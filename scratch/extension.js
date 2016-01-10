@@ -45,11 +45,11 @@ function deviceOpened(dev) {
 
     var potentialDevices = [];
     ext._deviceConnected = function(dev) {
-        if(device) return;
-    	console.log('connected');
+        console.log('connected');
+        //if(device) return;
         potentialDevices.push(dev);
-        if(!device)
-            tryNextDevice();
+        //if(!device)
+        //    tryNextDevice();
     };
 
     var poller = null;
