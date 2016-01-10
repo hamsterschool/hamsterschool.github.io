@@ -55,13 +55,13 @@ function deviceOpened(dev) {
     var poller = null;
     var watchdog = null;
     function tryNextDevice() {
-        var dev = potentialDevices.shift();
-        if(!dev) return;
+        device = potentialDevices.shift();
+        if(!device) return;
 
-        dev.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
-        console.log('Attempting connection with ' + dev.id);
-        console.log(dev);
-        dev.set_receive_handler(function(data) {
+        device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
+        console.log('Attempting connection with ' + device.id);
+        console.log(device);
+        device.set_receive_handler(function(data) {
             //var inputData = new Uint8Array(data);
             console.log('receive');
             //console.log(inputData);
@@ -70,16 +70,16 @@ function deviceOpened(dev) {
 
         poller = setInterval(function() {
             //queryFirmware();
-            if(dev)
-                dev.send('FF\r');
+            if(device)
+                device.send('FF\r');
         }, 1000);
 
         watchdog = setTimeout(function() {
             clearInterval(poller);
             poller = null;
-            dev.set_receive_handler(null);
-            dev.close();
-            dev = null;
+            device.set_receive_handler(null);
+            device.close();
+            device = null;
             tryNextDevice();
         }, 5000);
     }
