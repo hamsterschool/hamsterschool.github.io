@@ -48,9 +48,8 @@ function deviceOpened(dev) {
         console.log('connected');
         //if(device) return;
         potentialDevices.push(dev);
-        console.log(dev);
-        //if(!device)
-        //    tryNextDevice();
+        if(!device)
+            tryNextDevice();
     };
 
     var poller = null;
