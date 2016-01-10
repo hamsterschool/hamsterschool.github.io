@@ -1,0 +1,1 @@
+# hamsterschool.github.io
