@@ -60,7 +60,7 @@ function deviceOpened(dev) {
         if(!device) return;
 
         device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 }, deviceOpened);
-        console.log('connection3 with ' + device.id);
+        console.log('connection4 with ' + device.id);
         
         device.set_receive_handler(function(data) {
             //var inputData = new Uint8Array(data);
