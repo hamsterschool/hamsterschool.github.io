@@ -41,15 +41,14 @@ ext._deviceConnected = function(dev) {
     }
 }
 
-    var paramString = window.location.search.replace(/^\?|\/$/g, '');
-    var vars = paramString.split('&');
-    var lang = 'en';
-    for(var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=');
-        if(pair.length > 1 && pair[0] == 'lang')
-            lang = pair[1];
-    }
-    alert(window.location.search);
+    var langs = {
+        'ko': 'ko'
+    };
+    var lang = window.navigator.userLanguage || window.navigator.language;
+    lang = langs[lang];
+    if(lang == undefined)
+        lang = 'en';
+    alert(lang);
 
     // Block and block menu descriptions
     var descriptor = {
