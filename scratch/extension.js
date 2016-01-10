@@ -21,14 +21,15 @@
 
     var connected = false;
     var device = null;
-
+var poller2 = null;
 function deviceOpened(dev) {
     // if device fails to open, forget about it
     if (dev == null) device = null;
 
     // otherwise start polling
-    poller = setInterval(function() {
+    poller2 = setInterval(function() {
         rawData = device.read();
+        console.log(rawData);
     }, 20);
 };
 
@@ -58,7 +59,7 @@ function deviceOpened(dev) {
         device = potentialDevices.shift();
         if(!device) return;
 
-        device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
+        device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 }, deviceOpened);
         console.log('connection3 with ' + device.id);
         
         device.set_receive_handler(function(data) {
@@ -71,14 +72,14 @@ function deviceOpened(dev) {
         poller = setInterval(function() {
             //queryFirmware();
             if(device) {
-            	console.log(device);
-            	var rawData = device.read();
-            	console.log(rawData);
+
 //                device.send('FF\r');
             }
         }, 1000);
 
         watchdog = setTimeout(function() {
+            clearInterval(poller2);
+            poller2 = null;
             clearInterval(poller);
             poller = null;
             device.set_receive_handler(null);
