@@ -71,6 +71,7 @@ function deviceOpened(dev) {
         poller = setInterval(function() {
             //queryFirmware();
             if(device) {
+            	console.log(device);
             	var rawData = device.read();
             	console.log(rawData);
 //                device.send('FF\r');
