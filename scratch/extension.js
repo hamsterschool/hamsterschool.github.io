@@ -48,7 +48,16 @@ ext._deviceConnected = function(dev) {
     lang = langs[lang];
     if(lang == undefined)
         lang = 'en';
-    alert(lang);
+//    alert(lang);
+    
+    var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
+    alert(vars.length);
+//  var lang = 'en';
+//  for (var i=0; i<vars.length; i++) {
+//    var pair = vars[i].split('=');
+//    if (pair.length > 1 && pair[0]=='lang')
+//      lang = pair[1];
+//  }
 
     // Block and block menu descriptions
     var descriptor = {
