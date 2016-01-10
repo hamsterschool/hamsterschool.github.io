@@ -49,7 +49,7 @@ ext._deviceConnected = function(dev) {
         if(pair.length > 1 && pair[0] == 'lang')
             lang = pair[1];
     }
-    alert(lang);
+    alert(window.location);
 
     // Block and block menu descriptions
     var descriptor = {
