@@ -51,7 +51,7 @@ ext._deviceConnected = function(dev) {
 //    alert(lang);
     
     var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
-    alert(vars[0]]);
+    alert(vars[0]);
 //  var lang = 'en';
 //  for (var i=0; i<vars.length; i++) {
 //    var pair = vars[i].split('=');
