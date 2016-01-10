@@ -70,7 +70,8 @@ function deviceOpened(dev) {
 
         poller = setInterval(function() {
             //queryFirmware();
-            dev.send('FF\r');
+            if(dev)
+                dev.send('FF\r');
         }, 1000);
 
         watchdog = setTimeout(function() {
