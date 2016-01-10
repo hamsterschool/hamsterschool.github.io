@@ -1,6 +1,6 @@
 (function(ext) {
     var device = null;
-    ext._shutdown = function() {};
+    
 
     // Status reporting code
     // Use this to report missing hardware, plugin or unsupported browser
@@ -9,7 +9,19 @@
     };
     
 
-	var poller = null;
+
+
+
+
+//ext._deviceRemoved = function(dev) {
+  //  if(device != dev) return;
+    //if(poller) poller = clearInterval(poller);
+//    device = null;
+//};
+
+    var connected = false;
+    var device = null;
+
 function deviceOpened(dev) {
     // if device fails to open, forget about it
     if (dev == null) device = null;
@@ -19,27 +31,59 @@ function deviceOpened(dev) {
         rawData = device.read();
     }, 20);
 };
-ext._deviceConnected = function(dev) {
-    if(device) return;
 
-    device = dev;
-    device.open(deviceOpened);
-};
+//ext._deviceConnected = function(dev) {
+  //  if(device) return;
 
-ext._deviceRemoved = function(dev) {
-    if(device != dev) return;
-    if(poller) poller = clearInterval(poller);
-    device = null;
-};
+    //device = dev;
+    //device.open(deviceOpened);
+//};
+    ext._deviceRemoved = function(dev) {
+        console.log('Device removed');
+        // Not currently implemented with serial devices
+    };
 
     var potentialDevices = [];
-ext._deviceConnected = function(dev) {
-    potentialDevices.push(dev);
+    ext._deviceConnected = function(dev) {
+        if(device) return;
+    	console.log('connected');
+        potentialDevices.push(dev);
+        if(!device)
+            tryNextDevice();
+    };
 
-    if (!device) {
-        tryNextDevice();
+    var poller = null;
+    var watchdog = null;
+    function tryNextDevice() {
+        var dev = potentialDevices.shift();
+        if(!dev) return;
+
+        dev.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
+        console.log('Attempting connection with ' + dev.id);
+        dev.set_receive_handler(function(data) {
+            var inputData = new Uint8Array(data);
+            //processInput(inputData);
+        });
+
+        poller = setInterval(function() {
+            //queryFirmware();
+        }, 1000);
+
+        watchdog = setTimeout(function() {
+            clearInterval(poller);
+            poller = null;
+            //device.set_receive_handler(null);
+            //device.close();
+            device = null;
+            tryNextDevice();
+        }, 5000);
     }
-}
+
+    ext._shutdown = function() {
+        if(device) device.close();
+        if(poller) clearInterval(poller);
+        device = null;
+    };
 
     var langs = {
         'ko': 'ko'
@@ -56,7 +100,7 @@ ext._deviceConnected = function(dev) {
     lang = langs[lang];
     if(lang == undefined)
         lang = 'en';
-    alert(lang);
+    //alert(lang);
 
     // Block and block menu descriptions
     var descriptor = {
