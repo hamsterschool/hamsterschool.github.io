@@ -24,13 +24,16 @@
 var poller2 = null;
 function deviceOpened(dev) {
     // if device fails to open, forget about it
+    console.log('opened 1');
     if (dev == null) device = null;
 
+console.log('opened 2');
     // otherwise start polling
     poller2 = setInterval(function() {
         rawData = device.read();
         console.log(rawData);
     }, 20);
+    console.log('opened 3');
 };
 
 //ext._deviceConnected = function(dev) {
@@ -60,7 +63,7 @@ function deviceOpened(dev) {
         if(!device) return;
 
         device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 }, deviceOpened);
-        console.log('connection4 with ' + device.id);
+        console.log('connection5 with ' + device.id);
         
         device.set_receive_handler(function(data) {
             //var inputData = new Uint8Array(data);
