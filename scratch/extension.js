@@ -59,7 +59,7 @@ function deviceOpened(dev) {
         if(!device) return;
 
         device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
-        console.log('connection2 with ' + device.id);
+        console.log('connection3 with ' + device.id);
         
         device.set_receive_handler(function(data) {
             //var inputData = new Uint8Array(data);
@@ -68,15 +68,15 @@ function deviceOpened(dev) {
             //processInput(inputData);
         });
         
-        console.log('a');
-
         poller = setInterval(function() {
             //queryFirmware();
-            if(device)
-                device.send('FF\r');
+            if(device) {
+            	var rawData = device.read();
+            	console.log(rawData);
+//                device.send('FF\r');
+            }
         }, 1000);
 
-console.log('b');
         watchdog = setTimeout(function() {
             clearInterval(poller);
             poller = null;
@@ -85,7 +85,6 @@ console.log('b');
             device = null;
             tryNextDevice();
         }, 5000);
-        console.log('c');
     }
 
     ext._shutdown = function() {
