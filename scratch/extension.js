@@ -1,5 +1,5 @@
 (function(ext) {
-    var device = null;
+
     
 
     // Status reporting code
@@ -59,7 +59,7 @@ function deviceOpened(dev) {
         if(!device) return;
 
         device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
-        console.log('Attempting connection with ' + device.id);
+        console.log('connection with ' + device.id);
         console.log(device);
         device.set_receive_handler(function(data) {
             //var inputData = new Uint8Array(data);
