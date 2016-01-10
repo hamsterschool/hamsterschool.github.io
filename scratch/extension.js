@@ -44,20 +44,19 @@ ext._deviceConnected = function(dev) {
     var langs = {
         'ko': 'ko'
     };
-    var lang = window.navigator.userLanguage || window.navigator.language;
+    var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
+    var lang = undefined;
+    for(var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if(pair.length > 1 && pair[0] == 'lang')
+            lang = pair[1];
+    }
+    if(!lang)
+        lang = window.navigator.userLanguage || window.navigator.language;
     lang = langs[lang];
     if(lang == undefined)
         lang = 'en';
-//    alert(lang);
-    
-    var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
-    alert(vars[0]);
-//  var lang = 'en';
-//  for (var i=0; i<vars.length; i++) {
-//    var pair = vars[i].split('=');
-//    if (pair.length > 1 && pair[0]=='lang')
-//      lang = pair[1];
-//  }
+    alert(lang);
 
     // Block and block menu descriptions
     var descriptor = {
