@@ -76,9 +76,9 @@ function deviceOpened(dev) {
         watchdog = setTimeout(function() {
             clearInterval(poller);
             poller = null;
-            //device.set_receive_handler(null);
-            //device.close();
-            device = null;
+            dev.set_receive_handler(null);
+            dev.close();
+            dev = null;
             tryNextDevice();
         }, 5000);
     }
