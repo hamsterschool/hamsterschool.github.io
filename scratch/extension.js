@@ -62,7 +62,7 @@ function deviceOpened(dev) {
         console.log('Attempting connection with ' + dev.id);
         console.log(dev);
         dev.set_receive_handler(function(data) {
-            var inputData = new Uint8Array(data);
+            //var inputData = new Uint8Array(data);
             console.log('receive');
             //console.log(inputData);
             //processInput(inputData);
