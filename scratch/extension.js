@@ -61,6 +61,7 @@ function deviceOpened(dev) {
         dev.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 });
         console.log('Attempting connection with ' + dev.id);
         dev.set_receive_handler(function(data) {
+        	console.log(data);
             var inputData = new Uint8Array(data);
             //processInput(inputData);
         });
