@@ -62,12 +62,14 @@ function deviceOpened(dev) {
         console.log('Attempting connection with ' + dev.id);
         dev.set_receive_handler(function(data) {
             var inputData = new Uint8Array(data);
-            console.log(inputData);
+            console.log('receive');
+            //console.log(inputData);
             //processInput(inputData);
         });
 
         poller = setInterval(function() {
             //queryFirmware();
+            dev.send('FF\r');
         }, 1000);
 
         watchdog = setTimeout(function() {
