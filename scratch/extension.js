@@ -12,10 +12,22 @@
     var descriptor = {
         blocks: [
             // Block type, block name, function name
-            [' ', 'my first block', 'my_first_block'],
-        ]
+            ["w", "move forward", "moveForward"],
+		    ["w", "move backward", "moveBackward"],
+		    ["w", "turn %m.left_right", "turn", "left"],
+		    [" ", "set %m.left_right_both led to %m.color", "setLedTo", "left", "red"],
+		    [" ", "clear %m.left_right_both led", "clearLed", "left"],
+		    ["w", "beep", "beep"],
+		    ["b", "hand found?", "handFound"]
+        ],
+        menus: {
+		    "left_right": ["left", "right"],
+		    "left_right_both": ["left", "right", "both"],
+		    "color": ["red", "yellow", "green", "cyan", "blue", "magenta", "white"]
+	    },
+	    url: "http://hamster.school"
     };
 
     // Register the extension
-    ScratchExtensions.register('My first extension', descriptor, ext);
+    ScratchExtensions.register('Hamster', descriptor, ext);
 })({});
