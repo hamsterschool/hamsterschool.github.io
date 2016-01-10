@@ -9,7 +9,9 @@
     };
     
 
-
+set_error_handler(function(error) {
+	console.log(error);
+});
 
 
 
