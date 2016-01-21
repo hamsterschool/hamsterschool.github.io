@@ -119,6 +119,7 @@ ext.open('020401', 'ws://localhost:23518');
                 board = pair[1];
         }
     }
+    lang = 'en';
 
 	var blocks = {
 		en3n: [
