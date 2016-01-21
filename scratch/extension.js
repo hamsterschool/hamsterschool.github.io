@@ -246,8 +246,20 @@
 	
 	console.log(window);
 	
-	window.addEventListener('message', function(e) {
-		console.log(e);
+	window.addEventListener('message', function() {
+		console.log('a1');
+	});
+	
+	document.addEventListener('message', function() {
+		console.log('a2');
+	});
+	
+	window.addEventListener('click', function() {
+		console.log('a3');
+	});
+	
+	document.addEventListener('click', function() {
+		console.log('a4');
 	});
 	
 	window.__flash__addCallback(function() {
