@@ -240,7 +240,20 @@
 	console.log(window);
 	
 	window.__flash__addCallback(function() {
+		console.log('test1');
 	}, 'stop');
+	window.__flash__addCallback(function() {
+		console.log('test2');
+	}, 'reset');
+	window.__flash__addCallback(function() {
+		console.log('test3');
+	}, 'click');
+	window.__flash__addCallback(function() {
+		console.log('test4');
+	}, 'resetAll');
+	window.__flash__addCallback(function() {
+		console.log('test5');
+	}, 'reset_all');
 
 
 })({});
