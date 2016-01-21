@@ -46,42 +46,42 @@ JsonHandler.prototype.write = function(key, value) {
 	return false;
 };
 
-ext.open = function(url) {
-	if('WebSocket' in window) {
-		try {
-			var socket = new WebSocket(url);
-			socket.binaryType = 'arraybuffer';
-			ext.socket = socket;
-			socket.onopen = function() {
-				socket.onmessage = function(message) { // message: MessageEvent
-					try {
-						ext.receiveData = JSON.parse(message.data);
-					} catch (e) {
-					}
-                };
-                socket.onclose = function() {
-                    if(ext.stateChangedListener) {
-                        ext.stateChangedListener('closed');
-                    }
-                };
-            };
-            return true;
-        } catch (e) {
-        }
-    }
-    return false;
-};
+	function open(url) {
+		if('WebSocket' in window) {
+			try {
+				var socket = new WebSocket(url);
+				socket.binaryType = 'arraybuffer';
+				ext.socket = socket;
+				socket.onopen = function() {
+					socket.onmessage = function(message) { // message: MessageEvent
+						try {
+							ext.receiveData = JSON.parse(message.data);
+						} catch (e) {
+						}
+                	};
+                	socket.onclose = function() {
+                    	if(ext.stateChangedListener) {
+                        	ext.stateChangedListener('closed');
+                    	}
+                	};
+            	};
+            	return true;
+        	} catch (e) {
+        	}
+    	}
+    	return false;
+	};
 
-ext.close = function() {
-    if(ext.socket) {
-        ext.socket.close();
-            ext.socket = undefined;
-    }
-};
+	function close() {
+    	if(ext.socket) {
+        	ext.socket.close();
+            	ext.socket = undefined;
+    	}
+	};
 
-ext.sendHandler = new JsonHandler('020401');
+	ext.sendHandler = new JsonHandler('020401');
 
-ext.open('ws://localhost:23518');
+	ext.open('ws://localhost:23518');
 
     // Status reporting code
     // Use this to report missing hardware, plugin or unsupported browser
