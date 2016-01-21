@@ -130,8 +130,8 @@
 	};
 			
 	ext.leftProximity = function() {
-		console.log('call leftProximity ' + receiveData['leftProximity']);
-		return receiveData['leftProximity'];
+		console.log('call leftProximity ' + sensory['leftProximity']);
+		return sensory['leftProximity'];
 	};
 
 	ext._getStatus = function() {
