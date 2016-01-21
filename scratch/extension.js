@@ -158,10 +158,10 @@
 
 	var blocks = {
 		en3n: [
-			["w", "move forward for %n secs", "moveForwardForSecs", "1"],
-			["w", "move backward for %n secs", "moveBackwardForSecs", "1"],
-			["w", "turn %m.left_right for %n secs", "turnForSecs", "left", "1"],
-			[" ", "change wheels by left: %n right: %n", "changeBothWheelsBy", "10", "10"],
+			["w", "move forward for %n secs", "moveForwardForSecs", 1],
+			["w", "move backward for %n secs", "moveBackwardForSecs", 1],
+			["w", "turn %m.left_right for %n secs", "turnForSecs", "left", 1],
+			[" ", "change wheels by left: %n right: %n", "changeBothWheelsBy", 10, 10],
 			[" ", "set wheels to left: %n right: %n", "setBothWheelsTo", "30", "30"],
 			[" ", "change %m.left_right_both wheel by %n", "changeWheelBy", "left", "10"],
 			[" ", "set %m.left_right_both wheel to %n", "setWheelTo", "left", "30"],
