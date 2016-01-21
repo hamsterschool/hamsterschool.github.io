@@ -113,7 +113,7 @@
 	}
 
 	ext.moveForwardForSecs = function(sec, callback) {
-	console.log('sec ' + sec);
+	console.log('sec ' + (typeof sec));
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			waits.push(id);
