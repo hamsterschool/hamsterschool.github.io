@@ -1,4 +1,5 @@
 (function(ext) {
+    console.log('test1');
 
 function JsonHandler(id) {
 	var data = {
