@@ -1,113 +1,167 @@
 (function(ext) {
-    console.log('test3');
 
-function JsonHandler(id) {
-	var data = {
-		version: 0x01,
-		networkId: 0,
-		protocol: 'json'
+	var sensory = {
+		signalStrength: 0,
+		leftProximity: 0,
+		rightProximity: 0,
+		leftFloor: 0,
+		rightFloor: 0,
+		accelerationX: 0,
+		accelerationY: 0,
+		accelerationZ: 0,
+		light: 0,
+		temperature: 0,
+		inputA: 0,
+		inputB: 0,
+		lineTracerState: 0,
+		lineTracerStateId: 0
+	};
+	var motoring = {
+		leftWheel: 0,
+		rightWheel: 0,
+		buzzer: 0,
+		outputA: 0,
+		outputB: 0,
+		leftLed: 0,
+		rightLed: 0,
+		note: 0,
+		lineTracerMode: 0,
+		lineTracerModeId: 0,
+		lineTracerSpeed: 5,
+		ioModeA: 0,
+		ioModeB: 0
+	};
+	var lineTracerModeId = 0;
+	var lineTracerStateId = -1;
+	var tempo = 60;
+	var timeouts = [];
+	var WHEEL_SPEED = 30;
+	var TURN_SPEED = 30;
+
+	var reset = function() {
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		motoring.buzzer = 0;
+		motoring.outputA = 0;
+		motoring.outputB = 0;
+		motoring.leftLed = 0;
+		motoring.rightLed = 0;
+		motoring.note = 0;
+		motoring.lineTracerMode = 0;
+		motoring.lineTracerModeId = 0;
+		motoring.lineTracerSpeed = 5;
+		motoring.ioModeA = 0;
+		motoring.ioModeB = 0;
+		
+		lineTracerModeId = 0;
+		lineTracerStateId = -1;
+		tempo = 60;
+		removeAllTimeouts();
 	};
 	
-	var str = id.slice(0, 2); // company id
-	data.companyId = parseInt(str, 16) & 0xff;
-	str = id.slice(2, 4); // model id
-	data.modelId = parseInt(str, 16) & 0xff;
-	str = id.slice(4, 6); // variation id
-	data.variationId = parseInt(str, 16) & 0xff;
+	var removeTimeout = function(id) {
+		clearTimeout(id);
+		var index = timeouts.indexOf(id);
+		if(index >= 0) {
+			timeouts.splice(index, 1);
+		}
+	};
+	var removeAllTimeouts = function() {
+		for(var i in timeouts) {
+			clearTimeout(timeouts[i]);
+		}
+		timeouts = [];
+	};
+	var setLineTracerMode = function(mode) {
+		lineTracerModeId = (lineTracerModeId + 1) & 0xff;
+		motoring.lineTracerMode = mode;
+		motoring.lineTracerModeId = lineTracerModeId;
+	};
+
+	var open = function(url) {
+		if('WebSocket' in window) {
+			try {
+				var socket = new WebSocket(url);
+				socket.binaryType = 'arraybuffer';
+				ext.socket = socket;
+				socket.onopen = function() {
+					socket.onmessage = function(message) { // message: MessageEvent
+						try {
+							sensory = JSON.parse(message.data);
+							socket.send(JSON.stringify(motoring));
+						} catch (e) {
+						}
+					};
+					socket.onclose = function() {
+						if(ext.stateChangedListener) {
+							ext.stateChangedListener('closed');
+						}
+					};
+				};
+				return true;
+			} catch (e) {
+			}
+		}
+		return false;
+	}
+
+	function close() {
+		if(ext.socket) {
+			ext.socket.close();
+			ext.socket = undefined;
+		}
+	}
+
+	function send() {
+		JSON.stringify(sendData);
+	}
+
+	function write(key, value) {
+		sendData[key] = value;
+	}
 	
-	this.data = data;
-}
+	ext.moveForwardForSecs = function(sec) {
+		setLineTracerMode(0);
+		if(sec && sec > 0) {
+			waits.push(id);
+			motoring.leftWheel = WHEEL_SPEED;
+			motoring.rightWheel = WHEEL_SPEED;
+			var timer = setTimeout(function() {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				removeWait(id);
+				removeTimeout(timer);
+			}, sec * 1000);
+			timeouts.push(timer);
+		}
+	};
+			
+	ext.leftProximity = function() {
+		console.log('call leftProximity ' + receiveData['leftProximity']);
+		return receiveData['leftProximity'];
+	};
 
-JsonHandler.prototype.encode = function() {
-	if(this.data) {
-		return JSON.stringify(this.data);
+	ext._getStatus = function() {
+		return {status: 2, msg: 'Ready'};
+	};
+
+	var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
+	var lang = 'en';
+	var level = '3';
+	var board = 'n';
+	var pair;
+	for(var i = 0; i < vars.length; i++) {
+		pair = vars[i].split('=');
+		if(pair.length > 1) {
+			if(pair[0] == 'lang')
+				lang = pair[1];
+			else if(pair[0] == 'level')
+				level = pair[1];
+			else if(pair[0] == 'board')
+				board = pair[1];
+		}
 	}
-};
-
-JsonHandler.prototype.decode = function(data) { // data: array buffer
-	try {
-		this.data = JSON.parse(data);
-	} catch (e) {
-	}
-};
-
-JsonHandler.prototype.read = function(key) {
-	var data = this.data;
-	if(data) {
-		return data[key];
-	}
-};
-
-JsonHandler.prototype.write = function(key, value) {
-	var data = this.data;
-	if(data) {
-		data[key] = value;
-		return true;
-	}
-	return false;
-};
-
-    var receiveData = {};
-
-    function open(url) {
-        if('WebSocket' in window) {
-            try {
-                var socket = new WebSocket(url);
-                socket.binaryType = 'arraybuffer';
-                ext.socket = socket;
-                socket.onopen = function() {
-                    socket.onmessage = function(message) { // message: MessageEvent
-                        try {
-                            receiveData = JSON.parse(message.data);
-                        } catch (e) {
-                        }
-                    };
-                    socket.onclose = function() {
-                        if(ext.stateChangedListener) {
-                            ext.stateChangedListener('closed');
-                        }
-                    };
-                };
-                return true;
-            } catch (e) {
-            }
-        }
-        return false;
-    };
-
-    function close() {
-        if(ext.socket) {
-            ext.socket.close();
-            ext.socket = undefined;
-        }
-    };
-
-    ext.leftProximity = function() {
-    	console.log('call leftProximity ' + receiveData['leftProximity']);
-        return receiveData['leftProximity'];
-    };
-
-    ext._getStatus = function() {
-        return {status: 2, msg: 'Ready'};
-    };
-
-    var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
-    var lang = 'en';
-    var level = '3';
-    var board = 'n';
-    var pair;
-    for(var i = 0; i < vars.length; i++) {
-        pair = vars[i].split('=');
-        if(pair.length > 1) {
-            if(pair[0] == 'lang')
-                lang = pair[1];
-            else if(pair[0] == 'level')
-                level = pair[1];
-            else if(pair[0] == 'board')
-                board = pair[1];
-        }
-    }
-    lang = 'en';
+	lang = 'en';
 
 	var blocks = {
 		en3n: [
@@ -164,14 +218,14 @@ JsonHandler.prototype.write = function(key, value) {
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "diginal output"]
 		}
 	};
-    
-    var descriptor = {
-        blocks: blocks[lang + level + board],
-        menus: menus[lang],
-	    url: "http://hamster.school"
-    };
 
-    ScratchExtensions.register('Hamster', descriptor, ext);
-    
-    open('ws://localhost:23518');
+	var descriptor = {
+		blocks: blocks[lang + level + board],
+		menus: menus[lang],
+		url: "http://hamster.school"
+	};
+
+	ScratchExtensions.register('Hamster', descriptor, ext);
+
+	open('ws://localhost:23518');
 })({});
