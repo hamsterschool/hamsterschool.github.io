@@ -262,12 +262,8 @@
 		console.log('a4');
 	});
 	
-	window.Scratch.addEventListener('click', function() {
-		console.log('a3');
-	});
-	
-	window.Scratch.addEventListener('click', function() {
-		console.log('a4');
+	window.Scratch.FlashApp.$ASobj.on(function() {
+		console.log('a5');
 	});
 	
 	window.__flash__addCallback(function() {
