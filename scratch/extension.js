@@ -133,6 +133,7 @@
 	};
 
 	ext._getStatus = function() {
+	console.log('status');
 		return {status: 2, msg: 'Ready'};
 	};
 	
@@ -254,7 +255,7 @@
 	window.__flash__addCallback(function() {
 		console.log('test5');
 	}, 'reset_all');
-	window.__flash__addCallback(null, null);
+	//window.__flash__addCallback(null, null);
 
 
 })({});
