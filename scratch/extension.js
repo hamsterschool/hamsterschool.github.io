@@ -145,10 +145,10 @@
 		}
 	};
 	
-	ext._resetAll = function() {
+	ext._reset = function() {
 		console.log('resetAll');
 	};
-	ext._reset_all = function() {
+	ext.reset = function() {
 		console.log('reset_all');
 	};
 
@@ -237,6 +237,5 @@
 	open('ws://localhost:23518');
 	console.log(ext);
 	
-	var Event = require('event_bindings').Event;
-	console.log(Event);
+
 })({});
