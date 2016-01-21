@@ -152,6 +152,12 @@
 	ext.reset = function() {
 		console.log('reset_all');
 	};
+	ext.stop = function() {
+		console.log('reset_all');
+	};
+	ext._stop = function() {
+		console.log('reset_all');
+	};
 
 	var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
 	var lang = 'en';
