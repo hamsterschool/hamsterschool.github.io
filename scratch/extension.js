@@ -59,7 +59,6 @@ JsonHandler.prototype.write = function(key, value) {
                     socket.onmessage = function(message) { // message: MessageEvent
                         try {
                             receiveData = JSON.parse(message.data);
-                            console.log(receiveData['leftProximity']);
                         } catch (e) {
                         }
                     };
@@ -84,8 +83,8 @@ JsonHandler.prototype.write = function(key, value) {
     };
 
     ext.leftProximity = function() {
-    	console.log('call leftProximity');
-        receiveData['leftProximity'];
+    	console.log('call leftProximity ' + receiveData['leftProximity']);
+        return receiveData['leftProximity'];
     };
 
     ext._getStatus = function() {
