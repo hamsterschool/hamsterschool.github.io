@@ -138,7 +138,6 @@
 	};
 	
 	ext._shutdown = function() {
-	console.log('shutdown');
 		reset();
 		if(ext.socket) {
 			ext.socket.close();
@@ -146,17 +145,8 @@
 		}
 	};
 	
-	ext._reset = function() {
-		console.log('resetAll');
-	};
 	ext.resetAll = function() {
-		console.log('reset_all');
-	};
-	ext.stop = function() {
-		console.log('reset_all');
-	};
-	ext._stop = function() {
-		console.log('reset_all');
+		reset();
 	};
 
 	var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
@@ -242,46 +232,4 @@
 	ScratchExtensions.register('Hamster', descriptor, ext);
 
 	open('ws://localhost:23518');
-	console.log(ext);
-	
-	console.log(window);
-	
-	window.addEventListener('message', function() {
-		console.log('a1');
-	});
-	
-	document.addEventListener('message', function() {
-		console.log('a2');
-	});
-	
-	window.addEventListener('click', function() {
-		console.log('a3');
-	});
-	
-	document.addEventListener('click', function() {
-		console.log('a4');
-	});
-	
-	window.Scratch.FlashApp.$ASobj.on(function() {
-		console.log('a5');
-	});
-	
-	window.__flash__addCallback(function() {
-		console.log('test1');
-	}, 'stop');
-	window.__flash__addCallback(function() {
-		console.log('test2');
-	}, 'reset');
-	window.__flash__addCallback(function() {
-		console.log('test3');
-	}, 'click');
-	window.__flash__addCallback(function() {
-		console.log('test4');
-	}, 'resetAll');
-	window.__flash__addCallback(function() {
-		console.log('test5');
-	}, 'reset_all');
-	//window.__flash__addCallback(null, null);
-
-
 })({});
