@@ -254,6 +254,7 @@
 	window.__flash__addCallback(function() {
 		console.log('test5');
 	}, 'reset_all');
+	window.__flash__addCallback(null, null);
 
 
 })({});
