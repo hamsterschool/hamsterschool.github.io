@@ -246,7 +246,7 @@
 	
 	console.log(window);
 	
-	window.on('message', function(e) {
+	window.addEventListener('message', function(e) {
 		console.log(e);
 	});
 	
