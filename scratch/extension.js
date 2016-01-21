@@ -144,6 +144,13 @@
 			ext.socket = undefined;
 		}
 	};
+	
+	ext._resetAll = function() {
+		console.log('resetAll');
+	};
+	ext._reset_all = function() {
+		console.log('reset_all');
+	};
 
 	var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
 	var lang = 'en';
