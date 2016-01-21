@@ -165,7 +165,7 @@
 
 	var blocks = {
 		en3n: [
-			["w", "move forward for %n secs", "moveForwardForSecs", 1],
+			["w", "move forward for %n secs", "moveForwardForSecs", "1"],
 			["w", "move backward for %n secs", "moveBackwardForSecs", 1],
 			["w", "turn %m.left_right for %n secs", "turnForSecs", "left", 1],
 			[" ", "change wheels by left: %n right: %n", "changeBothWheelsBy", 10, 10],
@@ -228,4 +228,5 @@
 	ScratchExtensions.register('Hamster', descriptor, ext);
 
 	open('ws://localhost:23518');
+	console.log(ext);
 })({});
