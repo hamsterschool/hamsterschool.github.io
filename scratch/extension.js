@@ -116,7 +116,6 @@
 	console.log('sec ' + (typeof sec));
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
-			waits.push(id);
 			motoring.leftWheel = WHEEL_SPEED;
 			motoring.rightWheel = WHEEL_SPEED;
 			var timer = setTimeout(function() {
