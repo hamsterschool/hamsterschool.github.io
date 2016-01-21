@@ -248,7 +248,7 @@
 	
 	window.on('message', function(e) {
 		console.log(e);
-	};
+	});
 	
 	window.__flash__addCallback(function() {
 		console.log('test1');
