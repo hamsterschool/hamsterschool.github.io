@@ -237,5 +237,6 @@
 	open('ws://localhost:23518');
 	console.log(ext);
 	
+	console.log(window);
 
 })({});
