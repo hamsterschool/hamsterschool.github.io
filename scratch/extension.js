@@ -112,15 +112,7 @@
 		}
 	}
 
-	function send() {
-		JSON.stringify(sendData);
-	}
-
-	function write(key, value) {
-		sendData[key] = value;
-	}
-	
-	ext.moveForwardForSecs = function(sec) {
+	ext.moveForwardForSecs = function(sec, callback) {
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			waits.push(id);
@@ -131,6 +123,7 @@
 				motoring.rightWheel = 0;
 				removeWait(id);
 				removeTimeout(timer);
+				callback();
 			}, sec * 1000);
 			timeouts.push(timer);
 		}
