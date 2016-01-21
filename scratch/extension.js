@@ -135,6 +135,15 @@
 	ext._getStatus = function() {
 		return {status: 2, msg: 'Ready'};
 	};
+	
+	ext._shutdown = function() {
+	console.log('shutdown');
+		reset();
+		if(ext.socket) {
+			ext.socket.close();
+			ext.socket = undefined;
+		}
+	};
 
 	var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
 	var lang = 'en';
