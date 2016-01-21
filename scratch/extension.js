@@ -47,6 +47,8 @@ JsonHandler.prototype.write = function(key, value) {
 	return false;
 };
 
+    var receiveData = {};
+
     function open(url) {
         if('WebSocket' in window) {
             try {
@@ -57,8 +59,8 @@ JsonHandler.prototype.write = function(key, value) {
                 	console.log('open');
                     socket.onmessage = function(message) { // message: MessageEvent
                         try {
-                            ext.receiveData = JSON.parse(message.data);
-                            console.log(ext.receiveData);
+                            receiveData = JSON.parse(message.data);
+                            console.log(receiveData);
                         } catch (e) {
                         }
                     };
@@ -75,37 +77,20 @@ JsonHandler.prototype.write = function(key, value) {
         return false;
     };
 
-	function close() {
-    	if(ext.socket) {
-        	ext.socket.close();
-            	ext.socket = undefined;
-    	}
-	};
+    function close() {
+        if(ext.socket) {
+            ext.socket.close();
+            ext.socket = undefined;
+        }
+    };
 
-	ext.sendHandler = new JsonHandler('020401');
+    ext.leftProximity = function() {
+        receiveData['leftProximity'];
+    };
 
-	open('ws://localhost:23518');
-
-    // Status reporting code
-    // Use this to report missing hardware, plugin or unsupported browser
     ext._getStatus = function() {
         return {status: 2, msg: 'Ready'};
     };
-    
-
-
-
-
-
-//ext._deviceRemoved = function(dev) {
-  //  if(device != dev) return;
-    //if(poller) poller = clearInterval(poller);
-//    device = null;
-//};
-
-	ext.leftProximity = function() {
-		ext.receiveData.leftProximity;
-	}
 
     var vars = window.location.search.replace(/^\?|\/$/g, '').split("&");
     var lang = 'en';
@@ -188,4 +173,6 @@ JsonHandler.prototype.write = function(key, value) {
     };
 
     ScratchExtensions.register('Hamster', descriptor, ext);
+    
+    open('ws://localhost:23518');
 })({});
