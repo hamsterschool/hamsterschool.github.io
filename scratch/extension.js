@@ -238,5 +238,9 @@
 	console.log(ext);
 	
 	console.log(window);
+	
+	window.__flash__addCallback(function() {
+	}, 'stop');
+
 
 })({});
