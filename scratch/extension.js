@@ -46,10 +46,10 @@ JsonHandler.prototype.write = function(key, value) {
 	return false;
 };
 
-	function open(url) {
-		if('WebSocket' in window) {
-			try {
-				var socket = new WebSocket(url);
+    function open(url) {
+        if('WebSocket' in window) {
+            try {
+                var socket = new WebSocket(url);
 				socket.binaryType = 'arraybuffer';
 				ext.socket = socket;
 				socket.onopen = function() {
@@ -81,7 +81,7 @@ JsonHandler.prototype.write = function(key, value) {
 
 	ext.sendHandler = new JsonHandler('020401');
 
-	ext.open('ws://localhost:23518');
+	open('ws://localhost:23518');
 
     // Status reporting code
     // Use this to report missing hardware, plugin or unsupported browser
