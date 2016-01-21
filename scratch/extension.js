@@ -1,5 +1,5 @@
 (function(ext) {
-    console.log('test2');
+    console.log('test3');
 
 function JsonHandler(id) {
 	var data = {
@@ -56,11 +56,10 @@ JsonHandler.prototype.write = function(key, value) {
                 socket.binaryType = 'arraybuffer';
                 ext.socket = socket;
                 socket.onopen = function() {
-                	console.log('open');
                     socket.onmessage = function(message) { // message: MessageEvent
                         try {
                             receiveData = JSON.parse(message.data);
-                            console.log(receiveData);
+                            console.log(receiveData['leftProximity']);
                         } catch (e) {
                         }
                     };
@@ -85,6 +84,7 @@ JsonHandler.prototype.write = function(key, value) {
     };
 
     ext.leftProximity = function() {
+    	console.log('call leftProximity');
         receiveData['leftProximity'];
     };
 
