@@ -1,5 +1,5 @@
 (function(ext) {
-    console.log('test1');
+    console.log('test2');
 
 function JsonHandler(id) {
 	var data = {
