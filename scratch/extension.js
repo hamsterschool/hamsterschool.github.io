@@ -50,27 +50,29 @@ JsonHandler.prototype.write = function(key, value) {
         if('WebSocket' in window) {
             try {
                 var socket = new WebSocket(url);
-				socket.binaryType = 'arraybuffer';
-				ext.socket = socket;
-				socket.onopen = function() {
-					socket.onmessage = function(message) { // message: MessageEvent
-						try {
-							ext.receiveData = JSON.parse(message.data);
-						} catch (e) {
-						}
-                	};
-                	socket.onclose = function() {
-                    	if(ext.stateChangedListener) {
-                        	ext.stateChangedListener('closed');
-                    	}
-                	};
-            	};
-            	return true;
-        	} catch (e) {
-        	}
-    	}
-    	return false;
-	};
+                socket.binaryType = 'arraybuffer';
+                ext.socket = socket;
+                socket.onopen = function() {
+                	console.log('open');
+                    socket.onmessage = function(message) { // message: MessageEvent
+                        try {
+                            ext.receiveData = JSON.parse(message.data);
+                            console.log(ext.receiveData);
+                        } catch (e) {
+                        }
+                    };
+                    socket.onclose = function() {
+                        if(ext.stateChangedListener) {
+                            ext.stateChangedListener('closed');
+                        }
+                    };
+                };
+                return true;
+            } catch (e) {
+            }
+        }
+        return false;
+    };
 
 	function close() {
     	if(ext.socket) {
