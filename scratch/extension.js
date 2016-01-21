@@ -262,6 +262,14 @@
 		console.log('a4');
 	});
 	
+	window.Scratch.addEventListener('click', function() {
+		console.log('a3');
+	});
+	
+	window.Scratch.addEventListener('click', function() {
+		console.log('a4');
+	});
+	
 	window.__flash__addCallback(function() {
 		console.log('test1');
 	}, 'stop');
