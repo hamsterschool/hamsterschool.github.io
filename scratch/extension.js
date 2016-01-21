@@ -1,6 +1,93 @@
 (function(ext) {
 
-    
+function JsonHandler(id) {
+	var data = {
+		version: 0x01,
+		networkId: 0,
+		protocol: 'json'
+	};
+	
+	var str = id.slice(0, 2); // company id
+	data.companyId = parseInt(str, 16) & 0xff;
+	str = id.slice(2, 4); // model id
+	data.modelId = parseInt(str, 16) & 0xff;
+	str = id.slice(4, 6); // variation id
+	data.variationId = parseInt(str, 16) & 0xff;
+	
+	this.data = data;
+}
+
+JsonHandler.prototype.encode = function() {
+	if(this.data) {
+		return JSON.stringify(this.data);
+	}
+};
+
+JsonHandler.prototype.decode = function(data) { // data: array buffer
+	try {
+		this.data = JSON.parse(data);
+	} catch (e) {
+	}
+};
+
+JsonHandler.prototype.read = function(key) {
+	var data = this.data;
+	if(data) {
+		return data[key];
+	}
+};
+
+JsonHandler.prototype.write = function(key, value) {
+	var data = this.data;
+	if(data) {
+		data[key] = value;
+		return true;
+	}
+	return false;
+};
+
+ext.open = function(id, url) {
+    if('WebSocket' in window) {
+        try {
+            var socket = new WebSocket(url);
+            socket.binaryType = 'arraybuffer';
+            ext.socket = socket;
+            socket.onopen = function() {
+                socket.onmessage = function(message) { // message: MessageEvent
+                    var data = message.data;
+                    if(!ext.receiveHandler) {
+                        ext.receiveHandler = new JsonHandler(id);
+                    }
+                    if(ext.receiveHandler) {
+                        ext.receiveHandler.decode(data);
+                        if(ext.dataChangedListener) {
+                            ext.dataChangedListener();
+                        }
+                    }
+                };
+                socket.onclose = function() {
+                    if(ext.stateChangedListener) {
+                        ext.stateChangedListener('closed');
+                    }
+                };
+            };
+            return true;
+        } catch (e) {
+        }
+    }
+    return false;
+};
+
+ext.close = function() {
+    if(ext.socket) {
+        ext.socket.close();
+            ext.socket = undefined;
+    }
+};
+
+ext.sendHandler = new JsonHandler('020401');
+
+ext.open('020401', 'ws://localhost:23518');
 
     // Status reporting code
     // Use this to report missing hardware, plugin or unsupported browser
@@ -19,84 +106,7 @@
 //    device = null;
 //};
 
-    var connected = false;
-    var device = null;
-var poller2 = null;
-function deviceOpened(dev) {
-    // if device fails to open, forget about it
-    console.log('opened 1');
-    if (dev == null) device = null;
 
-console.log('opened 2');
-    // otherwise start polling
-    poller2 = setInterval(function() {
-        rawData = device.read();
-        console.log(rawData);
-    }, 20);
-    console.log('opened 3');
-};
-
-//ext._deviceConnected = function(dev) {
-  //  if(device) return;
-
-    //device = dev;
-    //device.open(deviceOpened);
-//};
-    ext._deviceRemoved = function(dev) {
-        console.log('Device removed');
-        // Not currently implemented with serial devices
-    };
-
-    var potentialDevices = [];
-    ext._deviceConnected = function(dev) {
-        console.log('connected');
-        //if(device) return;
-        potentialDevices.push(dev);
-        if(!device)
-            tryNextDevice();
-    };
-
-    var poller = null;
-    var watchdog = null;
-    function tryNextDevice() {
-        device = potentialDevices.shift();
-        if(!device) return;
-
-        device.open({ stopBits: 0, bitRate: 115200, ctsFlowControl: 2 }, deviceOpened);
-        console.log('connection5 with ' + device.id);
-        
-        device.set_receive_handler(function(data) {
-            //var inputData = new Uint8Array(data);
-            console.log('receive');
-            //console.log(inputData);
-            //processInput(inputData);
-        });
-        
-        poller = setInterval(function() {
-            //queryFirmware();
-            if(device) {
-
-//                device.send('FF\r');
-            }
-        }, 1000);
-
-        watchdog = setTimeout(function() {
-            clearInterval(poller2);
-            poller2 = null;
-            clearInterval(poller);
-            poller = null;
-            device.set_receive_handler(null);
-            device.close();
-            device = null;
-            tryNextDevice();
-        }, 5000);
-    }
-
-    ext._shutdown = function() {
-        if(device) device.close();
-        if(poller) clearInterval(poller);
-        device = null;
-    };
 
     var langs = {
         'ko': 'ko'
@@ -136,6 +146,5 @@ console.log('opened 2');
     };
 
     // Register the extension
-    var serial_info = {type: 'serial'};
-    ScratchExtensions.register('Hamster', descriptor, ext, serial_info);
+    ScratchExtensions.register('Hamster', descriptor, ext);
 })({});
