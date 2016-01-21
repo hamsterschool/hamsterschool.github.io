@@ -149,7 +149,7 @@
 	ext._reset = function() {
 		console.log('resetAll');
 	};
-	ext.reset = function() {
+	ext.resetAll = function() {
 		console.log('reset_all');
 	};
 	ext.stop = function() {
