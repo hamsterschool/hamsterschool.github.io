@@ -236,4 +236,7 @@
 
 	open('ws://localhost:23518');
 	console.log(ext);
+	
+	var Event = require('event_bindings').Event;
+	console.log(Event);
 })({});
