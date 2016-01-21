@@ -121,7 +121,6 @@
 			var timer = setTimeout(function() {
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
-				removeWait(id);
 				removeTimeout(timer);
 				callback();
 			}, sec * 1000);
