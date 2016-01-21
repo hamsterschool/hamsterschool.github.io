@@ -113,6 +113,7 @@
 	}
 
 	ext.moveForwardForSecs = function(sec, callback) {
+	console.log('sec ' + sec);
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			waits.push(id);
@@ -130,7 +131,6 @@
 	};
 			
 	ext.leftProximity = function() {
-		console.log('call leftProximity ' + sensory['leftProximity']);
 		return sensory['leftProximity'];
 	};
 
