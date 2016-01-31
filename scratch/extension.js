@@ -105,8 +105,7 @@
 						}
 					};
 					socket.onclose = function() {
-					console.log('closed');
-						ext.connectionState = STATE.CLOSED;
+						sensory.connectionState = STATE.CLOSED;
 					};
 				};
 				return true;
@@ -291,7 +290,6 @@
 	};
 	
 	ext._shutdown = function() {
-	console.log('shutdown');
 		reset();
 		if(ext.socket) {
 			ext.socket.close();
