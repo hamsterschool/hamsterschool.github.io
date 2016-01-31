@@ -100,6 +100,7 @@
 					socket.onmessage = function(message) { // message: MessageEvent
 						try {
 							sensory = JSON.parse(message.data);
+							console.log('state ' + sensory.connectionState);
 							socket.send(JSON.stringify(motoring));
 						} catch (e) {
 						}
