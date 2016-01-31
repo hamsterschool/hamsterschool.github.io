@@ -100,12 +100,12 @@
 					socket.onmessage = function(message) { // message: MessageEvent
 						try {
 							sensory = JSON.parse(message.data);
-							console.log('state ' + sensory.connectionState);
 							socket.send(JSON.stringify(motoring));
 						} catch (e) {
 						}
 					};
 					socket.onclose = function() {
+					console.log('closed');
 						ext.connectionState = STATE.CLOSED;
 					};
 				};
@@ -291,6 +291,7 @@
 	};
 	
 	ext._shutdown = function() {
+	console.log('shutdown');
 		reset();
 		if(ext.socket) {
 			ext.socket.close();
