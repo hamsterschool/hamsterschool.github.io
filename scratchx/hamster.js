@@ -717,6 +717,7 @@
 	};
 
 	ext.setWheelTo = function(which, speed) {
+	console.log(Date());
 		speed = parseFloat(speed);
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
