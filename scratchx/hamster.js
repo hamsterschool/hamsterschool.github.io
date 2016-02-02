@@ -15,7 +15,7 @@
 		inputB: 0,
 		lineTracerState: 0,
 		lineTracerStateId: 0,
-		connectionState: 'connecting'
+		connectionState: 0
 	};
 	var motoring = {
 		leftWheel: 0,
@@ -717,7 +717,6 @@
 	};
 
 	ext.setWheelTo = function(which, speed) {
-	console.log(Date());
 		speed = parseFloat(speed);
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
