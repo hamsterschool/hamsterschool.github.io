@@ -208,7 +208,7 @@
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'port': ['A', 'B', 'A and B'],
-			'mode': ['analog input', 'digital input', 'servo output', 'pwm output', 'diginal output']
+			'mode': ['analog input', 'digital input', 'servo output', 'pwm output', 'digital output']
 		},
 		ko: {
 			'left_right': ['왼쪽', '오른쪽'],
