@@ -442,7 +442,7 @@
 				inputA: 0,
 				inputB: 0,
 				lineTracerState: 0,
-				lineTracerStateId: 0,
+				lineTracerStateId: 0
 			};
 			robot.motoring = {
 				leftWheel: 0,
@@ -697,16 +697,15 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							robots.connectionState = data.connectionState;
-							var sensory = data.sensory;
-							var robot;
-							for(var i in sensory) {
-								robot = getRobot(i);
+							if(data.index >= 0) {
+								var robot = getRobot(data.index);
 								if(robot) {
-									robot.sensory = sensory[i];
+									robot.sensory = data;
 									if(robot.lineTracerCallback) handleLineTracer(robot);
 									if(robot.boardCallback) handleBoard(robot);
 								}
+							} else {
+								robots.connectionState = data.state;
 							}
 						} catch (e) {
 						}
@@ -1118,10 +1117,10 @@
 			octave = parseInt(octave);
 			beat = parseFloat(beat);
 			motoring.buzzer = 0;
-			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
+			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && robot.tempo > 0) {
 				note += (octave - 1) * 12;
 				motoring.note = note;
-				var timeout = beat * 60 * 1000 / tempo;
+				var timeout = beat * 60 * 1000 / robot.tempo;
 				var tail = 0;
 				if(timeout > 100) {
 					tail = 100;
@@ -1150,11 +1149,11 @@
 			beat = parseFloat(beat);
 			motoring.buzzer = 0;
 			motoring.note = 0;
-			if(beat && beat > 0 && tempo > 0) {
+			if(beat && beat > 0 && robot.tempo > 0) {
 				var timer = setTimeout(function() {
 					removeTimeout(timer);
 					callback();
-				}, beat * 60 * 1000 / tempo);
+				}, beat * 60 * 1000 / robot.tempo);
 				timeouts.push(timer);
 			}
 		}
