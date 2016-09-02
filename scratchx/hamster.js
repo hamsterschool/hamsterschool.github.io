@@ -14,8 +14,7 @@
 		inputA: 0,
 		inputB: 0,
 		lineTracerState: 0,
-		lineTracerStateId: 0,
-		connectionState: 0
+		lineTracerStateId: 0
 	};
 	var motoring = {
 		leftWheel: 0,
@@ -32,6 +31,7 @@
 		ioModeA: 0,
 		ioModeB: 0
 	};
+	var connectionState = 0;
 	var lineTracerModeId = 0;
 	var lineTracerStateId = -1;
 	var lineTracerCallback = undefined;
@@ -524,15 +524,20 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							sensory = JSON.parse(message.data);
-							if(lineTracerCallback) handleLineTracer();
-							if(boardCallback) handleBoard();
+							var data = JSON.parse(message.data);
+							if(data.index == 0) {
+								sensory = data;
+								if(lineTracerCallback) handleLineTracer();
+								if(boardCallback) handleBoard();
+							} else if(data.index < 0) {
+								connectionState = data.state;
+							}
 						} catch (e) {
 						}
 					};
 					sock.onclose = function() {
 						canSend = false;
-						sensory.connectionState = STATE.CLOSED;
+						connectionState = STATE.CLOSED;
 					};
 				};
 				return true;
@@ -997,7 +1002,7 @@
 	};
 
 	ext._getStatus = function() {
-		switch(sensory.connectionState) {
+		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
 			case STATE.CLOSED:
