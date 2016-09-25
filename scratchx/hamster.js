@@ -31,7 +31,7 @@
 		ioModeA: 0,
 		ioModeB: 0
 	};
-	var connectionState = 0;
+	var connectionState = 1;
 	var lineTracerModeId = 0;
 	var lineTracerStateId = -1;
 	var lineTracerCallback = undefined;
@@ -47,11 +47,11 @@
 	var WHEEL_SPEED = 30;
 	var TURN_SPEED = 30;
 	var STATE = {
-		CONNECTING: 0,
-		CONNECTED: 1,
-		CONNECTION_LOST: 2,
-		DISCONNECTED: 3,
-		CLOSED: 4
+		CONNECTING: 1,
+		CONNECTED: 2,
+		CONNECTION_LOST: 3,
+		DISCONNECTED: 4,
+		CLOSED: 5
 	};
 	var STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
