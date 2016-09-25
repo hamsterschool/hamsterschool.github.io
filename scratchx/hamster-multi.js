@@ -1,9 +1,8 @@
 (function(ext) {
 
-	var robots = {
-		motoring: {},
-		connectionState: 0
-	};
+	var robots = {};
+	var motorings = {};
+	var connectionState = 1;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -11,11 +10,11 @@
 	var WHEEL_SPEED = 30;
 	var TURN_SPEED = 30;
 	var STATE = {
-		CONNECTING: 0,
-		CONNECTED: 1,
-		CONNECTION_LOST: 2,
-		DISCONNECTED: 3,
-		CLOSED: 4
+		CONNECTING: 1,
+		CONNECTED: 2,
+		CONNECTION_LOST: 3,
+		DISCONNECTED: 4,
+		CLOSED: 5
 	};
 	var STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
@@ -493,7 +492,7 @@
 				robot.tempo = 60;
 			};
 			robots[index] = robot;
-			robots.motoring[index] = robot.motoring;
+			motorings[index] = robot.motoring;
 		}
 		return robot;
 	}
@@ -689,7 +688,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								socket.send(JSON.stringify(robots.motoring));
+								socket.send(JSON.stringify(motorings));
 							} catch (e) {
 							}
 						}
@@ -697,22 +696,24 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							if(data.index >= 0) {
-								var robot = getRobot(data.index);
-								if(robot) {
-									robot.sensory = data;
-									if(robot.lineTracerCallback) handleLineTracer(robot);
-									if(robot.boardCallback) handleBoard(robot);
+							if(data.type == 1) {
+								if(data.index >= 0) {
+									var robot = getRobot(data.index);
+									if(robot) {
+										robot.sensory = data;
+										if(robot.lineTracerCallback) handleLineTracer(robot);
+										if(robot.boardCallback) handleBoard(robot);
+									}
 								}
-							} else {
-								robots.connectionState = data.state;
+							} else if(data.type == 0) {
+								connectionState = data.state;
 							}
 						} catch (e) {
 						}
 					};
 					sock.onclose = function() {
 						canSend = false;
-						robots.connectionState = STATE.CLOSED;
+						connectionState = STATE.CLOSED;
 					};
 				};
 				return true;
@@ -1731,7 +1732,7 @@
 	};
 
 	ext._getStatus = function() {
-		switch(robots.connectionState) {
+		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
 			case STATE.CLOSED:
