@@ -525,11 +525,13 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							if(data.index == 0) {
-								sensory = data;
-								if(lineTracerCallback) handleLineTracer();
-								if(boardCallback) handleBoard();
-							} else if(data.index < 0) {
+							if(data.type == 1) {
+								if(data.index == 0) {
+									sensory = data;
+									if(lineTracerCallback) handleLineTracer();
+									if(boardCallback) handleBoard();
+								}
+							} else if(data.type == 0) {
 								connectionState = data.state;
 							}
 						} catch (e) {
