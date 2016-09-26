@@ -771,7 +771,7 @@
 	};
 	
 	ext.moveForward = function(index, callback) {
-		var robot = getrRobot(index);
+		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
 			setLineTracerMode(robot, 0);
