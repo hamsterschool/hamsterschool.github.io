@@ -511,11 +511,10 @@
 	}
 	
 	function handleLineTracer(robot) {
-		var lineTracerStateId = robot.sensory.lineTracerStateId;
-		console.log('handleLineTracer ' + lineTracerStateId + ", " + robot.lineTracerStateId);
-		if(lineTracerStateId != robot.lineTracerStateId) {
-			robot.lineTracerStateId = lineTracerStateId;
-			if(lineTracerStateId == 0x40) {
+		var sensory = robot.sensory;
+		if(sensory.lineTracerStateId != robot.lineTracerStateId) {
+			robot.lineTracerStateId = sensory.lineTracerStateId;
+			if(sensory.lineTracerState == 0x40) {
 				setLineTracerMode(robot, 0);
 				var callback = robot.lineTracerCallback;
 				robot.lineTracerCallback = undefined;
