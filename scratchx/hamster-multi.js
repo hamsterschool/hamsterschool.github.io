@@ -512,6 +512,7 @@
 	
 	function handleLineTracer(robot) {
 		var lineTracerStateId = robot.sensory.lineTracerStateId;
+		console.log('handleLineTracer ' + lineTracerStateId + ", " + robot.lineTracerStateId);
 		if(lineTracerStateId != robot.lineTracerStateId) {
 			robot.lineTracerStateId = lineTracerStateId;
 			if(lineTracerStateId == 0x40) {
