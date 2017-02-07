@@ -55,19 +55,21 @@
 	};
 	var STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
-		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ]
+		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
+		uz: [ 'Robot Kodlash Dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyor' ]
 	};
 	var EXTENSION_NAME = {
 		en: 'Hamster',
-		ko: '햄스터'
+		ko: '햄스터',
+		uz: 'Hamster'
 	};
 	var BLOCKS = {
 		en1: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			['w', 'move forward for 1 second', 'moveForward'],
-			['w', 'move backward for 1 second', 'moveBackward'],
-			['w', 'turn %m.left_right for 1 second', 'turn', 'left'],
+			['w', 'move forward', 'moveForward'],
+			['w', 'move backward', 'moveBackward'],
+			['w', 'turn %m.left_right', 'turn', 'left'],
 			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
 			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
 			['w', 'beep', 'beep'],
@@ -91,9 +93,9 @@
 		en3: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
-			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
-			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
+			['w', 'move forward for %n secs at speed %n', 'moveForwardForSecsAtSpeed', 1, 30],
+			['w', 'move backward for %n secs at speed %n', 'moveBackwardForSecsAtSpeed', 1, 30],
+			['w', 'turn %m.left_right for %n secs at speed %n', 'turnForSecsAtSpeed', 'left', 1, 30],
 			[' ', 'change wheels by left: %n right: %n', 'changeBothWheelsBy', 10, 10],
 			[' ', 'set wheels to left: %n right: %n', 'setBothWheelsTo', 30, 30],
 			[' ', 'change %m.left_right_both wheel by %n', 'changeWheelBy', 'left', 10],
@@ -132,9 +134,9 @@
 		ko1: [
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			['w', '앞으로 1초 이동하기', 'moveForward'],
-			['w', '뒤로 1초 이동하기', 'moveBackward'],
-			['w', '%m.left_right 으로 1초 돌기', 'turn', '왼쪽'],
+			['w', '앞으로 이동하기', 'moveForward'],
+			['w', '뒤로 이동하기', 'moveBackward'],
+			['w', '%m.left_right 으로 돌기', 'turn', '왼쪽'],
 			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
 			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
 			['w', '삐 소리내기', 'beep'],
@@ -158,9 +160,9 @@
 		ko3: [
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
-			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
-			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
+			['w', '앞으로 %n 초 속도 %n (으)로 이동하기', 'moveForwardForSecsAtSpeed', 1, 30],
+			['w', '뒤로 %n 초 속도 %n (으)로 이동하기', 'moveBackwardForSecsAtSpeed', 1, 30],
+			['w', '%m.left_right 으로 %n 초 속도 %n (으)로 돌기', 'turnForSecsAtSpeed', '왼쪽', 1, 30],
 			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기', 'changeBothWheelsBy', 10, 10],
 			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'setBothWheelsTo', 30, 30],
 			[' ', '%m.left_right_both 바퀴 %n 만큼 바꾸기', 'changeWheelBy', '왼쪽', 10],
@@ -195,6 +197,73 @@
 			[' ', '출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 'A', 100],
 			['r', '입력 A', 'inputA'],
 			['r', '입력 B', 'inputB']
+		],
+		uz1: [
+			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
+			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'oldinga yurish', 'moveForward'],
+			['w', 'orqaga yurish', 'moveBackward'],
+			['w', '%m.left_right o\'girilish', 'turn', 'chapga'],
+			[' ', 'm.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
+			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
+			['w', 'ovoz chiqarish', 'beep'],
+			['b', 'qo\'l topildimi?', 'handFound']
+		],
+		uz2: [
+			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
+			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
+			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
+			['w', '%m.left_right %n soniya o\'girilish', 'turnForSecs', 'chapga', 1],
+			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
+			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
+			['w', 'ovoz chiqarish', 'beep'],
+			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
+			['w', '%n zarb tanaffus', 'restFor', 0.25],
+			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
+			[' ', 'temni %n BPM ga sozlash', 'setTempoTo', 60],
+			['b', 'qo\'l topildimi?', 'handFound']
+		],
+		uz3: [
+			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
+			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'oldinga %n soniya %n tezlikda yurish', 'moveForwardForSecsAtSpeed', 1, 30],
+			['w', 'orqaga %n soniya %n tezlikda yurish', 'moveBackwardForSecsAtSpeed', 1, 30],
+			['w', '%m.left_right %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 'chapga', 1, 30],
+			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 10, 10],
+			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 30, 30],
+			[' ', '%m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 'chap', 10],
+			[' ', '%m.left_right_both g\'ildirakni %n ga sozlash', 'setWheelTo', 'chap', 30],
+			[' ', '%m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish', 'followLineUsingFloorSensor', 'qora', 'chap'],
+			['w', '%m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish', 'followLineUntilIntersection', 'qora', 'chap'],
+			[' ', 'liniyada ergashish tezligini %m.speed ga sozlash', 'setFollowingSpeedTo', '5'],
+			[' ', 'to\'xtatish', 'stop'],
+			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
+			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
+			['w', 'ovoz chiqarish', 'beep'],
+			[' ', 'buzerning ovozini %n ga o\'zgartirish', 'changeBuzzerBy', 10],
+			[' ', 'buzerning ovozini %n ga sozlash', 'setBuzzerTo', 1000],
+			[' ', 'buzerni o\'chirish', 'clearBuzzer'],
+			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
+			['w', '%n zarb tanaffus', 'restFor', 0.25],
+			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
+			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
+			['r', 'chap yaqinlik', 'leftProximity'],
+			['r', 'o\'ng yaqinlik', 'rightProximity'],
+			['r', 'chap taglik', 'leftFloor'],
+			['r', 'o\'ng taglik', 'rightFloor'],
+			['r', 'x tezlanish', 'accelerationX'],
+			['r', 'y tezlanish', 'accelerationY'],
+			['r', 'z tezlanish', 'accelerationZ'],
+			['r', 'yorug\'lik', 'light'],
+			['r', 'harorat', 'temperature'],
+			['r', 'signal kuchi', 'signalStrength'],
+			['b', 'qo\'l topildimi?', 'handFound'],
+			[' ', '%m.port portni %m.mode ga sozlash', 'setPortTo', 'A', 'analog kiritish'],
+			[' ', '%m.port portni %n ga o\'zgartirish', 'changeOutputBy', 'A', 10],
+			[' ', '%m.port portni %n ga sozlash', 'setOutputTo', 'A', 100],
+			['r', 'A kirish', 'inputA'],
+			['r', 'B kirish', 'inputB']
 		]
 	};
 	var MENUS = {
@@ -221,6 +290,18 @@
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'port': ['A', 'B', 'A와 B'],
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
+		},
+		uz: {
+			'left_right': ['chapga', 'chapga'],
+			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
+			'black_white': ['qora', 'oq'],
+			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
+			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
+			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'qirmizi', 'oq'],
+			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
+			'octave': ['1', '2', '3', '4', '5', '6', '7'],
+			'port': ['A', 'B', 'A va B'],
+			'mode': ['analog kiritish', 'raqamli kiritish', 'servo chiqish', 'pwm chiqish', 'raqamli chiqish']
 		}
 	};
 	
@@ -674,6 +755,62 @@
 			} else {
 				motoring.leftWheel = TURN_SPEED;
 				motoring.rightWheel = -TURN_SPEED;
+			}
+			var timer = setTimeout(function() {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				removeTimeout(timer);
+				callback();
+			}, sec * 1000);
+			timeouts.push(timer);
+		}
+	};
+	
+	ext.moveForwardForSecsAtSpeed = function(sec, speed, callback) {
+		sec = parseFloat(sec);
+		speed = parseFloat(speed);
+		setLineTracerMode(0);
+		if(sec && sec > 0 && speed && speed > 0) {
+			motoring.leftWheel = speed;
+			motoring.rightWheel = speed;
+			var timer = setTimeout(function() {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				removeTimeout(timer);
+				callback();
+			}, sec * 1000);
+			timeouts.push(timer);
+		}
+	};
+
+	ext.moveBackwardForSecsAtSpeed = function(sec, speed, callback) {
+		sec = parseFloat(sec);
+		speed = parseFloat(speed);
+		setLineTracerMode(0);
+		if(sec && sec > 0 && speed && speed > 0) {
+			motoring.leftWheel = -speed;
+			motoring.rightWheel = -speed;
+			var timer = setTimeout(function() {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				removeTimeout(timer);
+				callback();
+			}, sec * 1000);
+			timeouts.push(timer);
+		}
+	};
+
+	ext.turnForSecsAtSpeed = function(direction, sec, speed, callback) {
+		sec = parseFloat(sec);
+		speed = parseFloat(speed);
+		setLineTracerMode(0);
+		if(sec && sec > 0 && speed && speed > 0) {
+			if(DIRECTIONS[direction] == LEFT) {
+				motoring.leftWheel = -speed;
+				motoring.rightWheel = speed;
+			} else {
+				motoring.leftWheel = speed;
+				motoring.rightWheel = -speed;
 			}
 			var timer = setTimeout(function() {
 				motoring.leftWheel = 0;
