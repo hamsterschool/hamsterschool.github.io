@@ -18,11 +18,13 @@
 	};
 	var STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
-		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ]
+		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
+		uz: [ 'Robot Kodlash Dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyor' ]
 	};
 	var EXTENSION_NAME = {
 		en: 'Hamster',
-		ko: '햄스터'
+		ko: '햄스터',
+		uz: 'Hamster'
 	};
 	var BLOCKS = {
 		en1: [
@@ -308,6 +310,148 @@
 			['r', '햄스터[4]: 입력 B', 'inputB4'],
 			['r', '햄스터[5]: 입력 A', 'inputA5'],
 			['r', '햄스터[5]: 입력 B', 'inputB5']
+		],
+		uz1: [
+			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
+			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : oldinga yurish', 'moveForward', 0],
+			['w', 'Hamster %n : orqaga yurish', 'moveBackward', 0],
+			['w', 'Hamster %n : %m.left_right o\'girilish', 'turn', 0, 'chapga'],
+			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
+			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
+			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
+			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
+			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
+			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
+			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
+			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
+			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5']
+		],
+		uz2: [
+			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
+			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : oldinga %n soniya yurish', 'moveForwardForSecs', 0, 1],
+			['w', 'Hamster %n : orqaga %n soniya yurish', 'moveBackwardForSecs', 0, 1],
+			['w', 'Hamster %n : %m.left_right %n soniya o\'girilish', 'turnForSecs', 0, 'chapga', 1],
+			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
+			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
+			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
+			['w', 'Hamster %n : %m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 0, 'do', '4', 0.5],
+			['w', 'Hamster %n : %n zarb tanaffus', 'restFor', 0, 0.25],
+			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
+			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
+			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
+			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
+			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
+			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
+			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
+			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5']
+		],
+		uz3: [
+			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
+			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : oldinga %n soniya %n tezlikda yurish', 'moveForwardForSecsAtSpeed', 0, 1, 30],
+			['w', 'Hamster %n : orqaga %n soniya %n tezlikda yurish', 'moveBackwardForSecsAtSpeed', 0, 1, 30],
+			['w', 'Hamster %n : %m.left_right %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 0, 'chapga', 1, 30],
+			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 0, 10, 10],
+			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 0, 30, 30],
+			[' ', 'Hamster %n : %m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 0, 'chap', 10],
+			[' ', 'Hamster %n : %m.left_right_both g\'ildirakni %n ga sozlash', 'setWheelTo', 0, 'chap', 30],
+			[' ', 'Hamster %n : %m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish', 'followLineUsingFloorSensor', 0, 'qora', 'chap'],
+			['w', 'Hamster %n : %m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish', 'followLineUntilIntersection', 0, 'qora', 'chap'],
+			[' ', 'Hamster %n : liniyada ergashish tezligini %m.speed ga sozlash', 'setFollowingSpeedTo', 0, '5'],
+			[' ', 'Hamster %n : to\'xtatish', 'stop', 0],
+			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
+			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
+			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
+			[' ', 'Hamster %n : buzerning ovozini %n ga o\'zgartirish', 'changeBuzzerBy', 0, 10],
+			[' ', 'Hamster %n : buzerning ovozini %n ga sozlash', 'setBuzzerTo', 0, 1000],
+			[' ', 'Hamster %n : buzerni o\'chirish', 'clearBuzzer', 0],
+			['w', 'Hamster %n : %m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 0, 'do', '4', 0.5],
+			['w', 'Hamster %n : %n zarb tanaffus', 'restFor', 0, 0.25],
+			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
+			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
+			['r', 'Hamster[0]: chap yaqinlik', 'leftProximity0'],
+			['r', 'Hamster[0]: o\'ng yaqinlik', 'rightProximity0'],
+			['r', 'Hamster[0]: chap taglik', 'leftFloor0'],
+			['r', 'Hamster[0]: o\'ng taglik', 'rightFloor0'],
+			['r', 'Hamster[0]: x tezlanish', 'accelerationX0'],
+			['r', 'Hamster[0]: y tezlanish', 'accelerationY0'],
+			['r', 'Hamster[0]: z tezlanish', 'accelerationZ0'],
+			['r', 'Hamster[0]: yorug\'lik', 'light0'],
+			['r', 'Hamster[0]: harorat', 'temperature0'],
+			['r', 'Hamster[0]: signal kuchi', 'signalStrength0'],
+			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
+			['r', 'Hamster[1]: chap yaqinlik', 'leftProximity1'],
+			['r', 'Hamster[1]: o\'ng yaqinlik', 'rightProximity1'],
+			['r', 'Hamster[1]: chap taglik', 'leftFloor1'],
+			['r', 'Hamster[1]: o\'ng taglik', 'rightFloor1'],
+			['r', 'Hamster[1]: x tezlanish', 'accelerationX1'],
+			['r', 'Hamster[1]: y tezlanish', 'accelerationY1'],
+			['r', 'Hamster[1]: z tezlanish', 'accelerationZ1'],
+			['r', 'Hamster[1]: yorug\'lik', 'light1'],
+			['r', 'Hamster[1]: harorat', 'temperature1'],
+			['r', 'Hamster[1]: signal kuchi', 'signalStrength1'],
+			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
+			['r', 'Hamster[2]: chap yaqinlik', 'leftProximity2'],
+			['r', 'Hamster[2]: o\'ng yaqinlik', 'rightProximity2'],
+			['r', 'Hamster[2]: chap taglik', 'leftFloor2'],
+			['r', 'Hamster[2]: o\'ng taglik', 'rightFloor2'],
+			['r', 'Hamster[2]: x tezlanish', 'accelerationX2'],
+			['r', 'Hamster[2]: y tezlanish', 'accelerationY2'],
+			['r', 'Hamster[2]: z tezlanish', 'accelerationZ2'],
+			['r', 'Hamster[2]: yorug\'lik', 'light2'],
+			['r', 'Hamster[2]: harorat', 'temperature2'],
+			['r', 'Hamster[2]: signal kuchi', 'signalStrength2'],
+			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
+			['r', 'Hamster[3]: chap yaqinlik', 'leftProximity3'],
+			['r', 'Hamster[3]: o\'ng yaqinlik', 'rightProximity3'],
+			['r', 'Hamster[3]: chap taglik', 'leftFloor3'],
+			['r', 'Hamster[3]: o\'ng taglik', 'rightFloor3'],
+			['r', 'Hamster[3]: x tezlanish', 'accelerationX3'],
+			['r', 'Hamster[3]: y tezlanish', 'accelerationY3'],
+			['r', 'Hamster[3]: z tezlanish', 'accelerationZ3'],
+			['r', 'Hamster[3]: yorug\'lik', 'light3'],
+			['r', 'Hamster[3]: harorat', 'temperature3'],
+			['r', 'Hamster[3]: signal kuchi', 'signalStrength3'],
+			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
+			['r', 'Hamster[4]: chap yaqinlik', 'leftProximity4'],
+			['r', 'Hamster[4]: o\'ng yaqinlik', 'rightProximity4'],
+			['r', 'Hamster[4]: chap taglik', 'leftFloor4'],
+			['r', 'Hamster[4]: o\'ng taglik', 'rightFloor4'],
+			['r', 'Hamster[4]: x tezlanish', 'accelerationX4'],
+			['r', 'Hamster[4]: y tezlanish', 'accelerationY4'],
+			['r', 'Hamster[4]: z tezlanish', 'accelerationZ4'],
+			['r', 'Hamster[4]: yorug\'lik', 'light4'],
+			['r', 'Hamster[4]: harorat', 'temperature4'],
+			['r', 'Hamster[4]: signal kuchi', 'signalStrength4'],
+			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
+			['r', 'Hamster[5]: chap yaqinlik', 'leftProximity5'],
+			['r', 'Hamster[5]: o\'ng yaqinlik', 'rightProximity5'],
+			['r', 'Hamster[5]: chap taglik', 'leftFloor5'],
+			['r', 'Hamster[5]: o\'ng taglik', 'rightFloor5'],
+			['r', 'Hamster[5]: x tezlanish', 'accelerationX5'],
+			['r', 'Hamster[5]: y tezlanish', 'accelerationY5'],
+			['r', 'Hamster[5]: z tezlanish', 'accelerationZ5'],
+			['r', 'Hamster[5]: yorug\'lik', 'light5'],
+			['r', 'Hamster[5]: harorat', 'temperature5'],
+			['r', 'Hamster[5]: signal kuchi', 'signalStrength5'],
+			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5'],
+			[' ', 'Hamster %n : %m.port portni %m.mode ga sozlash', 'setPortTo', 0, 'A', 'analog kiritish'],
+			[' ', 'Hamster %n : %m.port portni %n ga o\'zgartirish', 'changeOutputBy', 0, 'A', 10],
+			[' ', 'Hamster %n : %m.port portni %n ga sozlash', 'setOutputTo', 0, 'A', 100],
+			['r', 'Hamster[0]: A kirish', 'inputA0'],
+			['r', 'Hamster[0]: B kirish', 'inputB0'],
+			['r', 'Hamster[1]: A kirish', 'inputA1'],
+			['r', 'Hamster[1]: B kirish', 'inputB1'],
+			['r', 'Hamster[2]: A kirish', 'inputA2'],
+			['r', 'Hamster[2]: B kirish', 'inputB2'],
+			['r', 'Hamster[3]: A kirish', 'inputA3'],
+			['r', 'Hamster[3]: B kirish', 'inputB3'],
+			['r', 'Hamster[4]: A kirish', 'inputA4'],
+			['r', 'Hamster[4]: B kirish', 'inputB4'],
+			['r', 'Hamster[5]: A kirish', 'inputA5'],
+			['r', 'Hamster[5]: B kirish', 'inputB5']
 		]
 	};
 	var MENUS = {
@@ -334,6 +478,18 @@
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'port': ['A', 'B', 'A와 B'],
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
+		},
+		uz: {
+			'left_right': ['chapga', 'chapga'],
+			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
+			'black_white': ['qora', 'oq'],
+			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
+			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
+			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'qirmizi', 'oq'],
+			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
+			'octave': ['1', '2', '3', '4', '5', '6', '7'],
+			'port': ['A', 'B', 'A va B'],
+			'mode': ['analog kiritish', 'raqamli kiritish', 'servo chiqish', 'pwm chiqish', 'raqamli chiqish']
 		}
 	};
 	
@@ -879,6 +1035,74 @@
 				} else {
 					motoring.leftWheel = TURN_SPEED;
 					motoring.rightWheel = -TURN_SPEED;
+				}
+				var timer = setTimeout(function() {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					removeTimeout(timer);
+					callback();
+				}, sec * 1000);
+				timeouts.push(timer);
+			}
+		}
+	};
+	
+	ext.moveForwardForSecsAtSpeed = function(index, sec, speed, callback) {
+		var robot = getRobot(index);
+		if(robot) {
+			var motoring = robot.motoring;
+			sec = parseFloat(sec);
+			speed = parseFloat(speed);
+			setLineTracerMode(robot, 0);
+			if(sec && sec > 0 && speed && speed > 0) {
+				motoring.leftWheel = speed;
+				motoring.rightWheel = speed;
+				var timer = setTimeout(function() {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					removeTimeout(timer);
+					callback();
+				}, sec * 1000);
+				timeouts.push(timer);
+			}
+		}
+	};
+
+	ext.moveBackwardForSecsAtSpeed = function(index, sec, speed, callback) {
+		var robot = getRobot(index);
+		if(robot) {
+			var motoring = robot.motoring;
+			sec = parseFloat(sec);
+			speed = parseFloat(speed);
+			setLineTracerMode(robot, 0);
+			if(sec && sec > 0 && speed && speed > 0) {
+				motoring.leftWheel = -speed;
+				motoring.rightWheel = -speed;
+				var timer = setTimeout(function() {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					removeTimeout(timer);
+					callback();
+				}, sec * 1000);
+				timeouts.push(timer);
+			}
+		}
+	};
+
+	ext.turnForSecsAtSpeed = function(index, direction, sec, speed, callback) {
+		var robot = getRobot(index);
+		if(robot) {
+			var motoring = robot.motoring;
+			sec = parseFloat(sec);
+			speed = parseFloat(speed);
+			setLineTracerMode(robot, 0);
+			if(sec && sec > 0 && speed && speed > 0) {
+				if(DIRECTIONS[direction] == LEFT) {
+					motoring.leftWheel = -speed;
+					motoring.rightWheel = speed;
+				} else {
+					motoring.leftWheel = speed;
+					motoring.rightWheel = -speed;
 				}
 				var timer = setTimeout(function() {
 					motoring.leftWheel = 0;
