@@ -221,7 +221,7 @@
 			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
 			['w', '%n zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
-			[' ', 'temni %n BPM ga sozlash', 'setTempoTo', 60],
+			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
 			['b', 'qo\'l topildimi?', 'handFound']
 		],
 		uz3: [
