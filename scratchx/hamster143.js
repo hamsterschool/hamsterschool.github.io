@@ -330,9 +330,12 @@
 	var PORT_B = 1;
 	var PORT_BOTH = 2;
 	
+	var langLeftRight = MENUS[lang]['left_right'];
 	var langLeftRightBoth = MENUS[lang]['left_right_both'];
 	var langFrontRear = MENUS[lang]['left_right_front_rear'];
 	var DIRECTIONS = {};
+	DIRECTIONS[langLeftRight[0]] = LEFT;
+	DIRECTIONS[langLeftRight[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[0]] = LEFT;
 	DIRECTIONS[langLeftRightBoth[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[2]] = BOTH;
