@@ -204,7 +204,7 @@
 			['w', 'oldinga yurish', 'moveForward'],
 			['w', 'orqaga yurish', 'moveBackward'],
 			['w', '%m.left_right o\'girilish', 'turn', 'chapga'],
-			[' ', 'm.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
+			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
 			['w', 'ovoz chiqarish', 'beep'],
 			['b', 'qo\'l topildimi?', 'handFound']
