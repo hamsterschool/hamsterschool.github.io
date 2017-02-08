@@ -480,7 +480,7 @@
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
 		},
 		uz: {
-			'left_right': ['chapga', 'chapga'],
+			'left_right': ['chapga', 'o\'nga'],
 			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
 			'black_white': ['qora', 'oq'],
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
