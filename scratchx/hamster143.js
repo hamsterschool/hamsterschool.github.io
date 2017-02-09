@@ -200,10 +200,10 @@
 		],
 		uz1: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
 			['w', 'oldinga yurish', 'moveForward'],
 			['w', 'orqaga yurish', 'moveBackward'],
-			['w', '%m.left_right o\'girilish', 'turn', 'chapga'],
+			['w', '%m.left_right ga o\'girilish', 'turn', 'chap'],
 			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
 			['w', 'ovoz chiqarish', 'beep'],
@@ -211,10 +211,10 @@
 		],
 		uz2: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
 			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
 			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
-			['w', '%m.left_right %n soniya o\'girilish', 'turnForSecs', 'chapga', 1],
+			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
 			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
 			['w', 'ovoz chiqarish', 'beep'],
@@ -226,10 +226,10 @@
 		],
 		uz3: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right o\'girish', 'boardTurn', 'chapga'],
+			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
 			['w', 'oldinga %n soniya %n tezlikda yurish', 'moveForwardForSecsAtSpeed', 1, 30],
 			['w', 'orqaga %n soniya %n tezlikda yurish', 'moveBackwardForSecsAtSpeed', 1, 30],
-			['w', '%m.left_right %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 'chapga', 1, 30],
+			['w', '%m.left_right ga %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 'chap', 1, 30],
 			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 10, 10],
 			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 30, 30],
 			[' ', '%m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 'chap', 10],
@@ -292,7 +292,7 @@
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
 		},
 		uz: {
-			'left_right': ['chapga', 'o\'nga'],
+			'left_right': ['chap', 'o\'ng'],
 			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
 			'black_white': ['qora', 'oq'],
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
@@ -330,12 +330,9 @@
 	var PORT_B = 1;
 	var PORT_BOTH = 2;
 	
-	var langLeftRight = MENUS[lang]['left_right'];
 	var langLeftRightBoth = MENUS[lang]['left_right_both'];
 	var langFrontRear = MENUS[lang]['left_right_front_rear'];
 	var DIRECTIONS = {};
-	DIRECTIONS[langLeftRight[0]] = LEFT;
-	DIRECTIONS[langLeftRight[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[0]] = LEFT;
 	DIRECTIONS[langLeftRightBoth[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[2]] = BOTH;
