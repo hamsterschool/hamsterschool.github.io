@@ -313,10 +313,10 @@
 		],
 		uz1: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
-			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chapga'],
 			['w', 'Hamster %n : oldinga yurish', 'moveForward', 0],
 			['w', 'Hamster %n : orqaga yurish', 'moveBackward', 0],
-			['w', 'Hamster %n : %m.left_right o\'girilish', 'turn', 0, 'chapga'],
+			['w', 'Hamster %n : %m.left_right ga o\'girilish', 'turn', 0, 'chapga'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
@@ -329,10 +329,10 @@
 		],
 		uz2: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
-			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chapga'],
 			['w', 'Hamster %n : oldinga %n soniya yurish', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : orqaga %n soniya yurish', 'moveBackwardForSecs', 0, 1],
-			['w', 'Hamster %n : %m.left_right %n soniya o\'girilish', 'turnForSecs', 0, 'chapga', 1],
+			['w', 'Hamster %n : %m.left_right ga %n soniya o\'girilish', 'turnForSecs', 0, 'chapga', 1],
 			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
@@ -349,10 +349,10 @@
 		],
 		uz3: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
-			['w', 'Hamster %n : doskada bir marta %m.left_right o\'girish', 'boardTurn', 0, 'chapga'],
+			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chapga'],
 			['w', 'Hamster %n : oldinga %n soniya %n tezlikda yurish', 'moveForwardForSecsAtSpeed', 0, 1, 30],
 			['w', 'Hamster %n : orqaga %n soniya %n tezlikda yurish', 'moveBackwardForSecsAtSpeed', 0, 1, 30],
-			['w', 'Hamster %n : %m.left_right %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 0, 'chapga', 1, 30],
+			['w', 'Hamster %n : %m.left_right ga %n soniya %n tezlikda o\'girilish', 'turnForSecsAtSpeed', 0, 'chapga', 1, 30],
 			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 0, 10, 10],
 			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 0, 30, 30],
 			[' ', 'Hamster %n : %m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 0, 'chap', 10],
@@ -480,7 +480,7 @@
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
 		},
 		uz: {
-			'left_right': ['chapga', 'o\'nga'],
+			'left_right': ['chap', 'o\'ng'],
 			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
 			'black_white': ['qora', 'oq'],
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
@@ -518,12 +518,9 @@
 	var PORT_B = 1;
 	var PORT_BOTH = 2;
 	
-	var langLeftRight = MENUS[lang]['left_right'];
 	var langLeftRightBoth = MENUS[lang]['left_right_both'];
 	var langFrontRear = MENUS[lang]['left_right_front_rear'];
 	var DIRECTIONS = {};
-	DIRECTIONS[langLeftRight[0]] = LEFT;
-	DIRECTIONS[langLeftRight[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[0]] = LEFT;
 	DIRECTIONS[langLeftRightBoth[1]] = RIGHT;
 	DIRECTIONS[langLeftRightBoth[2]] = BOTH;
