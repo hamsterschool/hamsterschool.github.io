@@ -19,7 +19,7 @@
 	var STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
 		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
-		uz: [ 'Robot Kodlash Dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyor' ]
+		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyorlangan' ]
 	};
 	var EXTENSION_NAME = {
 		en: 'Hamster',
