@@ -1238,6 +1238,7 @@
 	};
 
 	ext.resetAll = function() {
+		console.log('resetAll');
 		reset();
 	};
 
