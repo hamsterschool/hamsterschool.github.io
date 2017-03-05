@@ -995,6 +995,8 @@
 			robot.boardState = 1;
 			robot.boardCount = 0;
 			robot.boardCallback = callback;
+		} else {
+			callback();
 		}
 	};
 
@@ -1016,6 +1018,8 @@
 			robot.boardState = 1;
 			robot.boardCount = 0;
 			robot.boardCallback = callback;
+		} else {
+			callback();
 		}
 	};
 	
@@ -1033,6 +1037,8 @@
 				callback();
 			}, 1000);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 	
@@ -1050,6 +1056,8 @@
 				callback();
 			}, 1000);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 	
@@ -1072,6 +1080,8 @@
 				callback();
 			}, 1000);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 
@@ -1091,7 +1101,11 @@
 					callback();
 				}, sec * 1000);
 				timeouts.push(timer);
+			} else {
+				callback();
 			}
+		} else {
+			callback();
 		}
 	};
 
@@ -1111,7 +1125,11 @@
 					callback();
 				}, sec * 1000);
 				timeouts.push(timer);
+			} else {
+				callback();
 			}
+		} else {
+			callback();
 		}
 	};
 
@@ -1136,75 +1154,11 @@
 					callback();
 				}, sec * 1000);
 				timeouts.push(timer);
+			} else {
+				callback();
 			}
-		}
-	};
-	
-	ext.moveForwardForSecsAtSpeed = function(index, sec, speed, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			var motoring = robot.motoring;
-			sec = parseFloat(sec);
-			speed = parseFloat(speed);
-			setLineTracerMode(robot, 0);
-			if(sec && sec > 0 && speed && speed > 0) {
-				motoring.leftWheel = speed;
-				motoring.rightWheel = speed;
-				var timer = setTimeout(function() {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
-				}, sec * 1000);
-				timeouts.push(timer);
-			}
-		}
-	};
-
-	ext.moveBackwardForSecsAtSpeed = function(index, sec, speed, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			var motoring = robot.motoring;
-			sec = parseFloat(sec);
-			speed = parseFloat(speed);
-			setLineTracerMode(robot, 0);
-			if(sec && sec > 0 && speed && speed > 0) {
-				motoring.leftWheel = -speed;
-				motoring.rightWheel = -speed;
-				var timer = setTimeout(function() {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
-				}, sec * 1000);
-				timeouts.push(timer);
-			}
-		}
-	};
-
-	ext.turnForSecsAtSpeed = function(index, direction, sec, speed, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			var motoring = robot.motoring;
-			sec = parseFloat(sec);
-			speed = parseFloat(speed);
-			setLineTracerMode(robot, 0);
-			if(sec && sec > 0 && speed && speed > 0) {
-				if(DIRECTIONS[direction] == LEFT) {
-					motoring.leftWheel = -speed;
-					motoring.rightWheel = speed;
-				} else {
-					motoring.leftWheel = speed;
-					motoring.rightWheel = -speed;
-				}
-				var timer = setTimeout(function() {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
-				}, sec * 1000);
-				timeouts.push(timer);
-			}
+		} else {
+			callback();
 		}
 	};
 	
@@ -1345,6 +1299,8 @@
 			motoring.rightWheel = 0;
 			setLineTracerMode(robot, mode);
 			robot.lineTracerCallback = callback;
+		} else {
+			callback();
 		}
 	};
 
@@ -1416,6 +1372,8 @@
 				callback();
 			}, 200);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 
@@ -1481,7 +1439,11 @@
 					callback();
 				}, timeout);
 				timeouts.push(timer2);
+			} else {
+				callback();
 			}
+		} else {
+			callback();
 		}
 	};
 
@@ -1498,7 +1460,11 @@
 					callback();
 				}, beat * 60 * 1000 / robot.tempo);
 				timeouts.push(timer);
+			} else {
+				callback();
 			}
+		} else {
+			callback();
 		}
 	};
 
