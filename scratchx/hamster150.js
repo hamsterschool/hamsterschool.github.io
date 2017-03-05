@@ -789,6 +789,8 @@
 				callback();
 			}, sec * 1000);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 
@@ -805,6 +807,8 @@
 				callback();
 			}, sec * 1000);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 
@@ -826,62 +830,8 @@
 				callback();
 			}, sec * 1000);
 			timeouts.push(timer);
-		}
-	};
-	
-	ext.moveForwardForSecsAtSpeed = function(sec, speed, callback) {
-		sec = parseFloat(sec);
-		speed = parseFloat(speed);
-		setLineTracerMode(0);
-		if(sec && sec > 0 && speed && speed > 0) {
-			motoring.leftWheel = speed;
-			motoring.rightWheel = speed;
-			var timer = setTimeout(function() {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
-			}, sec * 1000);
-			timeouts.push(timer);
-		}
-	};
-
-	ext.moveBackwardForSecsAtSpeed = function(sec, speed, callback) {
-		sec = parseFloat(sec);
-		speed = parseFloat(speed);
-		setLineTracerMode(0);
-		if(sec && sec > 0 && speed && speed > 0) {
-			motoring.leftWheel = -speed;
-			motoring.rightWheel = -speed;
-			var timer = setTimeout(function() {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
-			}, sec * 1000);
-			timeouts.push(timer);
-		}
-	};
-
-	ext.turnForSecsAtSpeed = function(direction, sec, speed, callback) {
-		sec = parseFloat(sec);
-		speed = parseFloat(speed);
-		setLineTracerMode(0);
-		if(sec && sec > 0 && speed && speed > 0) {
-			if(DIRECTIONS[direction] == LEFT) {
-				motoring.leftWheel = -speed;
-				motoring.rightWheel = speed;
-			} else {
-				motoring.leftWheel = speed;
-				motoring.rightWheel = -speed;
-			}
-			var timer = setTimeout(function() {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
-			}, sec * 1000);
-			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 	
@@ -1093,6 +1043,8 @@
 				callback();
 			}, timeout);
 			timeouts.push(timer2);
+		} else {
+			callback();
 		}
 	};
 
@@ -1106,6 +1058,8 @@
 				callback();
 			}, beat * 60 * 1000 / tempo);
 			timeouts.push(timer);
+		} else {
+			callback();
 		}
 	};
 
