@@ -7,6 +7,13 @@
 	var socket = undefined;
 	var sendTimer = undefined;
 	var canSend = false;
+	var MOVEMENT_MODE = {
+		NONE: 0,
+		FORWARD: 1,
+		BACKWARD: 2,
+		LEFT: 3,
+		RIGHT: 4
+	};
 	var STATE = {
 		CONNECTING: 1,
 		CONNECTED: 2,
@@ -28,16 +35,16 @@
 		en1: [
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
 			['w', 'Hamster %n : turn %m.left_right once on board', 'boardTurn', 0, 'left'],
-			[' '],
-			['w', 'Hamster %n : move forward for 1 second', 'moveForward', 0],
-			['w', 'Hamster %n : move backward for 1 second', 'moveBackward', 0],
-			['w', 'Hamster %n : turn %m.left_right for 1 second', 'turn', 0, 'left'],
-			[' '],
+			['-'],
+			['w', 'Hamster %n : move forward', 'moveForward', 0],
+			['w', 'Hamster %n : move backward', 'moveBackward', 0],
+			['w', 'Hamster %n : turn %m.left_right', 'turn', 0, 'left'],
+			['-'],
 			[' ', 'Hamster %n : set %m.left_right_both led to %m.color', 'setLedTo', 0, 'left', 'red'],
 			[' ', 'Hamster %n : clear %m.left_right_both led', 'clearLed', 0, 'left'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : beep', 'beep', 0],
-			[' '],
+			['-'],
 			['b', 'Hamster[0]: hand found?', 'handFound0'],
 			['b', 'Hamster[1]: hand found?', 'handFound1'],
 			['b', 'Hamster[2]: hand found?', 'handFound2'],
@@ -48,21 +55,21 @@
 		en2: [
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
 			['w', 'Hamster %n : turn %m.left_right once on board', 'boardTurn', 0, 'left'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : move forward for %n secs', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : move backward for %n secs', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : turn %m.left_right for %n secs', 'turnForSecs', 0, 'left', 1],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : set %m.left_right_both led to %m.color', 'setLedTo', 0, 'left', 'red'],
 			[' ', 'Hamster %n : clear %m.left_right_both led', 'clearLed', 0, 'left'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : beep', 'beep', 0],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : play note %m.note %m.octave for %n beats', 'playNoteFor', 0, 'C', '4', 0.5],
 			['w', 'Hamster %n : rest for %n beats', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : change tempo by %n', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : set tempo to %n bpm', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['b', 'Hamster[0]: hand found?', 'handFound0'],
 			['b', 'Hamster[1]: hand found?', 'handFound1'],
 			['b', 'Hamster[2]: hand found?', 'handFound2'],
@@ -73,37 +80,37 @@
 		en3: [
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
 			['w', 'Hamster %n : turn %m.left_right once on board', 'boardTurn', 0, 'left'],
-			[' '],
+			['-'],
+			[' ', 'Hamster %n : change move/turn speed by %n', 'changeSpeedBy', 0, 10],
+			[' ', 'Hamster %n : set move/turn speed to %n', 'setSpeedTo', 0, 30],
 			['w', 'Hamster %n : move forward for %n secs', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : move backward for %n secs', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : turn %m.left_right for %n secs', 'turnForSecs', 0, 'left', 1],
-			[' ', 'Hamster %n : change movement speed by %n', 'changeSpeedBy', 0, 10],
-			[' ', 'Hamster %n : set movement speed to %n', 'setSpeedTo', 0, 30],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : change wheels by left: %n right: %n', 'changeBothWheelsBy', 0, 10, 10],
 			[' ', 'Hamster %n : set wheels to left: %n right: %n', 'setBothWheelsTo', 0, 30, 30],
 			[' ', 'Hamster %n : change %m.left_right_both wheel by %n', 'changeWheelBy', 0, 'left', 10],
 			[' ', 'Hamster %n : set %m.left_right_both wheel to %n', 'setWheelTo', 0, 'left', 30],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : follow %m.black_white line using %m.left_right_both floor sensor', 'followLineUsingFloorSensor', 0, 'black', 'left'],
 			['w', 'Hamster %n : follow %m.black_white line until %m.left_right_front_rear intersection', 'followLineUntilIntersection', 0, 'black', 'left'],
 			[' ', 'Hamster %n : set following speed to %m.speed', 'setFollowingSpeedTo', 0, '5'],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : stop', 'stop', 0],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : set %m.left_right_both led to %m.color', 'setLedTo', 0, 'left', 'red'],
 			[' ', 'Hamster %n : clear %m.left_right_both led', 'clearLed', 0, 'left'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : beep', 'beep', 0],
 			[' ', 'Hamster %n : change buzzer by %n', 'changeBuzzerBy', 0, 10],
 			[' ', 'Hamster %n : set buzzer to %n', 'setBuzzerTo', 0, 1000],
 			[' ', 'Hamster %n : clear buzzer', 'clearBuzzer', 0],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : play note %m.note %m.octave for %n beats', 'playNoteFor', 0, 'C', '4', 0.5],
 			['w', 'Hamster %n : rest for %n beats', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : change tempo by %n', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : set tempo to %n bpm', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['r', 'Hamster[0]: left proximity', 'leftProximity0'],
 			['r', 'Hamster[0]: right proximity', 'rightProximity0'],
 			['r', 'Hamster[0]: left floor', 'leftFloor0'],
@@ -115,7 +122,7 @@
 			['r', 'Hamster[0]: temperature', 'temperature0'],
 			['r', 'Hamster[0]: signal strength', 'signalStrength0'],
 			['b', 'Hamster[0]: hand found?', 'handFound0'],
-			[' '],
+			['-'],
 			['r', 'Hamster[1]: left proximity', 'leftProximity1'],
 			['r', 'Hamster[1]: right proximity', 'rightProximity1'],
 			['r', 'Hamster[1]: left floor', 'leftFloor1'],
@@ -127,7 +134,7 @@
 			['r', 'Hamster[1]: temperature', 'temperature1'],
 			['r', 'Hamster[1]: signal strength', 'signalStrength1'],
 			['b', 'Hamster[1]: hand found?', 'handFound1'],
-			[' '],
+			['-'],
 			['r', 'Hamster[2]: left proximity', 'leftProximity2'],
 			['r', 'Hamster[2]: right proximity', 'rightProximity2'],
 			['r', 'Hamster[2]: left floor', 'leftFloor2'],
@@ -139,7 +146,7 @@
 			['r', 'Hamster[2]: temperature', 'temperature2'],
 			['r', 'Hamster[2]: signal strength', 'signalStrength2'],
 			['b', 'Hamster[2]: hand found?', 'handFound2'],
-			[' '],
+			['-'],
 			['r', 'Hamster[3]: left proximity', 'leftProximity3'],
 			['r', 'Hamster[3]: right proximity', 'rightProximity3'],
 			['r', 'Hamster[3]: left floor', 'leftFloor3'],
@@ -151,7 +158,7 @@
 			['r', 'Hamster[3]: temperature', 'temperature3'],
 			['r', 'Hamster[3]: signal strength', 'signalStrength3'],
 			['b', 'Hamster[3]: hand found?', 'handFound3'],
-			[' '],
+			['-'],
 			['r', 'Hamster[4]: left proximity', 'leftProximity4'],
 			['r', 'Hamster[4]: right proximity', 'rightProximity4'],
 			['r', 'Hamster[4]: left floor', 'leftFloor4'],
@@ -163,7 +170,7 @@
 			['r', 'Hamster[4]: temperature', 'temperature4'],
 			['r', 'Hamster[4]: signal strength', 'signalStrength4'],
 			['b', 'Hamster[4]: hand found?', 'handFound4'],
-			[' '],
+			['-'],
 			['r', 'Hamster[5]: left proximity', 'leftProximity5'],
 			['r', 'Hamster[5]: right proximity', 'rightProximity5'],
 			['r', 'Hamster[5]: left floor', 'leftFloor5'],
@@ -175,42 +182,42 @@
 			['r', 'Hamster[5]: temperature', 'temperature5'],
 			['r', 'Hamster[5]: signal strength', 'signalStrength5'],
 			['b', 'Hamster[5]: hand found?', 'handFound5'],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : set port %m.port to %m.mode', 'setPortTo', 0, 'A', 'analog input'],
 			[' ', 'Hamster %n : change output %m.port by %n', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : set output %m.port to %n', 'setOutputTo', 0, 'A', 100],
-			[' '],
+			['-'],
 			['r', 'Hamster[0]: input A', 'inputA0'],
 			['r', 'Hamster[0]: input B', 'inputB0'],
-			[' '],
+			['-'],
 			['r', 'Hamster[1]: input A', 'inputA1'],
 			['r', 'Hamster[1]: input B', 'inputB1'],
-			[' '],
+			['-'],
 			['r', 'Hamster[2]: input A', 'inputA2'],
 			['r', 'Hamster[2]: input B', 'inputB2'],
-			[' '],
+			['-'],
 			['r', 'Hamster[3]: input A', 'inputA3'],
 			['r', 'Hamster[3]: input B', 'inputB3'],
-			[' '],
+			['-'],
 			['r', 'Hamster[4]: input A', 'inputA4'],
 			['r', 'Hamster[4]: input B', 'inputB4'],
-			[' '],
+			['-'],
 			['r', 'Hamster[5]: input A', 'inputA5'],
 			['r', 'Hamster[5]: input B', 'inputB5']
 		],
 		ko1: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
 			['w', '햄스터 %n : 말판 %m.left_right 으로 한 번 돌기', 'boardTurn', 0, '왼쪽'],
-			[' '],
-			['w', '햄스터 %n : 앞으로 1초 이동하기', 'moveForward', 0],
-			['w', '햄스터 %n : 뒤로 1초 이동하기', 'moveBackward', 0],
-			['w', '햄스터 %n : %m.left_right 으로 1초 돌기', 'turn', 0, '왼쪽'],
-			[' '],
+			['-'],
+			['w', '햄스터 %n : 앞으로 이동하기', 'moveForward', 0],
+			['w', '햄스터 %n : 뒤로 이동하기', 'moveBackward', 0],
+			['w', '햄스터 %n : %m.left_right 으로 돌기', 'turn', 0, '왼쪽'],
+			['-'],
 			[' ', '햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', 0, '왼쪽', '빨간색'],
 			[' ', '햄스터 %n : %m.left_right_both LED 끄기', 'clearLed', 0, '왼쪽'],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : 삐 소리내기', 'beep', 0],
-			[' '],
+			['-'],
 			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
 			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
 			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
@@ -221,21 +228,21 @@
 		ko2: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
 			['w', '햄스터 %n : 말판 %m.left_right 으로 한 번 돌기', 'boardTurn', 0, '왼쪽'],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : 앞으로 %n 초 이동하기', 'moveForwardForSecs', 0, 1],
 			['w', '햄스터 %n : 뒤로 %n 초 이동하기', 'moveBackwardForSecs', 0, 1],
 			['w', '햄스터 %n : %m.left_right 으로 %n 초 돌기', 'turnForSecs', 0, '왼쪽', 1],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', 0, '왼쪽', '빨간색'],
 			[' ', '햄스터 %n : %m.left_right_both LED 끄기', 'clearLed', 0, '왼쪽'],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : 삐 소리내기', 'beep', 0],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : %m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', 0, '도', '4', 0.5],
 			['w', '햄스터 %n : %n 박자 쉬기', 'restFor', 0, 0.25],
 			[' ', '햄스터 %n : 연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 0, 20],
 			[' ', '햄스터 %n : 연주 속도를 %n BPM으로 정하기', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
 			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
 			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
@@ -246,37 +253,37 @@
 		ko3: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
 			['w', '햄스터 %n : 말판 %m.left_right 으로 한 번 돌기', 'boardTurn', 0, '왼쪽'],
-			[' '],
+			['-'],
+			[' ', '햄스터 %n : 이동/돌기 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 0, 10],
+			[' ', '햄스터 %n : 이동/돌기 속도를 %n (으)로 정하기', 'setSpeedTo', 0, 30],
 			['w', '햄스터 %n : 앞으로 %n 초 이동하기', 'moveForwardForSecs', 0, 1],
 			['w', '햄스터 %n : 뒤로 %n 초 이동하기', 'moveBackwardForSecs', 0, 1],
 			['w', '햄스터 %n : %m.left_right 으로 %n 초 돌기', 'turnForSecs', 0, '왼쪽', 1],
-			[' ', '햄스터 %n : 움직임 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 0, 10],
-			[' ', '햄스터 %n : 움직임 속도를 %n (으)로 정하기', 'setSpeedTo', 0, 30],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기', 'changeBothWheelsBy', 0, 10, 10],
 			[' ', '햄스터 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'setBothWheelsTo', 0, 30, 30],
 			[' ', '햄스터 %n : %m.left_right_both 바퀴 %n 만큼 바꾸기', 'changeWheelBy', 0, '왼쪽', 10],
 			[' ', '햄스터 %n : %m.left_right_both 바퀴 %n (으)로 정하기', 'setWheelTo', 0, '왼쪽', 30],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : %m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기', 'followLineUsingFloorSensor', 0, '검은색', '왼쪽'],
 			['w', '햄스터 %n : %m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기', 'followLineUntilIntersection', 0, '검은색', '왼쪽'],
 			[' ', '햄스터 %n : 선 따라가기 속도를 %m.speed (으)로 정하기', 'setFollowingSpeedTo', 0, '5'],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : 정지하기', 'stop', 0],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', 0, '왼쪽', '빨간색'],
 			[' ', '햄스터 %n : %m.left_right_both LED 끄기', 'clearLed', 0, '왼쪽'],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : 삐 소리내기', 'beep', 0],
 			[' ', '햄스터 %n : 버저 음을 %n 만큼 바꾸기', 'changeBuzzerBy', 0, 10],
 			[' ', '햄스터 %n : 버저 음을 %n (으)로 정하기', 'setBuzzerTo', 0, 1000],
 			[' ', '햄스터 %n : 버저 끄기', 'clearBuzzer', 0],
-			[' '],
+			['-'],
 			['w', '햄스터 %n : %m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', 0, '도', '4', 0.5],
 			['w', '햄스터 %n : %n 박자 쉬기', 'restFor', 0, 0.25],
 			[' ', '햄스터 %n : 연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 0, 20],
 			[' ', '햄스터 %n : 연주 속도를 %n BPM으로 정하기', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['r', '햄스터[0]: 왼쪽 근접 센서', 'leftProximity0'],
 			['r', '햄스터[0]: 오른쪽 근접 센서', 'rightProximity0'],
 			['r', '햄스터[0]: 왼쪽 바닥 센서', 'leftFloor0'],
@@ -288,7 +295,7 @@
 			['r', '햄스터[0]: 온도', 'temperature0'],
 			['r', '햄스터[0]: 신호 세기', 'signalStrength0'],
 			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
-			[' '],
+			['-'],
 			['r', '햄스터[1]: 왼쪽 근접 센서', 'leftProximity1'],
 			['r', '햄스터[1]: 오른쪽 근접 센서', 'rightProximity1'],
 			['r', '햄스터[1]: 왼쪽 바닥 센서', 'leftFloor1'],
@@ -300,7 +307,7 @@
 			['r', '햄스터[1]: 온도', 'temperature1'],
 			['r', '햄스터[1]: 신호 세기', 'signalStrength1'],
 			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
-			[' '],
+			['-'],
 			['r', '햄스터[2]: 왼쪽 근접 센서', 'leftProximity2'],
 			['r', '햄스터[2]: 오른쪽 근접 센서', 'rightProximity2'],
 			['r', '햄스터[2]: 왼쪽 바닥 센서', 'leftFloor2'],
@@ -312,7 +319,7 @@
 			['r', '햄스터[2]: 온도', 'temperature2'],
 			['r', '햄스터[2]: 신호 세기', 'signalStrength2'],
 			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
-			[' '],
+			['-'],
 			['r', '햄스터[3]: 왼쪽 근접 센서', 'leftProximity3'],
 			['r', '햄스터[3]: 오른쪽 근접 센서', 'rightProximity3'],
 			['r', '햄스터[3]: 왼쪽 바닥 센서', 'leftFloor3'],
@@ -324,7 +331,7 @@
 			['r', '햄스터[3]: 온도', 'temperature3'],
 			['r', '햄스터[3]: 신호 세기', 'signalStrength3'],
 			['b', '햄스터[3]: 손 찾음?', 'handFound3'],
-			[' '],
+			['-'],
 			['r', '햄스터[4]: 왼쪽 근접 센서', 'leftProximity4'],
 			['r', '햄스터[4]: 오른쪽 근접 센서', 'rightProximity4'],
 			['r', '햄스터[4]: 왼쪽 바닥 센서', 'leftFloor4'],
@@ -336,7 +343,7 @@
 			['r', '햄스터[4]: 온도', 'temperature4'],
 			['r', '햄스터[4]: 신호 세기', 'signalStrength4'],
 			['b', '햄스터[4]: 손 찾음?', 'handFound4'],
-			[' '],
+			['-'],
 			['r', '햄스터[5]: 왼쪽 근접 센서', 'leftProximity5'],
 			['r', '햄스터[5]: 오른쪽 근접 센서', 'rightProximity5'],
 			['r', '햄스터[5]: 왼쪽 바닥 센서', 'leftFloor5'],
@@ -348,42 +355,42 @@
 			['r', '햄스터[5]: 온도', 'temperature5'],
 			['r', '햄스터[5]: 신호 세기', 'signalStrength5'],
 			['b', '햄스터[5]: 손 찾음?', 'handFound5'],
-			[' '],
+			['-'],
 			[' ', '햄스터 %n : 포트 %m.port 를 %m.mode 으로 정하기', 'setPortTo', 0, 'A', '아날로그 입력'],
 			[' ', '햄스터 %n : 출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 0, 'A', 10],
 			[' ', '햄스터 %n : 출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 0, 'A', 100],
-			[' '],
+			['-'],
 			['r', '햄스터[0]: 입력 A', 'inputA0'],
 			['r', '햄스터[0]: 입력 B', 'inputB0'],
-			[' '],
+			['-'],
 			['r', '햄스터[1]: 입력 A', 'inputA1'],
 			['r', '햄스터[1]: 입력 B', 'inputB1'],
-			[' '],
+			['-'],
 			['r', '햄스터[2]: 입력 A', 'inputA2'],
 			['r', '햄스터[2]: 입력 B', 'inputB2'],
-			[' '],
+			['-'],
 			['r', '햄스터[3]: 입력 A', 'inputA3'],
 			['r', '햄스터[3]: 입력 B', 'inputB3'],
-			[' '],
+			['-'],
 			['r', '햄스터[4]: 입력 A', 'inputA4'],
 			['r', '햄스터[4]: 입력 B', 'inputB4'],
-			[' '],
+			['-'],
 			['r', '햄스터[5]: 입력 A', 'inputA5'],
 			['r', '햄스터[5]: 입력 B', 'inputB5']
 		],
 		uz1: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
 			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : oldinga yurish', 'moveForward', 0],
 			['w', 'Hamster %n : orqaga yurish', 'moveBackward', 0],
 			['w', 'Hamster %n : %m.left_right ga o\'girilish', 'turn', 0, 'chap'],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
-			[' '],
+			['-'],
 			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
 			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
 			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
@@ -394,21 +401,21 @@
 		uz2: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
 			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : oldinga %n soniya yurish', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : orqaga %n soniya yurish', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : %m.left_right ga %n soniya o\'girilish', 'turnForSecs', 0, 'chap', 1],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : %m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 0, 'do', '4', 0.5],
 			['w', 'Hamster %n : %n zarb tanaffus', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
 			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
 			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
@@ -419,37 +426,37 @@
 		uz3: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
 			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : oldinga %n soniya yurish', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : orqaga %n soniya yurish', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : %m.left_right ga %n soniya o\'girilish', 'turnForSecs', 0, 'chap', 1],
 			[' ', 'Hamster %n : harakat tezligini %n ga o\'zgarish', 'changeSpeedBy', 0, 10],
 			[' ', 'Hamster %n : harakat tezligini %n ga sozlash', 'setSpeedTo', 0, 30],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 0, 10, 10],
 			[' ', 'Hamster %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 0, 30, 30],
 			[' ', 'Hamster %n : %m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 0, 'chap', 10],
 			[' ', 'Hamster %n : %m.left_right_both g\'ildirakni %n ga sozlash', 'setWheelTo', 0, 'chap', 30],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : %m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish', 'followLineUsingFloorSensor', 0, 'qora', 'chap'],
 			['w', 'Hamster %n : %m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish', 'followLineUntilIntersection', 0, 'qora', 'chap'],
 			[' ', 'Hamster %n : liniyada ergashish tezligini %m.speed ga sozlash', 'setFollowingSpeedTo', 0, '5'],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : to\'xtatish', 'stop', 0],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 0, 'chap', 'qizil'],
 			[' ', 'Hamster %n : %m.left_right_both LEDni o\'chirish', 'clearLed', 0, 'chap'],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
 			[' ', 'Hamster %n : buzerning ovozini %n ga o\'zgartirish', 'changeBuzzerBy', 0, 10],
 			[' ', 'Hamster %n : buzerning ovozini %n ga sozlash', 'setBuzzerTo', 0, 1000],
 			[' ', 'Hamster %n : buzerni o\'chirish', 'clearBuzzer', 0],
-			[' '],
+			['-'],
 			['w', 'Hamster %n : %m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 0, 'do', '4', 0.5],
 			['w', 'Hamster %n : %n zarb tanaffus', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
-			[' '],
+			['-'],
 			['r', 'Hamster[0]: chap yaqinlik', 'leftProximity0'],
 			['r', 'Hamster[0]: o\'ng yaqinlik', 'rightProximity0'],
 			['r', 'Hamster[0]: chap taglik', 'leftFloor0'],
@@ -461,7 +468,7 @@
 			['r', 'Hamster[0]: harorat', 'temperature0'],
 			['r', 'Hamster[0]: signal kuchi', 'signalStrength0'],
 			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
-			[' '],
+			['-'],
 			['r', 'Hamster[1]: chap yaqinlik', 'leftProximity1'],
 			['r', 'Hamster[1]: o\'ng yaqinlik', 'rightProximity1'],
 			['r', 'Hamster[1]: chap taglik', 'leftFloor1'],
@@ -473,7 +480,7 @@
 			['r', 'Hamster[1]: harorat', 'temperature1'],
 			['r', 'Hamster[1]: signal kuchi', 'signalStrength1'],
 			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
-			[' '],
+			['-'],
 			['r', 'Hamster[2]: chap yaqinlik', 'leftProximity2'],
 			['r', 'Hamster[2]: o\'ng yaqinlik', 'rightProximity2'],
 			['r', 'Hamster[2]: chap taglik', 'leftFloor2'],
@@ -485,7 +492,7 @@
 			['r', 'Hamster[2]: harorat', 'temperature2'],
 			['r', 'Hamster[2]: signal kuchi', 'signalStrength2'],
 			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
-			[' '],
+			['-'],
 			['r', 'Hamster[3]: chap yaqinlik', 'leftProximity3'],
 			['r', 'Hamster[3]: o\'ng yaqinlik', 'rightProximity3'],
 			['r', 'Hamster[3]: chap taglik', 'leftFloor3'],
@@ -497,7 +504,7 @@
 			['r', 'Hamster[3]: harorat', 'temperature3'],
 			['r', 'Hamster[3]: signal kuchi', 'signalStrength3'],
 			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
-			[' '],
+			['-'],
 			['r', 'Hamster[4]: chap yaqinlik', 'leftProximity4'],
 			['r', 'Hamster[4]: o\'ng yaqinlik', 'rightProximity4'],
 			['r', 'Hamster[4]: chap taglik', 'leftFloor4'],
@@ -509,7 +516,7 @@
 			['r', 'Hamster[4]: harorat', 'temperature4'],
 			['r', 'Hamster[4]: signal kuchi', 'signalStrength4'],
 			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
-			[' '],
+			['-'],
 			['r', 'Hamster[5]: chap yaqinlik', 'leftProximity5'],
 			['r', 'Hamster[5]: o\'ng yaqinlik', 'rightProximity5'],
 			['r', 'Hamster[5]: chap taglik', 'leftFloor5'],
@@ -521,26 +528,26 @@
 			['r', 'Hamster[5]: harorat', 'temperature5'],
 			['r', 'Hamster[5]: signal kuchi', 'signalStrength5'],
 			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5'],
-			[' '],
+			['-'],
 			[' ', 'Hamster %n : %m.port portni %m.mode ga sozlash', 'setPortTo', 0, 'A', 'analog kiritish'],
 			[' ', 'Hamster %n : %m.port portni %n ga o\'zgartirish', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : %m.port portni %n ga sozlash', 'setOutputTo', 0, 'A', 100],
-			[' '],
+			['-'],
 			['r', 'Hamster[0]: A kirish', 'inputA0'],
 			['r', 'Hamster[0]: B kirish', 'inputB0'],
-			[' '],
+			['-'],
 			['r', 'Hamster[1]: A kirish', 'inputA1'],
 			['r', 'Hamster[1]: B kirish', 'inputB1'],
-			[' '],
+			['-'],
 			['r', 'Hamster[2]: A kirish', 'inputA2'],
 			['r', 'Hamster[2]: B kirish', 'inputB2'],
-			[' '],
+			['-'],
 			['r', 'Hamster[3]: A kirish', 'inputA3'],
 			['r', 'Hamster[3]: B kirish', 'inputB3'],
-			[' '],
+			['-'],
 			['r', 'Hamster[4]: A kirish', 'inputA4'],
 			['r', 'Hamster[4]: B kirish', 'inputB4'],
-			[' '],
+			['-'],
 			['r', 'Hamster[5]: A kirish', 'inputA5'],
 			['r', 'Hamster[5]: B kirish', 'inputB5']
 		]
@@ -714,6 +721,7 @@
 			robot.boardCallback = undefined;
 			robot.tempo = 60;
 			robot.movementSpeed = 30;
+			robot.movementMode = MOVEMENT_MODE.NONE;
 			robot.reset = function() {
 				var motoring = robot.motoring;
 				motoring.leftWheel = 0;
@@ -739,6 +747,7 @@
 				robot.boardCallback = undefined;
 				robot.tempo = 60;
 				robot.movementSpeed = 30;
+				robot.movementMode = MOVEMENT_MODE.NONE;
 			};
 			robots[index] = robot;
 			motorings[index] = robot.motoring;
@@ -747,7 +756,7 @@
 	}
 
 	function setLineTracerMode(robot, mode) {
-		robot.lineTracerModeId = (robot.lineTracerModeId + 1) & 0xff;
+		robot.lineTracerModeId = (robot.lineTracerModeId % 255) + 1;
 		robot.motoring.lineTracerMode = mode;
 		robot.motoring.lineTracerModeId = robot.lineTracerModeId;
 	}
@@ -937,6 +946,28 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
+								var robot, movementMode, motoring, speed;
+								for(var i in robots) {
+									robot = robots[i];
+									movementMode = robot.movementMode;
+									if(movementMode != 0) {
+										motoring = robot.motoring;
+										speed = robot.movementSpeed;
+										if(movementMode == MOVEMENT_MODE.FORWARD) {
+											motoring.leftWheel = speed;
+											motoring.rightWheel = speed;
+										} else if(movementMode == MOVEMENT_MODE.BACKWARD) {
+											motoring.leftWheel = -speed;
+											motoring.rightWheel = -speed;
+										} else if(movementMode == MOVEMENT_MODE.LEFT) {
+											motoring.leftWheel = -speed;
+											motoring.rightWheel = speed;
+										} else if(movementMode == MOVEMENT_MODE.RIGHT) {
+											motoring.leftWheel = speed;
+											motoring.rightWheel = -speed;
+										}
+									}
+								}
 								socket.send(JSON.stringify(motorings));
 							} catch (e) {
 							}
@@ -988,6 +1019,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.movementMode = MOVEMENT_MODE.NONE;
 			setLineTracerMode(robot, 0);
 			motoring.leftWheel = 45;
 			motoring.rightWheel = 45;
@@ -1004,6 +1036,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.movementMode = MOVEMENT_MODE.NONE;
 			setLineTracerMode(robot, 0);
 			direction = DIRECTIONS[direction];
 			if(direction == LEFT) {
@@ -1027,10 +1060,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.movementMode = MOVEMENT_MODE.FORWARD;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			motoring.leftWheel = robot.movementSpeed;
 			motoring.rightWheel = robot.movementSpeed;
 			var timer = setTimeout(function() {
+				robot.movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -1046,10 +1082,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.movementMode = MOVEMENT_MODE.BACKWARD;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			motoring.leftWheel = -robot.movementSpeed;
 			motoring.rightWheel = -robot.movementSpeed;
 			var timer = setTimeout(function() {
+				robot.movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -1065,15 +1104,19 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(DIRECTIONS[direction] == LEFT) {
+				robot.movementMode = MOVEMENT_MODE.LEFT;
 				motoring.leftWheel = -robot.movementSpeed;
 				motoring.rightWheel = robot.movementSpeed;
 			} else {
+				robot.movementMode = MOVEMENT_MODE.RIGHT;
 				motoring.leftWheel = robot.movementSpeed;
 				motoring.rightWheel = -robot.movementSpeed;
 			}
 			var timer = setTimeout(function() {
+				robot.movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -1090,11 +1133,14 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
+				robot.movementMode = MOVEMENT_MODE.FORWARD;
 				motoring.leftWheel = robot.movementSpeed;
 				motoring.rightWheel = robot.movementSpeed;
 				var timer = setTimeout(function() {
+					robot.movementMode = MOVEMENT_MODE.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
 					removeTimeout(timer);
@@ -1114,11 +1160,14 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
+				robot.movementMode = MOVEMENT_MODE.BACKWARD;
 				motoring.leftWheel = -robot.movementSpeed;
 				motoring.rightWheel = -robot.movementSpeed;
 				var timer = setTimeout(function() {
+					robot.movementMode = MOVEMENT_MODE.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
 					removeTimeout(timer);
@@ -1138,16 +1187,20 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
 				if(DIRECTIONS[direction] == LEFT) {
+					robot.movementMode = MOVEMENT_MODE.LEFT;
 					motoring.leftWheel = -robot.movementSpeed;
 					motoring.rightWheel = robot.movementSpeed;
 				} else {
+					robot.movementMode = MOVEMENT_MODE.RIGHT;
 					motoring.leftWheel = robot.movementSpeed;
 					motoring.rightWheel = -robot.movementSpeed;
 				}
 				var timer = setTimeout(function() {
+					robot.movementMode = MOVEMENT_MODE.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
 					removeTimeout(timer);
@@ -1168,7 +1221,7 @@
 			speed = parseFloat(speed);
 			if(typeof speed == 'number') {
 				speed += robot.movementSpeed;
-				if(speed < 0) speed = 0;
+				if(speed < 1) speed = 1;
 				else if(speed > 100) speed = 100;
 				robot.movementSpeed = speed;
 			}
@@ -1180,7 +1233,7 @@
 		if(robot) {
 			speed = parseFloat(speed);
 			if(typeof speed == 'number') {
-				if(speed < 0) speed = 0;
+				if(speed < 1) speed = 1;
 				else if(speed > 100) speed = 100;
 				robot.movementSpeed = speed;
 			}
@@ -1193,6 +1246,8 @@
 			var motoring = robot.motoring;
 			left = parseFloat(left);
 			right = parseFloat(right);
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(typeof left == 'number') {
 				motoring.leftWheel += left;
@@ -1209,6 +1264,8 @@
 			var motoring = robot.motoring;
 			left = parseFloat(left);
 			right = parseFloat(right);
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(typeof left == 'number') {
 				motoring.leftWheel = left;
@@ -1224,6 +1281,8 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(typeof speed == 'number') {
 				which = DIRECTIONS[which];
@@ -1246,6 +1305,8 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			if(typeof speed == 'number') {
 				which = DIRECTIONS[which];
@@ -1274,6 +1335,8 @@
 			if(COLORS[color] == WHITE)
 				mode += 7;
 			
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			setLineTracerMode(robot, mode);
@@ -1295,6 +1358,8 @@
 			if(COLORS[color] == WHITE)
 				mode += 7;
 			
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			setLineTracerMode(robot, mode);
@@ -1319,6 +1384,8 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			robot.movementMode = MOVEMENT_MODE.NONE;
+			robot.boardCommand = 0;
 			setLineTracerMode(robot, 0);
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
