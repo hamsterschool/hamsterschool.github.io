@@ -672,17 +672,17 @@
 							try {
 								if(movementMode != 0) {
 									if(movementMode == MOVEMENT_MODE.FORWARD) {
-										motoring.leftWheel.write(movementSpeed);
-										motoring.rightWheel.write(movementSpeed);
+										motoring.leftWheel = movementSpeed;
+										motoring.rightWheel = movementSpeed;
 									} else if(movementMode == MOVEMENT_MODE.BACKWARD) {
-										motoring.leftWheel.write(-movementSpeed);
-										motoring.rightWheel.write(-movementSpeed);
+										motoring.leftWheel = -movementSpeed;
+										motoring.rightWheel = -movementSpeed;
 									} else if(movementMode == MOVEMENT_MODE.LEFT) {
-										motoring.leftWheel.write(-movementSpeed);
-										motoring.rightWheel.write(movementSpeed);
+										motoring.leftWheel = -movementSpeed;
+										motoring.rightWheel = movementSpeed;
 									} else if(movementMode == MOVEMENT_MODE.RIGHT) {
-										motoring.leftWheel.write(movementSpeed);
-										motoring.rightWheel.write(-movementSpeed);
+										motoring.leftWheel = movementSpeed;
+										motoring.rightWheel = -movementSpeed;
 									}
 								}
 								socket.send(JSON.stringify(motoring));
