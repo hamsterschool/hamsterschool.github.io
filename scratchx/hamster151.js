@@ -31,6 +31,13 @@
 		ioModeA: 0,
 		ioModeB: 0
 	};
+	var MOVEMENT_MODE = {
+		NONE: 0,
+		FORWARD: 1,
+		BACKWARD: 2,
+		LEFT: 3,
+		RIGHT: 4
+	};
 	var connectionState = 1;
 	var lineTracerModeId = 0;
 	var lineTracerStateId = -1;
@@ -40,11 +47,12 @@
 	var boardCount = 0;
 	var boardCallback = undefined;
 	var tempo = 60;
+	var movementSpeed = 30;
+	var movementMode = MOVEMENT_MODE.NONE;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
 	var canSend = false;
-	var movementSpeed = 30;
 	var STATE = {
 		CONNECTING: 1,
 		CONNECTED: 2,
@@ -66,72 +74,72 @@
 		en1: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			[' '],
+			['-'],
 			['w', 'move forward', 'moveForward'],
 			['w', 'move backward', 'moveBackward'],
 			['w', 'turn %m.left_right', 'turn', 'left'],
-			[' '],
+			['-'],
 			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
 			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
-			[' '],
+			['-'],
 			['w', 'beep', 'beep'],
-			[' '],
+			['-'],
 			['b', 'hand found?', 'handFound']
 		],
 		en2: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			[' '],
+			['-'],
 			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
 			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
 			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
-			[' '],
+			['-'],
 			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
 			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
-			[' '],
+			['-'],
 			['w', 'beep', 'beep'],
-			[' '],
+			['-'],
 			['w', 'play note %m.note %m.octave for %n beats', 'playNoteFor', 'C', '4', 0.5],
 			['w', 'rest for %n beats', 'restFor', 0.25],
 			[' ', 'change tempo by %n', 'changeTempoBy', 20],
 			[' ', 'set tempo to %n bpm', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['b', 'hand found?', 'handFound']
 		],
 		en3: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			[' '],
+			['-'],
+			[' ', 'change move/turn speed by %n', 'changeSpeedBy', 10],
+			[' ', 'set move/turn speed to %n', 'setSpeedTo', 30],
 			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
 			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
 			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
-			[' ', 'change movement speed by %n', 'changeSpeedBy', 10],
-			[' ', 'set movement speed to %n', 'setSpeedTo', 30],
-			[' '],
+			['-'],
 			[' ', 'change wheels by left: %n right: %n', 'changeBothWheelsBy', 10, 10],
 			[' ', 'set wheels to left: %n right: %n', 'setBothWheelsTo', 30, 30],
 			[' ', 'change %m.left_right_both wheel by %n', 'changeWheelBy', 'left', 10],
 			[' ', 'set %m.left_right_both wheel to %n', 'setWheelTo', 'left', 30],
-			[' '],
+			['-'],
 			[' ', 'follow %m.black_white line using %m.left_right_both floor sensor', 'followLineUsingFloorSensor', 'black', 'left'],
 			['w', 'follow %m.black_white line until %m.left_right_front_rear intersection', 'followLineUntilIntersection', 'black', 'left'],
 			[' ', 'set following speed to %m.speed', 'setFollowingSpeedTo', '5'],
-			[' '],
+			['-'],
 			[' ', 'stop', 'stop'],
-			[' '],
+			['-'],
 			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
 			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
-			[' '],
+			['-'],
 			['w', 'beep', 'beep'],
 			[' ', 'change buzzer by %n', 'changeBuzzerBy', 10],
 			[' ', 'set buzzer to %n', 'setBuzzerTo', 1000],
 			[' ', 'clear buzzer', 'clearBuzzer'],
-			[' '],
+			['-'],
 			['w', 'play note %m.note %m.octave for %n beats', 'playNoteFor', 'C', '4', 0.5],
 			['w', 'rest for %n beats', 'restFor', 0.25],
 			[' ', 'change tempo by %n', 'changeTempoBy', 20],
 			[' ', 'set tempo to %n bpm', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['r', 'left proximity', 'leftProximity'],
 			['r', 'right proximity', 'rightProximity'],
 			['r', 'left floor', 'leftFloor'],
@@ -143,83 +151,83 @@
 			['r', 'temperature', 'temperature'],
 			['r', 'signal strength', 'signalStrength'],
 			['b', 'hand found?', 'handFound'],
-			[' '],
+			['-'],
 			[' ', 'set port %m.port to %m.mode', 'setPortTo', 'A', 'analog input'],
 			[' ', 'change output %m.port by %n', 'changeOutputBy', 'A', 10],
 			[' ', 'set output %m.port to %n', 'setOutputTo', 'A', 100],
-			[' '],
+			['-'],
 			['r', 'input A', 'inputA'],
 			['r', 'input B', 'inputB']
 		],
 		ko1: [
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			[' '],
+			['-'],
 			['w', '앞으로 이동하기', 'moveForward'],
 			['w', '뒤로 이동하기', 'moveBackward'],
 			['w', '%m.left_right 으로 돌기', 'turn', '왼쪽'],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
 			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
-			[' '],
+			['-'],
 			['w', '삐 소리내기', 'beep'],
-			[' '],
+			['-'],
 			['b', '손 찾음?', 'handFound']
 		],
 		ko2: [
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			[' '],
+			['-'],
 			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
 			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
 			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
-			[' '],
+			['-'],
 			['w', '삐 소리내기', 'beep'],
-			[' '],
+			['-'],
 			['w', '%m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
 			['w', '%n 박자 쉬기', 'restFor', 0.25],
 			[' ', '연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 20],
 			[' ', '연주 속도를 %n BPM으로 정하기', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['b', '손 찾음?', 'handFound']
 		],
 		ko3: [
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			[' '],
+			['-'],
+			[' ', '이동/돌기 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 10],
+			[' ', '이동/돌기 속도를 %n (으)로 정하기', 'setSpeedTo', 30],
 			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
 			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
-			[' ', '움직임 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 10],
-			[' ', '움직임 속도를 %n (으)로 정하기', 'setSpeedTo', 30],
-			[' '],
+			['-'],
 			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기', 'changeBothWheelsBy', 10, 10],
 			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'setBothWheelsTo', 30, 30],
 			[' ', '%m.left_right_both 바퀴 %n 만큼 바꾸기', 'changeWheelBy', '왼쪽', 10],
 			[' ', '%m.left_right_both 바퀴 %n (으)로 정하기', 'setWheelTo', '왼쪽', 30],
-			[' '],
+			['-'],
 			[' ', '%m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기', 'followLineUsingFloorSensor', '검은색', '왼쪽'],
 			['w', '%m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기', 'followLineUntilIntersection', '검은색', '왼쪽'],
 			[' ', '선 따라가기 속도를 %m.speed (으)로 정하기', 'setFollowingSpeedTo', '5'],
-			[' '],
+			['-'],
 			[' ', '정지하기', 'stop'],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
 			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
-			[' '],
+			['-'],
 			['w', '삐 소리내기', 'beep'],
 			[' ', '버저 음을 %n 만큼 바꾸기', 'changeBuzzerBy', 10],
 			[' ', '버저 음을 %n (으)로 정하기', 'setBuzzerTo', 1000],
 			[' ', '버저 끄기', 'clearBuzzer'],
-			[' '],
+			['-'],
 			['w', '%m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
 			['w', '%n 박자 쉬기', 'restFor', 0.25],
 			[' ', '연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 20],
 			[' ', '연주 속도를 %n BPM으로 정하기', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['r', '왼쪽 근접 센서', 'leftProximity'],
 			['r', '오른쪽 근접 센서', 'rightProximity'],
 			['r', '왼쪽 바닥 센서', 'leftFloor'],
@@ -231,83 +239,83 @@
 			['r', '온도', 'temperature'],
 			['r', '신호 세기', 'signalStrength'],
 			['b', '손 찾음?', 'handFound'],
-			[' '],
+			['-'],
 			[' ', '포트 %m.port 를 %m.mode 으로 정하기', 'setPortTo', 'A', '아날로그 입력'],
 			[' ', '출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 'A', 10],
 			[' ', '출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 'A', 100],
-			[' '],
+			['-'],
 			['r', '입력 A', 'inputA'],
 			['r', '입력 B', 'inputB']
 		],
 		uz1: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
 			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			[' '],
+			['-'],
 			['w', 'oldinga yurish', 'moveForward'],
 			['w', 'orqaga yurish', 'moveBackward'],
 			['w', '%m.left_right ga o\'girilish', 'turn', 'chap'],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			[' '],
+			['-'],
 			['w', 'ovoz chiqarish', 'beep'],
-			[' '],
+			['-'],
 			['b', 'qo\'l topildimi?', 'handFound']
 		],
 		uz2: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
 			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			[' '],
+			['-'],
 			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
 			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			[' '],
+			['-'],
 			['w', 'ovoz chiqarish', 'beep'],
-			[' '],
+			['-'],
 			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
 			['w', '%n zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
 			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['b', 'qo\'l topildimi?', 'handFound']
 		],
 		uz3: [
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
 			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			[' '],
+			['-'],
+			[' ', 'harakatini/o\'girib tezligini %n ga o\'zgarish', 'changeSpeedBy', 10],
+			[' ', 'harakatini/o\'girib tezligini %n ga sozlash', 'setSpeedTo', 30],
 			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
 			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
-			[' ', 'harakat tezligini %n ga o\'zgarish', 'changeSpeedBy', 10],
-			[' ', 'harakat tezligini %n ga sozlash', 'setSpeedTo', 30],
-			[' '],
+			['-'],
 			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 10, 10],
 			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 30, 30],
 			[' ', '%m.left_right_both g\'ildirakni %n ga o\'zgarish', 'changeWheelBy', 'chap', 10],
 			[' ', '%m.left_right_both g\'ildirakni %n ga sozlash', 'setWheelTo', 'chap', 30],
-			[' '],
+			['-'],
 			[' ', '%m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish', 'followLineUsingFloorSensor', 'qora', 'chap'],
 			['w', '%m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish', 'followLineUntilIntersection', 'qora', 'chap'],
 			[' ', 'liniyada ergashish tezligini %m.speed ga sozlash', 'setFollowingSpeedTo', '5'],
-			[' '],
+			['-'],
 			[' ', 'to\'xtatish', 'stop'],
-			[' '],
+			['-'],
 			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
 			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			[' '],
+			['-'],
 			['w', 'ovoz chiqarish', 'beep'],
 			[' ', 'buzerning ovozini %n ga o\'zgartirish', 'changeBuzzerBy', 10],
 			[' ', 'buzerning ovozini %n ga sozlash', 'setBuzzerTo', 1000],
 			[' ', 'buzerni o\'chirish', 'clearBuzzer'],
-			[' '],
+			['-'],
 			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
 			['w', '%n zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
 			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
-			[' '],
+			['-'],
 			['r', 'chap yaqinlik', 'leftProximity'],
 			['r', 'o\'ng yaqinlik', 'rightProximity'],
 			['r', 'chap taglik', 'leftFloor'],
@@ -319,11 +327,11 @@
 			['r', 'harorat', 'temperature'],
 			['r', 'signal kuchi', 'signalStrength'],
 			['b', 'qo\'l topildimi?', 'handFound'],
-			[' '],
+			['-'],
 			[' ', '%m.port portni %m.mode ga sozlash', 'setPortTo', 'A', 'analog kiritish'],
 			[' ', '%m.port portni %n ga o\'zgartirish', 'changeOutputBy', 'A', 10],
 			[' ', '%m.port portni %n ga sozlash', 'setOutputTo', 'A', 100],
-			[' '],
+			['-'],
 			['r', 'A kirish', 'inputA'],
 			['r', 'B kirish', 'inputB']
 		]
@@ -454,7 +462,7 @@
 	}
 
 	function setLineTracerMode(mode) {
-		lineTracerModeId = (lineTracerModeId + 1) & 0xff;
+		lineTracerModeId = (lineTracerModeId % 255) + 1;
 		motoring.lineTracerMode = mode;
 		motoring.lineTracerModeId = lineTracerModeId;
 	}
@@ -483,6 +491,7 @@
 		boardCallback = undefined;
 		tempo = 60;
 		movementSpeed = 30;
+		movementMode = MOVEMENT_MODE.NONE;
 		removeAllTimeouts();
 	}
 	
@@ -661,6 +670,21 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
+								if(movementMode != 0) {
+									if(movementMode == MOVEMENT_MODE.FORWARD) {
+										motoring.leftWheel.write(movementSpeed);
+										motoring.rightWheel.write(movementSpeed);
+									} else if(movementMode == MOVEMENT_MODE.BACKWARD) {
+										motoring.leftWheel.write(-movementSpeed);
+										motoring.rightWheel.write(-movementSpeed);
+									} else if(movementMode == MOVEMENT_MODE.LEFT) {
+										motoring.leftWheel.write(-movementSpeed);
+										motoring.rightWheel.write(movementSpeed);
+									} else if(movementMode == MOVEMENT_MODE.RIGHT) {
+										motoring.leftWheel.write(movementSpeed);
+										motoring.rightWheel.write(-movementSpeed);
+									}
+								}
 								socket.send(JSON.stringify(motoring));
 							} catch (e) {
 							}
@@ -706,6 +730,7 @@
 	}
 
 	ext.boardMoveForward = function(callback) {
+		movementMode = MOVEMENT_MODE.NONE;
 		setLineTracerMode(0);
 		motoring.leftWheel = 45;
 		motoring.rightWheel = 45;
@@ -716,6 +741,7 @@
 	};
 
 	ext.boardTurn = function(direction, callback) {
+		movementMode = MOVEMENT_MODE.NONE;
 		setLineTracerMode(0);
 		direction = DIRECTIONS[direction];
 		if(direction == LEFT) {
@@ -733,10 +759,13 @@
 	};
 	
 	ext.moveForward = function(callback) {
+		movementMode = MOVEMENT_MODE.FORWARD;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		motoring.leftWheel = movementSpeed;
 		motoring.rightWheel = movementSpeed;
 		var timer = setTimeout(function() {
+			movementMode = MOVEMENT_MODE.NONE;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			removeTimeout(timer);
@@ -746,10 +775,13 @@
 	};
 	
 	ext.moveBackward = function(callback) {
+		movementMode = MOVEMENT_MODE.BACKWARD;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		motoring.leftWheel = -movementSpeed;
 		motoring.rightWheel = -movementSpeed;
 		var timer = setTimeout(function() {
+			movementMode = MOVEMENT_MODE.NONE;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			removeTimeout(timer);
@@ -759,15 +791,19 @@
 	};
 	
 	ext.turn = function(direction, callback) {
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(DIRECTIONS[direction] == LEFT) {
+			movementMode = MOVEMENT_MODE.LEFT;
 			motoring.leftWheel = -movementSpeed;
 			motoring.rightWheel = movementSpeed;
 		} else {
+			movementMode = MOVEMENT_MODE.RIGHT;
 			motoring.leftWheel = movementSpeed;
 			motoring.rightWheel = -movementSpeed;
 		}
 		var timer = setTimeout(function() {
+			movementMode = MOVEMENT_MODE.NONE;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			removeTimeout(timer);
@@ -778,11 +814,14 @@
 
 	ext.moveForwardForSecs = function(sec, callback) {
 		sec = parseFloat(sec);
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
+			movementMode = MOVEMENT_MODE.FORWARD;
 			motoring.leftWheel = movementSpeed;
 			motoring.rightWheel = movementSpeed;
 			var timer = setTimeout(function() {
+				movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -796,11 +835,14 @@
 
 	ext.moveBackwardForSecs = function(sec, callback) {
 		sec = parseFloat(sec);
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
+			movementMode = MOVEMENT_MODE.BACKWARD;
 			motoring.leftWheel = -movementSpeed;
 			motoring.rightWheel = -movementSpeed;
 			var timer = setTimeout(function() {
+				movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -814,16 +856,20 @@
 
 	ext.turnForSecs = function(direction, sec, callback) {
 		sec = parseFloat(sec);
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			if(DIRECTIONS[direction] == LEFT) {
+				movementMode = MOVEMENT_MODE.LEFT;
 				motoring.leftWheel = -movementSpeed;
 				motoring.rightWheel = movementSpeed;
 			} else {
+				movementMode = MOVEMENT_MODE.RIGHT;
 				motoring.leftWheel = movementSpeed;
 				motoring.rightWheel = -movementSpeed;
 			}
 			var timer = setTimeout(function() {
+				movementMode = MOVEMENT_MODE.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
 				removeTimeout(timer);
@@ -839,7 +885,7 @@
 		speed = parseFloat(speed);
 		if(typeof speed == 'number') {
 			speed += movementSpeed;
-			if(speed < 0) speed = 0;
+			if(speed < 1) speed = 1;
 			else if(speed > 100) speed = 100;
 			movementSpeed = speed;
 		}
@@ -848,7 +894,7 @@
 	ext.setSpeedTo = function(speed) {
 		speed = parseFloat(speed);
 		if(typeof speed == 'number') {
-			if(speed < 0) speed = 0;
+			if(speed < 1) speed = 1;
 			else if(speed > 100) speed = 100;
 			movementSpeed = speed;
 		}
@@ -857,6 +903,8 @@
 	ext.changeBothWheelsBy = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof left == 'number') {
 			motoring.leftWheel += left;
@@ -869,6 +917,8 @@
 	ext.setBothWheelsTo = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof left == 'number') {
 			motoring.leftWheel = left;
@@ -880,6 +930,8 @@
 
 	ext.changeWheelBy = function(which, speed) {
 		speed = parseFloat(speed);
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
 			which = DIRECTIONS[which];
@@ -898,6 +950,8 @@
 
 	ext.setWheelTo = function(which, speed) {
 		speed = parseFloat(speed);
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
 			which = DIRECTIONS[which];
@@ -922,6 +976,8 @@
 		if(COLORS[color] == WHITE)
 			mode += 7;
 		
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setLineTracerMode(mode);
@@ -939,6 +995,8 @@
 		if(COLORS[color] == WHITE)
 			mode += 7;
 		
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setLineTracerMode(mode);
@@ -953,6 +1011,8 @@
 	};
 
 	ext.stop = function() {
+		movementMode = MOVEMENT_MODE.NONE;
+		boardCommand = 0;
 		setLineTracerMode(0);
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
