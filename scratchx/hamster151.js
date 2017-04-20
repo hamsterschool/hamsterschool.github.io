@@ -135,6 +135,7 @@
 			[' ', 'set buzzer to %n', 'setBuzzerTo', 1000],
 			[' ', 'clear buzzer', 'clearBuzzer'],
 			['-'],
+			[' ', 'play note %m.note %m.octave', 'playNote', 'C', '4'],
 			['w', 'play note %m.note %m.octave for %n beats', 'playNoteFor', 'C', '4', 0.5],
 			['w', 'rest for %n beats', 'restFor', 0.25],
 			[' ', 'change tempo by %n', 'changeTempoBy', 20],
@@ -223,6 +224,7 @@
 			[' ', '버저 음을 %n (으)로 정하기', 'setBuzzerTo', 1000],
 			[' ', '버저 끄기', 'clearBuzzer'],
 			['-'],
+			[' ', '%m.note %m.octave 음을 연주하기', 'playNote', '도', '4'],
 			['w', '%m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
 			['w', '%n 박자 쉬기', 'restFor', 0.25],
 			[' ', '연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 20],
@@ -311,6 +313,7 @@
 			[' ', 'buzerning ovozini %n ga sozlash', 'setBuzzerTo', 1000],
 			[' ', 'buzerni o\'chirish', 'clearBuzzer'],
 			['-'],
+			[' ', '%m.note %m.octave notani ijro etish', 'playNote', 'do', '4'],
 			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
 			['w', '%n zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
@@ -758,6 +761,25 @@
 		boardCallback = callback;
 	};
 	
+	ext.changeSpeedBy = function(speed) {
+		speed = parseFloat(speed);
+		if(typeof speed == 'number') {
+			speed += movementSpeed;
+			if(speed < 1) speed = 1;
+			else if(speed > 100) speed = 100;
+			movementSpeed = speed;
+		}
+	};
+	
+	ext.setSpeedTo = function(speed) {
+		speed = parseFloat(speed);
+		if(typeof speed == 'number') {
+			if(speed < 1) speed = 1;
+			else if(speed > 100) speed = 100;
+			movementSpeed = speed;
+		}
+	};
+	
 	ext.moveForward = function(callback) {
 		movementMode = MOVEMENT_MODE.FORWARD;
 		boardCommand = 0;
@@ -881,25 +903,6 @@
 		}
 	};
 	
-	ext.changeSpeedBy = function(speed) {
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			speed += movementSpeed;
-			if(speed < 1) speed = 1;
-			else if(speed > 100) speed = 100;
-			movementSpeed = speed;
-		}
-	};
-	
-	ext.setSpeedTo = function(speed) {
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			if(speed < 1) speed = 1;
-			else if(speed > 100) speed = 100;
-			movementSpeed = speed;
-		}
-	};
-
 	ext.changeBothWheelsBy = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
@@ -1075,6 +1078,16 @@
 	ext.clearBuzzer = function() {
 		motoring.buzzer = 0;
 		motoring.note = 0;
+	};
+	
+	ext.playNote = function(note, octave) {
+		note = NOTES[note];
+		octave = parseInt(octave);
+		motoring.buzzer = 0;
+		if(note && octave && octave > 0 && octave < 8) {
+			note += (octave - 1) * 12;
+			motoring.note = note;
+		}
 	};
 
 	ext.playNoteFor = function(note, octave, beat, callback) {
@@ -1263,5 +1276,5 @@
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
 
-	open('ws://localhost:51419');
+	open('ws://localhost:51417');
 })({});
