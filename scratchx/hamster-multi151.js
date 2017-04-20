@@ -106,6 +106,7 @@
 			[' ', 'Hamster %n : set buzzer to %n', 'setBuzzerTo', 0, 1000],
 			[' ', 'Hamster %n : clear buzzer', 'clearBuzzer', 0],
 			['-'],
+			[' ', 'Hamster %n : play note %m.note %m.octave', 'playNote', 0, 'C', '4'],
 			['w', 'Hamster %n : play note %m.note %m.octave for %n beats', 'playNoteFor', 0, 'C', '4', 0.5],
 			['w', 'Hamster %n : rest for %n beats', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : change tempo by %n', 'changeTempoBy', 0, 20],
@@ -279,6 +280,7 @@
 			[' ', '햄스터 %n : 버저 음을 %n (으)로 정하기', 'setBuzzerTo', 0, 1000],
 			[' ', '햄스터 %n : 버저 끄기', 'clearBuzzer', 0],
 			['-'],
+			[' ', '햄스터 %n : %m.note %m.octave 음을 연주하기', 'playNote', 0, '도', '4'],
 			['w', '햄스터 %n : %m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', 0, '도', '4', 0.5],
 			['w', '햄스터 %n : %n 박자 쉬기', 'restFor', 0, 0.25],
 			[' ', '햄스터 %n : 연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 0, 20],
@@ -452,6 +454,7 @@
 			[' ', 'Hamster %n : buzerning ovozini %n ga sozlash', 'setBuzzerTo', 0, 1000],
 			[' ', 'Hamster %n : buzerni o\'chirish', 'clearBuzzer', 0],
 			['-'],
+			[' ', 'Hamster %n : %m.note %m.octave notani ijro etish', 'playNote', 0, 'do', '4'],
 			['w', 'Hamster %n : %m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 0, 'do', '4', 0.5],
 			['w', 'Hamster %n : %n zarb tanaffus', 'restFor', 0, 0.25],
 			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
@@ -1056,6 +1059,31 @@
 		}
 	};
 	
+	ext.changeSpeedBy = function(index, speed) {
+		var robot = getRobot(index);
+		if(robot) {
+			speed = parseFloat(speed);
+			if(typeof speed == 'number') {
+				speed += robot.movementSpeed;
+				if(speed < 1) speed = 1;
+				else if(speed > 100) speed = 100;
+				robot.movementSpeed = speed;
+			}
+		}
+	};
+	
+	ext.setSpeedTo = function(index, speed) {
+		var robot = getRobot(index);
+		if(robot) {
+			speed = parseFloat(speed);
+			if(typeof speed == 'number') {
+				if(speed < 1) speed = 1;
+				else if(speed > 100) speed = 100;
+				robot.movementSpeed = speed;
+			}
+		}
+	};
+	
 	ext.moveForward = function(index, callback) {
 		var robot = getRobot(index);
 		if(robot) {
@@ -1215,31 +1243,6 @@
 		}
 	};
 	
-	ext.changeSpeedBy = function(index, speed) {
-		var robot = getRobot(index);
-		if(robot) {
-			speed = parseFloat(speed);
-			if(typeof speed == 'number') {
-				speed += robot.movementSpeed;
-				if(speed < 1) speed = 1;
-				else if(speed > 100) speed = 100;
-				robot.movementSpeed = speed;
-			}
-		}
-	};
-	
-	ext.setSpeedTo = function(index, speed) {
-		var robot = getRobot(index);
-		if(robot) {
-			speed = parseFloat(speed);
-			if(typeof speed == 'number') {
-				if(speed < 1) speed = 1;
-				else if(speed > 100) speed = 100;
-				robot.movementSpeed = speed;
-			}
-		}
-	};
-
 	ext.changeBothWheelsBy = function(index, left, right) {
 		var robot = getRobot(index);
 		if(robot) {
@@ -1474,6 +1477,20 @@
 			var motoring = robot.motoring;
 			motoring.buzzer = 0;
 			motoring.note = 0;
+		}
+	};
+	
+	ext.playNote = function(index, note, octave) {
+		var robot = getRobot(index);
+		if(robot) {
+			var motoring = robot.motoring;
+			note = NOTES[note];
+			octave = parseInt(octave);
+			motoring.buzzer = 0;
+			if(note && octave && octave > 0 && octave < 8) {
+				note += (octave - 1) * 12;
+				motoring.note = note;
+			}
 		}
 	};
 
