@@ -2150,5 +2150,5 @@
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
 
-	open('ws://localhost:50417');
+	open('ws://localhost:51417');
 })({});
