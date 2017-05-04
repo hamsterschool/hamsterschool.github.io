@@ -17,6 +17,7 @@
 		lineTracerStateId: 0
 	};
 	var motoring = {
+		module: 'hamster',
 		leftWheel: 0,
 		rightWheel: 0,
 		buzzer: 0,
@@ -110,8 +111,8 @@
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
 			['-'],
-			[' ', 'change move/turn speed by %n', 'changeSpeedBy', 10],
-			[' ', 'set move/turn speed to %n', 'setSpeedTo', 30],
+			[' ', 'change default speed by %n', 'changeSpeedBy', 10],
+			[' ', 'set default speed to %n', 'setSpeedTo', 30],
 			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
 			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
 			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
@@ -199,8 +200,8 @@
 			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
 			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
 			['-'],
-			[' ', '이동/돌기 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 10],
-			[' ', '이동/돌기 속도를 %n (으)로 정하기', 'setSpeedTo', 30],
+			[' ', '기본 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 10],
+			[' ', '기본 속도를 %n (으)로 정하기', 'setSpeedTo', 30],
 			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
 			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
@@ -288,8 +289,8 @@
 			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
 			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
 			['-'],
-			[' ', 'harakatini/o\'girib tezligini %n ga o\'zgarish', 'changeSpeedBy', 10],
-			[' ', 'harakatini/o\'girib tezligini %n ga sozlash', 'setSpeedTo', 30],
+			[' ', 'andoza tezligini %n ga o\'zgarish', 'changeSpeedBy', 10],
+			[' ', 'andoza tezligini %n ga sozlash', 'setSpeedTo', 30],
 			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
 			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
@@ -696,14 +697,16 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							if(data.type == 1) {
-								if(data.index == 0) {
-									sensory = data;
-									if(lineTracerCallback) handleLineTracer();
-									if(boardCallback) handleBoard();
+							if(data.module == 'hamster') {
+								if(data.type == 1) {
+									if(data.index == 0) {
+										sensory = data;
+										if(lineTracerCallback) handleLineTracer();
+										if(boardCallback) handleBoard();
+									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
-							} else if(data.type == 0) {
-								connectionState = data.state;
 							}
 						} catch (e) {
 						}
