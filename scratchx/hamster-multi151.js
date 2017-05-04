@@ -81,8 +81,8 @@
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
 			['w', 'Hamster %n : turn %m.left_right once on board', 'boardTurn', 0, 'left'],
 			['-'],
-			[' ', 'Hamster %n : change move/turn speed by %n', 'changeSpeedBy', 0, 10],
-			[' ', 'Hamster %n : set move/turn speed to %n', 'setSpeedTo', 0, 30],
+			[' ', 'Hamster %n : change default speed by %n', 'changeSpeedBy', 0, 10],
+			[' ', 'Hamster %n : set default speed to %n', 'setSpeedTo', 0, 30],
 			['w', 'Hamster %n : move forward for %n secs', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : move backward for %n secs', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : turn %m.left_right for %n secs', 'turnForSecs', 0, 'left', 1],
@@ -255,8 +255,8 @@
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
 			['w', '햄스터 %n : 말판 %m.left_right 으로 한 번 돌기', 'boardTurn', 0, '왼쪽'],
 			['-'],
-			[' ', '햄스터 %n : 이동/돌기 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 0, 10],
-			[' ', '햄스터 %n : 이동/돌기 속도를 %n (으)로 정하기', 'setSpeedTo', 0, 30],
+			[' ', '햄스터 %n : 기본 속도를 %n 만큼 바꾸기', 'changeSpeedBy', 0, 10],
+			[' ', '햄스터 %n : 기본 속도를 %n (으)로 정하기', 'setSpeedTo', 0, 30],
 			['w', '햄스터 %n : 앞으로 %n 초 이동하기', 'moveForwardForSecs', 0, 1],
 			['w', '햄스터 %n : 뒤로 %n 초 이동하기', 'moveBackwardForSecs', 0, 1],
 			['w', '햄스터 %n : %m.left_right 으로 %n 초 돌기', 'turnForSecs', 0, '왼쪽', 1],
@@ -429,8 +429,8 @@
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
 			['w', 'Hamster %n : doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 0, 'chap'],
 			['-'],
-			[' ', 'Hamster %n : harakatini/o\'girib tezligini %n ga o\'zgarish', 'changeSpeedBy', 0, 10],
-			[' ', 'Hamster %n : harakatini/o\'girib tezligini %n ga sozlash', 'setSpeedTo', 0, 30],
+			[' ', 'Hamster %n : andoza tezligini %n ga o\'zgarish', 'changeSpeedBy', 0, 10],
+			[' ', 'Hamster %n : andoza tezligini %n ga sozlash', 'setSpeedTo', 0, 30],
 			['w', 'Hamster %n : oldinga %n soniya yurish', 'moveForwardForSecs', 0, 1],
 			['w', 'Hamster %n : orqaga %n soniya yurish', 'moveBackwardForSecs', 0, 1],
 			['w', 'Hamster %n : %m.left_right ga %n soniya o\'girilish', 'turnForSecs', 0, 'chap', 1],
@@ -701,6 +701,7 @@
 				lineTracerStateId: 0
 			};
 			robot.motoring = {
+				module: 'hamster',
 				leftWheel: 0,
 				rightWheel: 0,
 				buzzer: 0,
@@ -979,17 +980,19 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							if(data.type == 1) {
-								if(data.index >= 0) {
-									var robot = getRobot(data.index);
-									if(robot) {
-										robot.sensory = data;
-										if(robot.lineTracerCallback) handleLineTracer(robot);
-										if(robot.boardCallback) handleBoard(robot);
+							if(data.module == 'hamster') {
+								if(data.type == 1) {
+									if(data.index >= 0) {
+										var robot = getRobot(data.index);
+										if(robot) {
+											robot.sensory = data;
+											if(robot.lineTracerCallback) handleLineTracer(robot);
+											if(robot.boardCallback) handleBoard(robot);
+										}
 									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
-							} else if(data.type == 0) {
-								connectionState = data.state;
 							}
 						} catch (e) {
 						}
