@@ -32,7 +32,7 @@
 		ioModeA: 0,
 		ioModeB: 0
 	};
-	var MOVEMENT_MODE = {
+	const MOVEMENT_MODE = {
 		NONE: 0,
 		FORWARD: 1,
 		BACKWARD: 2,
@@ -54,24 +54,24 @@
 	var socket = undefined;
 	var sendTimer = undefined;
 	var canSend = false;
-	var STATE = {
+	const STATE = {
 		CONNECTING: 1,
 		CONNECTED: 2,
 		CONNECTION_LOST: 3,
 		DISCONNECTED: 4,
 		CLOSED: 5
 	};
-	var STATE_MSG = {
+	const STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
 		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyorlangan' ]
 	};
-	var EXTENSION_NAME = {
+	const EXTENSION_NAME = {
 		en: 'Hamster',
 		ko: '햄스터',
 		uz: 'Hamster'
 	};
-	var BLOCKS = {
+	const BLOCKS = {
 		en1: [
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
@@ -91,17 +91,17 @@
 			['w', 'move forward once on board', 'boardMoveForward'],
 			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
 			['-'],
-			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
-			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
-			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
+			['w', 'move forward %n secs', 'moveForwardForSecs', 1],
+			['w', 'move backward %n secs', 'moveBackwardForSecs', 1],
+			['w', 'turn %m.left_right %n secs', 'turnForSecs', 'left', 1],
 			['-'],
 			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
 			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
 			['-'],
 			['w', 'beep', 'beep'],
 			['-'],
-			['w', 'play note %m.note %m.octave for %n beats', 'playNoteFor', 'C', '4', 0.5],
-			['w', 'rest for %n beats', 'restFor', 0.25],
+			['w', 'play note %m.note %m.octave for %d.beats beats', 'playNoteFor', 'C', '4', 0.5],
+			['w', 'rest for %d.beats beats', 'restFor', 0.25],
 			[' ', 'change tempo by %n', 'changeTempoBy', 20],
 			[' ', 'set tempo to %n bpm', 'setTempoTo', 60],
 			['-'],
@@ -113,16 +113,16 @@
 			['-'],
 			[' ', 'change default speed by %n', 'changeSpeedBy', 10],
 			[' ', 'set default speed to %n', 'setSpeedTo', 30],
-			['w', 'move forward for %n secs', 'moveForwardForSecs', 1],
-			['w', 'move backward for %n secs', 'moveBackwardForSecs', 1],
-			['w', 'turn %m.left_right for %n secs', 'turnForSecs', 'left', 1],
+			['w', 'move forward %n secs', 'moveForwardForSecs', 1],
+			['w', 'move backward %n secs', 'moveBackwardForSecs', 1],
+			['w', 'turn %m.left_right %n secs', 'turnForSecs', 'left', 1],
 			['-'],
 			[' ', 'change wheels by left: %n right: %n', 'changeBothWheelsBy', 10, 10],
 			[' ', 'set wheels to left: %n right: %n', 'setBothWheelsTo', 30, 30],
 			[' ', 'change %m.left_right_both wheel by %n', 'changeWheelBy', 'left', 10],
 			[' ', 'set %m.left_right_both wheel to %n', 'setWheelTo', 'left', 30],
 			['-'],
-			[' ', 'follow %m.black_white line using %m.left_right_both floor sensor', 'followLineUsingFloorSensor', 'black', 'left'],
+			[' ', 'follow %m.black_white line with %m.left_right_both floor sensor', 'followLineUsingFloorSensor', 'black', 'left'],
 			['w', 'follow %m.black_white line until %m.left_right_front_rear intersection', 'followLineUntilIntersection', 'black', 'left'],
 			[' ', 'set following speed to %m.speed', 'setFollowingSpeedTo', '5'],
 			['-'],
@@ -137,8 +137,8 @@
 			[' ', 'clear buzzer', 'clearBuzzer'],
 			['-'],
 			[' ', 'play note %m.note %m.octave', 'playNote', 'C', '4'],
-			['w', 'play note %m.note %m.octave for %n beats', 'playNoteFor', 'C', '4', 0.5],
-			['w', 'rest for %n beats', 'restFor', 0.25],
+			['w', 'play note %m.note %m.octave for %d.beats beats', 'playNoteFor', 'C', '4', 0.5],
+			['w', 'rest for %d.beats beats', 'restFor', 0.25],
 			[' ', 'change tempo by %n', 'changeTempoBy', 20],
 			[' ', 'set tempo to %n bpm', 'setTempoTo', 60],
 			['-'],
@@ -189,8 +189,8 @@
 			['-'],
 			['w', '삐 소리내기', 'beep'],
 			['-'],
-			['w', '%m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
-			['w', '%n 박자 쉬기', 'restFor', 0.25],
+			['w', '%m.note %m.octave 음을 %d.beats 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
+			['w', '%d.beats 박자 쉬기', 'restFor', 0.25],
 			[' ', '연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 20],
 			[' ', '연주 속도를 %n BPM으로 정하기', 'setTempoTo', 60],
 			['-'],
@@ -226,8 +226,8 @@
 			[' ', '버저 끄기', 'clearBuzzer'],
 			['-'],
 			[' ', '%m.note %m.octave 음을 연주하기', 'playNote', '도', '4'],
-			['w', '%m.note %m.octave 음을 %n 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
-			['w', '%n 박자 쉬기', 'restFor', 0.25],
+			['w', '%m.note %m.octave 음을 %d.beats 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
+			['w', '%d.beats 박자 쉬기', 'restFor', 0.25],
 			[' ', '연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 20],
 			[' ', '연주 속도를 %n BPM으로 정하기', 'setTempoTo', 60],
 			['-'],
@@ -278,8 +278,8 @@
 			['-'],
 			['w', 'ovoz chiqarish', 'beep'],
 			['-'],
-			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
-			['w', '%n zarb tanaffus', 'restFor', 0.25],
+			['w', '%m.note %m.octave notani %d.beats zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
+			['w', '%d.beats zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
 			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
 			['-'],
@@ -315,8 +315,8 @@
 			[' ', 'buzerni o\'chirish', 'clearBuzzer'],
 			['-'],
 			[' ', '%m.note %m.octave notani ijro etish', 'playNote', 'do', '4'],
-			['w', '%m.note %m.octave notani %n zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
-			['w', '%n zarb tanaffus', 'restFor', 0.25],
+			['w', '%m.note %m.octave notani %d.beats zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
+			['w', '%d.beats zarb tanaffus', 'restFor', 0.25],
 			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
 			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
 			['-'],
@@ -347,9 +347,10 @@
 			'black_white': ['black', 'white'],
 			'left_right_front_rear': ['left', 'right', 'front', 'rear'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
-			'color': ['red', 'yellow', 'green', 'cyan', 'blue', 'magenta', 'white'],
+			'color': ['red', 'yellow', 'green', 'sky blue', 'blue', 'purple', 'white'],
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
+			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A and B'],
 			'mode': ['analog input', 'digital input', 'servo output', 'pwm output', 'digital output']
 		},
@@ -359,9 +360,10 @@
 			'black_white': ['검은색', '하얀색'],
 			'left_right_front_rear': ['왼쪽', '오른쪽', '앞쪽', '뒤쪽'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
-			'color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '보라색', '하얀색'],
+			'color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '하얀색'],
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
+			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A와 B'],
 			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력']
 		},
@@ -371,9 +373,10 @@
 			'black_white': ['qora', 'oq'],
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
-			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'qirmizi', 'oq'],
+			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyohrang', 'oq'],
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
+			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A va B'],
 			'mode': ['analog kiritish', 'raqamli kiritish', 'servo chiqish', 'pwm chiqish', 'raqamli chiqish']
 		}
@@ -393,62 +396,56 @@
 		}
 	}
 
-	var LEFT = 0;
-	var RIGHT = 1;
-	var BOTH = 2;
-	var FRONT = 3;
-	var REAR = 4;
-	var WHITE = 7;
-	var BLACK = 8;
-	var PORT_A = 0;
-	var PORT_B = 1;
-	var PORT_BOTH = 2;
-	
-	var langLeftRightBoth = MENUS[lang]['left_right_both'];
-	var langFrontRear = MENUS[lang]['left_right_front_rear'];
-	var DIRECTIONS = {};
-	DIRECTIONS[langLeftRightBoth[0]] = LEFT;
-	DIRECTIONS[langLeftRightBoth[1]] = RIGHT;
-	DIRECTIONS[langLeftRightBoth[2]] = BOTH;
-	DIRECTIONS[langFrontRear[2]] = FRONT;
-	DIRECTIONS[langFrontRear[3]] = REAR;
-	var langBlackWhite = MENUS[lang]['black_white'];
-	var langColor = MENUS[lang]['color'];
 	var COLORS = {};
-	COLORS[langColor[0]] = 4;
-	COLORS[langColor[1]] = 6;
-	COLORS[langColor[2]] = 2;
-	COLORS[langColor[3]] = 3;
-	COLORS[langColor[4]] = 1;
-	COLORS[langColor[5]] = 5;
-	COLORS[langColor[6]] = 7;
-	COLORS[langBlackWhite[0]] = 8;
-	var langNote = MENUS[lang]['note'];
 	var NOTES = {};
-	NOTES[langNote[0]] = 4;
-	NOTES[langNote[1]] = 5;
-	NOTES[langNote[2]] = 6;
-	NOTES[langNote[3]] = 7;
-	NOTES[langNote[4]] = 8;
-	NOTES[langNote[5]] = 9;
-	NOTES[langNote[6]] = 10;
-	NOTES[langNote[7]] = 11;
-	NOTES[langNote[8]] = 12;
-	NOTES[langNote[9]] = 13;
-	NOTES[langNote[10]] = 14;
-	NOTES[langNote[11]] = 15;
-	var langPort = MENUS[lang]['port'];
-	var PORTS = {};
-	PORTS[langPort[0]] = PORT_A;
-	PORTS[langPort[1]] = PORT_B;
-	PORTS[langPort[2]] = PORT_BOTH;
-	var langMode = MENUS[lang]['mode'];
+	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var MODES = {};
-	MODES[langMode[0]] = 0;
-	MODES[langMode[1]] = 1;
-	MODES[langMode[2]] = 8;
-	MODES[langMode[3]] = 9;
-	MODES[langMode[4]] = 10;
+	var VALUES = {};
+	const LEFT = 1;
+	const RIGHT = 2;
+	const BOTH = 3;
+	const FRONT = 4;
+	const REAR = 5;
+	const WHITE = 6;
+	var tmp;
+	for(var i in MENUS) {
+		tmp = MENUS[i]['color'];
+		COLORS[tmp[0]] = 4;
+		COLORS[tmp[1]] = 6;
+		COLORS[tmp[2]] = 2;
+		COLORS[tmp[3]] = 3;
+		COLORS[tmp[4]] = 1;
+		COLORS[tmp[5]] = 5;
+		COLORS[tmp[6]] = 7;
+		tmp = MENUS[i]['note'];
+		NOTES[tmp[0]] = 4;
+		NOTES[tmp[1]] = 5;
+		NOTES[tmp[2]] = 6;
+		NOTES[tmp[3]] = 7;
+		NOTES[tmp[4]] = 8;
+		NOTES[tmp[5]] = 9;
+		NOTES[tmp[6]] = 10;
+		NOTES[tmp[7]] = 11;
+		NOTES[tmp[8]] = 12;
+		NOTES[tmp[9]] = 13;
+		NOTES[tmp[10]] = 14;
+		NOTES[tmp[11]] = 15;
+		tmp = MENUS[i]['mode'];
+		MODES[tmp[0]] = 0;
+		MODES[tmp[1]] = 1;
+		MODES[tmp[2]] = 8;
+		MODES[tmp[3]] = 9;
+		MODES[tmp[4]] = 10;
+		tmp = MENUS[i]['left_right_both'];
+		VALUES[tmp[0]] = LEFT;
+		VALUES[tmp[1]] = RIGHT;
+		VALUES[tmp[2]] = BOTH;
+		tmp = MENUS[i]['left_right_front_rear'];
+		VALUES[tmp[2]] = FRONT;
+		VALUES[tmp[3]] = REAR;
+		tmp = MENUS[i]['black_white'];
+		VALUES[tmp[1]] = WHITE;
+	}
 
 	function removeTimeout(id) {
 		clearTimeout(id);
@@ -749,8 +746,7 @@
 	ext.boardTurn = function(direction, callback) {
 		movementMode = MOVEMENT_MODE.NONE;
 		setLineTracerMode(0);
-		direction = DIRECTIONS[direction];
-		if(direction == LEFT) {
+		if(VALUES[direction] === LEFT) {
 			boardCommand = 2;
 			motoring.leftWheel = -45;
 			motoring.rightWheel = 45;
@@ -818,7 +814,7 @@
 	ext.turn = function(direction, callback) {
 		boardCommand = 0;
 		setLineTracerMode(0);
-		if(DIRECTIONS[direction] == LEFT) {
+		if(VALUES[direction] === LEFT) {
 			movementMode = MOVEMENT_MODE.LEFT;
 			motoring.leftWheel = -movementSpeed;
 			motoring.rightWheel = movementSpeed;
@@ -884,7 +880,7 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
-			if(DIRECTIONS[direction] == LEFT) {
+			if(VALUES[direction] === LEFT) {
 				movementMode = MOVEMENT_MODE.LEFT;
 				motoring.leftWheel = -movementSpeed;
 				motoring.rightWheel = movementSpeed;
@@ -940,11 +936,11 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
-			which = DIRECTIONS[which];
-			if(which == LEFT) {
+			which = VALUES[which];
+			if(which === LEFT) {
 				motoring.leftWheel += speed;
 			}
-			else if(which == RIGHT) {
+			else if(which === RIGHT) {
 				motoring.rightWheel += speed;
 			}
 			else {
@@ -960,10 +956,10 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(typeof speed == 'number') {
-			which = DIRECTIONS[which];
-			if(which == LEFT) {
+			which = VALUES[which];
+			if(which === LEFT) {
 				motoring.leftWheel = speed;
-			} else if(which == RIGHT) {
+			} else if(which === RIGHT) {
 				motoring.rightWheel = speed;
 			} else {
 				motoring.leftWheel = speed;
@@ -974,12 +970,12 @@
 
 	ext.followLineUsingFloorSensor = function(color, which) {
 		var mode = 1;
-		which = DIRECTIONS[which];
-		if(which == RIGHT)
+		which = VALUES[which];
+		if(which === RIGHT)
 			mode = 2;
-		else if(which == BOTH)
+		else if(which === BOTH)
 			mode = 3;
-		if(COLORS[color] == WHITE)
+		if(VALUES[color] === WHITE)
 			mode += 7;
 		
 		movementMode = MOVEMENT_MODE.NONE;
@@ -991,14 +987,14 @@
 
 	ext.followLineUntilIntersection = function(color, which, callback) {
 		var mode = 4;
-		which = DIRECTIONS[which];
-		if(which == RIGHT)
+		which = VALUES[which];
+		if(which === RIGHT)
 			mode = 5;
-		else if(which == FRONT)
+		else if(which === FRONT)
 			mode = 6;
-		else if(which == REAR)
+		else if(which === REAR)
 			mode = 7;
-		if(COLORS[color] == WHITE)
+		if(VALUES[color] === WHITE)
 			mode += 7;
 		
 		movementMode = MOVEMENT_MODE.NONE;
@@ -1027,10 +1023,10 @@
 	ext.setLedTo = function(which, color) {
 		color = COLORS[color];
 		if(color && color > 0) {
-			which = DIRECTIONS[which];
-			if(which == LEFT) {
+			which = VALUES[which];
+			if(which === LEFT) {
 				motoring.leftLed = color;
-			} else if(which == RIGHT) {
+			} else if(which === RIGHT) {
 				motoring.rightLed = color;
 			} else {
 				motoring.leftLed = color;
@@ -1040,10 +1036,10 @@
 	};
 
 	ext.clearLed = function(which) {
-		which = DIRECTIONS[which];
-		if(which == LEFT) {
+		which = VALUES[which];
+		if(which === LEFT) {
 			motoring.leftLed = 0;
-		} else if(which == RIGHT) {
+		} else if(which === RIGHT) {
 			motoring.rightLed = 0;
 		} else {
 			motoring.leftLed = 0;
@@ -1096,7 +1092,9 @@
 	ext.playNoteFor = function(note, octave, beat, callback) {
 		note = NOTES[note];
 		octave = parseInt(octave);
-		beat = parseFloat(beat);
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
 			note += (octave - 1) * 12;
@@ -1125,7 +1123,9 @@
 	};
 
 	ext.restFor = function(beat, callback) {
-		beat = parseFloat(beat);
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
 		motoring.note = 0;
 		if(beat && beat > 0 && tempo > 0) {
@@ -1201,11 +1201,10 @@
 
 	ext.setPortTo = function(port, mode) {
 		mode = MODES[mode];
-		if(mode >= 0) {
-			port = PORTS[port];
-			if(port == PORT_A) {
+		if(typeof mode == 'number') {
+			if(port == 'A') {
 				motoring.ioModeA = mode;
-			} else if(port == PORT_B) {
+			} else if(port == 'B') {
 				motoring.ioModeB = mode;
 			} else {
 				motoring.ioModeA = mode;
@@ -1217,10 +1216,9 @@
 	ext.changeOutputBy = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
-			port = PORTS[port];
-			if(port == PORT_A) {
+			if(port == 'A') {
 				motoring.outputA += value;
-			} else if(port == PORT_B) {
+			} else if(port == 'B') {
 				motoring.outputB += value;
 			} else {
 				motoring.outputA += value;
@@ -1232,10 +1230,9 @@
 	ext.setOutputTo = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
-			port = PORTS[port];
-			if(port == PORT_A) {
+			if(port == 'A') {
 				motoring.outputA = value;
-			} else if(port == PORT_B) {
+			} else if(port == 'B') {
 				motoring.outputB = value;
 			} else {
 				motoring.outputA = value;
