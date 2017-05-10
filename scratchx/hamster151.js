@@ -340,7 +340,7 @@
 			['r', 'B kirish', 'inputB']
 		]
 	};
-	var MENUS = {
+	const MENUS = {
 		en: {
 			'left_right': ['left', 'right'],
 			'left_right_both': ['left', 'right', 'both'],
