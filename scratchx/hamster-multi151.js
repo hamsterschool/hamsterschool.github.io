@@ -2148,7 +2148,7 @@
 		url: "http://hamster.school"
 	};
 
-	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
+	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext); 
 
 	open('ws://localhost:51417');
 })({});
