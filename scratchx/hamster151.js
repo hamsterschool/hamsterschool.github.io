@@ -432,6 +432,10 @@
 		timeouts = [];
 	}
 	
+	function clearMotoring() {
+		motoring.map = 0xf8000000;
+	}
+	
 	function setLeftLed(color) {
 		motoring.leftLed = color;
 		motoring.map |= 0x01000000;
@@ -667,6 +671,7 @@
 						if(canSend && socket) {
 							try {
 								socket.send(JSON.stringify(motoring));
+								clearMotoring();
 							} catch (e) {
 							}
 						}
