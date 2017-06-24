@@ -433,7 +433,7 @@
 	}
 	
 	function clearMotoring() {
-		motoring.map = 0xf8000000;
+		motoring.map = 0xfc000000;
 	}
 	
 	function setLeftLed(color) {
