@@ -642,6 +642,7 @@
 			};
 			robot.motoring = {
 				module: 'hamster',
+				index: index,
 				map: 0xfc000000,
 				leftWheel: 0,
 				rightWheel: 0,
