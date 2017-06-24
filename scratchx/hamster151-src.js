@@ -472,7 +472,7 @@
 	}
 
 	function reset() {
-		motoring.map = 0xfde00000;
+		motoring.map = 0xfdfc0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		motoring.buzzer = 0;
@@ -670,7 +670,8 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								socket.send(JSON.stringify(motoring));
+								var json = JSON.stringify(motoring);
+								if(canSend && socket) socket.send(json);
 								clearMotoring();
 							} catch (e) {
 							}
@@ -695,6 +696,10 @@
 					};
 					sock.onclose = function() {
 						canSend = false;
+						if(sendTimer) {
+							clearInterval(sendTimer);
+							sendTimer = undefined;
+						}
 						connectionState = STATE.CLOSED;
 					};
 				};
