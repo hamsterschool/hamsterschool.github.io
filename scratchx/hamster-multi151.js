@@ -687,10 +687,19 @@
 				robot.boardCallback = undefined;
 				robot.tempo = 60;
 			};
+			robot.clearMotoring = function() {
+				robot.motoring.map = 0xfc000000;
+			};
 			robots[index] = robot;
 			motorings[index] = robot.motoring;
 		}
 		return robot;
+	}
+	
+	function clearMotorings() {
+		for(var i in robots) {
+			robots[i].clearMotoring();
+		}
 	}
 	
 	function setLeftLed(robot, color) {
@@ -913,6 +922,7 @@
 						if(canSend && socket) {
 							try {
 								socket.send(JSON.stringify(motorings));
+								clearMotorings();
 							} catch (e) {
 							}
 						}
