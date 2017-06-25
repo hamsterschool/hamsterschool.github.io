@@ -192,6 +192,7 @@
 			['b', '버튼을 %m.button_state ?', 'turtleButtonState', '클릭했는가']
 		],
 		ko3: [
+			['h', '버튼을 %m.button_state 일때', 'turtleWhenButtonState', '클릭했는가'],
 			['w', '앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 6, 'cm'],
 			['w', '뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 6, 'cm'],
 			['w', '%m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', '왼쪽', 90, '도'],
@@ -645,14 +646,8 @@
 	}
 	
 	function handleEvents() {
-		console.log('handleEvents');
 		if(sensory.map & 0x00000800) {
-			console.log('event click');
 			clickedId = (clickedId % 255) + 1;
-			setTimeout(function() {
-				console.log('event click clear');
-				clickedPrevId = clickedId;
-			}, 0);
 		}
 	}
 	
@@ -720,6 +715,16 @@
 			socket = undefined;
 		}
 	}
+	
+	ext.turtleWhenButtonState = function(state) {
+		state = BUTTON_STATES[state];
+		var result = false;
+		if(state == 1) result = clickedId != clickedPrevId;
+		else if(state == 2) result = (sensory.map & 0x00000400) != 0;
+		else if(state == 3) result = (sensory.map & 0x00000200) != 0;
+		clickedPrevId = clickedId;
+		return result;
+	};
 
 	ext.turtleMoveForward = function(callback) {
 		motoring.leftWheel = 0;
@@ -1184,7 +1189,6 @@
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
-		console.log('button state ' + state + ', ' + clickedId + ', ' + clickedPrevId);
 		if(state == 1) return clickedId != clickedPrevId;
 		else if(state == 2) return (sensory.map & 0x00000400) != 0;
 		else if(state == 3) return (sensory.map & 0x00000200) != 0;
