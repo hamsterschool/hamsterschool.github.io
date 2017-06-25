@@ -839,7 +839,7 @@
 			if(unit === SECONDS) unit = 2;
 			else if(unit === PULSES) unit = 3;
 			else unit = 1;
-			if(VALUES[direction] === LEFT) {
+			if(VALUES[wheel] === LEFT) {
 				if(VALUES[head] === HEAD) {
 					setMotion(5, unit, 0, value, 0);
 				} else {
