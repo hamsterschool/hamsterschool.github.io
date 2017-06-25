@@ -648,6 +648,9 @@
 	function handleEvents() {
 		if(sensory.map & 0x00000800) {
 			clickedId = (clickedId % 255) + 1;
+			setTimeout(function() {
+				clickedPrevId = clickedId;
+			}, 0);
 		}
 	}
 	
@@ -722,7 +725,6 @@
 		if(state == 1) result = clickedId != clickedPrevId;
 		else if(state == 2) result = (sensory.map & 0x00000400) != 0;
 		else if(state == 3) result = (sensory.map & 0x00000200) != 0;
-		clickedPrevId = clickedId;
 		return result;
 	};
 
