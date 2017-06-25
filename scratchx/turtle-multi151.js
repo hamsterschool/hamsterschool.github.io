@@ -662,6 +662,12 @@
 			robot.clearMotoring = function() {
 				robot.motoring.map = 0xf8000000;
 			};
+			robot.clearEvent = function() {
+				robot.clicked = false;
+				robot.doubleClicked = false;
+				robot.longPressed = false;
+				robot.colorPattern = -1;
+			};
 			robots[index] = robot;
 			motorings[index] = robot.motoring;
 		}
@@ -671,6 +677,12 @@
 	function clearMotorings() {
 		for(var i in robots) {
 			robots[i].clearMotoring();
+		}
+	}
+	
+	function clearEvents() {
+		for(var i in robots) {
+			robots[i].clearEvent();
 		}
 	}
 	
@@ -1742,6 +1754,7 @@
 	};
 	
 	ext._getStatus = function() {
+		clearEvents();
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
