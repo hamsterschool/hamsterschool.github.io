@@ -345,6 +345,7 @@
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
+			'when_button_state': ['clicked', 'double-clicked', 'long-pressed'],
 			'button_state': ['clicked', 'double-clicked', 'long-pressed']
 		},
 		ko: {
@@ -390,6 +391,7 @@
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
+			'when_button_state': ['chertayotgan', 'ikki-chertayotgan', 'uzoq-bosdi'],
 			'button_state': ['chertayotgan', 'ikki-chertayotgan', 'uzoq-bosdi']
 		}
 	};
