@@ -49,6 +49,10 @@
 	var soundRepeat = 1;
 	var soundCallback = undefined;
 	var lineTracerCallback = undefined;
+	var clicked = false;
+	var doubleClicked = false;
+	var longPressed = false;
+	var colorPattern = -1;
 	var tempo = 60;
 	var timeouts = [];
 	var socket = undefined;
@@ -415,7 +419,6 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
-	const WHITE = 8;
 	const LEVEL1_MOVE_CM = 12;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
@@ -588,26 +591,41 @@
 		soundRepeat = 1;
 		soundCallback = undefined;
 		lineTracerCallback = undefined;
-		tempo = 60;
 		clicked = false;
 		doubleClicked = false;
 		longPressed = false;
+		colorPattern = -1;
+		tempo = 60;
 		removeAllTimeouts();
 	}
 	
-	function handleWheelState() {
-		if(sensory.map & 0x00000020) {
-			if(sensory.wheelState == 0) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				var callback = pulseCallback;
-				pulseCallback = undefined;
-				if(callback) callback();
+	function handleSensory() {
+		if(sensory.map & 0x00000800) clicked = true;
+		if(sensory.map & 0x00000400) doubleClicked = true;
+		if(sensory.map & 0x00000200) longPressed = true;
+		if(sensory.map & 0x00000080) colorPattern = sensory.colorPattern;
+		
+		if(lineTracerCallback) {
+			if(sensory.map & 0x00000008) {
+				if(sensory.lineTracerState == 0x02) {
+					setLineTracerMode(0);
+					var callback = lineTracerCallback;
+					lineTracerCallback = undefined;
+					if(callback) callback();
+				}
 			}
 		}
-	}
-	
-	function handleSoundState() {
+		if(pulseCallback) {
+			if(sensory.map & 0x00000020) {
+				if(sensory.wheelState == 0) {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					var callback = pulseCallback;
+					pulseCallback = undefined;
+					if(callback) callback();
+				}
+			}
+		}
 		if(sensory.map & 0x00000010) {
 			if(sensory.soundState == 0) {
 				if(soundId > 0) {
@@ -630,17 +648,6 @@
 					soundCallback = undefined;
 					if(callback) callback();
 				}
-			}
-		}
-	}
-	
-	function handleLineTracerState() {
-		if(sensory.map & 0x00000008) {
-			if(sensory.lineTracerState == 0x02) {
-				setLineTracerMode(0);
-				var callback = lineTracerCallback;
-				lineTracerCallback = undefined;
-				if(callback) callback();
 			}
 		}
 	}
@@ -670,9 +677,7 @@
 								if(data.type == 1) {
 									if(data.index == 0) {
 										sensory = data;
-										if(pulseCallback) handleWheelState();
-										if(soundCallback) handleSoundState();
-										if(lineTracerCallback) handleLineTracerState();
+										handleSensory();
 									}
 								} else if(data.type == 0) {
 									connectionState = data.state;
@@ -1043,7 +1048,9 @@
 		count = parseInt(count);
 		motoring.buzzer = 0;
 		setNote(0);
-		if(sound && count) runSound(sound, count);
+		if(sound && count) {
+			runSound(sound, count);
+		}
 	};
 	
 	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
@@ -1167,14 +1174,14 @@
 	};
 
 	ext.turtleIsColorPattern = function(color1, color2) {
-		return sensory.colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
+		return colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
 	};
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
-		if(state == 1) return (sensory.map & 0x00000800) != 0;
-		else if(state == 2) return (sensory.map & 0x00000400) != 0;
-		else if(state == 3) return (sensory.map & 0x00000200) != 0;
+		if(state == 1) return clicked;
+		else if(state == 2) return doubleClicked;
+		else if(state == 3) return longPressed;
 		return false;
 	};
 
@@ -1183,7 +1190,7 @@
 	};
 
 	ext.turtleColorPattern = function() {
-		return sensory.colorPattern;
+		return colorPattern;
 	};
 
 	ext.turtleFloor = function() {
@@ -1207,6 +1214,11 @@
 	};
 
 	ext._getStatus = function() {
+		clicked = false;
+		doubleClicked = false;
+		longPressed = false;
+		colorPattern = -1;
+		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
