@@ -897,11 +897,9 @@
 			wheel = VALUES[wheel];
 			if(wheel === LEFT) {
 				motoring.leftWheel += speed;
-			}
-			else if(wheel === RIGHT) {
+			} else if(wheel === RIGHT) {
 				motoring.rightWheel += speed;
-			}
-			else {
+			} else {
 				motoring.leftWheel += speed;
 				motoring.rightWheel += speed;
 			}
