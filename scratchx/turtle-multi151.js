@@ -479,11 +479,15 @@
 	for(var i in MENUS) {
 		tmp = MENUS[i]['line_color'];
 		LINE_COLORS[tmp[0]] = 0;
-		LINE_COLORS[tmp[1]] = 1;
-		LINE_COLORS[tmp[2]] = 3;
-		LINE_COLORS[tmp[3]] = 5;
 		LINE_COLORS[tmp[4]] = 7;
 		tmp = MENUS[i]['touching_color'];
+		LINE_COLORS[tmp[0]] = 1;
+		LINE_COLORS[tmp[2]] = 2;
+		LINE_COLORS[tmp[3]] = 3;
+		LINE_COLORS[tmp[4]] = 4;
+		LINE_COLORS[tmp[5]] = 5;
+		LINE_COLORS[tmp[6]] = 6;
+		COLOR_NUMBERS[tmp[7]] = 0;
 		COLOR_NUMBERS[tmp[0]] = 1;
 		COLOR_NUMBERS[tmp[1]] = 2;
 		COLOR_NUMBERS[tmp[2]] = 3;
@@ -491,15 +495,13 @@
 		COLOR_NUMBERS[tmp[4]] = 5;
 		COLOR_NUMBERS[tmp[5]] = 6;
 		COLOR_NUMBERS[tmp[6]] = 7;
-		COLOR_NUMBERS[tmp[7]] = 0;
 		COLOR_NUMBERS[tmp[8]] = 8;
-		tmp = MENUS[i]['pattern_color'];
 		COLOR_PATTERNS[tmp[0]] = 1;
-		COLOR_PATTERNS[tmp[1]] = 3;
-		COLOR_PATTERNS[tmp[2]] = 4;
-		COLOR_PATTERNS[tmp[3]] = 5;
-		COLOR_PATTERNS[tmp[4]] = 6;
-		COLOR_PATTERNS[tmp[5]] = 7;
+		COLOR_PATTERNS[tmp[2]] = 3;
+		COLOR_PATTERNS[tmp[3]] = 4;
+		COLOR_PATTERNS[tmp[4]] = 5;
+		COLOR_PATTERNS[tmp[5]] = 6;
+		COLOR_PATTERNS[tmp[6]] = 7;
 		tmp = MENUS[i]['led_color'];
 		RGB_COLORS[tmp[0]] = [255, 0, 0];
 		RGB_COLORS[tmp[1]] = [255, 63, 0];
@@ -1024,7 +1026,7 @@
 				if(unit === SECONDS) unit = 2;
 				else if(unit === PULSES) unit = 3;
 				else unit = 1;
-				if(VALUES[direction] === LEFT) {
+				if(VALUES[wheel] === LEFT) {
 					if(VALUES[head] === HEAD) {
 						setMotion(robot, 5, unit, 0, value, 0);
 					} else {
@@ -1094,11 +1096,9 @@
 				wheel = VALUES[wheel];
 				if(wheel === LEFT) {
 					motoring.leftWheel += speed;
-				}
-				else if(wheel === RIGHT) {
+				} else if(wheel === RIGHT) {
 					motoring.rightWheel += speed;
-				}
-				else {
+				} else {
 					motoring.leftWheel += speed;
 					motoring.rightWheel += speed;
 				}
@@ -1374,7 +1374,7 @@
 			note = NOTES[note];
 			octave = parseInt(octave);
 			robot.motoring.buzzer = 0;
-			if(note && octave && octave > 0 && octavev < 8) {
+			if(note && octave && octave > 0 && octave < 8) {
 				note += (octave - 1) * 12;
 				setNote(robot, note);
 			}
@@ -1392,10 +1392,10 @@
 			else beat = parseFloat(beat);
 			robot.motoring.buzzer = 0;
 			runSound(robot, 0);
-			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
+			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && robot.tempo > 0) {
 				note += (octave - 1) * 12;
 				setNote(robot, note);
-				var timeout = beat * 60 * 1000 / tempo;
+				var timeout = beat * 60 * 1000 / robot.tempo;
 				var tail = 0;
 				if(timeout > 100) {
 					tail = 100;
@@ -1430,11 +1430,11 @@
 			robot.motoring.buzzer = 0;
 			setNote(robot, 0);
 			runSound(robot, 0);
-			if(beat && beat > 0 && tempo > 0) {
+			if(beat && beat > 0 && robot.tempo > 0) {
 				var timer = setTimeout(function() {
 					removeTimeout(timer);
 					callback();
-				}, beat * 60 * 1000 / tempo);
+				}, beat * 60 * 1000 / robot.tempo);
 				timeouts.push(timer);
 			} else {
 				callback();
