@@ -416,6 +416,7 @@
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var SOUNDS = {};
 	var BUTTON_STATES = {};
+	var WHEN_BUTTON_STATES = {};
 	var VALUES = {};
 	const SECONDS = 1;
 	const PULSES = 2;
@@ -489,6 +490,10 @@
 		BUTTON_STATES[tmp[0]] = 1;
 		BUTTON_STATES[tmp[1]] = 2;
 		BUTTON_STATES[tmp[2]] = 3;
+		tmp = MENUS[i]['when_button_state'];
+		WHEN_BUTTON_STATES[tmp[0]] = 1;
+		WHEN_BUTTON_STATES[tmp[1]] = 2;
+		WHEN_BUTTON_STATES[tmp[2]] = 3;
 		tmp = MENUS[i]['move_unit'];
 		VALUES[tmp[1]] = SECONDS;
 		VALUES[tmp[2]] = PULSES;
@@ -738,7 +743,7 @@
 	};
 	
 	ext.turtleWhenButtonState = function(state) {
-		state = BUTTON_STATES[state];
+		state = WHEN_BUTTON_STATES[state];
 		if(state == 1) return clicked;
 		else if(state == 2) return doubleClicked;
 		else if(state == 3) return longPressed;
