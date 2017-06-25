@@ -1096,7 +1096,7 @@
 		note = NOTES[note];
 		octave = parseInt(octave);
 		motoring.buzzer = 0;
-		if(note && octave && octave > 0 && octavev < 8) {
+		if(note && octave && octave > 0 && octave < 8) {
 			note += (octave - 1) * 12;
 			setNote(note);
 		}
