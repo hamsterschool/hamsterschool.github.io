@@ -1112,8 +1112,8 @@
 		var key = module + index;
 		var robot = robots[key];
 		if(!robot) {
-			robot = {};
 			if(module == 'hamster') {
+				robot = {};
 				robot.sensory = {
 					map: 0,
 					signalStrength: 0,
@@ -1352,6 +1352,7 @@
 				robots[key] = robot;
 				motorings[key] = robot.motoring;
 			} else if(module == 'turtle') {
+				robot = {};
 				robot.sensory = {
 					map: 0,
 					signalStrength: 0,
@@ -1640,7 +1641,6 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
-							console.log(data);
 							if(data.type == 1) {
 								if(data.index >= 0) {
 									var robot = getRobot(data.module, data.index);
