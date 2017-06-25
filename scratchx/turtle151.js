@@ -645,6 +645,7 @@
 	}
 	
 	function handleEvents() {
+		console.log('handleEvents');
 		if(sensory.map & 0x00000800) {
 			console.log('event click');
 			clickedId = (clickedId % 255) + 1;
