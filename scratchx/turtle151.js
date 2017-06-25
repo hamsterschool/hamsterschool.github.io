@@ -50,8 +50,9 @@
 	var soundCallback = undefined;
 	var lineTracerCallback = undefined;
 	var tempo = 60;
-	var clickedId = 0;
-	var clickedPrevId = 0;
+	var clicked = false;
+	var doubleClicked = false;
+	var longPressed = false;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -646,12 +647,12 @@
 	}
 	
 	function handleEvents() {
-		console.log('handleEvents');
 		if(sensory.map & 0x00000800) {
-			clickedId = (clickedId % 255) + 1;
-			setTimeout(function() {
-				clickedPrevId = clickedId;
-			}, 0);
+			clicked = true;
+		} else if(sensory.map & 0x00000400) {
+			doubleClicked = true;
+		} else if(sensory.map & 0x00000200) {
+			longPressed = true;
 		}
 	}
 	
@@ -721,13 +722,11 @@
 	}
 	
 	ext.turtleWhenButtonState = function(state) {
-		console.log('turtleWhenButtonState');
 		state = BUTTON_STATES[state];
-		var result = false;
-		if(state == 1) result = clickedId != clickedPrevId;
-		else if(state == 2) result = (sensory.map & 0x00000400) != 0;
-		else if(state == 3) result = (sensory.map & 0x00000200) != 0;
-		return result;
+		if(state == 1) return clicked;
+		else if(state == 2) return doubleClicked;
+		else if(state == 3) return longPressed;
+		return false;
 	};
 
 	ext.turtleMoveForward = function(callback) {
@@ -1192,11 +1191,10 @@
 	};
 
 	ext.turtleButtonState = function(state) {
-		console.log('turtleButtonState');
 		state = BUTTON_STATES[state];
-		if(state == 1) return clickedId != clickedPrevId;
-		else if(state == 2) return (sensory.map & 0x00000400) != 0;
-		else if(state == 3) return (sensory.map & 0x00000200) != 0;
+		if(state == 1) return clicked;
+		else if(state == 2) return doubleClicked;
+		else if(state == 3) return longPressed;
 		return false;
 	};
 
@@ -1229,7 +1227,10 @@
 	};
 
 	ext._getStatus = function() {
-		console.log('_getStatus');
+		clicked = false;
+		doubleClicked = false;
+		longPressed = false;
+		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
