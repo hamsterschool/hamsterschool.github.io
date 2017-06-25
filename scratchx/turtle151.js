@@ -591,9 +591,6 @@
 		soundCallback = undefined;
 		lineTracerCallback = undefined;
 		tempo = 60;
-		clicked = false;
-		doubleClicked = false;
-		longPressed = false;
 		removeAllTimeouts();
 	}
 	
@@ -649,8 +646,10 @@
 	
 	function handleEvents() {
 		if(sensory.map & 0x00000800) {
+			console.log('event click');
 			clickedId = (clickedId % 255) + 1;
 			setTimeout(function() {
+				console.log('event click clear');
 				clickedPrevId = clickedId;
 			}, 0);
 		}
@@ -684,6 +683,7 @@
 										if(pulseCallback) handleWheelState();
 										if(soundCallback) handleSoundState();
 										if(lineTracerCallback) handleLineTracerState();
+										handleEvents();
 									}
 								} else if(data.type == 0) {
 									connectionState = data.state;
@@ -1183,6 +1183,7 @@
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
+		console.log('button state ' + state + ', ' + clickedId + ', ' + clickedPrevId);
 		if(state == 1) return clickedId != clickedPrevId;
 		else if(state == 2) return (sensory.map & 0x00000400) != 0;
 		else if(state == 3) return (sensory.map & 0x00000200) != 0;
