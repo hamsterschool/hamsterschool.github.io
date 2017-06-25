@@ -745,7 +745,9 @@
 	};
 	
 	ext.turtleWhenButtonState = function(state) {
+		console.log(state);
 		state = WHEN_BUTTON_STATES[state];
+		console.log(state);
 		if(state == 1) return clicked;
 		else if(state == 2) return doubleClicked;
 		else if(state == 3) return longPressed;
