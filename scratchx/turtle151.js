@@ -50,6 +50,8 @@
 	var soundCallback = undefined;
 	var lineTracerCallback = undefined;
 	var tempo = 60;
+	var clickedId = 0;
+	var clickedPrevId = 0;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -645,6 +647,15 @@
 		}
 	}
 	
+	function handleEvents() {
+		if(sensory.map & 0x00000800) {
+			clickedId = (clickedId % 255) + 1;
+			setTimeout(function() {
+				clickedPrevId = clickedId;
+			}, 0);
+		}
+	}
+	
 	function open(url) {
 		if('WebSocket' in window) {
 			try {
@@ -1172,7 +1183,7 @@
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
-		if(state == 1) return (sensory.map & 0x00000800) != 0;
+		if(state == 1) return clickedId != clickedPrevId;
 		else if(state == 2) return (sensory.map & 0x00000400) != 0;
 		else if(state == 3) return (sensory.map & 0x00000200) != 0;
 		return false;
