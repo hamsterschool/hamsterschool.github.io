@@ -7,6 +7,8 @@
 	var socket = undefined;
 	var sendTimer = undefined;
 	var canSend = false;
+	const HAMSTER = 'hamster';
+	const TURTLE = 'turtle';
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -1112,7 +1114,7 @@
 		var key = module + index;
 		var robot = robots[key];
 		if(!robot) {
-			if(module == 'hamster') {
+			if(module == HAMSTER) {
 				robot = {};
 				robot.sensory = {
 					map: 0,
@@ -1351,7 +1353,7 @@
 				};
 				robots[key] = robot;
 				motorings[key] = robot.motoring;
-			} else if(module == 'turtle') {
+			} else if(module == TURTLE) {
 				robot = {};
 				robot.sensory = {
 					map: 0,
@@ -1684,7 +1686,7 @@
 	}
 
 	ext.boardMoveForward = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.motion = MOTION.NONE;
@@ -1701,7 +1703,7 @@
 	};
 
 	ext.boardTurn = function(index, direction, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.motion = MOTION.NONE;
@@ -1724,7 +1726,7 @@
 	};
 	
 	ext.moveForward = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.motion = MOTION.FORWARD;
@@ -1746,7 +1748,7 @@
 	};
 	
 	ext.moveBackward = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.motion = MOTION.BACKWARD;
@@ -1768,7 +1770,7 @@
 	};
 	
 	ext.turn = function(index, direction, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			robot.boardCommand = 0;
@@ -1796,7 +1798,7 @@
 	};
 
 	ext.moveForwardForSecs = function(index, sec, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
@@ -1823,7 +1825,7 @@
 	};
 
 	ext.moveBackwardForSecs = function(index, sec, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
@@ -1850,7 +1852,7 @@
 	};
 
 	ext.turnForSecs = function(index, direction, sec, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sec = parseFloat(sec);
@@ -1883,7 +1885,7 @@
 	};
 	
 	ext.changeBothWheelsBy = function(index, left, right) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			left = parseFloat(left);
@@ -1901,7 +1903,7 @@
 	};
 
 	ext.setBothWheelsTo = function(index, left, right) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			left = parseFloat(left);
@@ -1919,7 +1921,7 @@
 	};
 
 	ext.changeWheelBy = function(index, which, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
@@ -1943,7 +1945,7 @@
 	};
 
 	ext.setWheelTo = function(index, which, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
@@ -1965,7 +1967,7 @@
 	};
 
 	ext.followLineUsingFloorSensor = function(index, color, which) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 1;
@@ -1986,7 +1988,7 @@
 	};
 
 	ext.followLineUntilIntersection = function(index, color, which, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 4;
@@ -2012,7 +2014,7 @@
 	};
 
 	ext.setFollowingSpeedTo = function(index, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseInt(speed);
@@ -2023,7 +2025,7 @@
 	};
 
 	ext.stop = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.motion = MOTION.NONE;
@@ -2035,7 +2037,7 @@
 	};
 
 	ext.setLedTo = function(index, which, color) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			color = COLORS[color];
@@ -2054,7 +2056,7 @@
 	};
 
 	ext.clearLed = function(index, which) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			which = VALUES[which];
@@ -2070,7 +2072,7 @@
 	};
 
 	ext.beep = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.buzzer = 440;
@@ -2087,7 +2089,7 @@
 	};
 
 	ext.changeBuzzerBy = function(index, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var buzzer = parseFloat(value);
@@ -2099,7 +2101,7 @@
 	};
 
 	ext.setBuzzerTo = function(index, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var buzzer = parseFloat(value);
@@ -2111,7 +2113,7 @@
 	};
 
 	ext.clearBuzzer = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.buzzer = 0;
@@ -2120,7 +2122,7 @@
 	};
 	
 	ext.playNoteFor = function(index, note, octave, beat, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			note = NOTES[note];
@@ -2159,7 +2161,7 @@
 	};
 
 	ext.restFor = function(index, beat, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var tmp = BEATS[beat];
@@ -2182,7 +2184,7 @@
 	};
 
 	ext.changeTempoBy = function(index, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			value = parseFloat(value);
 			if(typeof value == 'number') {
@@ -2193,7 +2195,7 @@
 	};
 
 	ext.setTempoTo = function(index, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			value = parseFloat(value);
 			if(typeof value == 'number') {
@@ -2204,67 +2206,67 @@
 	};
 
 	ext.leftProximity0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2274,67 +2276,67 @@
 	};
 
 	ext.leftProximity1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2344,67 +2346,67 @@
 	};
 
 	ext.leftProximity2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2414,67 +2416,67 @@
 	};
 
 	ext.leftProximity3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2484,67 +2486,67 @@
 	};
 
 	ext.leftProximity4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2554,67 +2556,67 @@
 	};
 
 	ext.leftProximity5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
 	ext.rightProximity5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
 	ext.leftFloor5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
 	ext.rightFloor5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
 	ext.accelerationX5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
 	ext.accelerationY5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
 	ext.accelerationZ5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
 	ext.light5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
 	ext.temperature5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
 	ext.signalStrength5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
 	ext.handFound5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2624,7 +2626,7 @@
 	};
 
 	ext.setPortTo = function(index, port, mode) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			mode = MODES[mode];
@@ -2642,7 +2644,7 @@
 	};
 
 	ext.changeOutputBy = function(index, port, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			value = parseFloat(value);
@@ -2660,7 +2662,7 @@
 	};
 
 	ext.setOutputTo = function(index, port, value) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			value = parseFloat(value);
@@ -2678,79 +2680,79 @@
 	};
 
 	ext.inputA0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
 	ext.inputA1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(HAMSTER, 1);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
 	ext.inputA2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(HAMSTER, 2);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
 	ext.inputA3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(HAMSTER, 3);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
 	ext.inputA4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(HAMSTER, 4);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
 	ext.inputA5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
 	ext.inputB5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(HAMSTER, 5);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 	
 	ext.turtleMoveForward = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2765,7 +2767,7 @@
 	};
 	
 	ext.turtleMoveBackward = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2780,7 +2782,7 @@
 	};
 	
 	ext.turtleTurn = function(index, direction, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2799,7 +2801,7 @@
 	};
 
 	ext.turtleMoveForwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2822,7 +2824,7 @@
 	};
 
 	ext.turtleMoveBackwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2845,7 +2847,7 @@
 	};
 
 	ext.turtleTurnUnitInPlace = function(index, direction, value, unit, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2872,7 +2874,7 @@
 	};
 	
 	ext.turtleTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, head, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2907,7 +2909,7 @@
 	};
 	
 	ext.turtlePivotAroundWheelUnitInDirection = function(index, wheel, value, unit, head, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -2942,7 +2944,7 @@
 	};
 	
 	ext.turtleChangeWheelsByLeftRight = function(index, left, right) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			left = parseFloat(left);
@@ -2960,7 +2962,7 @@
 	};
 
 	ext.turtleSetWheelsToLeftRight = function(index, left, right) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			left = parseFloat(left);
@@ -2978,7 +2980,7 @@
 	};
 
 	ext.turtleChangeWheelBy = function(index, wheel, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
@@ -3000,7 +3002,7 @@
 	};
 
 	ext.turtleSetWheelTo = function(index, wheel, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			speed = parseFloat(speed);
@@ -3022,7 +3024,7 @@
 	};
 
 	ext.turtleFollowLine = function(index, color) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 10 + LINE_COLORS[color];
@@ -3035,7 +3037,7 @@
 	};
 
 	ext.turtleFollowLineUntil = function(index, color, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 60 + LINE_COLORS[color];
@@ -3051,7 +3053,7 @@
 	};
 	
 	ext.turtleFollowLineUntilBlack = function(index, color, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 70 + LINE_COLORS[color];
@@ -3067,7 +3069,7 @@
 	};
 	
 	ext.turtleCrossIntersection = function(index, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -3082,7 +3084,7 @@
 	};
 	
 	ext.turtleTurnAtIntersection = function(index, direction, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			var mode = 20;
@@ -3101,7 +3103,7 @@
 	};
 
 	ext.turtleSetFollowingSpeedTo = function(index, speed) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			speed = parseInt(speed);
 			if(typeof speed == 'number') {
@@ -3112,7 +3114,7 @@
 	};
 
 	ext.turtleStop = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.leftWheel = 0;
@@ -3124,7 +3126,7 @@
 	};
 
 	ext.turtleSetHeadLedTo = function(index, color) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			color = RGB_COLORS[color];
@@ -3137,7 +3139,7 @@
 	};
 	
 	ext.turtleChangeHeadLedByRGB = function(index, red, green, blue) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			red = parseInt(red);
@@ -3156,7 +3158,7 @@
 	};
 	
 	ext.turtleSetHeadLedToRGB = function(index, red, green, blue) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			red = parseInt(red);
@@ -3175,7 +3177,7 @@
 	};
 
 	ext.turtleClearHeadLed = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.ledRed = 0;
@@ -3185,7 +3187,7 @@
 	};
 
 	ext.turtlePlaySound = function(index, sound) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sound = SOUNDS[sound];
@@ -3196,7 +3198,7 @@
 	};
 	
 	ext.turtlePlaySoundTimes = function(index, sound, count) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sound = SOUNDS[sound];
@@ -3210,7 +3212,7 @@
 	};
 	
 	ext.turtlePlaySoundTimesUntilDone = function(index, sound, count, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var motoring = robot.motoring;
 			sound = SOUNDS[sound];
@@ -3229,7 +3231,7 @@
 	};
 
 	ext.turtleChangeBuzzerBy = function(index, hz) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			hz = parseFloat(hz);
 			if(typeof hz == 'number') {
@@ -3241,7 +3243,7 @@
 	};
 
 	ext.turtleSetBuzzerTo = function(index, hz) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			hz = parseFloat(hz);
 			if(typeof hz == 'number') {
@@ -3253,7 +3255,7 @@
 	};
 
 	ext.turtleClearSound = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			robot.motoring.buzzer = 0;
 			setTurtleNote(robot, 0);
@@ -3262,7 +3264,7 @@
 	};
 	
 	ext.turtlePlayNote = function(index, note, octave) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			note = NOTES[note];
 			octave = parseInt(octave);
@@ -3276,7 +3278,7 @@
 	};
 	
 	ext.turtlePlayNoteForBeats = function(index, note, octave, beat, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			note = NOTES[note];
 			octave = parseInt(octave);
@@ -3315,7 +3317,7 @@
 	};
 
 	ext.turtleRestForBeats = function(index, beat, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			var tmp = BEATS[beat];
 			if(tmp) beat = tmp;
@@ -3338,7 +3340,7 @@
 	};
 
 	ext.turtleChangeTempoBy = function(index, bpm) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			bpm = parseFloat(bpm);
 			if(typeof bpm == 'number') {
@@ -3349,7 +3351,7 @@
 	};
 
 	ext.turtleSetTempoTo = function(index, bpm) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			bpm = parseFloat(bpm);
 			if(typeof bpm == 'number') {
@@ -3360,19 +3362,19 @@
 	};
 
 	ext.turtleTouchingColor = function(index, color) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.sensory.colorNumber == COLOR_NUMBERS[color];
 		return false;
 	};
 
 	ext.turtleIsColorPattern = function(index, color1, color2) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
 		return false;
 	};
 
 	ext.turtleButtonState = function(index, state) {
-		var robot = getRobot(index);
+		var robot = getRobot(TURTLE, index);
 		if(robot) {
 			state = BUTTON_STATES[state];
 			if(state == 1) return robot.clicked;
@@ -3383,253 +3385,253 @@
 	};
 
 	ext.turtleColorNumber0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobotTURTLE, (0);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ0 = function() {
-		var robot = getRobot(0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
 	
 	ext.turtleColorNumber1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ1 = function() {
-		var robot = getRobot(1);
+		var robot = getRobot(TURTLE, 1);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
 	
 	ext.turtleColorNumber2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ2 = function() {
-		var robot = getRobot(2);
+		var robot = getRobot(TURTLE, 2);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
 	
 	ext.turtleColorNumber3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ3 = function() {
-		var robot = getRobot(3);
+		var robot = getRobot(TURTLE, 3);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
 	
 	ext.turtleColorNumber4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ4 = function() {
-		var robot = getRobot(4);
+		var robot = getRobot(TURTLE, 4);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
 	
 	ext.turtleColorNumber5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.colorNumber;
 		return -1;
 	};
 
 	ext.turtleColorPattern5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
 
 	ext.turtleFloor5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.floor;
 		return 0;
 	};
 
 	ext.turtleButton5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.button;
 		return 0;
 	};
 
 	ext.turtleAccelerationX5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.accelerationX;
 		return 0;
 	};
 
 	ext.turtleAccelerationY5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.accelerationY;
 		return 0;
 	};
 
 	ext.turtleAccelerationZ5 = function() {
-		var robot = getRobot(5);
+		var robot = getRobot(TURTLE, 5);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
 	};
