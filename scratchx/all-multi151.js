@@ -3391,7 +3391,7 @@
 	};
 
 	ext.turtleColorPattern0 = function() {
-		var robot = getRobotTURTLE, (0);
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.colorPattern;
 		return -1;
 	};
