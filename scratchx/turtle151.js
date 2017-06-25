@@ -49,6 +49,10 @@
 	var soundRepeat = 1;
 	var soundCallback = undefined;
 	var lineTracerCallback = undefined;
+	var clicked = false;
+	var doubleClicked = false;
+	var longPressed = false;
+	var colorPattern = -1;
 	var tempo = 60;
 	var timeouts = [];
 	var socket = undefined;
@@ -190,6 +194,10 @@
 			['b', '버튼을 %m.button_state ?', 'turtleButtonState', '클릭했는가']
 		],
 		ko3: [
+			['h', '%m.touching_color 에 닿았을 때', 'turtleWhenTouchingColor', '빨간색'],
+			['h', '색상 패턴이 %m.pattern_color %m.pattern_color 일 때', 'turtleWhenColorPattern', '빨간색', '노란색'],
+			['h', '버튼을 %m.when_button_state 때', 'turtleWhenButtonState', '클릭했을'],
+			['-'],
 			['w', '앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 6, 'cm'],
 			['w', '뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 6, 'cm'],
 			['w', '%m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', '왼쪽', 90, '도'],
@@ -359,6 +367,7 @@
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
+			'when_button_state': ['클릭했을', '더블클릭했을', '길게~눌렀을'],
 			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가']
 		},
 		uz: {
@@ -588,34 +597,54 @@
 		soundRepeat = 1;
 		soundCallback = undefined;
 		lineTracerCallback = undefined;
-		tempo = 60;
 		clicked = false;
 		doubleClicked = false;
 		longPressed = false;
+		colorPattern = -1;
+		tempo = 60;
 		removeAllTimeouts();
 	}
 	
-	function handleWheelState() {
-		if(sensory.map & 0x00000020) {
-			if(sensory.wheelState == 0) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				var callback = pulseCallback;
-				pulseCallback = undefined;
-				if(callback) callback();
+	function handleSensory() {
+		if(sensory.map & 0x00000800) {
+			clicked = true;
+		}
+		if(sensory.map & 0x00000400) {
+			doubleClicked = true;
+		}
+		if(sensory.map & 0x00000200) {
+			longPressed = true;
+		}
+		if(sensory.map & 0x00000080) {
+			colorPattern = sensory.colorPattern;
+		}
+		if(pulseCallback) {
+			if(sensory.map & 0x00000020) {
+				if(sensory.wheelState == 0) {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					var callback = pulseCallback;
+					pulseCallback = undefined;
+					if(callback) callback();
+				}
 			}
 		}
-	}
-	
-	function handleSoundState() {
-		if(sensory.map & 0x00000010) {
-			if(sensory.soundState == 0) {
-				if(soundId > 0) {
-					if(soundRepeat < 0) {
-						runSound(soundId, -1);
-					} else if(soundRepeat > 1) {
-						soundRepeat --;
-						runSound(soundId, soundRepeat);
+		if(soundCallback) {
+			if(sensory.map & 0x00000010) {
+				if(sensory.soundState == 0) {
+					if(soundId > 0) {
+						if(soundRepeat < 0) {
+							runSound(soundId, -1);
+						} else if(soundRepeat > 1) {
+							soundRepeat --;
+							runSound(soundId, soundRepeat);
+						} else {
+							soundId = 0;
+							soundRepeat = 1;
+							var callback = soundCallback;
+							soundCallback = undefined;
+							if(callback) callback();
+						}
 					} else {
 						soundId = 0;
 						soundRepeat = 1;
@@ -623,24 +652,17 @@
 						soundCallback = undefined;
 						if(callback) callback();
 					}
-				} else {
-					soundId = 0;
-					soundRepeat = 1;
-					var callback = soundCallback;
-					soundCallback = undefined;
-					if(callback) callback();
 				}
 			}
 		}
-	}
-	
-	function handleLineTracerState() {
-		if(sensory.map & 0x00000008) {
-			if(sensory.lineTracerState == 0x02) {
-				setLineTracerMode(0);
-				var callback = lineTracerCallback;
-				lineTracerCallback = undefined;
-				if(callback) callback();
+		if(lineTracerCallback) {
+			if(sensory.map & 0x00000008) {
+				if(sensory.lineTracerState == 0x02) {
+					setLineTracerMode(0);
+					var callback = lineTracerCallback;
+					lineTracerCallback = undefined;
+					if(callback) callback();
+				}
 			}
 		}
 	}
@@ -670,9 +692,7 @@
 								if(data.type == 1) {
 									if(data.index == 0) {
 										sensory = data;
-										if(pulseCallback) handleWheelState();
-										if(soundCallback) handleSoundState();
-										if(lineTracerCallback) handleLineTracerState();
+										handleSensory();
 									}
 								} else if(data.type == 0) {
 									connectionState = data.state;
@@ -708,6 +728,22 @@
 			socket = undefined;
 		}
 	}
+	
+	ext.turtleWhenTouchingColor = function(color) {
+		return sensory.colorNumber == COLOR_NUMBERS[color];
+	};
+	
+	ext.turtleWhenColorPattern = function(color1, color2) {
+		return colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
+	};
+	
+	ext.turtleWhenButtonState = function(state) {
+		state = BUTTON_STATES[state];
+		if(state == 1) return clicked;
+		else if(state == 2) return doubleClicked;
+		else if(state == 3) return longPressed;
+		return false;
+	};
 
 	ext.turtleMoveForward = function(callback) {
 		motoring.leftWheel = 0;
@@ -1167,14 +1203,14 @@
 	};
 
 	ext.turtleIsColorPattern = function(color1, color2) {
-		return sensory.colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
+		return colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
 	};
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
-		if(state == 1) return (sensory.map & 0x00000800) != 0;
-		else if(state == 2) return (sensory.map & 0x00000400) != 0;
-		else if(state == 3) return (sensory.map & 0x00000200) != 0;
+		if(state == 1) return clicked;
+		else if(state == 2) return doubleClicked;
+		else if(state == 3) return longPressed;
 		return false;
 	};
 
@@ -1183,7 +1219,7 @@
 	};
 
 	ext.turtleColorPattern = function() {
-		return sensory.colorPattern;
+		return colorPattern;
 	};
 
 	ext.turtleFloor = function() {
@@ -1207,6 +1243,11 @@
 	};
 
 	ext._getStatus = function() {
+		clicked = false;
+		doubleClicked = false;
+		longPressed = false;
+		colorPattern = -1;
+		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
@@ -1230,8 +1271,6 @@
 		menus: MENUS[lang],
 		url: "http://turtle.school"
 	};
-	
-	console.log(ext);
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
 
