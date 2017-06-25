@@ -1640,6 +1640,7 @@
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
+							console.log(data);
 							if(data.type == 1) {
 								if(data.index >= 0) {
 									var robot = getRobot(data.module, data.index);
