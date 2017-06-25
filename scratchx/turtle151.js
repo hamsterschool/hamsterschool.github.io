@@ -194,10 +194,6 @@
 			['b', '버튼을 %m.button_state ?', 'turtleButtonState', '클릭했는가']
 		],
 		ko3: [
-			['h', '%m.touching_color 에 닿았을 때', 'turtleWhenTouchingColor', '빨간색'],
-			['h', '색상 패턴이 %m.pattern_color %m.pattern_color 일 때', 'turtleWhenColorPattern', '빨간색', '노란색'],
-			['h', '버튼을 %m.when_button_state 때', 'turtleWhenButtonState', '클릭했을'],
-			['-'],
 			['w', '앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 6, 'cm'],
 			['w', '뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 6, 'cm'],
 			['w', '%m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', '왼쪽', 90, '도'],
@@ -345,7 +341,6 @@
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'when_button_state': ['clicked', 'double-clicked', 'long-pressed'],
 			'button_state': ['clicked', 'double-clicked', 'long-pressed']
 		},
 		ko: {
@@ -368,7 +363,6 @@
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'when_button_state': ['클릭했을', '더블클릭했을', '길게~눌렀을'],
 			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가']
 		},
 		uz: {
@@ -391,7 +385,6 @@
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'when_button_state': ['chertayotgan', 'ikki-chertayotgan', 'uzoq-bosdi'],
 			'button_state': ['chertayotgan', 'ikki-chertayotgan', 'uzoq-bosdi']
 		}
 	};
@@ -418,7 +411,6 @@
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var SOUNDS = {};
 	var BUTTON_STATES = {};
-	var WHEN_BUTTON_STATES = {};
 	var VALUES = {};
 	const SECONDS = 1;
 	const PULSES = 2;
@@ -427,7 +419,6 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
-	const WHITE = 8;
 	const LEVEL1_MOVE_CM = 12;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
@@ -492,10 +483,6 @@
 		BUTTON_STATES[tmp[0]] = 1;
 		BUTTON_STATES[tmp[1]] = 2;
 		BUTTON_STATES[tmp[2]] = 3;
-		tmp = MENUS[i]['when_button_state'];
-		WHEN_BUTTON_STATES[tmp[0]] = 1;
-		WHEN_BUTTON_STATES[tmp[1]] = 2;
-		WHEN_BUTTON_STATES[tmp[2]] = 3;
 		tmp = MENUS[i]['move_unit'];
 		VALUES[tmp[1]] = SECONDS;
 		VALUES[tmp[2]] = PULSES;
@@ -613,17 +600,20 @@
 	}
 	
 	function handleSensory() {
-		if(sensory.map & 0x00000800) {
-			clicked = true;
-		}
-		if(sensory.map & 0x00000400) {
-			doubleClicked = true;
-		}
-		if(sensory.map & 0x00000200) {
-			longPressed = true;
-		}
-		if(sensory.map & 0x00000080) {
-			colorPattern = sensory.colorPattern;
+		if(sensory.map & 0x00000800) clicked = true;
+		if(sensory.map & 0x00000400) doubleClicked = true;
+		if(sensory.map & 0x00000200) longPressed = true;
+		if(sensory.map & 0x00000080) colorPattern = sensory.colorPattern;
+		
+		if(lineTracerCallback) {
+			if(sensory.map & 0x00000008) {
+				if(sensory.lineTracerState == 0x02) {
+					setLineTracerMode(0);
+					var callback = lineTracerCallback;
+					lineTracerCallback = undefined;
+					if(callback) callback();
+				}
+			}
 		}
 		if(pulseCallback) {
 			if(sensory.map & 0x00000020) {
@@ -636,22 +626,14 @@
 				}
 			}
 		}
-		if(soundCallback) {
-			if(sensory.map & 0x00000010) {
-				if(sensory.soundState == 0) {
-					if(soundId > 0) {
-						if(soundRepeat < 0) {
-							runSound(soundId, -1);
-						} else if(soundRepeat > 1) {
-							soundRepeat --;
-							runSound(soundId, soundRepeat);
-						} else {
-							soundId = 0;
-							soundRepeat = 1;
-							var callback = soundCallback;
-							soundCallback = undefined;
-							if(callback) callback();
-						}
+		if(sensory.map & 0x00000010) {
+			if(sensory.soundState == 0) {
+				if(soundId > 0) {
+					if(soundRepeat < 0) {
+						runSound(soundId, -1);
+					} else if(soundRepeat > 1) {
+						soundRepeat --;
+						runSound(soundId, soundRepeat);
 					} else {
 						soundId = 0;
 						soundRepeat = 1;
@@ -659,15 +641,11 @@
 						soundCallback = undefined;
 						if(callback) callback();
 					}
-				}
-			}
-		}
-		if(lineTracerCallback) {
-			if(sensory.map & 0x00000008) {
-				if(sensory.lineTracerState == 0x02) {
-					setLineTracerMode(0);
-					var callback = lineTracerCallback;
-					lineTracerCallback = undefined;
+				} else {
+					soundId = 0;
+					soundRepeat = 1;
+					var callback = soundCallback;
+					soundCallback = undefined;
 					if(callback) callback();
 				}
 			}
@@ -735,24 +713,6 @@
 			socket = undefined;
 		}
 	}
-	
-	ext.turtleWhenTouchingColor = function(color) {
-		return sensory.colorNumber == COLOR_NUMBERS[color];
-	};
-	
-	ext.turtleWhenColorPattern = function(color1, color2) {
-		return colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
-	};
-	
-	ext.turtleWhenButtonState = function(state) {
-		console.log(state);
-		state = WHEN_BUTTON_STATES[state];
-		console.log(state);
-		if(state == 1) return clicked;
-		else if(state == 2) return doubleClicked;
-		else if(state == 3) return longPressed;
-		return false;
-	};
 
 	ext.turtleMoveForward = function(callback) {
 		motoring.leftWheel = 0;
@@ -1088,7 +1048,9 @@
 		count = parseInt(count);
 		motoring.buzzer = 0;
 		setNote(0);
-		if(sound && count) runSound(sound, count);
+		if(sound && count) {
+			runSound(sound, count);
+		}
 	};
 	
 	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
