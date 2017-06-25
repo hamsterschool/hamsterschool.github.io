@@ -50,9 +50,6 @@
 	var soundCallback = undefined;
 	var lineTracerCallback = undefined;
 	var tempo = 60;
-	var clicked = false;
-	var doubleClicked = false;
-	var longPressed = false;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -193,7 +190,6 @@
 			['b', '버튼을 %m.button_state ?', 'turtleButtonState', '클릭했는가']
 		],
 		ko3: [
-			['h', '버튼을 %m.button_state 일때', 'turtleWhenButtonState', '클릭했는가'],
 			['w', '앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 6, 'cm'],
 			['w', '뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 6, 'cm'],
 			['w', '%m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', '왼쪽', 90, '도'],
@@ -593,6 +589,9 @@
 		soundCallback = undefined;
 		lineTracerCallback = undefined;
 		tempo = 60;
+		clicked = false;
+		doubleClicked = false;
+		longPressed = false;
 		removeAllTimeouts();
 	}
 	
@@ -646,16 +645,6 @@
 		}
 	}
 	
-	function handleEvents() {
-		if(sensory.map & 0x00000800) {
-			clicked = true;
-		} else if(sensory.map & 0x00000400) {
-			doubleClicked = true;
-		} else if(sensory.map & 0x00000200) {
-			longPressed = true;
-		}
-	}
-	
 	function open(url) {
 		if('WebSocket' in window) {
 			try {
@@ -684,7 +673,6 @@
 										if(pulseCallback) handleWheelState();
 										if(soundCallback) handleSoundState();
 										if(lineTracerCallback) handleLineTracerState();
-										handleEvents();
 									}
 								} else if(data.type == 0) {
 									connectionState = data.state;
@@ -720,14 +708,6 @@
 			socket = undefined;
 		}
 	}
-	
-	ext.turtleWhenButtonState = function(state) {
-		state = BUTTON_STATES[state];
-		if(state == 1) return clicked;
-		else if(state == 2) return doubleClicked;
-		else if(state == 3) return longPressed;
-		return false;
-	};
 
 	ext.turtleMoveForward = function(callback) {
 		motoring.leftWheel = 0;
@@ -1192,9 +1172,9 @@
 
 	ext.turtleButtonState = function(state) {
 		state = BUTTON_STATES[state];
-		if(state == 1) return clicked;
-		else if(state == 2) return doubleClicked;
-		else if(state == 3) return longPressed;
+		if(state == 1) return (sensory.map & 0x00000800) != 0;
+		else if(state == 2) return (sensory.map & 0x00000400) != 0;
+		else if(state == 3) return (sensory.map & 0x00000200) != 0;
 		return false;
 	};
 
@@ -1227,10 +1207,6 @@
 	};
 
 	ext._getStatus = function() {
-		clicked = false;
-		doubleClicked = false;
-		longPressed = false;
-		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
