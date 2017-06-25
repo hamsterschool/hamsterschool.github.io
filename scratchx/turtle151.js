@@ -646,6 +646,7 @@
 	}
 	
 	function handleEvents() {
+		console.log('handleEvents');
 		if(sensory.map & 0x00000800) {
 			clickedId = (clickedId % 255) + 1;
 			setTimeout(function() {
@@ -720,6 +721,7 @@
 	}
 	
 	ext.turtleWhenButtonState = function(state) {
+		console.log('turtleWhenButtonState');
 		state = BUTTON_STATES[state];
 		var result = false;
 		if(state == 1) result = clickedId != clickedPrevId;
@@ -1190,6 +1192,7 @@
 	};
 
 	ext.turtleButtonState = function(state) {
+		console.log('turtleButtonState');
 		state = BUTTON_STATES[state];
 		if(state == 1) return clickedId != clickedPrevId;
 		else if(state == 2) return (sensory.map & 0x00000400) != 0;
@@ -1226,6 +1229,7 @@
 	};
 
 	ext._getStatus = function() {
+		console.log('_getStatus');
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
@@ -1249,6 +1253,8 @@
 		menus: MENUS[lang],
 		url: "http://turtle.school"
 	};
+	
+	console.log(ext);
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
 
