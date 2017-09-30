@@ -1137,7 +1137,6 @@
 						if(canSend && socket) {
 							try {
 								var json = JSON.stringify(motoring);
-								console.log(json);
 								if(canSend && socket) socket.send(json);
 								clearMotoring();
 							} catch (e) {
