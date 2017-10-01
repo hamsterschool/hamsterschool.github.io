@@ -786,7 +786,7 @@
 				command: 0,
 				callback: undefined,
 				wheels: { left: 0, right: 0 },
-				reset2: function() {
+				reset: function() {
 					this.marker = -1;
 					this.command = 0;
 					this.callback = undefined;
@@ -948,7 +948,7 @@
 		colors = {};
 		markers = {};
 		if(navigator) {
-			navigator.reset2();
+			navigator.reset();
 			navigator = undefined;
 		}
 		removeAllTimeouts();
@@ -1119,15 +1119,15 @@
 	}
 	
 	function handleNavigation() {
-		var navigator = getNavigator();
-		navigator.updatePosition();
+		var navi = getNavigator();
+		navi.updatePosition();
 		var wheels = undefined;
-		if(navigator.command == 1) {
-			wheels = navigator.moveTo();
-		} else if(navigator.command == 2) {
-			wheels = navigator.turnToXY();
-		} else if(navigator.command == 3) {
-			wheels = navigator.turnToDegree();
+		if(navi.command == 1) {
+			wheels = navi.moveTo();
+		} else if(navi.command == 2) {
+			wheels = navi.turnToXY();
+		} else if(navi.command == 3) {
+			wheels = navi.turnToDegree();
 		}
 		var motoring = tx.motoring;
 		if(wheels) {
@@ -1136,9 +1136,9 @@
 		} else {
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
-			navigator.command = 0;
-			var callback = navigator.callback;
-			navigator.callback = undefined;
+			navi.command = 0;
+			var callback = navi.callback;
+			navi.callback = undefined;
 			callback();
 		}
 	}
