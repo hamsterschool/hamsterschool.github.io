@@ -747,6 +747,8 @@
 			'marker_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '방향', '폭', '높이', '넓이']
 		},
 		uz: {
+			'cm_sec': ['cm', 'soniya'],
+			'deg_sec': ['daraja', 'soniya'],
 			'move_unit': ['cm', 'soniya', 'puls'],
 			'turn_unit': ['daraja', 'soniya', 'puls'],
 			'head_tail': ['bosh', 'dum'],
