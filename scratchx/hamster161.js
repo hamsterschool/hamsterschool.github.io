@@ -16,22 +16,24 @@
 		inputB: 0,
 		lineTracerState: 0
 	};
-	var motoring = {
-		module: 'hamster',
-		map: 0xfc000000,
-		leftWheel: 0,
-		rightWheel: 0,
-		buzzer: 0,
-		outputA: 0,
-		outputB: 0,
-		leftLed: 0,
-		rightLed: 0,
-		note: 0,
-		lineTracerMode: 0,
-		lineTracerSpeed: 5,
-		ioModeA: 0,
-		ioModeB: 0,
-		motion: 0,
+	var tx = {
+		motoring: {
+			module: 'hamster',
+			map: 0xfc000000,
+			leftWheel: 0,
+			rightWheel: 0,
+			buzzer: 0,
+			outputA: 0,
+			outputB: 0,
+			leftLed: 0,
+			rightLed: 0,
+			note: 0,
+			lineTracerMode: 0,
+			lineTracerSpeed: 5,
+			ioModeA: 0,
+			ioModeB: 0,
+			motion: 0
+		},
 		ar: {}
 	};
 	const MOTION = {
@@ -55,18 +57,17 @@
 	var boardCount = 0;
 	var boardCallback = undefined;
 	var tempo = 60;
-	var chatSocket = undefined;
-	var chatMessages = {};
-	var colors = {};
-	var markers = {};
-	var robotMarker = -1;
-	var navigator = undefined;
-	var navigationCommand = 0;
-	var navigationCallback = undefined;
+	var chat = {
+		socket: undefined,
+		messages: {}
+	};
 	var tolerance = {
 		position: 15,
 		angle: 5 * Math.PI / 180.0
 	};
+	var colors = {};
+	var markers = {};
+	var navigator = undefined;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -708,55 +709,62 @@
 	}
 	
 	function clearMotoring() {
-		motoring.map = 0xfc000000;
+		tx.motoring.map = 0xfc000000;
 	}
 	
 	function setLeftLed(color) {
+		var motoring = tx.motoring;
 		motoring.leftLed = color;
 		motoring.map |= 0x01000000;
 	}
 	
 	function setRightLed(color) {
+		var motoring = tx.motoring;
 		motoring.rightLed = color;
 		motoring.map |= 0x00800000;
 	}
 	
 	function setNote(note) {
+		var motoring = tx.motoring;
 		motoring.note = note;
 		motoring.map |= 0x00400000;
 	}
 
 	function setLineTracerMode(mode) {
+		var motoring = tx.motoring;
 		motoring.lineTracerMode = mode;
 		motoring.map |= 0x00200000;
 	}
 	
 	function setLineTracerSpeed(speed) {
+		var motoring = tx.motoring;
 		motoring.lineTracerSpeed = speed;
 		motoring.map |= 0x00100000;
 	}
 	
 	function setIoModeA(mode) {
+		var motoring = tx.motoring;
 		motoring.ioModeA = mode;
 		motoring.map |= 0x00080000;
 	}
 	
 	function setIoModeB(mode) {
+		var motoring = tx.motoring;
 		motoring.ioModeB = mode;
 		motoring.map |= 0x00040000;
 	}
 	
 	function chatDisconnect() {
-		if(chatSocket) {
-			chatSocket.close();
-			chatSocket = undefined;
+		if(chat.socket) {
+			chat.socket.close();
+			chat.socket = undefined;
 		}
 	}
 	
 	function chatSend(data) {
-		if(chatSocket) {
+		if(chat.socket) {
 			try {
-				chatSocket.send(JSON.stringify(data));
+				chat.socket.send(JSON.stringify(data));
 			} catch (e) {
 			}
 		}
@@ -774,8 +782,16 @@
 				targetDirectionY: -1,
 				targetDegree: -200,
 				backward: false,
+				marker: -1,
+				command: 0,
+				callback: undefined,
 				wheels: { left: 0, right: 0 },
-				reset: function() {
+				reset2: function() {
+					this.marker = -1;
+					this.command = 0;
+					this.callback = undefined;
+				},
+				clear: function() {
 					this.x = -1;
 					this.y = -1;
 					this.theta = 0;
@@ -802,12 +818,12 @@
 				setBackward: function(backward) {
 					this.backward = backward;
 				},
-				updatePosition: function(markerIndex) {
-					var marker = markers[markerIndex];
-					if(marker) {
-						this.x = marker.x;
-						this.y = marker.y;
-						this.theta = marker.theta;
+				updatePosition: function() {
+					var data = markers[this.marker];
+					if(data) {
+						this.x = data.x;
+						this.y = data.y;
+						this.theta = data.theta;
 					}
 				},
 				moveTo: function() {
@@ -880,7 +896,7 @@
 				turnToDegree: function() {
 					var targetDegree = this.targetDegree;
 					if(targetDegree > -200) {
-						var targetRadian = degree * Math.PI / 180.0;
+						var targetRadian = targetDegree * Math.PI / 180.0;
 						return this.turn(targetRadian);
 					}
 				},
@@ -895,16 +911,17 @@
 	}
 	
 	function getArImage(id, index) {
-		var image = motoring.ar[id];
+		var image = tx.ar[id];
 		if(image === undefined) {
 			image = {};
-			motoring.ar[id] = image;
+			tx.ar[id] = image;
 		}
 		image['id'] = index;
 		return image;
 	}
 
 	function reset() {
+		var motoring = tx.motoring;
 		motoring.map = 0xfdfc0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -919,7 +936,7 @@
 		motoring.ioModeA = 0;
 		motoring.ioModeB = 0;
 		motoring.motion = 0;
-		motoring.ar = {};
+		tx.ar = {};
 		
 		lineTracerCallback = undefined;
 		boardCommand = 0;
@@ -927,13 +944,13 @@
 		boardCount = 0;
 		boardCallback = undefined;
 		tempo = 60;
-		chatMessages = {};
+		chat.messages = {};
 		colors = {};
 		markers = {};
-		robotMarker = -1;
-		navigator = undefined;
-		navigationCommand = 0;
-		navigationCallback = undefined;
+		if(navigator) {
+			navigator.reset2();
+			navigator = undefined;
+		}
 		removeAllTimeouts();
 		chatDisconnect();
 	}
@@ -1103,24 +1120,25 @@
 	
 	function handleNavigation() {
 		var navigator = getNavigator();
-		navigator.updatePosition(robotMarker);
+		navigator.updatePosition();
 		var wheels = undefined;
-		if(navigationCommand == 1) {
+		if(navigator.command == 1) {
 			wheels = navigator.moveTo();
-		} else if(navigationCommand == 2) {
+		} else if(navigator.command == 2) {
 			wheels = navigator.turnToXY();
-		} else if(navigationCommand == 3) {
+		} else if(navigator.command == 3) {
 			wheels = navigator.turnToDegree();
 		}
+		var motoring = tx.motoring;
 		if(wheels) {
 			motoring.leftWheel = wheels.left;
 			motoring.rightWheel = wheels.right;
 		} else {
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
-			navigationCommand = 0;
-			var callback = navigationCallback;
-			navigationCallback = undefined;
+			navigator.command = 0;
+			var callback = navigator.callback;
+			navigator.callback = undefined;
 			callback();
 		}
 	}
@@ -1136,7 +1154,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								var json = JSON.stringify(motoring);
+								var json = JSON.stringify(tx);
 								if(canSend && socket) socket.send(json);
 								clearMotoring();
 							} catch (e) {
@@ -1145,17 +1163,23 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var data = JSON.parse(message.data);
-							if(data.module == 'hamster') {
-								if(data.type == 1) {
-									if(data.index == 0) {
+							var received = JSON.parse(message.data);
+							var data;
+							for(var i in received) {
+								data = received[i];
+								if(i == 'sensory') {
+									if(data.module == 'hamster' && data.index == 0) {
 										sensory = data;
 										if(lineTracerCallback) handleLineTracer();
 										if(boardCallback) handleBoard();
-										if(navigationCallback) handleNavigation();
+										if(navigator && navigator.callback) handleNavigation();
 									}
-								} else if(data.type == 0) {
-									connectionState = data.state;
+								} else if(i == 'state') {
+									if(data.module == 'hamster') {
+										connectionState = data.state;
+									}
+								} else if(i == 'navigation') {
+									tolerance = data;
 								}
 							}
 						} catch (e) {
@@ -1190,6 +1214,7 @@
 	}
 
 	ext.boardMoveForward = function(callback) {
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		setLineTracerMode(0);
 		motoring.leftWheel = 45;
@@ -1201,6 +1226,7 @@
 	};
 
 	ext.boardTurn = function(direction, callback) {
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		setLineTracerMode(0);
 		if(VALUES[direction] === LEFT) {
@@ -1218,6 +1244,7 @@
 	};
 	
 	ext.moveForward = function(callback) {
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.FORWARD;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1234,6 +1261,7 @@
 	};
 	
 	ext.moveBackward = function(callback) {
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.BACKWARD;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1252,6 +1280,7 @@
 	ext.turn = function(direction, callback) {
 		boardCommand = 0;
 		setLineTracerMode(0);
+		var motoring = tx.motoring;
 		if(VALUES[direction] === LEFT) {
 			motoring.motion = MOTION.LEFT;
 			motoring.leftWheel = -30;
@@ -1276,6 +1305,7 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
+			var motoring = tx.motoring;
 			motoring.motion = MOTION.FORWARD;
 			motoring.leftWheel = 30;
 			motoring.rightWheel = 30;
@@ -1297,6 +1327,7 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
+			var motoring = tx.motoring;
 			motoring.motion = MOTION.BACKWARD;
 			motoring.leftWheel = -30;
 			motoring.rightWheel = -30;
@@ -1318,6 +1349,7 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
+			var motoring = tx.motoring;
 			if(VALUES[direction] === LEFT) {
 				motoring.motion = MOTION.LEFT;
 				motoring.leftWheel = -30;
@@ -1343,6 +1375,7 @@
 	ext.changeBothWheelsBy = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1357,6 +1390,7 @@
 	ext.setBothWheelsTo = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1370,6 +1404,7 @@
 
 	ext.changeWheelBy = function(which, speed) {
 		speed = parseFloat(speed);
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1390,6 +1425,7 @@
 
 	ext.setWheelTo = function(which, speed) {
 		speed = parseFloat(speed);
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1416,6 +1452,7 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		motoring.leftWheel = 0;
@@ -1435,6 +1472,7 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		motoring.leftWheel = 0;
@@ -1451,6 +1489,7 @@
 	};
 
 	ext.stop = function() {
+		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1486,6 +1525,7 @@
 	};
 
 	ext.beep = function(callback) {
+		var motoring = tx.motoring;
 		motoring.buzzer = 440;
 		setNote(0);
 		var timer = setTimeout(function() {
@@ -1499,7 +1539,7 @@
 	ext.changeBuzzerBy = function(value) {
 		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
-			motoring.buzzer += buzzer;
+			tx.motoring.buzzer += buzzer;
 		}
 		setNote(0);
 	};
@@ -1507,13 +1547,13 @@
 	ext.setBuzzerTo = function(value) {
 		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
-			motoring.buzzer = buzzer;
+			tx.motoring.buzzer = buzzer;
 		}
 		setNote(0);
 	};
 
 	ext.clearBuzzer = function() {
-		motoring.buzzer = 0;
+		tx.motoring.buzzer = 0;
 		setNote(0);
 	};
 	
@@ -1523,7 +1563,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
+		tx.motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
 			note += (octave - 1) * 12;
 			setNote(note);
@@ -1554,7 +1594,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
+		tx.motoring.buzzer = 0;
 		setNote(0);
 		if(beat && beat > 0 && tempo > 0) {
 			var timer = setTimeout(function() {
@@ -1644,6 +1684,7 @@
 	ext.changeOutputBy = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
+			var motoring = tx.motoring;
 			if(port == 'A') {
 				motoring.outputA += value;
 			} else if(port == 'B') {
@@ -1658,6 +1699,7 @@
 	ext.setOutputTo = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
+			var motoring = tx.motoring;
 			if(port == 'A') {
 				motoring.outputA = value;
 			} else if(port == 'B') {
@@ -1673,6 +1715,7 @@
 		action = VALUES[action];
 		setIoModeA(10);
 		setIoModeB(10);
+		var motoring = tx.motoring;
 		if(action == OPEN) {
 			motoring.outputA = 1;
 			motoring.outputB = 0;
@@ -1690,6 +1733,7 @@
 	ext.clearGripper = function() {
 		setIoModeA(10);
 		setIoModeB(10);
+		var motoring = tx.motoring;
 		motoring.outputA = 0;
 		motoring.outputB = 0;
 	};
@@ -1709,19 +1753,19 @@
 			try {
 				var sock = new WebSocket('ws://' + ip + ':' + port);
 				sock.binaryType = 'arraybuffer';
-				chatSocket = sock;
+				chat.socket = sock;
 				sock.onopen = function() {
 					sock.onmessage = function(message) {
 						try {
 							var data = JSON.parse(message.data);
 							if(data.type === 'send' || data.type === 'broadcast') {
-								chatMessages[data.message] = true;
+								chat.messages[data.message] = true;
 							}
 						} catch (e) {
 						}
 					};
 					sock.onclose = function() {
-						chatSocket = undefined;
+						chat.socket = undefined;
 					};
 					chatSend({
 						type: 'register',
@@ -1752,13 +1796,14 @@
 	};
 	
 	ext.messageReceived = function(message) {
-		return chatMessages[message] === true;
+		return chat.messages[message] === true;
 	};
 	
 	ext.setRobotMarkerTo = function(marker) {
 		marker = parseInt(marker);
 		if((typeof marker == 'number') && marker >= 0) {
-			robotMarker = marker;
+			var navi = getNavigator();
+			navi.marker = marker;
 		}
 	};
 	
@@ -1766,21 +1811,21 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		var navi = getNavigator();
-		navi.reset();
+		navi.clear();
 		navi.setTargetPosition(x, y);
 		navi.setBackward(VALUES[direction] == BACKWARD);
-		navigationCallback = callback;
-		navigationCommand = 1;
+		navi.allback = callback;
+		navi.command = 1;
 	};
 	
 	ext.turnInDirectionOfXY = function(x, y, callback) {
 		boardCommand = 0;
 		setLineTracerMode(0);
 		var navi = getNavigator();
-		navi.reset();
+		navi.clear();
 		navi.setTargetDirection(x, y);
-		navigationCallback = callback;
-		navigationCommand = 2;
+		navi.callback = callback;
+		navi.command = 2;
 	};
 	
 	ext.turnInDirectionOfDegrees = function(degree, callback) {
@@ -1793,10 +1838,10 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		var navi = getNavigator();
-		navi.reset();
+		navi.clear();
 		navi.setTargetDegree(degree);
-		navigationCallback = callback;
-		navigationCommand = 3;
+		navi.callback = callback;
+		navi.command = 3;
 	};
 	
 	ext.dataOfColorObject = function(color, value) {
@@ -1844,7 +1889,7 @@
 		return 2147483647;
 	};
 	
-	ext.orientationFromMarkerToMarker = function() {
+	ext.orientationFromMarkerToMarker = function(marker1, marker2) {
 		marker1 = parseInt(marker1);
 		marker2 = parseInt(marker2);
 		if(marker1 >= 0 && marker2 >= 0) {
