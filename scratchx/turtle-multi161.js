@@ -2403,7 +2403,7 @@
 		}
 	};
 	
-	ext.turtleTurnInDirectionOfXY = function(x, y, callback) {
+	ext.turtleTurnInDirectionOfXY = function(index, x, y, callback) {
 		var robot = getRobot(index);
 		if(robot) {
 			x = parseInt(x);
@@ -2425,7 +2425,7 @@
 		}
 	};
 
-	ext.turtleTurnInDirectionOfDegrees = function(degree, callback) {
+	ext.turtleTurnInDirectionOfDegrees = function(index, degree, callback) {
 		var robot = getRobot(index);
 		if(robot) {
 			degree = parseFloat(degree);
