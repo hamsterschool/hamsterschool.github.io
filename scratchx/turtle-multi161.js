@@ -981,9 +981,7 @@
 			robot.tempo = 60;
 			robot.navigator = undefined;
 			robot.getNavigator = function() {
-				if(!robot.navigator) {
-					robot.navigator = createNavigator();
-				}
+				if(!robot.navigator) robot.navigator = createNavigator();
 				return robot.navigator;
 			};
 			robot.reset = function() {
@@ -1019,7 +1017,10 @@
 				robot.longPressed = false;
 				robot.colorPattern = -1;
 				robot.tempo = 60;
-				if(robot.navigator) robot.navigator.reset();
+				if(robot.navigator) {
+					robot.navigator.reset();
+					robot.navigator = undefined;
+				}
 			};
 			robot.clearMotoring = function() {
 				robot.motoring.map = 0xf8000000;
@@ -1031,7 +1032,7 @@
 				robot.colorPattern = -1;
 			};
 			robots[index] = robot;
-			motorings[index] = robot.motoring;
+			tx['turtle' + index] = robot.motoring;
 		}
 		return robot;
 	}
@@ -1382,7 +1383,7 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(i == 'state') {
+								if(i == 'connection') {
 									if(data.module == 'turtle') {
 										connectionState = data.state;
 									}
