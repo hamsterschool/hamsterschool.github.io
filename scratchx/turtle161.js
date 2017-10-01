@@ -1700,7 +1700,7 @@
 	
 	ext.connectToIpPortAs = function(ip, port, name, callback) {
 		port = parseInt(port);
-		if(('WebSocket' in window) && port > 0) {
+		if(('WebSocket' in window) && (typeof port == 'number') && port > 0) {
 			chatDisconnect();
 			try {
 				var sock = new WebSocket('ws://' + ip + ':' + port);
@@ -1751,7 +1751,7 @@
 		return chat.messages[message] === true;
 	};
 	
-	ext.setRobotMarkerTo = function(marker) {
+	ext.turtleSetRobotMarkerTo = function(marker) {
 		marker = parseInt(marker);
 		if((typeof marker == 'number') && marker >= 0) {
 			var navi = getNavigator();
@@ -1759,7 +1759,7 @@
 		}
 	};
 
-	ext.moveToXY = function(direction, x, y, callback) {
+	ext.turtleMoveToXY = function(direction, x, y, callback) {
 		x = parseInt(x);
 		y = parseInt(y);
 		if((typeof x == 'number') && (typeof y == 'number')) {
@@ -1777,7 +1777,7 @@
 		}
 	};
 	
-	ext.turnInDirectionOfXY = function(x, y, callback) {
+	ext.turtleTurnInDirectionOfXY = function(x, y, callback) {
 		x = parseInt(x);
 		y = parseInt(y);
 		if((typeof x == 'number') && (typeof y == 'number')) {
@@ -1794,7 +1794,7 @@
 		}
 	};
 
-	ext.turnInDirectionOfDegrees = function(degree, callback) {
+	ext.turtleTurnInDirectionOfDegrees = function(degree, callback) {
 		degree = parseFloat(degree);
 		if(typeof degree == 'number') {
 			if(degree > 180) {
