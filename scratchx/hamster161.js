@@ -1167,19 +1167,19 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(i == 'sensory') {
+								if(i == 'connection') {
+									if(data.module == 'hamster') {
+										connectionState = data.state;
+									}
+								} else if(i == 'navigation') {
+									tolerance = data;
+								} else {
 									if(data.module == 'hamster' && data.index == 0) {
 										sensory = data;
 										if(lineTracerCallback) handleLineTracer();
 										if(boardCallback) handleBoard();
 										if(navigator && navigator.callback) handleNavigation();
 									}
-								} else if(i == 'state') {
-									if(data.module == 'hamster') {
-										connectionState = data.state;
-									}
-								} else if(i == 'navigation') {
-									tolerance = data;
 								}
 							}
 						} catch (e) {
