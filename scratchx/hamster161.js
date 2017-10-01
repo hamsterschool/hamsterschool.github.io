@@ -1748,7 +1748,7 @@
 	
 	ext.connectToIpPortAs = function(ip, port, name, callback) {
 		port = parseInt(port);
-		if(('WebSocket' in window) && port > 0) {
+		if(('WebSocket' in window) && (typeof port == 'number') && port > 0) {
 			chatDisconnect();
 			try {
 				var sock = new WebSocket('ws://' + ip + ':' + port);
@@ -1808,40 +1808,56 @@
 	};
 	
 	ext.moveToXY = function(direction, x, y, callback) {
-		boardCommand = 0;
-		setLineTracerMode(0);
-		var navi = getNavigator();
-		navi.clear();
-		navi.setTargetPosition(x, y);
-		navi.setBackward(VALUES[direction] == BACKWARD);
-		navi.allback = callback;
-		navi.command = 1;
+		x = parseInt(x);
+		y = parseInt(y);
+		if((typeof x == 'number') && (typeof y == 'number')) {
+			boardCommand = 0;
+			setLineTracerMode(0);
+			var navi = getNavigator();
+			navi.clear();
+			navi.setTargetPosition(x, y);
+			navi.setBackward(VALUES[direction] == BACKWARD);
+			navi.allback = callback;
+			navi.command = 1;
+		} else {
+			callback();
+		}
 	};
 	
 	ext.turnInDirectionOfXY = function(x, y, callback) {
-		boardCommand = 0;
-		setLineTracerMode(0);
-		var navi = getNavigator();
-		navi.clear();
-		navi.setTargetDirection(x, y);
-		navi.callback = callback;
-		navi.command = 2;
+		x = parseInt(x);
+		y = parseInt(y);
+		if((typeof x == 'number') && (typeof y == 'number')) {
+			boardCommand = 0;
+			setLineTracerMode(0);
+			var navi = getNavigator();
+			navi.clear();
+			navi.setTargetDirection(x, y);
+			navi.callback = callback;
+			navi.command = 2;
+		} else {
+			callback();
+		}
 	};
 	
 	ext.turnInDirectionOfDegrees = function(degree, callback) {
 		degree = parseFloat(degree);
-		if(degree > 180) {
-			while(degree > 180) degree -= 360;
-		} else if(degree < -180) {
-			while(degree < -180) degree += 360;
+		if(typeof degree == 'number') {
+			if(degree > 180) {
+				while(degree > 180) degree -= 360;
+			} else if(degree < -180) {
+				while(degree < -180) degree += 360;
+			}
+			boardCommand = 0;
+			setLineTracerMode(0);
+			var navi = getNavigator();
+			navi.clear();
+			navi.setTargetDegree(degree);
+			navi.callback = callback;
+			navi.command = 3;
+		} else {
+			callback();
 		}
-		boardCommand = 0;
-		setLineTracerMode(0);
-		var navi = getNavigator();
-		navi.clear();
-		navi.setTargetDegree(degree);
-		navi.callback = callback;
-		navi.command = 3;
 	};
 	
 	ext.dataOfColorObject = function(color, value) {
@@ -1858,7 +1874,7 @@
 	ext.dataOfMarker = function(marker, value) {
 		marker = parseInt(marker);
 		value = CAMERA_DATA[value];
-		if(marker >= 0) {
+		if((typeof marker == 'number') && marker >= 0) {
 			marker = markers[marker];
 			if(marker) {
 				var v = marker[value];
@@ -1872,7 +1888,7 @@
 	ext.distanceFromMarkerToMarker = function(marker1, marker2) {
 		marker1 = parseInt(marker1);
 		marker2 = parseInt(marker2);
-		if(marker1 >= 0 && marker2 >= 0) {
+		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
 			marker1 = markers[marker1];
 			marker2 = markers[marker2];
 			if(marker1 && marker2) {
@@ -1892,7 +1908,7 @@
 	ext.orientationFromMarkerToMarker = function(marker1, marker2) {
 		marker1 = parseInt(marker1);
 		marker2 = parseInt(marker2);
-		if(marker1 >= 0 && marker2 >= 0) {
+		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
 			marker1 = markers[marker1];
 			marker2 = markers[marker2];
 			if(marker1 && marker2) {
@@ -1929,18 +1945,20 @@
 	
 	ext.setImagePositionToXY = function(index, x, y) {
 		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
+		x = parseInt(x);
+		y = parseInt(y);
+		if((typeof index == 'number') && index >= 0 && (typeof x == 'number') && (typeof y == 'number')) {
 			var id = 'image' + index;
 			var image = getArImage(id, index);
-			image['x'] = parseInt(x);
-			image['y'] = parseInt(y);
+			image['x'] = x;
+			image['y'] = y;
 		}
 	};
 	
 	ext.setImageOrientationToDegrees = function(index, degree) {
 		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
-			degree = parseFloat(degree);
+		degree = parseFloat(degree);
+		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
 			if(degree > 180) {
 				while(degree > 180) degree -= 360;
 			} else if(degree < -180) {
@@ -1955,7 +1973,7 @@
 	ext.setImageSizeTo = function(index, scale) {
 		index = parseInt(index);
 		scale = parseFloat(scale);
-		if((typeof index == 'number') && index >= 0 && scale > 0) {
+		if((typeof index == 'number') && index >= 0 && (typeof scale == 'number') && scale > 0) {
 			var id = 'image' + index;
 			var image = getArImage(id, index);
 			image['scale'] = scale / 100.0;
