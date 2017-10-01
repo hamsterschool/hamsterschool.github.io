@@ -2842,7 +2842,7 @@
 		}
 	};
 	
-	ext.turnInDirectionOfXY = function(x, y, callback) {
+	ext.turnInDirectionOfXY = function(index, x, y, callback) {
 		var robot = getRobot(index);
 		if(robot) {
 			x = parseInt(x);
@@ -2863,7 +2863,7 @@
 		}
 	};
 	
-	ext.turnInDirectionOfDegrees = function(degree, callback) {
+	ext.turnInDirectionOfDegrees = function(index, degree, callback) {
 		var robot = getRobot(index);
 		if(robot) {
 			degree = parseFloat(degree);
