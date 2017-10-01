@@ -1134,18 +1134,18 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(i == 'sensory') {
-									if(data.module == 'turtle' && data.index == 0) {
-										sensory = data;
-										handleSensory();
-										if(navigator && navigator.callback) handleNavigation();
-									}
-								} else if(i == 'state') {
+								if(i == 'connection') {
 									if(data.module == 'turtle') {
 										connectionState = data.state;
 									}
 								} else if(i == 'navigation') {
 									tolerance = data;
+								} else {
+									if(data.module == 'turtle' && data.index == 0) {
+										sensory = data;
+										handleSensory();
+										if(navigator && navigator.callback) handleNavigation();
+									}
 								}
 							}
 						} catch (e) {
