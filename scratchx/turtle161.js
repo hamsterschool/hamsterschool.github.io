@@ -41,8 +41,16 @@
 		motionUnit: 0,
 		motionSpeed: 0,
 		motionValue: 0,
-		motionRadius: 0
+		motionRadius: 0,
+		ar: {}
 	};
+	const STRAIGHT_SPEED = 50;
+	const MINIMUM_WHEEL_SPEED = 18;
+	const GAIN_BASE_SPEED = 2.0;
+	const MAX_BASE_SPEED = 50;
+	const GAIN_POSITION = 70;
+	const GAIN_ANGLE = 50;
+	const PI_2 = 2 * Math.PI;
 	var connectionState = 1;
 	var pulseCallback = undefined;
 	var soundId = 0;
@@ -54,6 +62,18 @@
 	var longPressed = false;
 	var colorPattern = -1;
 	var tempo = 60;
+	var chatSocket = undefined;
+	var chatMessages = {};
+	var colors = {};
+	var markers = {};
+	var robotMarker = -1;
+	var navigator = undefined;
+	var navigationCommand = 0;
+	var navigationCallback = undefined;
+	var tolerance = {
+		position: 15,
+		angle: 5 * Math.PI / 180.0
+	};
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -412,6 +432,8 @@
 	var SOUNDS = {};
 	var BUTTON_STATES = {};
 	var VALUES = {};
+	var CAMERA_COLORS = {};
+	var CAMERA_DATA = {};
 	const SECONDS = 1;
 	const PULSES = 2;
 	const DEGREES = 3;
@@ -419,6 +441,8 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
+	const FORWARD = 8;
+	const BACKWARD = 9;
 	const LEVEL1_MOVE_CM = 12;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
@@ -496,6 +520,27 @@
 		VALUES[tmp[2]] = BACK;
 		tmp = MENUS[i]['head_tail'];
 		VALUES[tmp[0]] = HEAD;
+		tmp = MENUS[i]['forward_backward'];
+		VALUES[tmp[0]] = FORWARD;
+		VALUES[tmp[1]] = BACKWARD;
+		tmp = MENUS[i]['camera_color'];
+		CAMERA_COLORS[tmp[0]] = 'red';
+		CAMERA_COLORS[tmp[1]] = 'yellow';
+		CAMERA_COLORS[tmp[2]] = 'green';
+		CAMERA_COLORS[tmp[3]] = 'cyan';
+		CAMERA_COLORS[tmp[4]] = 'blue';
+		CAMERA_COLORS[tmp[5]] = 'magenta';
+		tmp = MENUS[i]['marker_position'];
+		CAMERA_DATA[tmp[0]] = 'x';
+		CAMERA_DATA[tmp[1]] = 'y';
+		CAMERA_DATA[tmp[2]] = 'left';
+		CAMERA_DATA[tmp[3]] = 'right';
+		CAMERA_DATA[tmp[4]] = 'top';
+		CAMERA_DATA[tmp[5]] = 'bottom';
+		CAMERA_DATA[tmp[6]] = 'theta';
+		CAMERA_DATA[tmp[7]] = 'width';
+		CAMERA_DATA[tmp[8]] = 'height';
+		CAMERA_DATA[tmp[9]] = 'area';
 	}
 
 	function removeTimeout(id) {
@@ -566,6 +611,164 @@
 		}
 	}
 	
+	function chatDisconnect() {
+		if(chatSocket) {
+			chatSocket.close();
+			chatSocket = undefined;
+		}
+	}
+	
+	function chatSend(data) {
+		if(chatSocket) {
+			try {
+				chatSocket.send(JSON.stringify(data));
+			} catch (e) {
+			}
+		}
+	}
+	
+	function getNavigator() {
+		if(!navigator) {
+			navigator = {
+				x: -1,
+				y: -1,
+				theta: 0,
+				targetPositionX: -1,
+				targetPositionY: -1,
+				targetDirectionX: -1,
+				targetDirectionY: -1,
+				targetDegree: -200,
+				backward: false,
+				wheels: { left: 0, right: 0 },
+				reset: function() {
+					this.x = -1;
+					this.y = -1;
+					this.theta = 0;
+					this.targetPositionX = -1;
+					this.targetPositionY = -1;
+					this.targetDirectionX = -1;
+					this.targetDirectionY = -1;
+					this.targetDegree = -200;
+					this.backward = false;
+					this.wheels.left = 0;
+					this.wheels.right = 0;
+				},
+				setTargetPosition: function(x, y) {
+					this.targetPositionX = x;
+					this.targetPositionY = y;
+				},
+				setTargetDirection: function(x, y) {
+					this.targetDirectionX = x;
+					this.targetDirectionY = y;
+				},
+				setTargetDegree: function(degree) {
+					this.targetDegree = degree;
+				},
+				setBackward: function(backward) {
+					this.backward = backward;
+				},
+				updatePosition: function(markerIndex) {
+					var marker = markers[markerIndex];
+					if(marker) {
+						this.x = marker.x;
+						this.y = marker.y;
+						this.theta = marker.theta;
+					}
+				},
+				moveTo: function() {
+					var x = this.x;
+					var y = this.y;
+					var targetX = this.targetPositionX;
+					var targetY = this.targetPositionY;
+					var backward = this.backward;
+					if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
+						var currentRadian = this.theta * Math.PI / 180.0;
+						if(backward) currentRadian += Math.PI;
+						var targetRadian = Math.atan2(targetY - y, targetX - x);
+						var diff = this.validateRadian(targetRadian - currentRadian);
+						var mag = Math.abs(diff);
+						var ex = targetX - x;
+						var ey = targetY - y;
+						var dist = Math.sqrt(ex * ex + ey * ey);
+						if(dist > tolerance.position) {
+							var wheels = this.wheels;
+							if(mag < 0.01) {
+								wheels.left = STRAIGHT_SPEED;
+								wheels.right = STRAIGHT_SPEED;
+							} else {
+								var base = (MINIMUM_WHEEL_SPEED + 0.5 / mag) * GAIN_BASE_SPEED;
+								if(base > MAX_BASE_SPEED) base = MAX_BASE_SPEED;
+								var value = 0;
+								if(diff > 0) value = Math.log(1 + mag) * GAIN_POSITION;
+								else value = -Math.log(1 + mag) * GAIN_POSITION;
+								if(backward) value = -value;
+								wheels.left = parseInt(base - value);
+								wheels.right = parseInt(base + value);
+							}
+							if(backward) {
+								wheels.left = -wheels.left;
+								wheels.right = -wheels.right;
+							}
+							return wheels;
+						}
+					} else {
+						return this.wheels;
+					}
+				},
+				turn: function(targetRadian) {
+					var currentRadian = this.theta * Math.PI / 180.0;
+					var diff = this.validateRadian(targetRadian - currentRadian);
+					var mag = Math.abs(diff);
+					var direction = (diff > 0) ? 1 : -1;
+					if(mag > tolerance.angle) {
+						var value = 0;
+						if(diff > 0) value = Math.log(1 + mag) * GAIN_ANGLE;
+						else value = -Math.log(1 + mag) * GAIN_ANGLE;
+						var wheels = this.wheels;
+						wheels.left = -value;
+						wheels.right = value;
+						return wheels;
+					}
+				},
+				turnToXY: function() {
+					var x = this.x;
+					var y = this.y;
+					var targetX = this.targetDirectionX;
+					var targetY = this.targetDirectionY;
+					if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
+						var targetRadian = Math.atan2(targetY - y, targetX - x);
+						return this.turn(targetRadian);
+					} else {
+						return this.wheels;
+					}
+				},
+				turnToDegree: function() {
+					var targetDegree = this.targetDegree;
+					if(targetDegree > -200) {
+						var targetRadian = degree * Math.PI / 180.0;
+						return this.turn(targetRadian);
+					}
+				},
+				validateRadian: function(radian) {
+					if(radian > Math.PI) return radian - this.PI_2;
+					else if(radian < -Math.PI) return radian + this.PI_2;
+					return radian;
+				}
+			};
+		}
+		return navigator;
+	}
+	
+	function getArImage(id, index) {
+		var image = motoring.ar[id];
+		if(image === undefined) {
+			image = {};
+			motoring.ar[id] = image;
+		}
+		image['id'] = index;
+		return image;
+	}
+	
 	function reset() {
 		motoring.map = 0xffe40000;
 		motoring.leftWheel = 0;
@@ -587,6 +790,7 @@
 		motoring.motionSpeed = 0;
 		motoring.motionValue = 0;
 		motoring.motionRadius = 0;
+		motoring.ar = {};
 
 		pulseCallback = undefined;
 		soundId = 0;
@@ -598,7 +802,15 @@
 		longPressed = false;
 		colorPattern = -1;
 		tempo = 60;
+		chatMessages = {};
+		colors = {};
+		markers = {};
+		robotMarker = -1;
+		navigator = undefined;
+		navigationCommand = 0;
+		navigationCallback = undefined;
 		removeAllTimeouts();
+		chatDisconnect();
 	}
 	
 	function handleSensory() {
@@ -654,6 +866,30 @@
 		}
 	}
 	
+	function handleNavigation() {
+		var navigator = getNavigator();
+		navigator.updatePosition(robotMarker);
+		var wheels = undefined;
+		if(navigationCommand == 1) {
+			wheels = navigator.moveTo();
+		} else if(navigationCommand == 2) {
+			wheels = navigator.turnToXY();
+		} else if(navigationCommand == 3) {
+			wheels = navigator.turnToDegree();
+		}
+		if(wheels) {
+			motoring.leftWheel = wheels.left;
+			motoring.rightWheel = wheels.right;
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			navigationCommand = 0;
+			var callback = navigationCallback;
+			navigationCallback = undefined;
+			callback();
+		}
+	}
+	
 	function open(url) {
 		if('WebSocket' in window) {
 			try {
@@ -680,6 +916,7 @@
 									if(data.index == 0) {
 										sensory = data;
 										handleSensory();
+										if(navigationCallback) handleNavigation();
 									}
 								} else if(data.type == 0) {
 									connectionState = data.state;
@@ -1212,7 +1449,222 @@
 	ext.turtleAccelerationZ = function() {
 		return sensory.accelerationZ;
 	};
+	
+	ext.connectToIpPortAs = function(ip, port, name, callback) {
+		port = parseInt(port);
+		if(('WebSocket' in window) && port > 0) {
+			chatDisconnect();
+			try {
+				var sock = new WebSocket('ws://' + ip + ':' + port);
+				sock.binaryType = 'arraybuffer';
+				chatSocket = sock;
+				sock.onopen = function() {
+					sock.onmessage = function(message) {
+						try {
+							var data = JSON.parse(message.data);
+							if(data.type === 'send' || data.type === 'broadcast') {
+								chatMessages[data.message] = true;
+							}
+						} catch (e) {
+						}
+					};
+					sock.onclose = function() {
+						chatSocket = undefined;
+					};
+					chatSend({
+						type: 'register',
+						name: name
+					});
+					callback();
+				};
+			} catch (e) {
+			}
+		} else {
+			callback();
+		}
+	};
+	
+	ext.sendTo = function(message, receiver) {
+		chatSend({
+			type: 'send',
+			to: receiver,
+			message: message
+		});
+	};
+	
+	ext.broadcast = function(message) {
+		chatSend({
+			type: 'broadcast',
+			message: message
+		});
+	};
+	
+	ext.messageReceived = function(message) {
+		return chatMessages[message] === true;
+	};
+	
+	ext.setRobotMarkerTo = function(marker) {
+		marker = parseInt(marker);
+		if((typeof marker == 'number') && marker >= 0) {
+			robotMarker = marker;
+		}
+	};
 
+	ext.moveToXY = function(direction, x, y, callback) {
+		boardCommand = 0;
+		setLineTracerMode(0);
+		var navi = getNavigator();
+		navi.reset();
+		navi.setTargetPosition(x, y);
+		navi.setBackward(VALUES[direction] == BACKWARD);
+		navigationCallback = callback;
+		navigationCommand = 1;
+	};
+	
+	ext.turnInDirectionOfXY = function(x, y, callback) {
+		boardCommand = 0;
+		setLineTracerMode(0);
+		var navi = getNavigator();
+		navi.reset();
+		navi.setTargetDirection(x, y);
+		navigationCallback = callback;
+		navigationCommand = 2;
+	};
+
+	ext.turnInDirectionOfDegrees = function(degree, callback) {
+		degree = parseFloat(degree);
+		if(degree > 180) {
+			while(degree > 180) degree -= 360;
+		} else if(degree < -180) {
+			while(degree < -180) degree += 360;
+		}
+		boardCommand = 0;
+		setLineTracerMode(0);
+		var navi = getNavigator();
+		navi.reset();
+		navi.setTargetDegree(degree);
+		navigationCallback = callback;
+		navigationCommand = 3;
+	};
+	
+	ext.dataOfColorObject = function(color, value) {
+		color = CAMERA_COLORS[color];
+		value = CAMERA_DATA[value];
+		color = colors[color];
+		if(color) {
+			value = color[value];
+			if(typeof value == 'number') return value;
+		}
+		return -1;
+	};
+	
+	ext.dataOfMarker = function(marker, value) {
+		marker = parseInt(marker);
+		value = CAMERA_DATA[value];
+		if(marker >= 0) {
+			marker = markers[marker];
+			if(marker) {
+				var v = marker[value];
+				if(typeof v == 'number') return v;
+			}
+		}
+		if(value === 'theta') return -200;
+		else return -1;
+	};
+	
+	ext.distanceFromMarkerToMarker = function(marker1, marker2) {
+		marker1 = parseInt(marker1);
+		marker2 = parseInt(marker2);
+		if(marker1 >= 0 && marker2 >= 0) {
+			marker1 = markers[marker1];
+			marker2 = markers[marker2];
+			if(marker1 && marker2) {
+				var x1 = marker1.x;
+				var y1 = marker1.y;
+				var x2 = marker2.x;
+				var y2 = marker2.y;
+				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
+					var dx = x2 - x1, dy = y2 - y1;
+					return Math.sqrt(dx * dx + dy * dy);
+				}
+			}
+		}
+		return 2147483647;
+	};
+	
+	ext.orientationFromMarkerToMarker = function() {
+		marker1 = parseInt(marker1);
+		marker2 = parseInt(marker2);
+		if(marker1 >= 0 && marker2 >= 0) {
+			marker1 = markers[marker1];
+			marker2 = markers[marker2];
+			if(marker1 && marker2) {
+				var x1 = marker1.x;
+				var y1 = marker1.y;
+				var x2 = marker2.x;
+				var y2 = marker2.y;
+				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
+					var dx = x2 - x1, dy = y2 - y1;
+					return Math.atan2(dy, dx) * 180.0 / Math.PI;
+				}
+			}
+		}
+		return -200;
+	};
+	
+	ext.showImage = function(index) {
+		index = parseInt(index);
+		if((typeof index == 'number') && index >= 0) {
+			var id = 'image' + index;
+			var image = getArImage(id, index);
+			image['visible'] = true;
+		}
+	};
+	
+	ext.hideImage = function(index) {
+		index = parseInt(index);
+		if((typeof index == 'number') && index >= 0) {
+			var id = 'image' + index;
+			var image = getArImage(id, index);
+			image['visible'] = false;
+		}
+	};
+	
+	ext.setImagePositionToXY = function(index, x, y) {
+		index = parseInt(index);
+		if((typeof index == 'number') && index >= 0) {
+			var id = 'image' + index;
+			var image = getArImage(id, index);
+			image['x'] = parseInt(x);
+			image['y'] = parseInt(y);
+		}
+	};
+	
+	ext.setImageOrientationToDegrees = function(index, degree) {
+		index = parseInt(index);
+		if((typeof index == 'number') && index >= 0) {
+			degree = parseFloat(degree);
+			if(degree > 180) {
+				while(degree > 180) degree -= 360;
+			} else if(degree < -180) {
+				while(degree < -180) degree += 360;
+			}
+			var id = 'image' + index;
+			var image = getArImage(id, index);
+			image['theta'] = degree;
+		}
+	};
+	
+	ext.setImageSizeTo = function(index, scale) {
+		index = parseInt(index);
+		scale = parseFloat(scale);
+		if((typeof index == 'number') && index >= 0 && scale > 0) {
+			var id = 'image' + index;
+			var image = getArImage(id, index);
+			image['scale'] = scale / 100.0;
+		}
+	};
+	
 	ext._getStatus = function() {
 		clicked = false;
 		doubleClicked = false;
