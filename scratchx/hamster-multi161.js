@@ -1134,6 +1134,10 @@
 			robot.boardCallback = undefined;
 			robot.tempo = 60;
 			robot.navigator = undefined;
+			robot.getNavigator = function() {
+				if(!robot.navigator) robot.navigator = createNavigator();
+				return robot.navigator;
+			};
 			robot.reset = function() {
 				var motoring = robot.motoring;
 				motoring.map = 0xfdfc0000;
@@ -1164,10 +1168,6 @@
 			};
 			robot.clearMotoring = function() {
 				robot.motoring.map = 0xfc000000;
-			};
-			robot.getNavigator = function() {
-				if(!robot.navigator) robot.navigator = createNavigator();
-				return robot.navigator;
 			};
 			robots[index] = robot;
 			tx['hamster' + index] = robot.motoring;
