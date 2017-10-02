@@ -4,24 +4,7 @@
 	var tx = {
 		ar: {}
 	};
-	const STRAIGHT_SPEED = 50;
-	const MINIMUM_WHEEL_SPEED = 18;
-	const GAIN_BASE_SPEED = 2.0;
-	const MAX_BASE_SPEED = 50;
-	const GAIN_POSITION = 70;
-	const GAIN_ANGLE = 50;
-	const PI_2 = 2 * Math.PI;
 	var connectionState = 1;
-	var chat = {
-		socket: undefined,
-		messages: {}
-	};
-	var tolerance = {
-		position: 15,
-		angle: 5 * Math.PI / 180.0
-	};
-	var colors = {};
-	var markers = {};
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -160,106 +143,6 @@
 			['r', 'Turtle[5]: y acceleration', 'turtleAccelerationY5'],
 			['r', 'Turtle[5]: z acceleration', 'turtleAccelerationZ5']
 		],
-		en4: [
-			['w', 'Turtle %n : move forward %n %m.move_unit', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : move backward %n %m.move_unit', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : turn %m.left_right %n %m.turn_unit in place', 'turtleTurnUnitInPlace', 0, 'left', 90, 'degrees'],
-			['w', 'Turtle %n : turn %m.left_right %n %m.turn_unit with radius %n cm in %m.head_tail direction', 'turtleTurnUnitWithRadiusInDirection', 0, 'left', 90, 'degrees', 6, 'head'],
-			['w', 'Turtle %n : pivot around %m.left_right wheel %n %m.turn_unit in %m.head_tail direction', 'turtlePivotAroundWheelUnitInDirection', 0, 'left', 90, 'degrees', 'head'],
-			[' ', 'Turtle %n : change wheels by left: %n right: %n', 'turtleChangeWheelsByLeftRight', 0, 10, 10],
-			[' ', 'Turtle %n : set wheels to left: %n right: %n', 'turtleSetWheelsToLeftRight', 0, 50, 50],
-			[' ', 'Turtle %n : change %m.left_right_both wheel by %n', 'turtleChangeWheelBy', 0, 'left', 10],
-			[' ', 'Turtle %n : set %m.left_right_both wheel to %n', 'turtleSetWheelTo', 0, 'left', 50],
-			[' ', 'Turtle %n : follow %m.line_color line', 'turtleFollowLine', 0, 'black'],
-			['w', 'Turtle %n : follow black line until %m.target_color', 'turtleFollowLineUntil', 0, 'red'],
-			['w', 'Turtle %n : follow %m.color_line line until black', 'turtleFollowLineUntilBlack', 0, 'red'],
-			['w', 'Turtle %n : cross black intersection', 'turtleCrossIntersection', 0],
-			['w', 'Turtle %n : turn %m.left_right_back at black intersection', 'turtleTurnAtIntersection', 0, 'left'],
-			[' ', 'Turtle %n : set following speed to %m.speed', 'turtleSetFollowingSpeedTo', 0, '5'],
-			[' ', 'Turtle %n : stop', 'turtleStop', 0],
-			['-'],
-			[' ', 'Turtle %n : set head led to %m.led_color', 'turtleSetHeadLedTo', 0, 'red'],
-			[' ', 'Turtle %n : change head led by r: %n g: %n b: %n', 'turtleChangeHeadLedByRGB', 0, 10, 0, 0],
-			[' ', 'Turtle %n : set head led to r: %n g: %n b: %n', 'turtleSetHeadLedToRGB', 0, 255, 0, 0],
-			[' ', 'Turtle %n : clear head led', 'turtleClearHeadLed', 0],
-			['-'],
-			[' ', 'Turtle %n : play sound %m.sound %n times', 'turtlePlaySoundTimes', 0, 'beep', 1],
-			['w', 'Turtle %n : play sound %m.sound %n times until done', 'turtlePlaySoundTimesUntilDone', 0, 'beep', 1],
-			[' ', 'Turtle %n : change buzzer by %n', 'turtleChangeBuzzerBy', 0, 10],
-			[' ', 'Turtle %n : set buzzer to %n', 'turtleSetBuzzerTo', 0, 1000],
-			[' ', 'Turtle %n : clear sound', 'turtleClearSound', 0],
-			[' ', 'Turtle %n : play note %m.note %m.octave', 'turtlePlayNote', 0, 'C', '4'],
-			['w', 'Turtle %n : play note %m.note %m.octave for %d.beats beats', 'turtlePlayNoteForBeats', 0, 'C', '4', 0.5],
-			['w', 'Turtle %n : rest for %d.beats beats', 'turtleRestForBeats', 0, 0.25],
-			[' ', 'Turtle %n : change tempo by %n', 'turtleChangeTempoBy', 0, 20],
-			[' ', 'Turtle %n : set tempo to %n bpm', 'turtleSetTempoTo', 0, 60],
-			['-'],
-			['b', 'Turtle %n : touching %m.touching_color ?', 'turtleTouchingColor', 0, 'red'],
-			['b', 'Turtle %n : color pattern %m.pattern_color %m.pattern_color ?', 'turtleIsColorPattern', 0, 'red', 'yellow'],
-			['b', 'Turtle %n : button %m.button_state ?', 'turtleButtonState', 0, 'clicked'],
-			['r', 'Turtle[0]: color number', 'turtleColorNumber0'],
-			['r', 'Turtle[0]: color pattern', 'turtleColorPattern0'],
-			['r', 'Turtle[0]: floor', 'turtleFloor0'],
-			['r', 'Turtle[0]: button', 'turtleButton0'],
-			['r', 'Turtle[0]: x acceleration', 'turtleAccelerationX0'],
-			['r', 'Turtle[0]: y acceleration', 'turtleAccelerationY0'],
-			['r', 'Turtle[0]: z acceleration', 'turtleAccelerationZ0'],
-			['r', 'Turtle[1]: color number', 'turtleColorNumber1'],
-			['r', 'Turtle[1]: color pattern', 'turtleColorPattern1'],
-			['r', 'Turtle[1]: floor', 'turtleFloor1'],
-			['r', 'Turtle[1]: button', 'turtleButton1'],
-			['r', 'Turtle[1]: x acceleration', 'turtleAccelerationX1'],
-			['r', 'Turtle[1]: y acceleration', 'turtleAccelerationY1'],
-			['r', 'Turtle[1]: z acceleration', 'turtleAccelerationZ1'],
-			['r', 'Turtle[2]: color number', 'turtleColorNumber2'],
-			['r', 'Turtle[2]: color pattern', 'turtleColorPattern2'],
-			['r', 'Turtle[2]: floor', 'turtleFloor2'],
-			['r', 'Turtle[2]: button', 'turtleButton2'],
-			['r', 'Turtle[2]: x acceleration', 'turtleAccelerationX2'],
-			['r', 'Turtle[2]: y acceleration', 'turtleAccelerationY2'],
-			['r', 'Turtle[2]: z acceleration', 'turtleAccelerationZ2'],
-			['r', 'Turtle[3]: color number', 'turtleColorNumber3'],
-			['r', 'Turtle[3]: color pattern', 'turtleColorPattern3'],
-			['r', 'Turtle[3]: floor', 'turtleFloor3'],
-			['r', 'Turtle[3]: button', 'turtleButton3'],
-			['r', 'Turtle[3]: x acceleration', 'turtleAccelerationX3'],
-			['r', 'Turtle[3]: y acceleration', 'turtleAccelerationY3'],
-			['r', 'Turtle[3]: z acceleration', 'turtleAccelerationZ3'],
-			['r', 'Turtle[4]: color number', 'turtleColorNumber4'],
-			['r', 'Turtle[4]: color pattern', 'turtleColorPattern4'],
-			['r', 'Turtle[4]: floor', 'turtleFloor4'],
-			['r', 'Turtle[4]: button', 'turtleButton4'],
-			['r', 'Turtle[4]: x acceleration', 'turtleAccelerationX4'],
-			['r', 'Turtle[4]: y acceleration', 'turtleAccelerationY4'],
-			['r', 'Turtle[4]: z acceleration', 'turtleAccelerationZ4'],
-			['r', 'Turtle[5]: color number', 'turtleColorNumber5'],
-			['r', 'Turtle[5]: color pattern', 'turtleColorPattern5'],
-			['r', 'Turtle[5]: floor', 'turtleFloor5'],
-			['r', 'Turtle[5]: button', 'turtleButton5'],
-			['r', 'Turtle[5]: x acceleration', 'turtleAccelerationX5'],
-			['r', 'Turtle[5]: y acceleration', 'turtleAccelerationY5'],
-			['r', 'Turtle[5]: z acceleration', 'turtleAccelerationZ5'],
-			['-'],
-			['w', 'connect to ip: %s port: %n as %s', 'connectToIpPortAs', '127.0.0.1', 60000, 'name'],
-			[' ', 'send %s to %s', 'sendTo', 'message', 'receiver'],
-			[' ', 'broadcast %s', 'broadcast', 'message'],
-			['b', '%s received?', 'messageReceived', 'message'],
-			['-'],
-			[' ', 'Turtle %n : set robot\'s marker to %n', 'turtleSetRobotMarkerTo', 0, 0],
-			['w', 'Turtle %n : move %m.forward_backward to x: %n y: %n', 'turtleMoveToXY', 0, 'forward', 320, 240],
-			['w', 'Turtle %n : turn in direction of x: %n y: %n', 'turtleTurnInDirectionOfXY', 0, 320, 240],
-			['w', 'Turtle %n : turn in direction of %n degrees', 'turtleTurnInDirectionOfDegrees', 0, 90],
-			['r', '%m.camera_color object\'s %m.color_position', 'dataOfColorObject', 'red', 'x-position'],
-			['r', 'marker %n \'s %m.marker_position', 'dataOfMarker', 0, 'x-position'],
-			['r', 'distance from marker %n to marker %n', 'distanceFromMarkerToMarker', 0, 1],
-			['r', 'orientation from marker %n to marker %n', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', 'show image %n', 'showImage', 0],
-			[' ', 'hide image %n', 'hideImage', 0],
-			[' ', 'set image %n \'s position to x: %n y: %n', 'setImagePositionToXY', 0, 320, 240],
-			[' ', 'set image %n \'s orientation to %n degrees', 'setImageOrientationToDegrees', 0, 90],
-			[' ', 'set image %n \'s size to %n %', 'setImageSizeTo', 0, 200]
-		],
 		ko1: [
 			['w', '거북이 %n : 앞으로 이동하기', 'turtleMoveForward', 0],
 			['w', '거북이 %n : 뒤로 이동하기', 'turtleMoveBackward', 0],
@@ -376,106 +259,6 @@
 			['r', '거북이[5]: y축 가속도', 'turtleAccelerationY5'],
 			['r', '거북이[5]: z축 가속도', 'turtleAccelerationZ5']
 		],
-		ko4: [
-			['w', '거북이 %n : 앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : 뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', 0, '왼쪽', 90, '도'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', 0, '왼쪽', 90, '도', 6, '머리'],
-			['w', '거북이 %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', 0, '왼쪽', 90, '도', '머리'],
-			[' ', '거북이 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기', 'turtleChangeWheelsByLeftRight', 0, 10, 10],
-			[' ', '거북이 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'turtleSetWheelsToLeftRight', 0, 50, 50],
-			[' ', '거북이 %n : %m.left_right_both 바퀴 %n 만큼 바꾸기', 'turtleChangeWheelBy', 0, '왼쪽', 10],
-			[' ', '거북이 %n : %m.left_right_both 바퀴 %n (으)로 정하기', 'turtleSetWheelTo', 0, '왼쪽', 50],
-			[' ', '거북이 %n : %m.line_color 선을 따라가기', 'turtleFollowLine', 0, '검은색'],
-			['w', '거북이 %n : 검은색 선을 따라 %m.target_color 까지 이동하기', 'turtleFollowLineUntil', 0, '빨간색'],
-			['w', '거북이 %n : %m.color_line 선을 따라 검은색까지 이동하기', 'turtleFollowLineUntilBlack', 0, '빨간색'],
-			['w', '거북이 %n : 검은색 교차로 건너가기', 'turtleCrossIntersection', 0],
-			['w', '거북이 %n : 검은색 교차로에서 %m.left_right_back 으로 돌기', 'turtleTurnAtIntersection', 0, '왼쪽'],
-			[' ', '거북이 %n : 선 따라가기 속도를 %m.speed (으)로 정하기', 'turtleSetFollowingSpeedTo', 0, '5'],
-			[' ', '거북이 %n : 정지하기', 'turtleStop', 0],
-			['-'],
-			[' ', '거북이 %n : 머리 LED를 %m.led_color 으로 정하기', 'turtleSetHeadLedTo', 0, '빨간색'],
-			[' ', '거북이 %n : 머리 LED를 R: %n G: %n B: %n 만큼 바꾸기', 'turtleChangeHeadLedByRGB', 0, 10, 0, 0],
-			[' ', '거북이 %n : 머리 LED를 R: %n G: %n B: %n (으)로 정하기', 'turtleSetHeadLedToRGB', 0, 255, 0, 0],
-			[' ', '거북이 %n : 머리 LED 끄기', 'turtleClearHeadLed', 0],
-			['-'],
-			[' ', '거북이 %n : %m.sound 소리 %n 번 재생하기', 'turtlePlaySoundTimes', 0, '삐', 1],
-			['w', '거북이 %n : %m.sound 소리 %n 번 재생하고 기다리기', 'turtlePlaySoundTimesUntilDone', 0, '삐', 1],
-			[' ', '거북이 %n : 버저 음을 %n 만큼 바꾸기', 'turtleChangeBuzzerBy', 0, 10],
-			[' ', '거북이 %n : 버저 음을 %n (으)로 정하기', 'turtleSetBuzzerTo', 0, 1000],
-			[' ', '거북이 %n : 소리 끄기', 'turtleClearSound', 0],
-			[' ', '거북이 %n : %m.note %m.octave 음을 연주하기', 'turtlePlayNote', 0, '도', '4'],
-			['w', '거북이 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기', 'turtlePlayNoteForBeats', 0, '도', '4', 0.5],
-			['w', '거북이 %n : %d.beats 박자 쉬기', 'turtleRestForBeats', 0, 0.25],
-			[' ', '거북이 %n : 연주 속도를 %n 만큼 바꾸기', 'turtleChangeTempoBy', 0, 20],
-			[' ', '거북이 %n : 연주 속도를 %n BPM으로 정하기', 'turtleSetTempoTo', 0, 60],
-			['-'],
-			['b', '거북이 %n : %m.touching_color 에 닿았는가?', 'turtleTouchingColor', 0, '빨간색'],
-			['b', '거북이 %n : 색깔 패턴이 %m.pattern_color %m.pattern_color 인가?', 'turtleIsColorPattern', 0, '빨간색', '노란색'],
-			['b', '거북이 %n : 버튼을 %m.button_state ?', 'turtleButtonState', 0, '클릭했는가'],
-			['r', '거북이[0]: 색깔 번호', 'turtleColorNumber0'],
-			['r', '거북이[0]: 색깔 패턴', 'turtleColorPattern0'],
-			['r', '거북이[0]: 바닥 센서', 'turtleFloor0'],
-			['r', '거북이[0]: 버튼', 'turtleButton0'],
-			['r', '거북이[0]: x축 가속도', 'turtleAccelerationX0'],
-			['r', '거북이[0]: y축 가속도', 'turtleAccelerationY0'],
-			['r', '거북이[0]: z축 가속도', 'turtleAccelerationZ0'],
-			['r', '거북이[1]: 색깔 번호', 'turtleColorNumber1'],
-			['r', '거북이[1]: 색깔 패턴', 'turtleColorPattern1'],
-			['r', '거북이[1]: 바닥 센서', 'turtleFloor1'],
-			['r', '거북이[1]: 버튼', 'turtleButton1'],
-			['r', '거북이[1]: x축 가속도', 'turtleAccelerationX1'],
-			['r', '거북이[1]: y축 가속도', 'turtleAccelerationY1'],
-			['r', '거북이[1]: z축 가속도', 'turtleAccelerationZ1'],
-			['r', '거북이[2]: 색깔 번호', 'turtleColorNumber2'],
-			['r', '거북이[2]: 색깔 패턴', 'turtleColorPattern2'],
-			['r', '거북이[2]: 바닥 센서', 'turtleFloor2'],
-			['r', '거북이[2]: 버튼', 'turtleButton2'],
-			['r', '거북이[2]: x축 가속도', 'turtleAccelerationX2'],
-			['r', '거북이[2]: y축 가속도', 'turtleAccelerationY2'],
-			['r', '거북이[2]: z축 가속도', 'turtleAccelerationZ2'],
-			['r', '거북이[3]: 색깔 번호', 'turtleColorNumber3'],
-			['r', '거북이[3]: 색깔 패턴', 'turtleColorPattern3'],
-			['r', '거북이[3]: 바닥 센서', 'turtleFloor3'],
-			['r', '거북이[3]: 버튼', 'turtleButton3'],
-			['r', '거북이[3]: x축 가속도', 'turtleAccelerationX3'],
-			['r', '거북이[3]: y축 가속도', 'turtleAccelerationY3'],
-			['r', '거북이[3]: z축 가속도', 'turtleAccelerationZ3'],
-			['r', '거북이[4]: 색깔 번호', 'turtleColorNumber4'],
-			['r', '거북이[4]: 색깔 패턴', 'turtleColorPattern4'],
-			['r', '거북이[4]: 바닥 센서', 'turtleFloor4'],
-			['r', '거북이[4]: 버튼', 'turtleButton4'],
-			['r', '거북이[4]: x축 가속도', 'turtleAccelerationX4'],
-			['r', '거북이[4]: y축 가속도', 'turtleAccelerationY4'],
-			['r', '거북이[4]: z축 가속도', 'turtleAccelerationZ4'],
-			['r', '거북이[5]: 색깔 번호', 'turtleColorNumber5'],
-			['r', '거북이[5]: 색깔 패턴', 'turtleColorPattern5'],
-			['r', '거북이[5]: 바닥 센서', 'turtleFloor5'],
-			['r', '거북이[5]: 버튼', 'turtleButton5'],
-			['r', '거북이[5]: x축 가속도', 'turtleAccelerationX5'],
-			['r', '거북이[5]: y축 가속도', 'turtleAccelerationY5'],
-			['r', '거북이[5]: z축 가속도', 'turtleAccelerationZ5'],
-			['-'],
-			['w', '주소 %s 포트 %n 에 %s (으)로 연결하기', 'connectToIpPortAs', '127.0.0.1', 60000, '이름'],
-			[' ', '%s 을(를) %s 에게 보내기', 'sendTo', '메시지', '받는 사람'],
-			[' ', '%s 을(를) 모두에게 보내기', 'broadcast', '메시지'],
-			['b', '%s 을(를) 받았는가?', 'messageReceived', '메시지'],
-			['-'],
-			[' ', '거북이 %n : 로봇의 마커를 %n (으)로 정하기', 'turtleSetRobotMarkerTo', 0, 0],
-			['w', '거북이 %n : %m.forward_backward x %n y %n 위치로 이동하기', 'turtleMoveToXY', 0, '앞으로', 320, 240],
-			['w', '거북이 %n : x %n y %n 방향으로 돌기', 'turtleTurnInDirectionOfXY', 0, 320, 240],
-			['w', '거북이 %n : %n 도 방향으로 돌기', 'turtleTurnInDirectionOfDegrees', 0, 90],
-			['r', '%m.camera_color 의 %m.color_position', 'dataOfColorObject', '빨간색', 'x-좌표'],
-			['r', '마커 %n 의 %m.marker_position', 'dataOfMarker', 0, 'x-좌표'],
-			['r', '마커 %n 에서 마커 %n 까지의 거리', 'distanceFromMarkerToMarker', 0, 1],
-			['r', '마커 %n 에서 마커 %n 까지의 방향', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', '그림 %n 보이기', 'showImage', 0],
-			[' ', '그림 %n 숨기기', 'hideImage', 0],
-			[' ', '그림 %n 의 위치를 x %n y %n (으)로 정하기', 'setImagePositionToXY', 0, 320, 240],
-			[' ', '그림 %n 의 방향을 %n 도로 정하기', 'setImageOrientationToDegrees', 0, 90],
-			[' ', '그림 %n 의 크기를 %n %로 정하기', 'setImageSizeTo', 0, 200]
-		],
 		uz1: [
 			['w', 'Turtle %n : oldinga yurish', 'turtleMoveForward', 0],
 			['w', 'Turtle %n : orqaga yurish', 'turtleMoveBackward', 0],
@@ -591,106 +374,6 @@
 			['r', 'Turtle[5]: x tezlanish', 'turtleAccelerationX5'],
 			['r', 'Turtle[5]: y tezlanish', 'turtleAccelerationY5'],
 			['r', 'Turtle[5]: z tezlanish', 'turtleAccelerationZ5']
-		],
-		uz4: [
-			['w', 'Turtle %n : oldinga %n %m.move_unit yurish', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : orqaga %n %m.move_unit yurish', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : %m.left_right ga %n %m.turn_unit o\'z joyda o\'girilish', 'turtleTurnUnitInPlace', 0, 'chap', 90, 'daraja'],
-			['w', 'Turtle %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.head_tail yo\'nalishga o\'girilish', 'turtleTurnUnitWithRadiusInDirection', 0, 'chap', 90, 'daraja', 6, 'bosh'],
-			['w', 'Turtle %n : %m.left_right g\'ildirak markaziga %n %m.turn_unit %m.head_tail yo\'nalishga o\'girilish', 'turtlePivotAroundWheelUnitInDirection', 0, 'chap', 90, 'daraja', 'bosh'],
-			[' ', 'Turtle %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'turtleChangeWheelsByLeftRight', 0, 10, 10],
-			[' ', 'Turtle %n : chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'turtleSetWheelsToLeftRight', 0, 50, 50],
-			[' ', 'Turtle %n : %m.left_right_both g\'ildirakni %n ga o\'zgartirish', 'turtleChangeWheelBy', 0, 'chap', 10],
-			[' ', 'Turtle %n : %m.left_right_both g\'ildirakni %n ga sozlash', 'turtleSetWheelTo', 0, 'chap', 50],
-			[' ', 'Turtle %n : %m.line_color chiziqqa ergashish', 'turtleFollowLine', 0, 'qora'],
-			['w', 'Turtle %n : qora chiziq ustida %m.target_color gacha yurish', 'turtleFollowLineUntil', 0, 'qizil'],
-			['w', 'Turtle %n : %m.color_line chiziq ustida qora gacha yurish', 'turtleFollowLineUntilBlack', 0, 'qizil'],
-			['w', 'Turtle %n : qora chorrahadan o\'tib yurish', 'turtleCrossIntersection', 0],
-			['w', 'Turtle %n : qora chorrahada %m.left_right_back ga o\'girilish', 'turtleTurnAtIntersection', 0, 'chap'],
-			[' ', 'Turtle %n : liniyada ergashish tezligini %m.speed ga sozlash', 'turtleSetFollowingSpeedTo', 0, '5'],
-			[' ', 'Turtle %n : to\'xtatish', 'turtleStop', 0],
-			['-'],
-			[' ', 'Turtle %n : boshining LEDni %m.led_color ga sozlash', 'turtleSetHeadLedTo', 0, 'qizil'],
-			[' ', 'Turtle %n : boshining LEDni r: %n g: %n b: %n ga o\'zgartirish', 'turtleChangeHeadLedByRGB', 0, 10, 0, 0],
-			[' ', 'Turtle %n : boshining LEDni r: %n g: %n b: %n ga sozlash', 'turtleSetHeadLedToRGB', 0, 255, 0, 0],
-			[' ', 'Turtle %n : boshining LEDni o\'chirish', 'turtleClearHeadLed', 0],
-			['-'],
-			[' ', 'Turtle %n : %m.sound tovushni %n marta ijro etish', 'turtlePlaySoundTimes', 0, 'qisqa', 1],
-			['w', 'Turtle %n : %m.sound tovushni %n marta ijro tugaguncha kutish', 'turtlePlaySoundTimesUntilDone', 0, 'qisqa', 1],
-			[' ', 'Turtle %n : buzerning ovozini %n ga o\'zgartirish', 'turtleChangeBuzzerBy', 0, 10],
-			[' ', 'Turtle %n : buzerning ovozini %n ga sozlash', 'turtleSetBuzzerTo', 0, 1000],
-			[' ', 'Turtle %n : tovushni o\'chirish', 'turtleClearSound', 0],
-			[' ', 'Turtle %n : %m.note %m.octave notani ijro etish', 'turtlePlayNote', 0, 'do', '4'],
-			['w', 'Turtle %n : %m.note %m.octave notani %d.beats zarb ijro etish', 'turtlePlayNoteForBeats', 0, 'do', '4', 0.5],
-			['w', 'Turtle %n : %d.beats zarb tanaffus', 'turtleRestForBeats', 0, 0.25],
-			[' ', 'Turtle %n : temni %n ga o\'zgartirish', 'turtleChangeTempoBy', 0, 20],
-			[' ', 'Turtle %n : temni %n bpm ga sozlash', 'turtleSetTempoTo', 0, 60],
-			['-'],
-			['b', 'Turtle %n : %m.touching_color ga tekkan?', 'turtleTouchingColor', 0, 'qizil'],
-			['b', 'Turtle %n : rang naqshi %m.pattern_color %m.pattern_color ?', 'turtleIsColorPattern', 0, 'qizil', 'sariq'],
-			['b', 'Turtle %n : tugmani %m.button_state ?', 'turtleButtonState', 0, 'bosgan'],
-			['r', 'Turtle[0]: rang raqami', 'turtleColorNumber0'],
-			['r', 'Turtle[0]: rang naqshi', 'turtleColorPattern0'],
-			['r', 'Turtle[0]: taglik sensori', 'turtleFloor0'],
-			['r', 'Turtle[0]: tugma', 'turtleButton0'],
-			['r', 'Turtle[0]: x tezlanish', 'turtleAccelerationX0'],
-			['r', 'Turtle[0]: y tezlanish', 'turtleAccelerationY0'],
-			['r', 'Turtle[0]: z tezlanish', 'turtleAccelerationZ0'],
-			['r', 'Turtle[1]: rang raqami', 'turtleColorNumber1'],
-			['r', 'Turtle[1]: rang naqshi', 'turtleColorPattern1'],
-			['r', 'Turtle[1]: taglik sensori', 'turtleFloor1'],
-			['r', 'Turtle[1]: tugma', 'turtleButton1'],
-			['r', 'Turtle[1]: x tezlanish', 'turtleAccelerationX1'],
-			['r', 'Turtle[1]: y tezlanish', 'turtleAccelerationY1'],
-			['r', 'Turtle[1]: z tezlanish', 'turtleAccelerationZ1'],
-			['r', 'Turtle[2]: rang raqami', 'turtleColorNumber2'],
-			['r', 'Turtle[2]: rang naqshi', 'turtleColorPattern2'],
-			['r', 'Turtle[2]: taglik sensori', 'turtleFloor2'],
-			['r', 'Turtle[2]: tugma', 'turtleButton2'],
-			['r', 'Turtle[2]: x tezlanish', 'turtleAccelerationX2'],
-			['r', 'Turtle[2]: y tezlanish', 'turtleAccelerationY2'],
-			['r', 'Turtle[2]: z tezlanish', 'turtleAccelerationZ2'],
-			['r', 'Turtle[3]: rang raqami', 'turtleColorNumber3'],
-			['r', 'Turtle[3]: rang naqshi', 'turtleColorPattern3'],
-			['r', 'Turtle[3]: taglik sensori', 'turtleFloor3'],
-			['r', 'Turtle[3]: tugma', 'turtleButton3'],
-			['r', 'Turtle[3]: x tezlanish', 'turtleAccelerationX3'],
-			['r', 'Turtle[3]: y tezlanish', 'turtleAccelerationY3'],
-			['r', 'Turtle[3]: z tezlanish', 'turtleAccelerationZ3'],
-			['r', 'Turtle[4]: rang raqami', 'turtleColorNumber4'],
-			['r', 'Turtle[4]: rang naqshi', 'turtleColorPattern4'],
-			['r', 'Turtle[4]: taglik sensori', 'turtleFloor4'],
-			['r', 'Turtle[4]: tugma', 'turtleButton4'],
-			['r', 'Turtle[4]: x tezlanish', 'turtleAccelerationX4'],
-			['r', 'Turtle[4]: y tezlanish', 'turtleAccelerationY4'],
-			['r', 'Turtle[4]: z tezlanish', 'turtleAccelerationZ4'],
-			['r', 'Turtle[5]: rang raqami', 'turtleColorNumber5'],
-			['r', 'Turtle[5]: rang naqshi', 'turtleColorPattern5'],
-			['r', 'Turtle[5]: taglik sensori', 'turtleFloor5'],
-			['r', 'Turtle[5]: tugma', 'turtleButton5'],
-			['r', 'Turtle[5]: x tezlanish', 'turtleAccelerationX5'],
-			['r', 'Turtle[5]: y tezlanish', 'turtleAccelerationY5'],
-			['r', 'Turtle[5]: z tezlanish', 'turtleAccelerationZ5'],
-			['-'],
-			['w', 'ip: %s port: %n ga %s sifatida ulang', 'connectToIpPortAs', '127.0.0.1', 60000, 'nomi'],
-			[' ', '%s ni %s ga yuboring', 'sendTo', 'xabar', 'qabul qiluvchi'],
-			[' ', '%s ni hammaga yuboring', 'broadcast', 'xabar'],
-			['b', '%s ni qabul qiling?', 'messageReceived', 'xabar'],
-			['-'],
-			[' ', 'Turtle %n : robotning markerini %n ga sozlash', 'turtleSetRobotMarkerTo', 0, 0],
-			['w', 'Turtle %n : %m.forward_backward x: %n y: %n tomonga yurish', 'turtleMoveToXY', 0, 'oldinga', 320, 240],
-			['w', 'Turtle %n : x: %n y: %n tomonga o\'girilish', 'turtleTurnInDirectionOfXY', 0, 320, 240],
-			['w', 'Turtle %n : %n daraja tomonga o\'girilish', 'turtleTurnInDirectionOfDegrees', 0, 90],
-			['r', '%m.camera_color ning %m.color_position', 'dataOfColorObject', 'qizil', 'x-holati'],
-			['r', 'marker %n ning %m.marker_position', 'dataOfMarker', 0, 'x-holati'],
-			['r', 'marker %n dan marker %n gacha masofa', 'distanceFromMarkerToMarker', 0, 1],
-			['r', 'marker %n dan marker %n gacha orientatsiya', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', 'rasm %n ni ko\'rsatish', 'showImage', 0],
-			[' ', 'rasm %n ni yashirish', 'hideImage', 0],
-			[' ', 'rasm %n ning pozitsiyasini x %n y %n ga sozlash', 'setImagePositionToXY', 0, 320, 240],
-			[' ', 'rasm %n ning yo\'nalishini %n darajaga sozlash', 'setImageOrientationToDegrees', 0, 90],
-			[' ', 'rasm %n ning o\'lchamini %n % ga sozlash', 'setImageSizeTo', 0, 200]
 		]
 	};
 	const MENUS = {
@@ -703,7 +386,6 @@
 			'left_right': ['left', 'right'],
 			'left_right_both': ['left', 'right', 'both'],
 			'left_right_back': ['left', 'right', 'back'],
-			'forward_backward': ['forward', 'backward'],
 			'line_color': ['black', 'red', 'green', 'blue', 'any color'],
 			'target_color': ['red', 'yellow', 'green', 'sky blue', 'blue', 'purple', 'any color'],
 			'color_line': ['red', 'green', 'blue', 'any color'],
@@ -715,10 +397,7 @@
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['clicked', 'double-clicked', 'long-pressed'],
-			'camera_color': ['red', 'yellow', 'green', 'sky-blue', 'blue', 'purple'],
-			'color_position': ['x-position', 'y-position', 'left-position', 'right-position', 'top-position', 'bottom-position', 'width', 'height', 'area'],
-			'marker_position': ['x-position', 'y-position', 'left-position', 'right-position', 'top-position', 'bottom-position', 'orientation', 'width', 'height', 'area']
+			'button_state': ['clicked', 'double-clicked', 'long-pressed']
 		},
 		ko: {
 			'cm_sec': ['cm', '초'],
@@ -729,7 +408,6 @@
 			'left_right': ['왼쪽', '오른쪽'],
 			'left_right_both': ['왼쪽', '오른쪽', '양쪽'],
 			'left_right_back': ['왼쪽', '오른쪽', '뒤쪽'],
-			'forward_backward': ['앞으로', '뒤로'],
 			'line_color': ['검은색', '빨간색', '초록색', '파란색', '아무 색'],
 			'target_color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '아무 색'],
 			'color_line': ['빨간색', '초록색', '파란색', '아무 색'],
@@ -742,9 +420,6 @@
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가']
-			'camera_color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색'],
-			'color_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '폭', '높이', '넓이'],
-			'marker_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '방향', '폭', '높이', '넓이']
 		},
 		uz: {
 			'cm_sec': ['cm', 'soniya'],
@@ -755,7 +430,6 @@
 			'left_right': ['chap', 'o\'ng'],
 			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
 			'left_right_back': ['chap', 'o\'ng', 'orqa'],
-			'forward_backward': ['oldinga', 'orqaga'],
 			'line_color': ['qora', 'qizil', 'yashil', 'ko\'k', 'har qanday rang'],
 			'target_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'har qanday rang'],
 			'color_line': ['qizil', 'yashil', 'ko\'k', 'har qanday rang'],
@@ -767,10 +441,7 @@
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['bosgan', 'ikki-marta-bosgan', 'uzoq-bosganmi'],
-			'camera_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyohrang'],
-			'color_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'kengligi', 'balandligi', 'maydoni'],
-			'marker_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'orientatsiya', 'kengligi', 'balandligi', 'maydoni']
+			'button_state': ['bosgan', 'ikki-marta-bosgan', 'uzoq-bosganmi']
 		}
 	};
 	
@@ -797,8 +468,6 @@
 	var SOUNDS = {};
 	var BUTTON_STATES = {};
 	var VALUES = {};
-	var CAMERA_COLORS = {};
-	var CAMERA_DATA = {};
 	const SECONDS = 1;
 	const PULSES = 2;
 	const DEGREES = 3;
@@ -806,8 +475,6 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
-	const FORWARD = 8;
-	const BACKWARD = 9;
 	const LEVEL1_MOVE_CM = 12;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
@@ -885,27 +552,6 @@
 		VALUES[tmp[2]] = BACK;
 		tmp = MENUS[i]['head_tail'];
 		VALUES[tmp[0]] = HEAD;
-		tmp = MENUS[i]['forward_backward'];
-		VALUES[tmp[0]] = FORWARD;
-		VALUES[tmp[1]] = BACKWARD;
-		tmp = MENUS[i]['camera_color'];
-		CAMERA_COLORS[tmp[0]] = 'red';
-		CAMERA_COLORS[tmp[1]] = 'yellow';
-		CAMERA_COLORS[tmp[2]] = 'green';
-		CAMERA_COLORS[tmp[3]] = 'cyan';
-		CAMERA_COLORS[tmp[4]] = 'blue';
-		CAMERA_COLORS[tmp[5]] = 'magenta';
-		tmp = MENUS[i]['marker_position'];
-		CAMERA_DATA[tmp[0]] = 'x';
-		CAMERA_DATA[tmp[1]] = 'y';
-		CAMERA_DATA[tmp[2]] = 'left';
-		CAMERA_DATA[tmp[3]] = 'right';
-		CAMERA_DATA[tmp[4]] = 'top';
-		CAMERA_DATA[tmp[5]] = 'bottom';
-		CAMERA_DATA[tmp[6]] = 'theta';
-		CAMERA_DATA[tmp[7]] = 'width';
-		CAMERA_DATA[tmp[8]] = 'height';
-		CAMERA_DATA[tmp[9]] = 'area';
 	}
 
 	function removeTimeout(id) {
@@ -981,11 +627,6 @@
 			robot.longPressed = false;
 			robot.colorPattern = -1;
 			robot.tempo = 60;
-			robot.navigator = undefined;
-			robot.getNavigator = function() {
-				if(!robot.navigator) robot.navigator = createNavigator();
-				return robot.navigator;
-			};
 			robot.reset = function() {
 				var motoring = robot.motoring;
 				motoring.map = 0xffe40000;
@@ -1019,10 +660,6 @@
 				robot.longPressed = false;
 				robot.colorPattern = -1;
 				robot.tempo = 60;
-				if(robot.navigator) {
-					robot.navigator.reset();
-					robot.navigator = undefined;
-				}
 			};
 			robot.clearMotoring = function() {
 				robot.motoring.map = 0xf8000000;
@@ -1106,180 +743,12 @@
 			setSound(robot, sound);
 		}
 	}
-	
-	function chatDisconnect() {
-		if(chat.socket) {
-			chat.socket.close();
-			chat.socket = undefined;
-		}
-	}
-	
-	function chatSend(data) {
-		if(chat.socket) {
-			try {
-				chat.socket.send(JSON.stringify(data));
-			} catch (e) {
-			}
-		}
-	}
-	
-	function createNavigator() {
-		return {
-			x: -1,
-			y: -1,
-			theta: 0,
-			targetPositionX: -1,
-			targetPositionY: -1,
-			targetDirectionX: -1,
-			targetDirectionY: -1,
-			targetDegree: -200,
-			backward: false,
-			marker: -1,
-			command: 0,
-			callback: undefined,
-			wheels: { left: 0, right: 0 },
-			reset: function() {
-				this.marker = -1;
-				this.command = 0;
-				this.callback = undefined;
-			},
-			clear: function() {
-				this.x = -1;
-				this.y = -1;
-				this.theta = 0;
-				this.targetPositionX = -1;
-				this.targetPositionY = -1;
-				this.targetDirectionX = -1;
-				this.targetDirectionY = -1;
-				this.targetDegree = -200;
-				this.backward = false;
-				this.wheels.left = 0;
-				this.wheels.right = 0;
-			},
-			setTargetPosition: function(x, y) {
-				this.targetPositionX = x;
-				this.targetPositionY = y;
-			},
-			setTargetDirection: function(x, y) {
-				this.targetDirectionX = x;
-				this.targetDirectionY = y;
-			},
-			setTargetDegree: function(degree) {
-				this.targetDegree = degree;
-			},
-			setBackward: function(backward) {
-				this.backward = backward;
-			},
-			updatePosition: function() {
-				var data = markers[this.marker];
-				if(data) {
-					this.x = data.x;
-					this.y = data.y;
-					this.theta = data.theta;
-				}
-			},
-			moveTo: function() {
-				var x = this.x;
-				var y = this.y;
-				var targetX = this.targetPositionX;
-				var targetY = this.targetPositionY;
-				var backward = this.backward;
-				if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
-					var currentRadian = this.theta * Math.PI / 180.0;
-					if(backward) currentRadian += Math.PI;
-					var targetRadian = Math.atan2(targetY - y, targetX - x);
-					var diff = this.validateRadian(targetRadian - currentRadian);
-					var mag = Math.abs(diff);
-					var ex = targetX - x;
-					var ey = targetY - y;
-					var dist = Math.sqrt(ex * ex + ey * ey);
-					if(dist > tolerance.position) {
-						var wheels = this.wheels;
-						if(mag < 0.01) {
-							wheels.left = STRAIGHT_SPEED;
-							wheels.right = STRAIGHT_SPEED;
-						} else {
-							var base = (MINIMUM_WHEEL_SPEED + 0.5 / mag) * GAIN_BASE_SPEED;
-							if(base > MAX_BASE_SPEED) base = MAX_BASE_SPEED;
-							var value = 0;
-							if(diff > 0) value = Math.log(1 + mag) * GAIN_POSITION;
-							else value = -Math.log(1 + mag) * GAIN_POSITION;
-							if(backward) value = -value;
-							wheels.left = parseInt(base - value);
-							wheels.right = parseInt(base + value);
-						}
-						if(backward) {
-							wheels.left = -wheels.left;
-							wheels.right = -wheels.right;
-						}
-						return wheels;
-					}
-				} else {
-					return this.wheels;
-				}
-			},
-			turn: function(targetRadian) {
-				var currentRadian = this.theta * Math.PI / 180.0;
-				var diff = this.validateRadian(targetRadian - currentRadian);
-				var mag = Math.abs(diff);
-				var direction = (diff > 0) ? 1 : -1;
-				if(mag > tolerance.angle) {
-					var value = 0;
-					if(diff > 0) value = Math.log(1 + mag) * GAIN_ANGLE;
-					else value = -Math.log(1 + mag) * GAIN_ANGLE;
-					var wheels = this.wheels;
-					wheels.left = -value;
-					wheels.right = value;
-					return wheels;
-				}
-			},
-			turnToXY: function() {
-				var x = this.x;
-				var y = this.y;
-				var targetX = this.targetDirectionX;
-				var targetY = this.targetDirectionY;
-				if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
-					var targetRadian = Math.atan2(targetY - y, targetX - x);
-					return this.turn(targetRadian);
-				} else {
-					return this.wheels;
-				}
-			},
-			turnToDegree: function() {
-				var targetDegree = this.targetDegree;
-				if(targetDegree > -200) {
-					var targetRadian = targetDegree * Math.PI / 180.0;
-					return this.turn(targetRadian);
-				}
-			},
-			validateRadian: function(radian) {
-				if(radian > Math.PI) return radian - this.PI_2;
-				else if(radian < -Math.PI) return radian + this.PI_2;
-				return radian;
-			}
-		};
-	}
-	
-	function getArImage(id, index) {
-		var image = tx.ar[id];
-		if(image === undefined) {
-			image = {};
-			tx.ar[id] = image;
-		}
-		image['id'] = index;
-		return image;
-	}
 
 	function reset() {
 		for(var i in robots) {
 			robots[i].reset();
 		}
-		tx.ar = {};
-		chat.messages = {};
-		colors = {};
-		markers = {};
 		removeAllTimeouts();
-		chatDisconnect();
 	}
 	
 	function handleSensory(robot) {
@@ -1336,31 +805,6 @@
 		}
 	}
 	
-	function handleNavigation(robot) {
-		var navi = robot.getNavigator();
-		navi.updatePosition();
-		var wheels = undefined;
-		if(navi.command == 1) {
-			wheels = navi.moveTo();
-		} else if(navi.command == 2) {
-			wheels = navi.turnToXY();
-		} else if(navi.command == 3) {
-			wheels = navi.turnToDegree();
-		}
-		var motoring = robot.motoring;
-		if(wheels) {
-			motoring.leftWheel = wheels.left;
-			motoring.rightWheel = wheels.right;
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			navi.command = 0;
-			var callback = navi.callback;
-			navi.callback = undefined;
-			callback();
-		}
-	}
-	
 	function open(url) {
 		if('WebSocket' in window) {
 			try {
@@ -1389,15 +833,12 @@
 									if(data.module == 'turtle') {
 										connectionState = data.state;
 									}
-								} else if(i == 'navigation') {
-									tolerance = data;
 								} else {
 									if(data.module == 'turtle' && data.index >= 0) {
 										var robot = getRobot(data.index);
 										if(robot) {
 											robot.sensory = data;
 											handleSensory(robot);
-											if(robot.navigator && robot.navigator.callback) handleNavigation();
 										}
 									}
 								}
@@ -2316,261 +1757,6 @@
 		var robot = getRobot(5);
 		if(robot) return robot.sensory.accelerationZ;
 		return 0;
-	};
-	
-	ext.connectToIpPortAs = function(ip, port, name, callback) {
-		port = parseInt(port);
-		if(('WebSocket' in window) && (typeof port == 'number') && port > 0) {
-			chatDisconnect();
-			try {
-				var sock = new WebSocket('ws://' + ip + ':' + port);
-				sock.binaryType = 'arraybuffer';
-				chat.socket = sock;
-				sock.onopen = function() {
-					sock.onmessage = function(message) {
-						try {
-							var data = JSON.parse(message.data);
-							if(data.type === 'send' || data.type === 'broadcast') {
-								chat.messages[data.message] = true;
-							}
-						} catch (e) {
-						}
-					};
-					sock.onclose = function() {
-						chat.socket = undefined;
-					};
-					chatSend({
-						type: 'register',
-						name: name
-					});
-					callback();
-				};
-			} catch (e) {
-			}
-		} else {
-			callback();
-		}
-	};
-	
-	ext.sendTo = function(message, receiver) {
-		chatSend({
-			type: 'send',
-			to: receiver,
-			message: message
-		});
-	};
-	
-	ext.broadcast = function(message) {
-		chatSend({
-			type: 'broadcast',
-			message: message
-		});
-	};
-	
-	ext.messageReceived = function(message) {
-		return chat.messages[message] === true;
-	};
-	
-	ext.turtleSetRobotMarkerTo = function(index, marker) {
-		var robot = getRobot(index);
-		if(robot) {
-			marker = parseInt(marker);
-			if((typeof marker == 'number') && marker >= 0) {
-				var navi = robot.getNavigator();
-				navi.marker = marker;
-			}
-		}
-	};
-
-	ext.turtleMoveToXY = function(index, direction, x, y, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			x = parseInt(x);
-			y = parseInt(y);
-			if((typeof x == 'number') && (typeof y == 'number')) {
-				setPulse(robot, 0);
-				setLineTracerMode(robot, 0);
-				setMotion(robot, 0, 0, 0, 0, 0);
-				var navi = robot.getNavigator();
-				navi.clear();
-				navi.setTargetPosition(x, y);
-				navi.setBackward(VALUES[direction] == BACKWARD);
-				navi.allback = callback;
-				navi.command = 1;
-			} else {
-				callback();
-			}
-		} else {
-			callback();
-		}
-	};
-	
-	ext.turtleTurnInDirectionOfXY = function(index, x, y, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			x = parseInt(x);
-			y = parseInt(y);
-			if((typeof x == 'number') && (typeof y == 'number')) {
-				setPulse(robot, 0);
-				setLineTracerMode(robot, 0);
-				setMotion(robot, 0, 0, 0, 0, 0);
-				var navi = robot.getNavigator();
-				navi.clear();
-				navi.setTargetDirection(x, y);
-				navi.callback = callback;
-				navi.command = 2;
-			} else {
-				callback();
-			}
-		} else {
-			callback();
-		}
-	};
-
-	ext.turtleTurnInDirectionOfDegrees = function(index, degree, callback) {
-		var robot = getRobot(index);
-		if(robot) {
-			degree = parseFloat(degree);
-			if(typeof degree == 'number') {
-				if(degree > 180) {
-					while(degree > 180) degree -= 360;
-				} else if(degree < -180) {
-					while(degree < -180) degree += 360;
-				}
-				setPulse(robot, 0);
-				setLineTracerMode(robot, 0);
-				setMotion(robot, 0, 0, 0, 0, 0);
-				var navi = robot.getNavigator();
-				navi.clear();
-				navi.setTargetDegree(degree);
-				navi.callback = callback;
-				navi.command = 3;
-			} else {
-				callback();
-			}
-		} else {
-			callback();
-		}
-	};
-	
-	ext.dataOfColorObject = function(color, value) {
-		color = CAMERA_COLORS[color];
-		value = CAMERA_DATA[value];
-		color = colors[color];
-		if(color) {
-			value = color[value];
-			if(typeof value == 'number') return value;
-		}
-		return -1;
-	};
-	
-	ext.dataOfMarker = function(marker, value) {
-		marker = parseInt(marker);
-		value = CAMERA_DATA[value];
-		if((typeof marker == 'number') && marker >= 0) {
-			marker = markers[marker];
-			if(marker) {
-				var v = marker[value];
-				if(typeof v == 'number') return v;
-			}
-		}
-		if(value === 'theta') return -200;
-		else return -1;
-	};
-	
-	ext.distanceFromMarkerToMarker = function(marker1, marker2) {
-		marker1 = parseInt(marker1);
-		marker2 = parseInt(marker2);
-		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
-			marker1 = markers[marker1];
-			marker2 = markers[marker2];
-			if(marker1 && marker2) {
-				var x1 = marker1.x;
-				var y1 = marker1.y;
-				var x2 = marker2.x;
-				var y2 = marker2.y;
-				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
-					var dx = x2 - x1, dy = y2 - y1;
-					return Math.sqrt(dx * dx + dy * dy);
-				}
-			}
-		}
-		return 2147483647;
-	};
-	
-	ext.orientationFromMarkerToMarker = function(marker1, marker2) {
-		marker1 = parseInt(marker1);
-		marker2 = parseInt(marker2);
-		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
-			marker1 = markers[marker1];
-			marker2 = markers[marker2];
-			if(marker1 && marker2) {
-				var x1 = marker1.x;
-				var y1 = marker1.y;
-				var x2 = marker2.x;
-				var y2 = marker2.y;
-				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
-					var dx = x2 - x1, dy = y2 - y1;
-					return Math.atan2(dy, dx) * 180.0 / Math.PI;
-				}
-			}
-		}
-		return -200;
-	};
-	
-	ext.showImage = function(index) {
-		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['visible'] = true;
-		}
-	};
-	
-	ext.hideImage = function(index) {
-		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['visible'] = false;
-		}
-	};
-	
-	ext.setImagePositionToXY = function(index, x, y) {
-		index = parseInt(index);
-		x = parseInt(x);
-		y = parseInt(y);
-		if((typeof index == 'number') && index >= 0 && (typeof x == 'number') && (typeof y == 'number')) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['x'] = x;
-			image['y'] = y;
-		}
-	};
-	
-	ext.setImageOrientationToDegrees = function(index, degree) {
-		index = parseInt(index);
-		degree = parseFloat(degree);
-		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['theta'] = degree;
-		}
-	};
-	
-	ext.setImageSizeTo = function(index, scale) {
-		index = parseInt(index);
-		scale = parseFloat(scale);
-		if((typeof index == 'number') && index >= 0 && (typeof scale == 'number') && scale > 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['scale'] = scale / 100.0;
-		}
 	};
 	
 	ext._getStatus = function() {
