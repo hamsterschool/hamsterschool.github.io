@@ -585,7 +585,7 @@
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
 			'forward_backward': ['oldinga', 'orqaga'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
-			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyohrang', 'oq'],
+			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'oq'],
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
