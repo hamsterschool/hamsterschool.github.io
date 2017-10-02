@@ -156,11 +156,11 @@
 			['b', '거북이 %n : 버튼을 %m.button_state ?', 'turtleButtonState', 0, '클릭했는가']
 		],
 		ko2: [
-			['w', '거북이 %n : 앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : 뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', 0, '왼쪽', 90, '도'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', 0, '왼쪽', 90, '도', 6, '머리'],
-			['w', '거북이 %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', 0, '왼쪽', 90, '도', '머리'],
+			['w', '거북이 %n : 앞으로 %n %m.cm_sec 이동하기', 'turtleMoveForwardUnit', 0, 6, 'cm'],
+			['w', '거북이 %n : 뒤로 %n %m.cm_sec 이동하기', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
+			['w', '거북이 %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기', 'turtleTurnUnitInPlace', 0, '왼쪽', 90, '도'],
+			['w', '거북이 %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', 0, '왼쪽', 90, '도', 6, '머리'],
+			['w', '거북이 %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', 0, '왼쪽', 90, '도', '머리'],
 			['-'],
 			[' ', '거북이 %n : 머리 LED를 %m.led_color 으로 정하기', 'turtleSetHeadLedTo', 0, '빨간색'],
 			[' ', '거북이 %n : 머리 LED 끄기', 'turtleClearHeadLed', 0],
@@ -272,11 +272,11 @@
 			['b', 'Turtle %n : tugmasini %m.button_state ?', 'turtleButtonState', 0, 'chertayotgan']
 		],
 		uz2: [
-			['w', 'Turtle %n : oldinga %n %m.move_unit yurish', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : orqaga %n %m.move_unit yurish', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', 'Turtle %n : %m.left_right ga %n %m.turn_unit joyda o\'girilish', 'turtleTurnUnitInPlace', 0, 'chap', 90, 'daraja'],
-			['w', 'Turtle %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.head_tail yo\'nalishda o\'girilish', 'turtleTurnUnitWithRadiusInDirection', 0, 'chap', 90, 'daraja', 6, 'bosh'],
-			['w', 'Turtle %n : %m.left_right g\'ildirak markaziga %n %m.turn_unit %m.head_tail yo\'nalishda o\'girilish', 'turtlePivotAroundWheelUnitInDirection', 0, 'chap', 90, 'daraja', 'bosh'],
+			['w', 'Turtle %n : oldinga %n %m.cm_sec yurish', 'turtleMoveForwardUnit', 0, 6, 'cm'],
+			['w', 'Turtle %n : orqaga %n %m.cm_sec yurish', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
+			['w', 'Turtle %n : %m.left_right ga %n %m.deg_sec joyda o\'girilish', 'turtleTurnUnitInPlace', 0, 'chap', 90, 'daraja'],
+			['w', 'Turtle %n : %m.left_right ga %n %m.deg_sec radius %n cm %m.head_tail yo\'nalishda o\'girilish', 'turtleTurnUnitWithRadiusInDirection', 0, 'chap', 90, 'daraja', 6, 'bosh'],
+			['w', 'Turtle %n : %m.left_right g\'ildirak markaziga %n %m.deg_sec %m.head_tail yo\'nalishda o\'girilish', 'turtlePivotAroundWheelUnitInDirection', 0, 'chap', 90, 'daraja', 'bosh'],
 			['-'],
 			[' ', 'Turtle %n : boshini LEDni %m.led_color ga sozlash', 'turtleSetHeadLedTo', 0, 'qizil'],
 			[' ', 'Turtle %n : boshini LEDni o\'chirish', 'turtleClearHeadLed', 0],
