@@ -275,11 +275,11 @@
 			['b', '거북이 %n : 버튼을 %m.button_state ?', 'turtleButtonState', 0, '클릭했는가']
 		],
 		ko2: [
-			['w', '거북이 %n : 앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : 뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', 0, '왼쪽', 90, '도'],
-			['w', '거북이 %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', 0, '왼쪽', 90, '도', 6, '머리'],
-			['w', '거북이 %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', 0, '왼쪽', 90, '도', '머리'],
+			['w', '거북이 %n : 앞으로 %n %m.cm_sec 이동하기', 'turtleMoveForwardUnit', 0, 6, 'cm'],
+			['w', '거북이 %n : 뒤로 %n %m.cm_sec 이동하기', 'turtleMoveBackwardUnit', 0, 6, 'cm'],
+			['w', '거북이 %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기', 'turtleTurnUnitInPlace', 0, '왼쪽', 90, '도'],
+			['w', '거북이 %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', 0, '왼쪽', 90, '도', 6, '머리'],
+			['w', '거북이 %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', 0, '왼쪽', 90, '도', '머리'],
 			['-'],
 			[' ', '거북이 %n : 머리 LED를 %m.led_color 으로 정하기', 'turtleSetHeadLedTo', 0, '빨간색'],
 			[' ', '거북이 %n : 머리 LED 끄기', 'turtleClearHeadLed', 0],
@@ -741,7 +741,7 @@
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가'],
+			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가']
 			'camera_color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색'],
 			'color_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '폭', '높이', '넓이'],
 			'marker_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '방향', '폭', '높이', '넓이']
