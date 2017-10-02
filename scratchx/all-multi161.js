@@ -1,9 +1,7 @@
 (function(ext) {
 
 	var robots = {};
-	var tx = {
-		ar: {}
-	};
+	var packet = {};
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -11,6 +9,8 @@
 		LEFT: 3,
 		RIGHT: 4
 	};
+	const HAMSTER = 'hamster';
+	const TURTLE = 'turtle';
 	var connectionState = 1;
 	var timeouts = [];
 	var socket = undefined;
@@ -1170,10 +1170,6 @@
 				robot.boardCount = 0;
 				robot.boardCallback = undefined;
 				robot.tempo = 60;
-				robot.resetData = function() {
-					robot.boardCommand = 0;
-					setLineTracerMode(robot, 0);
-				};
 				robot.reset = function() {
 					var motoring = robot.motoring;
 					motoring.map = 0xfdfc0000;
@@ -1370,7 +1366,7 @@
 				robot.clearEvent = function() {
 				};
 				robots[key] = robot;
-				tx[key] = robot.motoring;
+				packet[key] = robot.motoring;
 			} else if(module == TURTLE) {
 				robot = {};
 				robot.sensory = {
@@ -1427,11 +1423,6 @@
 				robot.longPressed = false;
 				robot.colorPattern = -1;
 				robot.tempo = 60;
-				robot.resetData = function() {
-					setTurtlePulse(robot, 0);
-					setTurtleLineTracerMode(robot, 0);
-					setTurtleMotion(robot, 0, 0, 0, 0, 0);
-				};
 				robot.reset = function() {
 					var motoring = robot.motoring;
 					motoring.map = 0xffe40000;
@@ -1529,7 +1520,7 @@
 					robot.colorPattern = -1;
 				};
 				robots[key] = robot;
-				tx[key] = robot.motoring;
+				packet[key] = robot.motoring;
 			}
 		}
 		return robot;
@@ -1656,7 +1647,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								var json = JSON.stringify(tx);
+								var json = JSON.stringify(packet);
 								if(canSend && socket) socket.send(json);
 								clearMotorings();
 							} catch (e) {
@@ -1665,21 +1656,17 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									connectionState = data.state;
-								} else {
-									if(data.index >= 0) {
-										var robot = getRobot(data.module, data.index);
-										if(robot) {
-											robot.sensory = data;
-											robot.handleSensory();
-										}
+							var data = JSON.parse(message.data);
+							if(data.type == 1) {
+								if(data.index >= 0) {
+									var robot = getRobot(data.module, data.index);
+									if(robot) {
+										robot.sensory = data;
+										robot.handleSensory();
 									}
 								}
+							} else if(data.type == 0) {
+								connectionState = data.state;
 							}
 						} catch (e) {
 						}
