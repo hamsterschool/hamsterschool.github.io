@@ -20,31 +20,32 @@
 		soundState: 0,
 		lineTracerState: 0
 	};
-	var tx = {
-		motoring: {
-			module: 'turtle',
-			map: 0xf8000000,
-			leftWheel: 0,
-			rightWheel: 0,
-			ledRed: 0,
-			ledGreen: 0,
-			ledBlue: 0,
-			buzzer: 0,
-			pulse: 0,
-			note: 0,
-			sound: 0,
-			lineTracerMode: 0,
-			lineTracerGain: 5,
-			lineTracerSpeed: 5,
-			lamp: 1,
-			lock: 0,
-			motionType: 0,
-			motionUnit: 0,
-			motionSpeed: 0,
-			motionValue: 0,
-			motionRadius: 0
-		}
+	var motoring = {
+		module: 'turtle',
+		map: 0xf8000000,
+		leftWheel: 0,
+		rightWheel: 0,
+		ledRed: 0,
+		ledGreen: 0,
+		ledBlue: 0,
+		buzzer: 0,
+		pulse: 0,
+		note: 0,
+		sound: 0,
+		lineTracerMode: 0,
+		lineTracerGain: 5,
+		lineTracerSpeed: 5,
+		lamp: 1,
+		lock: 0,
+		motionType: 0,
+		motionUnit: 0,
+		motionSpeed: 0,
+		motionValue: 0,
+		motionRadius: 0
  	};
+	var packet = {
+		turtle: motoring
+	};
 	var connectionState = 1;
 	var pulseCallback = undefined;
 	var soundId = 0;
@@ -516,47 +517,40 @@
 	}
 	
 	function clearMotoring() {
-		tx.motoring.map = 0xf8000000;
+		motoring.map = 0xf8000000;
 	}
 	
 	function setPulse(pulse) {
-		var motoring = tx.motoring;
 		motoring.pulse = pulse;
 		motoring.map |= 0x04000000;
 	}
 	
 	function setNote(note) {
-		var motoring = tx.motoring;
 		motoring.note = note;
 		motoring.map |= 0x02000000;
 	}
 	
 	function setSound(sound) {
-		var motoring = tx.motoring;
 		motoring.sound = sound;
 		motoring.map |= 0x01000000;
 	}
 
 	function setLineTracerMode(mode) {
-		var motoring = tx.motoring;
 		motoring.lineTracerMode = mode;
 		motoring.map |= 0x00800000;
 	}
 	
 	function setLineTracerGain(gain) {
-		var motoring = tx.motoring;
 		motoring.lineTracerGain = gain;
 		motoring.map |= 0x00400000;
 	}
 	
 	function setLineTracerSpeed(speed) {
-		var motoring = tx.motoring;
 		motoring.lineTracerSpeed = speed;
 		motoring.map |= 0x00200000;
 	}
 	
 	function setMotion(type, unit, speed, value, radius) {
-		var motoring = tx.motoring;
 		motoring.motionType = type;
 		motoring.motionUnit = unit;
 		motoring.motionSpeed = speed;
@@ -576,7 +570,6 @@
 	}
 	
 	function reset() {
-		var motoring = tx.motoring;
 		motoring.map = 0xffe40000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -675,7 +668,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								var json = JSON.stringify(tx);
+								var json = JSON.stringify(packet);
 								if(canSend && socket) socket.send(json);
 								clearMotoring();
 							} catch (e) {
@@ -684,19 +677,15 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'turtle') {
-										connectionState = data.state;
-									}
-								} else {
-									if(data.module == 'turtle' && data.index == 0) {
+							var data = JSON.parse(message.data);
+							if(data.module == 'turtle') {
+								if(data.type == 1) {
+									if(data.index == 0) {
 										sensory = data;
 										handleSensory();
 									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
 							}
 						} catch (e) {
@@ -731,7 +720,6 @@
 	}
 
 	ext.turtleMoveForward = function(callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -741,7 +729,6 @@
 	};
 	
 	ext.turtleMoveBackward = function(callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -751,7 +738,6 @@
 	};
 	
 	ext.turtleTurn = function(direction, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -765,7 +751,6 @@
 	};
 
 	ext.turtleMoveForwardUnit = function(value, unit, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -783,7 +768,6 @@
 	};
 
 	ext.turtleMoveBackwardUnit = function(value, unit, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -801,7 +785,6 @@
 	};
 
 	ext.turtleTurnUnitInPlace = function(direction, value, unit, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -823,7 +806,6 @@
 	};
 	
 	ext.turtleTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, head, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -853,7 +835,6 @@
 	};
 	
 	ext.turtlePivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -888,7 +869,6 @@
 		setPulse(0);
 		setLineTracerMode(0);
 		setMotion(0, 0, 0, 0, 0);
-		var motoring = tx.motoring;
 		if(typeof left == 'number') {
 			motoring.leftWheel += left;
 		}
@@ -903,7 +883,6 @@
 		setPulse(0);
 		setLineTracerMode(0);
 		setMotion(0, 0, 0, 0, 0);
-		var motoring = tx.motoring;
 		if(typeof left == 'number') {
 			motoring.leftWheel = left;
 		}
@@ -918,7 +897,6 @@
 		setLineTracerMode(0);
 		setMotion(0, 0, 0, 0, 0);
 		if(typeof speed == 'number') {
-			var motoring = tx.motoring;
 			wheel = VALUES[wheel];
 			if(wheel === LEFT) {
 				motoring.leftWheel += speed;
@@ -937,7 +915,6 @@
 		setLineTracerMode(0);
 		setMotion(0, 0, 0, 0, 0);
 		if(typeof speed == 'number') {
-			var motoring = tx.motoring;
 			wheel = VALUES[wheel];
 			if(wheel === LEFT) {
 				motoring.leftWheel = speed;
@@ -952,7 +929,6 @@
 
 	ext.turtleFollowLine = function(color) {
 		var mode = 10 + LINE_COLORS[color];
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -962,7 +938,6 @@
 
 	ext.turtleFollowLineUntil = function(color, callback) {
 		var mode = 60 + LINE_COLORS[color];
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -973,7 +948,6 @@
 	
 	ext.turtleFollowLineUntilBlack = function(color, callback) {
 		var mode = 70 + LINE_COLORS[color];
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -983,7 +957,6 @@
 	};
 	
 	ext.turtleCrossIntersection = function(callback) {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -997,7 +970,6 @@
 		direction = VALUES[direction];
 		if(direction === RIGHT) mode = 30;
 		else if(direction === BACK) mode = 50;
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -1015,7 +987,6 @@
 	};
 
 	ext.turtleStop = function() {
-		var motoring = tx.motoring;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		setPulse(0);
@@ -1026,7 +997,6 @@
 	ext.turtleSetHeadLedTo = function(color) {
 		color = RGB_COLORS[color];
 		if(color) {
-			var motoring = tx.motoring;
 			motoring.ledRed = color[0];
 			motoring.ledGreen = color[1];
 			motoring.ledBlue = color[2];
@@ -1037,7 +1007,6 @@
 		red = parseInt(red);
 		green = parseInt(green);
 		blue = parseInt(blue);
-		var motoring = tx.motoring;
 		if(typeof red == 'number') {
 			motoring.ledRed += red;
 		}
@@ -1053,7 +1022,6 @@
 		red = parseInt(red);
 		green = parseInt(green);
 		blue = parseInt(blue);
-		var motoring = tx.motoring;
 		if(typeof red == 'number') {
 			motoring.ledRed = red;
 		}
@@ -1066,7 +1034,6 @@
 	};
 
 	ext.turtleClearHeadLed = function() {
-		var motoring = tx.motoring;
 		motoring.ledRed = 0;
 		motoring.ledGreen = 0;
 		motoring.ledBlue = 0;
@@ -1074,7 +1041,7 @@
 
 	ext.turtlePlaySound = function(sound) {
 		sound = SOUNDS[sound];
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		if(sound) runSound(sound);
 	};
@@ -1082,7 +1049,7 @@
 	ext.turtlePlaySoundTimes = function(sound, count) {
 		sound = SOUNDS[sound];
 		count = parseInt(count);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		if(sound && count) {
 			runSound(sound, count);
@@ -1092,7 +1059,7 @@
 	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
 		sound = SOUNDS[sound];
 		count = parseInt(count);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		if(sound && count) {
 			runSound(sound, count);
@@ -1105,7 +1072,7 @@
 	ext.turtleChangeBuzzerBy = function(hz) {
 		hz = parseFloat(hz);
 		if(typeof hz == 'number') {
-			tx.motoring.buzzer += hz;
+			motoring.buzzer += hz;
 		}
 		setNote(0);
 		runSound(0);
@@ -1114,14 +1081,14 @@
 	ext.turtleSetBuzzerTo = function(hz) {
 		hz = parseFloat(hz);
 		if(typeof hz == 'number') {
-			tx.motoring.buzzer = hz;
+			motoring.buzzer = hz;
 		}
 		setNote(0);
 		runSound(0);
 	};
 
 	ext.turtleClearSound = function() {
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		runSound(0);
 	};
@@ -1129,7 +1096,7 @@
 	ext.turtlePlayNote = function(note, octave) {
 		note = NOTES[note];
 		octave = parseInt(octave);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8) {
 			note += (octave - 1) * 12;
 			setNote(note);
@@ -1143,7 +1110,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		runSound(0);
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
 			note += (octave - 1) * 12;
@@ -1175,7 +1142,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		runSound(0);
 		if(beat && beat > 0 && tempo > 0) {
