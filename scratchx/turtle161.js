@@ -43,16 +43,8 @@
 			motionSpeed: 0,
 			motionValue: 0,
 			motionRadius: 0
-		},
-		ar: {}
+		}
  	};
-	const STRAIGHT_SPEED = 50;
-	const MINIMUM_WHEEL_SPEED = 18;
-	const GAIN_BASE_SPEED = 2.0;
-	const MAX_BASE_SPEED = 50;
-	const GAIN_POSITION = 70;
-	const GAIN_ANGLE = 50;
-	const PI_2 = 2 * Math.PI;
 	var connectionState = 1;
 	var pulseCallback = undefined;
 	var soundId = 0;
@@ -64,17 +56,6 @@
 	var longPressed = false;
 	var colorPattern = -1;
 	var tempo = 60;
-	var chat = {
-		socket: undefined,
-		messages: {}
-	};
-	var tolerance = {
-		position: 15,
-		angle: 5 * Math.PI / 180.0
-	};
-	var colors = {};
-	var markers = {};
-	var navigator = undefined;
 	var timeouts = [];
 	var socket = undefined;
 	var sendTimer = undefined;
@@ -178,66 +159,6 @@
 			['r', 'y acceleration', 'turtleAccelerationY'],
 			['r', 'z acceleration', 'turtleAccelerationZ']
 		],
-		en4: [
-			['w', 'move forward %n %m.move_unit', 'turtleMoveForwardUnit', 6, 'cm'],
-			['w', 'move backward %n %m.move_unit', 'turtleMoveBackwardUnit', 6, 'cm'],
-			['w', 'turn %m.left_right %n %m.turn_unit in place', 'turtleTurnUnitInPlace', 'left', 90, 'degrees'],
-			['w', 'turn %m.left_right %n %m.turn_unit with radius %n cm in %m.head_tail direction', 'turtleTurnUnitWithRadiusInDirection', 'left', 90, 'degrees', 6, 'head'],
-			['w', 'pivot around %m.left_right wheel %n %m.turn_unit in %m.head_tail direction', 'turtlePivotAroundWheelUnitInDirection', 'left', 90, 'degrees', 'head'],
-			[' ', 'change wheels by left: %n right: %n', 'turtleChangeWheelsByLeftRight', 10, 10],
-			[' ', 'set wheels to left: %n right: %n', 'turtleSetWheelsToLeftRight', 50, 50],
-			[' ', 'change %m.left_right_both wheel by %n', 'turtleChangeWheelBy', 'left', 10],
-			[' ', 'set %m.left_right_both wheel to %n', 'turtleSetWheelTo', 'left', 50],
-			[' ', 'follow %m.line_color line', 'turtleFollowLine', 'black'],
-			['w', 'follow black line until %m.target_color', 'turtleFollowLineUntil', 'red'],
-			['w', 'follow %m.color_line line until black', 'turtleFollowLineUntilBlack', 'red'],
-			['w', 'cross black intersection', 'turtleCrossIntersection'],
-			['w', 'turn %m.left_right_back at black intersection', 'turtleTurnAtIntersection', 'left'],
-			[' ', 'set following speed to %m.speed', 'turtleSetFollowingSpeedTo', '5'],
-			[' ', 'stop', 'turtleStop'],
-			['-'],
-			[' ', 'set head led to %m.led_color', 'turtleSetHeadLedTo', 'red'],
-			[' ', 'change head led by r: %n g: %n b: %n', 'turtleChangeHeadLedByRGB', 10, 0, 0],
-			[' ', 'set head led to r: %n g: %n b: %n', 'turtleSetHeadLedToRGB', 255, 0, 0],
-			[' ', 'clear head led', 'turtleClearHeadLed'],
-			['-'],
-			[' ', 'play sound %m.sound %n times', 'turtlePlaySoundTimes', 'beep', 1],
-			['w', 'play sound %m.sound %n times until done', 'turtlePlaySoundTimesUntilDone', 'beep', 1],
-			[' ', 'change buzzer by %n', 'turtleChangeBuzzerBy', 10],
-			[' ', 'set buzzer to %n', 'turtleSetBuzzerTo', 1000],
-			[' ', 'clear sound', 'turtleClearSound'],
-			[' ', 'play note %m.note %m.octave', 'turtlePlayNote', 'C', '4'],
-			['w', 'play note %m.note %m.octave for %d.beats beats', 'turtlePlayNoteForBeats', 'C', '4', 0.5],
-			['w', 'rest for %d.beats beats', 'turtleRestForBeats', 0.25],
-			[' ', 'change tempo by %n', 'turtleChangeTempoBy', 20],
-			[' ', 'set tempo to %n bpm', 'turtleSetTempoTo', 60],
-			['-'],
-			['b', 'touching %m.touching_color ?', 'turtleTouchingColor', 'red'],
-			['b', 'color pattern %m.pattern_color %m.pattern_color ?', 'turtleIsColorPattern', 'red', 'yellow'],
-			['b', 'button %m.button_state ?', 'turtleButtonState', 'clicked'],
-			['r', 'color number', 'turtleColorNumber'],
-			['r', 'color pattern', 'turtleColorPattern'],
-			['r', 'floor', 'turtleFloor'],
-			['r', 'button', 'turtleButton'],
-			['r', 'x acceleration', 'turtleAccelerationX'],
-			['r', 'y acceleration', 'turtleAccelerationY'],
-			['r', 'z acceleration', 'turtleAccelerationZ'],
-			['-'],
-			[' ', 'set robot\'s marker to %n', 'turtleSetRobotMarkerTo', 0],
-			['w', 'move %m.forward_backward to x: %n y: %n', 'turtleMoveToXY', 'forward', 320, 240],
-			['w', 'turn in direction of x: %n y: %n', 'turtleTurnInDirectionOfXY', 320, 240],
-			['w', 'turn in direction of %n degrees', 'turtleTurnInDirectionOfDegrees', 90],
-			['r', '%m.camera_color object\'s %m.color_position', 'dataOfColorObject', 'red', 'x-position'],
-			['r', 'marker %n \'s %m.marker_position', 'dataOfMarker', 0, 'x-position'],
-			['r', 'distance from marker %n to marker %n', 'distanceFromMarkerToMarker', 0, 1],
-			['r', 'orientation from marker %n to marker %n', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', 'show image %n', 'showImage', 0],
-			[' ', 'hide image %n', 'hideImage', 0],
-			[' ', 'set image %n \'s position to x: %n y: %n', 'setImagePositionToXY', 0, 320, 240],
-			[' ', 'set image %n \'s orientation to %n degrees', 'setImageOrientationToDegrees', 0, 90],
-			[' ', 'set image %n \'s size to %n %', 'setImageSizeTo', 0, 200]
-		],
 		ko1: [
 			['w', '앞으로 이동하기', 'turtleMoveForward'],
 			['w', '뒤로 이동하기', 'turtleMoveBackward'],
@@ -319,71 +240,6 @@
 			['r', 'y축 가속도', 'turtleAccelerationY'],
 			['r', 'z축 가속도', 'turtleAccelerationZ']
 		],
-		ko4: [
-			['w', '앞으로 %n %m.move_unit 이동하기', 'turtleMoveForwardUnit', 6, 'cm'],
-			['w', '뒤로 %n %m.move_unit 이동하기', 'turtleMoveBackwardUnit', 6, 'cm'],
-			['w', '%m.left_right 으로 %n %m.turn_unit 제자리 돌기', 'turtleTurnUnitInPlace', '왼쪽', 90, '도'],
-			['w', '%m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.head_tail 방향으로 돌기', 'turtleTurnUnitWithRadiusInDirection', '왼쪽', 90, '도', 6, '머리'],
-			['w', '%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.head_tail 방향으로 돌기', 'turtlePivotAroundWheelUnitInDirection', '왼쪽', 90, '도', '머리'],
-			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기', 'turtleChangeWheelsByLeftRight', 10, 10],
-			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'turtleSetWheelsToLeftRight', 50, 50],
-			[' ', '%m.left_right_both 바퀴 %n 만큼 바꾸기', 'turtleChangeWheelBy', '왼쪽', 10],
-			[' ', '%m.left_right_both 바퀴 %n (으)로 정하기', 'turtleSetWheelTo', '왼쪽', 50],
-			[' ', '%m.line_color 선을 따라가기', 'turtleFollowLine', '검은색'],
-			['w', '검은색 선을 따라 %m.target_color 까지 이동하기', 'turtleFollowLineUntil', '빨간색'],
-			['w', '%m.color_line 선을 따라 검은색까지 이동하기', 'turtleFollowLineUntilBlack', '빨간색'],
-			['w', '검은색 교차로 건너가기', 'turtleCrossIntersection'],
-			['w', '검은색 교차로에서 %m.left_right_back 으로 돌기', 'turtleTurnAtIntersection', '왼쪽'],
-			[' ', '선 따라가기 속도를 %m.speed (으)로 정하기', 'turtleSetFollowingSpeedTo', '5'],
-			[' ', '정지하기', 'turtleStop'],
-			['-'],
-			[' ', '머리 LED를 %m.led_color 으로 정하기', 'turtleSetHeadLedTo', '빨간색'],
-			[' ', '머리 LED를 R: %n G: %n B: %n 만큼 바꾸기', 'turtleChangeHeadLedByRGB', 10, 0, 0],
-			[' ', '머리 LED를 R: %n G: %n B: %n (으)로 정하기', 'turtleSetHeadLedToRGB', 255, 0, 0],
-			[' ', '머리 LED 끄기', 'turtleClearHeadLed'],
-			['-'],
-			[' ', '%m.sound 소리 %n 번 재생하기', 'turtlePlaySoundTimes', '삐', 1],
-			['w', '%m.sound 소리 %n 번 재생하고 기다리기', 'turtlePlaySoundTimesUntilDone', '삐', 1],
-			[' ', '버저 음을 %n 만큼 바꾸기', 'turtleChangeBuzzerBy', 10],
-			[' ', '버저 음을 %n (으)로 정하기', 'turtleSetBuzzerTo', 1000],
-			[' ', '소리 끄기', 'turtleClearSound'],
-			[' ', '%m.note %m.octave 음을 연주하기', 'turtlePlayNote', '도', '4'],
-			['w', '%m.note %m.octave 음을 %d.beats 박자 연주하기', 'turtlePlayNoteForBeats', '도', '4', 0.5],
-			['w', '%d.beats 박자 쉬기', 'turtleRestForBeats', 0.25],
-			[' ', '연주 속도를 %n 만큼 바꾸기', 'turtleChangeTempoBy', 20],
-			[' ', '연주 속도를 %n BPM으로 정하기', 'turtleSetTempoTo', 60],
-			['-'],
-			['b', '%m.touching_color 에 닿았는가?', 'turtleTouchingColor', '빨간색'],
-			['b', '색깔 패턴이 %m.pattern_color %m.pattern_color 인가?', 'turtleIsColorPattern', '빨간색', '노란색'],
-			['b', '버튼을 %m.button_state ?', 'turtleButtonState', '클릭했는가'],
-			['r', '색깔 번호', 'turtleColorNumber'],
-			['r', '색깔 패턴', 'turtleColorPattern'],
-			['r', '바닥 센서', 'turtleFloor'],
-			['r', '버튼', 'turtleButton'],
-			['r', 'x축 가속도', 'turtleAccelerationX'],
-			['r', 'y축 가속도', 'turtleAccelerationY'],
-			['r', 'z축 가속도', 'turtleAccelerationZ'],
-			['-'],
-			['w', '주소 %s 포트 %n 에 %s (으)로 연결하기', 'connectToIpPortAs', '127.0.0.1', 60000, '이름'],
-			[' ', '%s 을(를) %s 에게 보내기', 'sendTo', '메시지', '받는 사람'],
-			[' ', '%s 을(를) 모두에게 보내기', 'broadcast', '메시지'],
-			['b', '%s 을(를) 받았는가?', 'messageReceived', '메시지'],
-			['-'],
-			[' ', '로봇의 마커를 %n (으)로 정하기', 'turtleSetRobotMarkerTo', 0],
-			['w', '%m.forward_backward x %n y %n 위치로 이동하기', 'turtleMoveToXY', '앞으로', 320, 240],
-			['w', 'x %n y %n 방향으로 돌기', 'turtleTurnInDirectionOfXY', 320, 240],
-			['w', '%n 도 방향으로 돌기', 'turtleTurnInDirectionOfDegrees', 90],
-			['r', '%m.camera_color 의 %m.color_position', 'dataOfColorObject', '빨간색', 'x-좌표'],
-			['r', '마커 %n 의 %m.marker_position', 'dataOfMarker', 0, 'x-좌표'],
-			['r', '마커 %n 에서 마커 %n 까지의 거리', 'distanceFromMarkerToMarker', 0, 1],
-			['r', '마커 %n 에서 마커 %n 까지의 방향', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', '그림 %n 보이기', 'showImage', 0],
-			[' ', '그림 %n 숨기기', 'hideImage', 0],
-			[' ', '그림 %n 의 위치를 x %n y %n (으)로 정하기', 'setImagePositionToXY', 0, 320, 240],
-			[' ', '그림 %n 의 방향을 %n 도로 정하기', 'setImageOrientationToDegrees', 0, 90],
-			[' ', '그림 %n 의 크기를 %n %로 정하기', 'setImageSizeTo', 0, 200]
-		],
 		uz1: [
 			['w', 'oldinga yurish', 'turtleMoveForward'],
 			['w', 'orqaga yurish', 'turtleMoveBackward'],
@@ -464,71 +320,6 @@
 			['r', 'x tezlanish', 'turtleAccelerationX'],
 			['r', 'y tezlanish', 'turtleAccelerationY'],
 			['r', 'z tezlanish', 'turtleAccelerationZ']
-		],
-		uz4: [
-			['w', 'oldinga %n %m.move_unit yurish', 'turtleMoveForwardUnit', 6, 'cm'],
-			['w', 'orqaga %n %m.move_unit yurish', 'turtleMoveBackwardUnit', 6, 'cm'],
-			['w', '%m.left_right ga %n %m.turn_unit o\'z joyda o\'girilish', 'turtleTurnUnitInPlace', 'chap', 90, 'daraja'],
-			['w', '%m.left_right ga %n %m.turn_unit radius %n cm %m.head_tail yo\'nalishga o\'girilish', 'turtleTurnUnitWithRadiusInDirection', 'chap', 90, 'daraja', 6, 'bosh'],
-			['w', '%m.left_right g\'ildirak markaziga %n %m.turn_unit %m.head_tail yo\'nalishga o\'girilish', 'turtlePivotAroundWheelUnitInDirection', 'chap', 90, 'daraja', 'bosh'],
-			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'turtleChangeWheelsByLeftRight', 10, 10],
-			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'turtleSetWheelsToLeftRight', 50, 50],
-			[' ', '%m.left_right_both g\'ildirakni %n ga o\'zgartirish', 'turtleChangeWheelBy', 'chap', 10],
-			[' ', '%m.left_right_both g\'ildirakni %n ga sozlash', 'turtleSetWheelTo', 'chap', 50],
-			[' ', '%m.line_color chiziqqa ergashish', 'turtleFollowLine', 'qora'],
-			['w', 'qora chiziq ustida %m.target_color gacha yurish', 'turtleFollowLineUntil', 'qizil'],
-			['w', '%m.color_line chiziq ustida qora gacha yurish', 'turtleFollowLineUntilBlack', 'qizil'],
-			['w', 'qora chorrahadan o\'tib yurish', 'turtleCrossIntersection'],
-			['w', 'qora chorrahada %m.left_right_back ga o\'girilish', 'turtleTurnAtIntersection', 'chap'],
-			[' ', 'liniyada ergashish tezligini %m.speed ga sozlash', 'turtleSetFollowingSpeedTo', '5'],
-			[' ', 'to\'xtatish', 'turtleStop'],
-			['-'],
-			[' ', 'boshining LEDni %m.led_color ga sozlash', 'turtleSetHeadLedTo', 'qizil'],
-			[' ', 'boshining LEDni r: %n g: %n b: %n ga o\'zgartirish', 'turtleChangeHeadLedByRGB', 10, 0, 0],
-			[' ', 'boshining LEDni r: %n g: %n b: %n ga sozlash', 'turtleSetHeadLedToRGB', 255, 0, 0],
-			[' ', 'boshining LEDni o\'chirish', 'turtleClearHeadLed'],
-			['-'],
-			[' ', '%m.sound tovushni %n marta ijro etish', 'turtlePlaySoundTimes', 'qisqa', 1],
-			['w', '%m.sound tovushni %n marta ijro tugaguncha kutish', 'turtlePlaySoundTimesUntilDone', 'qisqa', 1],
-			[' ', 'buzerning ovozini %n ga o\'zgartirish', 'turtleChangeBuzzerBy', 10],
-			[' ', 'buzerning ovozini %n ga sozlash', 'turtleSetBuzzerTo', 1000],
-			[' ', 'tovushni o\'chirish', 'turtleClearSound'],
-			[' ', '%m.note %m.octave notani ijro etish', 'turtlePlayNote', 'do', '4'],
-			['w', '%m.note %m.octave notani %d.beats zarb ijro etish', 'turtlePlayNoteForBeats', 'do', '4', 0.5],
-			['w', '%d.beats zarb tanaffus', 'turtleRestForBeats', 0.25],
-			[' ', 'temni %n ga o\'zgartirish', 'turtleChangeTempoBy', 20],
-			[' ', 'temni %n bpm ga sozlash', 'turtleSetTempoTo', 60],
-			['-'],
-			['b', '%m.touching_color ga tekkan?', 'turtleTouchingColor', 'qizil'],
-			['b', 'rang naqshi %m.pattern_color %m.pattern_color ?', 'turtleIsColorPattern', 'qizil', 'sariq'],
-			['b', 'tugmani %m.button_state ?', 'turtleButtonState', 'bosgan'],
-			['r', 'rang raqami', 'turtleColorNumber'],
-			['r', 'rang naqshi', 'turtleColorPattern'],
-			['r', 'taglik sensori', 'turtleFloor'],
-			['r', 'tugma', 'turtleButton'],
-			['r', 'x tezlanish', 'turtleAccelerationX'],
-			['r', 'y tezlanish', 'turtleAccelerationY'],
-			['r', 'z tezlanish', 'turtleAccelerationZ'],
-			['-'],
-			['w', 'ip: %s port: %n ga %s sifatida ulang', 'connectToIpPortAs', '127.0.0.1', 60000, 'nomi'],
-			[' ', '%s ni %s ga yuboring', 'sendTo', 'xabar', 'qabul qiluvchi'],
-			[' ', '%s ni hammaga yuboring', 'broadcast', 'xabar'],
-			['b', '%s ni qabul qiling?', 'messageReceived', 'xabar'],
-			['-'],
-			[' ', 'robotning markerini %n ga sozlash', 'turtleSetRobotMarkerTo', 0],
-			['w', '%m.forward_backward x: %n y: %n tomonga yurish', 'turtleMoveToXY', 'oldinga', 320, 240],
-			['w', 'x: %n y: %n tomonga o\'girilish', 'turtleTurnInDirectionOfXY', 320, 240],
-			['w', '%n daraja tomonga o\'girilish', 'turtleTurnInDirectionOfDegrees', 90],
-			['r', '%m.camera_color ning %m.color_position', 'dataOfColorObject', 'qizil', 'x-holati'],
-			['r', 'marker %n ning %m.marker_position', 'dataOfMarker', 0, 'x-holati'],
-			['r', 'marker %n dan marker %n gacha masofa', 'distanceFromMarkerToMarker', 0, 1],
-			['r', 'marker %n dan marker %n gacha orientatsiya', 'orientationFromMarkerToMarker', 0, 1],
-			['-'],
-			[' ', 'rasm %n ni ko\'rsatish', 'showImage', 0],
-			[' ', 'rasm %n ni yashirish', 'hideImage', 0],
-			[' ', 'rasm %n ning pozitsiyasini x %n y %n ga sozlash', 'setImagePositionToXY', 0, 320, 240],
-			[' ', 'rasm %n ning yo\'nalishini %n darajaga sozlash', 'setImageOrientationToDegrees', 0, 90],
-			[' ', 'rasm %n ning o\'lchamini %n % ga sozlash', 'setImageSizeTo', 0, 200]
 		]
 	};
 	const MENUS = {
@@ -541,7 +332,6 @@
 			'left_right': ['left', 'right'],
 			'left_right_both': ['left', 'right', 'both'],
 			'left_right_back': ['left', 'right', 'back'],
-			'forward_backward': ['forward', 'backward'],
 			'line_color': ['black', 'red', 'green', 'blue', 'any color'],
 			'target_color': ['red', 'yellow', 'green', 'sky blue', 'blue', 'purple', 'any color'],
 			'color_line': ['red', 'green', 'blue', 'any color'],
@@ -553,10 +343,7 @@
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['clicked', 'double-clicked', 'long-pressed'],
-			'camera_color': ['red', 'yellow', 'green', 'sky-blue', 'blue', 'purple'],
-			'color_position': ['x-position', 'y-position', 'left-position', 'right-position', 'top-position', 'bottom-position', 'width', 'height', 'area'],
-			'marker_position': ['x-position', 'y-position', 'left-position', 'right-position', 'top-position', 'bottom-position', 'orientation', 'width', 'height', 'area']
+			'button_state': ['clicked', 'double-clicked', 'long-pressed']
 		},
 		ko: {
 			'cm_sec': ['cm', '초'],
@@ -567,7 +354,6 @@
 			'left_right': ['왼쪽', '오른쪽'],
 			'left_right_both': ['왼쪽', '오른쪽', '양쪽'],
 			'left_right_back': ['왼쪽', '오른쪽', '뒤쪽'],
-			'forward_backward': ['앞으로', '뒤로'],
 			'line_color': ['검은색', '빨간색', '초록색', '파란색', '아무 색'],
 			'target_color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '아무 색'],
 			'color_line': ['빨간색', '초록색', '파란색', '아무 색'],
@@ -579,10 +365,7 @@
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가'],
-			'camera_color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색'],
-			'color_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '폭', '높이', '넓이'],
-			'marker_position': ['x-좌표', 'y-좌표', '왼쪽-좌표', '오른쪽-좌표', '위쪽-좌표', '아래쪽-좌표', '방향', '폭', '높이', '넓이']
+			'button_state': ['클릭했는가', '더블클릭했는가', '길게~눌렀는가']
 		},
 		uz: {
 			'cm_sec': ['cm', 'soniya'],
@@ -593,7 +376,6 @@
 			'left_right': ['chap', 'o\'ng'],
 			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
 			'left_right_back': ['chap', 'o\'ng', 'orqa'],
-			'forward_backward': ['oldinga', 'orqaga'],
 			'line_color': ['qora', 'qizil', 'yashil', 'ko\'k', 'har qanday rang'],
 			'target_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'har qanday rang'],
 			'color_line': ['qizil', 'yashil', 'ko\'k', 'har qanday rang'],
@@ -605,10 +387,7 @@
 			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'button_state': ['bosgan', 'ikki-marta-bosgan', 'uzoq-bosganmi'],
-			'camera_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyohrang'],
-			'color_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'kengligi', 'balandligi', 'maydoni'],
-			'marker_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'orientatsiya', 'kengligi', 'balandligi', 'maydoni']
+			'button_state': ['bosgan', 'ikki-marta-bosgan', 'uzoq-bosganmi']
 		}
 	};
 	
@@ -635,8 +414,6 @@
 	var SOUNDS = {};
 	var BUTTON_STATES = {};
 	var VALUES = {};
-	var CAMERA_COLORS = {};
-	var CAMERA_DATA = {};
 	const SECONDS = 1;
 	const PULSES = 2;
 	const DEGREES = 3;
@@ -644,8 +421,6 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
-	const FORWARD = 8;
-	const BACKWARD = 9;
 	const LEVEL1_MOVE_CM = 12;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
@@ -723,27 +498,6 @@
 		VALUES[tmp[2]] = BACK;
 		tmp = MENUS[i]['head_tail'];
 		VALUES[tmp[0]] = HEAD;
-		tmp = MENUS[i]['forward_backward'];
-		VALUES[tmp[0]] = FORWARD;
-		VALUES[tmp[1]] = BACKWARD;
-		tmp = MENUS[i]['camera_color'];
-		CAMERA_COLORS[tmp[0]] = 'red';
-		CAMERA_COLORS[tmp[1]] = 'yellow';
-		CAMERA_COLORS[tmp[2]] = 'green';
-		CAMERA_COLORS[tmp[3]] = 'cyan';
-		CAMERA_COLORS[tmp[4]] = 'blue';
-		CAMERA_COLORS[tmp[5]] = 'magenta';
-		tmp = MENUS[i]['marker_position'];
-		CAMERA_DATA[tmp[0]] = 'x';
-		CAMERA_DATA[tmp[1]] = 'y';
-		CAMERA_DATA[tmp[2]] = 'left';
-		CAMERA_DATA[tmp[3]] = 'right';
-		CAMERA_DATA[tmp[4]] = 'top';
-		CAMERA_DATA[tmp[5]] = 'bottom';
-		CAMERA_DATA[tmp[6]] = 'theta';
-		CAMERA_DATA[tmp[7]] = 'width';
-		CAMERA_DATA[tmp[8]] = 'height';
-		CAMERA_DATA[tmp[9]] = 'area';
 	}
 
 	function removeTimeout(id) {
@@ -821,172 +575,6 @@
 		}
 	}
 	
-	function chatDisconnect() {
-		if(chat.socket) {
-			chat.socket.close();
-			chat.socket = undefined;
-		}
-	}
-	
-	function chatSend(data) {
-		if(chat.socket) {
-			try {
-				chat.socket.send(JSON.stringify(data));
-			} catch (e) {
-			}
-		}
-	}
-	
-	function getNavigator() {
-		if(!navigator) {
-			navigator = {
-				x: -1,
-				y: -1,
-				theta: 0,
-				targetPositionX: -1,
-				targetPositionY: -1,
-				targetDirectionX: -1,
-				targetDirectionY: -1,
-				targetDegree: -200,
-				backward: false,
-				marker: -1,
-				command: 0,
-				callback: undefined,
-				wheels: { left: 0, right: 0 },
-				reset: function() {
-					this.marker = -1;
-					this.command = 0;
-					this.callback = undefined;
-				},
-				clear: function() {
-					this.x = -1;
-					this.y = -1;
-					this.theta = 0;
-					this.targetPositionX = -1;
-					this.targetPositionY = -1;
-					this.targetDirectionX = -1;
-					this.targetDirectionY = -1;
-					this.targetDegree = -200;
-					this.backward = false;
-					this.wheels.left = 0;
-					this.wheels.right = 0;
-				},
-				setTargetPosition: function(x, y) {
-					this.targetPositionX = x;
-					this.targetPositionY = y;
-				},
-				setTargetDirection: function(x, y) {
-					this.targetDirectionX = x;
-					this.targetDirectionY = y;
-				},
-				setTargetDegree: function(degree) {
-					this.targetDegree = degree;
-				},
-				setBackward: function(backward) {
-					this.backward = backward;
-				},
-				updatePosition: function() {
-					var data = markers[this.marker];
-					if(data) {
-						this.x = data.x;
-						this.y = data.y;
-						this.theta = data.theta;
-					}
-				},
-				moveTo: function() {
-					var x = this.x;
-					var y = this.y;
-					var targetX = this.targetPositionX;
-					var targetY = this.targetPositionY;
-					var backward = this.backward;
-					if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
-						var currentRadian = this.theta * Math.PI / 180.0;
-						if(backward) currentRadian += Math.PI;
-						var targetRadian = Math.atan2(targetY - y, targetX - x);
-						var diff = this.validateRadian(targetRadian - currentRadian);
-						var mag = Math.abs(diff);
-						var ex = targetX - x;
-						var ey = targetY - y;
-						var dist = Math.sqrt(ex * ex + ey * ey);
-						if(dist > tolerance.position) {
-							var wheels = this.wheels;
-							if(mag < 0.01) {
-								wheels.left = STRAIGHT_SPEED;
-								wheels.right = STRAIGHT_SPEED;
-							} else {
-								var base = (MINIMUM_WHEEL_SPEED + 0.5 / mag) * GAIN_BASE_SPEED;
-								if(base > MAX_BASE_SPEED) base = MAX_BASE_SPEED;
-								var value = 0;
-								if(diff > 0) value = Math.log(1 + mag) * GAIN_POSITION;
-								else value = -Math.log(1 + mag) * GAIN_POSITION;
-								if(backward) value = -value;
-								wheels.left = parseInt(base - value);
-								wheels.right = parseInt(base + value);
-							}
-							if(backward) {
-								wheels.left = -wheels.left;
-								wheels.right = -wheels.right;
-							}
-							return wheels;
-						}
-					} else {
-						return this.wheels;
-					}
-				},
-				turn: function(targetRadian) {
-					var currentRadian = this.theta * Math.PI / 180.0;
-					var diff = this.validateRadian(targetRadian - currentRadian);
-					var mag = Math.abs(diff);
-					var direction = (diff > 0) ? 1 : -1;
-					if(mag > tolerance.angle) {
-						var value = 0;
-						if(diff > 0) value = Math.log(1 + mag) * GAIN_ANGLE;
-						else value = -Math.log(1 + mag) * GAIN_ANGLE;
-						var wheels = this.wheels;
-						wheels.left = -value;
-						wheels.right = value;
-						return wheels;
-					}
-				},
-				turnToXY: function() {
-					var x = this.x;
-					var y = this.y;
-					var targetX = this.targetDirectionX;
-					var targetY = this.targetDirectionY;
-					if(x >= 0 && y >= 0 && targetX >= 0 && targetY >= 0) {
-						var targetRadian = Math.atan2(targetY - y, targetX - x);
-						return this.turn(targetRadian);
-					} else {
-						return this.wheels;
-					}
-				},
-				turnToDegree: function() {
-					var targetDegree = this.targetDegree;
-					if(targetDegree > -200) {
-						var targetRadian = targetDegree * Math.PI / 180.0;
-						return this.turn(targetRadian);
-					}
-				},
-				validateRadian: function(radian) {
-					if(radian > Math.PI) return radian - this.PI_2;
-					else if(radian < -Math.PI) return radian + this.PI_2;
-					return radian;
-				}
-			};
-		}
-		return navigator;
-	}
-	
-	function getArImage(id, index) {
-		var image = tx.ar[id];
-		if(image === undefined) {
-			image = {};
-			tx.ar[id] = image;
-		}
-		image['id'] = index;
-		return image;
-	}
-	
 	function reset() {
 		var motoring = tx.motoring;
 		motoring.map = 0xffe40000;
@@ -1009,7 +597,6 @@
 		motoring.motionSpeed = 0;
 		motoring.motionValue = 0;
 		motoring.motionRadius = 0;
-		tx.ar = {};
 
 		pulseCallback = undefined;
 		soundId = 0;
@@ -1021,15 +608,7 @@
 		longPressed = false;
 		colorPattern = -1;
 		tempo = 60;
-		chat.messages = {};
-		colors = {};
-		markers = {};
-		if(navigator) {
-			navigator.reset();
-			navigator = undefined;
-		}
 		removeAllTimeouts();
-		chatDisconnect();
 	}
 	
 	function handleSensory() {
@@ -1085,31 +664,6 @@
 		}
 	}
 	
-	function handleNavigation() {
-		var navi = getNavigator();
-		navi.updatePosition();
-		var wheels = undefined;
-		if(navi.command == 1) {
-			wheels = navi.moveTo();
-		} else if(navi.command == 2) {
-			wheels = navi.turnToXY();
-		} else if(navi.command == 3) {
-			wheels = navi.turnToDegree();
-		}
-		var motoring = tx.motoring;
-		if(wheels) {
-			motoring.leftWheel = wheels.left;
-			motoring.rightWheel = wheels.right;
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			navi.command = 0;
-			var callback = navi.callback;
-			navi.callback = undefined;
-			callback();
-		}
-	}
-	
 	function open(url) {
 		if('WebSocket' in window) {
 			try {
@@ -1138,13 +692,10 @@
 									if(data.module == 'turtle') {
 										connectionState = data.state;
 									}
-								} else if(i == 'navigation') {
-									tolerance = data;
 								} else {
 									if(data.module == 'turtle' && data.index == 0) {
 										sensory = data;
 										handleSensory();
-										if(navigator && navigator.callback) handleNavigation();
 									}
 								}
 							}
@@ -1696,243 +1247,6 @@
 
 	ext.turtleAccelerationZ = function() {
 		return sensory.accelerationZ;
-	};
-	
-	ext.connectToIpPortAs = function(ip, port, name, callback) {
-		port = parseInt(port);
-		if(('WebSocket' in window) && (typeof port == 'number') && port > 0) {
-			chatDisconnect();
-			try {
-				var sock = new WebSocket('ws://' + ip + ':' + port);
-				sock.binaryType = 'arraybuffer';
-				chat.socket = sock;
-				sock.onopen = function() {
-					sock.onmessage = function(message) {
-						try {
-							var data = JSON.parse(message.data);
-							if(data.type === 'send' || data.type === 'broadcast') {
-								chat.messages[data.message] = true;
-							}
-						} catch (e) {
-						}
-					};
-					sock.onclose = function() {
-						chat.socket = undefined;
-					};
-					chatSend({
-						type: 'register',
-						name: name
-					});
-					callback();
-				};
-			} catch (e) {
-			}
-		} else {
-			callback();
-		}
-	};
-	
-	ext.sendTo = function(message, receiver) {
-		chatSend({
-			type: 'send',
-			to: receiver,
-			message: message
-		});
-	};
-	
-	ext.broadcast = function(message) {
-		chatSend({
-			type: 'broadcast',
-			message: message
-		});
-	};
-	
-	ext.messageReceived = function(message) {
-		return chat.messages[message] === true;
-	};
-	
-	ext.turtleSetRobotMarkerTo = function(marker) {
-		marker = parseInt(marker);
-		if((typeof marker == 'number') && marker >= 0) {
-			var navi = getNavigator();
-			navi.marker = marker;
-		}
-	};
-
-	ext.turtleMoveToXY = function(direction, x, y, callback) {
-		x = parseInt(x);
-		y = parseInt(y);
-		if((typeof x == 'number') && (typeof y == 'number')) {
-			setPulse(0);
-			setLineTracerMode(0);
-			setMotion(0, 0, 0, 0, 0);
-			var navi = getNavigator();
-			navi.clear();
-			navi.setTargetPosition(x, y);
-			navi.setBackward(VALUES[direction] == BACKWARD);
-			navi.allback = callback;
-			navi.command = 1;
-		} else {
-			callback();
-		}
-	};
-	
-	ext.turtleTurnInDirectionOfXY = function(x, y, callback) {
-		x = parseInt(x);
-		y = parseInt(y);
-		if((typeof x == 'number') && (typeof y == 'number')) {
-			setPulse(0);
-			setLineTracerMode(0);
-			setMotion(0, 0, 0, 0, 0);
-			var navi = getNavigator();
-			navi.clear();
-			navi.setTargetDirection(x, y);
-			navi.callback = callback;
-			navi.command = 2;
-		} else {
-			callback();
-		}
-	};
-
-	ext.turtleTurnInDirectionOfDegrees = function(degree, callback) {
-		degree = parseFloat(degree);
-		if(typeof degree == 'number') {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
-			setPulse(0);
-			setLineTracerMode(0);
-			setMotion(0, 0, 0, 0, 0);
-			var navi = getNavigator();
-			navi.clear();
-			navi.setTargetDegree(degree);
-			navi.callback = callback;
-			navi.command = 3;
-		} else {
-			callback();
-		}
-	};
-	
-	ext.dataOfColorObject = function(color, value) {
-		color = CAMERA_COLORS[color];
-		value = CAMERA_DATA[value];
-		color = colors[color];
-		if(color) {
-			value = color[value];
-			if(typeof value == 'number') return value;
-		}
-		return -1;
-	};
-	
-	ext.dataOfMarker = function(marker, value) {
-		marker = parseInt(marker);
-		value = CAMERA_DATA[value];
-		if((typeof marker == 'number') && marker >= 0) {
-			marker = markers[marker];
-			if(marker) {
-				var v = marker[value];
-				if(typeof v == 'number') return v;
-			}
-		}
-		if(value === 'theta') return -200;
-		else return -1;
-	};
-	
-	ext.distanceFromMarkerToMarker = function(marker1, marker2) {
-		marker1 = parseInt(marker1);
-		marker2 = parseInt(marker2);
-		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
-			marker1 = markers[marker1];
-			marker2 = markers[marker2];
-			if(marker1 && marker2) {
-				var x1 = marker1.x;
-				var y1 = marker1.y;
-				var x2 = marker2.x;
-				var y2 = marker2.y;
-				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
-					var dx = x2 - x1, dy = y2 - y1;
-					return Math.sqrt(dx * dx + dy * dy);
-				}
-			}
-		}
-		return 2147483647;
-	};
-	
-	ext.orientationFromMarkerToMarker = function(marker1, marker2) {
-		marker1 = parseInt(marker1);
-		marker2 = parseInt(marker2);
-		if((typeof marker1 == 'number') && marker1 >= 0 && (typeof marker2 == 'number') && marker2 >= 0) {
-			marker1 = markers[marker1];
-			marker2 = markers[marker2];
-			if(marker1 && marker2) {
-				var x1 = marker1.x;
-				var y1 = marker1.y;
-				var x2 = marker2.x;
-				var y2 = marker2.y;
-				if((typeof x1 == 'number') && (typeof y1 == 'number') && (typeof x2 == 'number') && (typeof y2 == 'number')) {
-					var dx = x2 - x1, dy = y2 - y1;
-					return Math.atan2(dy, dx) * 180.0 / Math.PI;
-				}
-			}
-		}
-		return -200;
-	};
-	
-	ext.showImage = function(index) {
-		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['visible'] = true;
-		}
-	};
-	
-	ext.hideImage = function(index) {
-		index = parseInt(index);
-		if((typeof index == 'number') && index >= 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['visible'] = false;
-		}
-	};
-	
-	ext.setImagePositionToXY = function(index, x, y) {
-		index = parseInt(index);
-		x = parseInt(x);
-		y = parseInt(y);
-		if((typeof index == 'number') && index >= 0 && (typeof x == 'number') && (typeof y == 'number')) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['x'] = x;
-			image['y'] = y;
-		}
-	};
-	
-	ext.setImageOrientationToDegrees = function(index, degree) {
-		index = parseInt(index);
-		degree = parseFloat(degree);
-		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['theta'] = degree;
-		}
-	};
-	
-	ext.setImageSizeTo = function(index, scale) {
-		index = parseInt(index);
-		scale = parseFloat(scale);
-		if((typeof index == 'number') && index >= 0 && (typeof scale == 'number') && scale > 0) {
-			var id = 'image' + index;
-			var image = getArImage(id, index);
-			image['scale'] = scale / 100.0;
-		}
 	};
 	
 	ext._getStatus = function() {
