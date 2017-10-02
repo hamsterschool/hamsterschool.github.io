@@ -687,7 +687,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								var json = JSON.stringify(tx);
+								var json = JSON.stringify(packet);
 								if(canSend && socket) socket.send(json);
 								clearMotoring();
 							} catch (e) {
@@ -696,20 +696,16 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'hamster') {
-										connectionState = data.state;
-									}
-								} else {
-									if(data.module == 'hamster' && data.index == 0) {
+							var data = JSON.parse(message.data);
+							if(data.module == 'hamster') {
+								if(data.type == 1) {
+									if(data.index == 0) {
 										sensory = data;
 										if(lineTracerCallback) handleLineTracer();
 										if(boardCallback) handleBoard();
 									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
 							}
 						} catch (e) {
