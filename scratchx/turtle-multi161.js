@@ -1,9 +1,7 @@
 (function(ext) {
 
 	var robots = {};
-	var tx = {
-		ar: {}
-	};
+	var packet = {};
 	var connectionState = 1;
 	var timeouts = [];
 	var socket = undefined;
@@ -671,7 +669,7 @@
 				robot.colorPattern = -1;
 			};
 			robots[index] = robot;
-			tx['turtle' + index] = robot.motoring;
+			packet['turtle' + index] = robot.motoring;
 		}
 		return robot;
 	}
@@ -816,7 +814,7 @@
 					sendTimer = setInterval(function() {
 						if(canSend && socket) {
 							try {
-								var json = JSON.stringify(tx);
+								var json = JSON.stringify(packet);
 								if(canSend && socket) socket.send(json);
 								clearMotorings();
 							} catch (e) {
@@ -825,16 +823,10 @@
 					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'turtle') {
-										connectionState = data.state;
-									}
-								} else {
-									if(data.module == 'turtle' && data.index >= 0) {
+							var data = JSON.parse(message.data);
+							if(data.module == 'turtle') {
+								if(data.type == 1) {
+									if(data.index >= 0) {
 										var robot = getRobot(data.index);
 										if(robot) {
 											robot.sensory = data;
@@ -842,6 +834,8 @@
 										}
 									}
 								}
+							} else if(data.type == 0) {
+								connectionState = data.state;
 							}
 						} catch (e) {
 						}
