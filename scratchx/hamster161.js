@@ -16,24 +16,25 @@
 		inputB: 0,
 		lineTracerState: 0
 	};
-	var tx = {
-		motoring: {
-			module: 'hamster',
-			map: 0xfc000000,
-			leftWheel: 0,
-			rightWheel: 0,
-			buzzer: 0,
-			outputA: 0,
-			outputB: 0,
-			leftLed: 0,
-			rightLed: 0,
-			note: 0,
-			lineTracerMode: 0,
-			lineTracerSpeed: 5,
-			ioModeA: 0,
-			ioModeB: 0,
-			motion: 0
-		}
+	var motoring = {
+		module: 'hamster',
+		map: 0xfc000000,
+		leftWheel: 0,
+		rightWheel: 0,
+		buzzer: 0,
+		outputA: 0,
+		outputB: 0,
+		leftLed: 0,
+		rightLed: 0,
+		note: 0,
+		lineTracerMode: 0,
+		lineTracerSpeed: 5,
+		ioModeA: 0,
+		ioModeB: 0,
+		motion: 0
+	};
+	var packet = {
+		hamster: motoring
 	};
 	const MOTION = {
 		NONE: 0,
@@ -449,53 +450,45 @@
 	}
 	
 	function clearMotoring() {
-		tx.motoring.map = 0xfc000000;
+		motoring.map = 0xfc000000;
 	}
 	
 	function setLeftLed(color) {
-		var motoring = tx.motoring;
 		motoring.leftLed = color;
 		motoring.map |= 0x01000000;
 	}
 	
 	function setRightLed(color) {
-		var motoring = tx.motoring;
 		motoring.rightLed = color;
 		motoring.map |= 0x00800000;
 	}
 	
 	function setNote(note) {
-		var motoring = tx.motoring;
 		motoring.note = note;
 		motoring.map |= 0x00400000;
 	}
 
 	function setLineTracerMode(mode) {
-		var motoring = tx.motoring;
 		motoring.lineTracerMode = mode;
 		motoring.map |= 0x00200000;
 	}
 	
 	function setLineTracerSpeed(speed) {
-		var motoring = tx.motoring;
 		motoring.lineTracerSpeed = speed;
 		motoring.map |= 0x00100000;
 	}
 	
 	function setIoModeA(mode) {
-		var motoring = tx.motoring;
 		motoring.ioModeA = mode;
 		motoring.map |= 0x00080000;
 	}
 	
 	function setIoModeB(mode) {
-		var motoring = tx.motoring;
 		motoring.ioModeB = mode;
 		motoring.map |= 0x00040000;
 	}
 
 	function reset() {
-		var motoring = tx.motoring;
 		motoring.map = 0xfdfc0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -751,7 +744,6 @@
 	}
 
 	ext.boardMoveForward = function(callback) {
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		setLineTracerMode(0);
 		motoring.leftWheel = 45;
@@ -763,7 +755,6 @@
 	};
 
 	ext.boardTurn = function(direction, callback) {
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		setLineTracerMode(0);
 		if(VALUES[direction] === LEFT) {
@@ -781,7 +772,6 @@
 	};
 	
 	ext.moveForward = function(callback) {
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.FORWARD;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -798,7 +788,6 @@
 	};
 	
 	ext.moveBackward = function(callback) {
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.BACKWARD;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -817,7 +806,6 @@
 	ext.turn = function(direction, callback) {
 		boardCommand = 0;
 		setLineTracerMode(0);
-		var motoring = tx.motoring;
 		if(VALUES[direction] === LEFT) {
 			motoring.motion = MOTION.LEFT;
 			motoring.leftWheel = -30;
@@ -842,7 +830,6 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
-			var motoring = tx.motoring;
 			motoring.motion = MOTION.FORWARD;
 			motoring.leftWheel = 30;
 			motoring.rightWheel = 30;
@@ -864,7 +851,6 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
-			var motoring = tx.motoring;
 			motoring.motion = MOTION.BACKWARD;
 			motoring.leftWheel = -30;
 			motoring.rightWheel = -30;
@@ -886,7 +872,6 @@
 		boardCommand = 0;
 		setLineTracerMode(0);
 		if(sec && sec > 0) {
-			var motoring = tx.motoring;
 			if(VALUES[direction] === LEFT) {
 				motoring.motion = MOTION.LEFT;
 				motoring.leftWheel = -30;
@@ -912,7 +897,6 @@
 	ext.changeBothWheelsBy = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -927,7 +911,6 @@
 	ext.setBothWheelsTo = function(left, right) {
 		left = parseFloat(left);
 		right = parseFloat(right);
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -941,7 +924,6 @@
 
 	ext.changeWheelBy = function(which, speed) {
 		speed = parseFloat(speed);
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -962,7 +944,6 @@
 
 	ext.setWheelTo = function(which, speed) {
 		speed = parseFloat(speed);
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -989,7 +970,6 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		motoring.leftWheel = 0;
@@ -1009,7 +989,6 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		motoring.leftWheel = 0;
@@ -1026,7 +1005,6 @@
 	};
 
 	ext.stop = function() {
-		var motoring = tx.motoring;
 		motoring.motion = MOTION.NONE;
 		boardCommand = 0;
 		setLineTracerMode(0);
@@ -1062,7 +1040,6 @@
 	};
 
 	ext.beep = function(callback) {
-		var motoring = tx.motoring;
 		motoring.buzzer = 440;
 		setNote(0);
 		var timer = setTimeout(function() {
@@ -1076,7 +1053,7 @@
 	ext.changeBuzzerBy = function(value) {
 		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
-			tx.motoring.buzzer += buzzer;
+			motoring.buzzer += buzzer;
 		}
 		setNote(0);
 	};
@@ -1084,13 +1061,13 @@
 	ext.setBuzzerTo = function(value) {
 		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
-			tx.motoring.buzzer = buzzer;
+			motoring.buzzer = buzzer;
 		}
 		setNote(0);
 	};
 
 	ext.clearBuzzer = function() {
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 	};
 	
@@ -1100,7 +1077,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
 			note += (octave - 1) * 12;
 			setNote(note);
@@ -1131,7 +1108,7 @@
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
-		tx.motoring.buzzer = 0;
+		motoring.buzzer = 0;
 		setNote(0);
 		if(beat && beat > 0 && tempo > 0) {
 			var timer = setTimeout(function() {
@@ -1221,7 +1198,6 @@
 	ext.changeOutputBy = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
-			var motoring = tx.motoring;
 			if(port == 'A') {
 				motoring.outputA += value;
 			} else if(port == 'B') {
@@ -1236,7 +1212,6 @@
 	ext.setOutputTo = function(port, value) {
 		value = parseFloat(value);
 		if(typeof value == 'number') {
-			var motoring = tx.motoring;
 			if(port == 'A') {
 				motoring.outputA = value;
 			} else if(port == 'B') {
@@ -1252,7 +1227,6 @@
 		action = VALUES[action];
 		setIoModeA(10);
 		setIoModeB(10);
-		var motoring = tx.motoring;
 		if(action == OPEN) {
 			motoring.outputA = 1;
 			motoring.outputB = 0;
@@ -1270,7 +1244,6 @@
 	ext.clearGripper = function() {
 		setIoModeA(10);
 		setIoModeB(10);
-		var motoring = tx.motoring;
 		motoring.outputA = 0;
 		motoring.outputB = 0;
 	};
