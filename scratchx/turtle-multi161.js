@@ -833,9 +833,9 @@
 											handleSensory(robot);
 										}
 									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
-							} else if(data.type == 0) {
-								connectionState = data.state;
 							}
 						} catch (e) {
 						}
