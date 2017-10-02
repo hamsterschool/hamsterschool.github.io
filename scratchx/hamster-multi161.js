@@ -706,7 +706,7 @@
 				robot.motoring.map = 0xfc000000;
 			};
 			robots[index] = robot;
-			packet[index] = robot.motoring;
+			packet['hamster' + index] = robot.motoring;
 		}
 		return robot;
 	}
