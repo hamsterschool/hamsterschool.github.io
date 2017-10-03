@@ -433,18 +433,6 @@
 		VALUES[tmp[1]] = CLOSE;
 	}
 	
-	if(!Date.now) {
-		Date.now = function() {
-			return new Date().getTime();
-		};
-	}
-	
-	var timer = {
-		timeout: function(callback, ms) {
-			
-		}
-	};
-
 	function removeTimeout(id) {
 		clearTimeout(id);
 		var index = timeouts.indexOf(id);
@@ -715,6 +703,12 @@
 						canSend = false;
 						connectionState = STATE.CLOSED;
 					};
+					
+					if(!Date.now) {
+						Date.now = function() {
+							return new Date().getTime();
+						};
+					}
 					
 					var targetTime = Date.now();
 					var run = function() {
