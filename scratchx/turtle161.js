@@ -59,7 +59,6 @@
 	var tempo = 60;
 	var timeouts = [];
 	var socket = undefined;
-	var sendTimer = undefined;
 	var canSend = false;
 	const STATE = {
 		CONNECTING: 1,
@@ -664,17 +663,6 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					canSend = true;
-					sendTimer = setInterval(function() {
-						if(canSend && socket) {
-							try {
-								var json = JSON.stringify(packet);
-								if(canSend && socket) socket.send(json);
-								clearMotoring();
-							} catch (e) {
-							}
-						}
-					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var data = JSON.parse(message.data);
@@ -693,12 +681,33 @@
 					};
 					sock.onclose = function() {
 						canSend = false;
-						if(sendTimer) {
-							clearInterval(sendTimer);
-							sendTimer = undefined;
-						}
 						connectionState = STATE.CLOSED;
 					};
+					
+					if(!Date.now) {
+						Date.now = function() {
+							return new Date().getTime();
+						};
+					}
+					
+					var targetTime = Date.now();
+					var run = function() {
+						if(canSend && socket) {
+							if(Date.now() > targetTime) {
+								try {
+									var json = JSON.stringify(packet);
+									if(canSend && socket) socket.send(json);
+									clearMotoring();
+								} catch (e) {
+								}
+								targetTime += 20;
+							}
+							setTimeout(run, 5);
+						}
+					};
+					
+					canSend = true;
+					run();
 				};
 				return true;
 			} catch (e) {
@@ -709,10 +718,6 @@
 
 	function close() {
 		canSend = false;
-		if(sendTimer) {
-			clearInterval(sendTimer);
-			sendTimer = undefined;
-		}
 		if(socket) {
 			socket.close();
 			socket = undefined;
