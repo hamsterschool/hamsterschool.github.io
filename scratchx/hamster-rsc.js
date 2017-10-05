@@ -1176,10 +1176,6 @@
 					};
 					sock.onclose = function() {
 						canSend = false;
-						if(sendTimer) {
-							clearInterval(sendTimer);
-							sendTimer = undefined;
-						}
 						connectionState = STATE.CLOSED;
 					};
 					
@@ -1217,10 +1213,6 @@
 
 	function close() {
 		canSend = false;
-		if(sendTimer) {
-			clearInterval(sendTimer);
-			sendTimer = undefined;
-		}
 		if(socket) {
 			socket.close();
 			socket = undefined;
