@@ -1616,7 +1616,7 @@
 											if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
 										}
 									}
-								} else if(data.type == 0) {
+								} else if(data.type == 0 && data.module == 'hamster') {
 									connectionState = data.state;
 								}
 							}
