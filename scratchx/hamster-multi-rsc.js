@@ -1,9 +1,7 @@
 (function(ext) {
 
 	var robots = {};
-	var tx = {
-		ar: {}
-	};
+	var packet = {};
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -31,7 +29,6 @@
 	var markers = {};
 	var timeouts = [];
 	var socket = undefined;
-	var sendTimer = undefined;
 	var canSend = false;
 	const STATE = {
 		CONNECTING: 1,
@@ -1170,7 +1167,7 @@
 				robot.motoring.map = 0xfc000000;
 			};
 			robots[index] = robot;
-			tx['hamster' + index] = robot.motoring;
+			packet['hamster' + index] = robot.motoring;
 		}
 		return robot;
 	}
@@ -1370,10 +1367,20 @@
 	};
 	
 	function getArImage(id, index) {
-		var image = tx.ar[id];
+		var extension = packet.extension;
+		if(extension === undefined) {
+			extension = {};
+			packet.extension = extension;
+		}
+		var ar = extension.ar;
+		if(ar === undefined) {
+			ar = {};
+			extension.ar = ar;
+		}
+		var image = ar[id];
 		if(image === undefined) {
 			image = {};
-			tx.ar[id] = image;
+			ar[id] = image;
 		}
 		image['id'] = index;
 		return image;
@@ -1383,7 +1390,7 @@
 		for(var i in robots) {
 			robots[i].reset();
 		}
-		tx.ar = {};
+		packet.extension = {};
 		chat.messages = {};
 		colors = {};
 		markers = {};
@@ -1589,31 +1596,18 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					canSend = true;
-					sendTimer = setInterval(function() {
-						if(canSend && socket) {
-							try {
-								var json = JSON.stringify(tx);
-								if(canSend && socket) socket.send(json);
-								clearMotorings();
-							} catch (e) {
-							}
-						}
-					}, 20);
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var received = JSON.parse(message.data);
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'hamster') {
-										connectionState = data.state;
-									}
-								} else if(i == 'navigation') {
-									tolerance = data;
-								} else {
-									if(data.module == 'hamster' && data.index >= 0) {
+								if(data.type == 1) {
+									if(data.module == 'extension') {
+										if(data.colors) colors = data.colors;
+										if(data.markers) markers = data.markers;
+										if(data.tolerance) tolerance = data.tolerance;
+									} else if(data.module == 'hamster' && data.index >= 0) {
 										var robot = getRobot(data.index);
 										if(robot) {
 											robot.sensory = data;
@@ -1622,6 +1616,8 @@
 											if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
 										}
 									}
+								} else if(data.type == 0) {
+									connectionState = data.state;
 								}
 							}
 						} catch (e) {
@@ -1629,10 +1625,6 @@
 					};
 					sock.onclose = function() {
 						canSend = false;
-						if(sendTimer) {
-							clearInterval(sendTimer);
-							sendTimer = undefined;
-						}
 						connectionState = STATE.CLOSED;
 					};
 				};
@@ -1645,10 +1637,6 @@
 
 	function close() {
 		canSend = false;
-		if(sendTimer) {
-			clearInterval(sendTimer);
-			sendTimer = undefined;
-		}
 		if(socket) {
 			socket.close();
 			socket = undefined;
