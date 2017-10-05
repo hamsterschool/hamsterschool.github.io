@@ -672,7 +672,7 @@
 										sensory = data;
 										handleSensory();
 									}
-								} else if(data.type == 0 && data.module == 'turtle') {
+								} else if(data.type == 0) {
 									connectionState = data.state;
 								}
 							}
