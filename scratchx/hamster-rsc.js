@@ -1167,7 +1167,7 @@
 										if(boardCallback) handleBoard();
 										if(navigator && navigator.callback) handleNavigation();
 									}
-								} else if(data.type == 0) {
+								} else if(data.type == 0 && data.module == 'hamster') {
 									connectionState = data.state;
 								}
 							}
