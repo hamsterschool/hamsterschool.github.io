@@ -890,6 +890,7 @@
 				},
 				turnToDegree: function() {
 					var targetDegree = this.targetDegree;
+					console.log(targetDegree);
 					if(targetDegree > -200) {
 						var targetRadian = targetDegree * Math.PI / 180.0;
 						return this.turn(targetRadian);
@@ -1126,6 +1127,7 @@
 		} else if(navi.command == 2) {
 			wheels = navi.turnToXY();
 		} else if(navi.command == 3) {
+			console.log('test4');
 			wheels = navi.turnToDegree();
 		}
 		if(wheels) {
@@ -1843,6 +1845,7 @@
 			navi.setTargetDegree(degree);
 			navi.callback = callback;
 			navi.command = 3;
+			console.log('test3');
 		} else {
 			callback();
 		}
