@@ -1160,7 +1160,6 @@
 									}
 								} else {
 									if(data.module == 'extension') {
-										console.log(data);
 										if(data.colors) colors = data.colors;
 										if(data.markers) markers = data.markers;
 										if(data.tolerance) tolerance = data.tolerance;
@@ -1861,6 +1860,7 @@
 	ext.dataOfMarker = function(marker, value) {
 		marker = parseInt(marker);
 		value = CAMERA_DATA[value];
+		console.log(marker + ', ' + value);
 		if((typeof marker == 'number') && marker >= 0) {
 			marker = markers[marker];
 			if(marker) {
