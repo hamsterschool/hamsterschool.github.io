@@ -34,7 +34,7 @@
 		motion: 0
 	};
 	var packet = {
-		hamster: motoring,
+		robot: motoring,
 		extension: {
 			module: 'extension'
 		}
