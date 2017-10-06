@@ -1160,6 +1160,7 @@
 									}
 								} else {
 									if(data.module == 'extension') {
+										console.log(data);
 										if(data.colors) colors = data.colors;
 										if(data.markers) markers = data.markers;
 										if(data.tolerance) tolerance = data.tolerance;
