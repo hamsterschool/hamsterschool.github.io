@@ -863,8 +863,10 @@
 				},
 				turn: function(targetRadian) {
 					var currentRadian = this.theta * Math.PI / 180.0;
+					console.log('turn1 ' + currentRadian);
 					var diff = this.validateRadian(targetRadian - currentRadian);
 					var mag = Math.abs(diff);
+					console.log('turn2 ' + mag + ', ' + tolerance.angle);
 					var direction = (diff > 0) ? 1 : -1;
 					if(mag > tolerance.angle) {
 						var value = 0;
@@ -873,6 +875,7 @@
 						var wheels = this.wheels;
 						wheels.left = -value;
 						wheels.right = value;
+						console.log(wheels);
 						return wheels;
 					}
 				},
@@ -894,6 +897,8 @@
 					if(targetDegree > -200) {
 						var targetRadian = targetDegree * Math.PI / 180.0;
 						return this.turn(targetRadian);
+					} else {
+						return this.wheels;
 					}
 				},
 				validateRadian: function(radian) {
