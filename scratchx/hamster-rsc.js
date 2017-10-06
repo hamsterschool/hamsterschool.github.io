@@ -902,8 +902,8 @@
 					}
 				},
 				validateRadian: function(radian) {
-					if(radian > Math.PI) return radian - this.PI_2;
-					else if(radian < -Math.PI) return radian + this.PI_2;
+					if(radian > Math.PI) return radian - PI_2;
+					else if(radian < -Math.PI) return radian + PI_2;
 					return radian;
 				}
 			};
