@@ -1140,7 +1140,7 @@
 			navi.command = 0;
 			var callback = navi.callback;
 			navi.callback = undefined;
-			callback();
+			if(callback) callback();
 		}
 	}
 
