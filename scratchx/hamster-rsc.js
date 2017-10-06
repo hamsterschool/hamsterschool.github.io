@@ -1803,7 +1803,7 @@
 			navi.clear();
 			navi.setTargetPosition(x, y);
 			navi.setBackward(VALUES[direction] == BACKWARD);
-			navi.allback = callback;
+			navi.callback = callback;
 			navi.command = 1;
 		} else {
 			callback();
@@ -1828,7 +1828,9 @@
 	
 	ext.turnInDirectionOfDegrees = function(degree, callback) {
 		degree = parseFloat(degree);
+		console.log('test1');
 		if(typeof degree == 'number') {
+			console.log('test2');
 			if(degree > 180) {
 				while(degree > 180) degree -= 360;
 			} else if(degree < -180) {
@@ -1860,10 +1862,8 @@
 	ext.dataOfMarker = function(marker, value) {
 		marker = parseInt(marker);
 		value = CAMERA_DATA[value];
-		console.log(marker + ', ' + value);
 		if((typeof marker == 'number') && marker >= 0) {
 			marker = markers[marker];
-			console.log(marker);
 			if(marker) {
 				var v = marker[value];
 				if(typeof v == 'number') return v;
