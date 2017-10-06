@@ -2,6 +2,7 @@
 
 	var robots = {};
 	var packet = {
+		version: 1,
 		extension: {
 			module: 'extension'
 		}
@@ -1377,27 +1378,39 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
+					var slaveVersion = 1;
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'turtle') {
-										connectionState = data.state;
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								if(received.module == 'turtle') {
+									connectionState = received.state;
+								}
+							} else {
+								if(slaveVersion == 1) {
+									var data;
+									for(var i in received) {
+										data = received[i];
+										if(data.module == 'extension') {
+											if(data.colors) colors = data.colors;
+											if(data.markers) markers = data.markers;
+											if(data.tolerance) tolerance = data.tolerance;
+										} else if(data.module == 'turtle' && data.index >= 0) {
+											var robot = getRobot(data.index);
+											if(robot) {
+												robot.sensory = data;
+												handleSensory(robot);
+												if(robot.navigator && robot.navigator.callback) handleNavigation();
+											}
+										}
 									}
 								} else {
-									if(data.module == 'extension') {
-										if(data.colors) colors = data.colors;
-										if(data.markers) markers = data.markers;
-										if(data.tolerance) tolerance = data.tolerance;
-									} else if(data.module == 'turtle' && data.index >= 0) {
-										var robot = getRobot(data.index);
+									if(received.module == 'turtle' && received.index >= 0) {
+										var robot = getRobot(received.index);
 										if(robot) {
-											robot.sensory = data;
+											robot.sensory = received;
 											handleSensory(robot);
-											if(robot.navigator && robot.navigator.callback) handleNavigation();
 										}
 									}
 								}
