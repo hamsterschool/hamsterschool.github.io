@@ -2529,7 +2529,7 @@
 				return radian;
 			}
 		};
-	};
+	}
 	
 	function getArImage(id, index) {
 		var extension = packet.extension;
