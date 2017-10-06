@@ -46,6 +46,7 @@
 		LEFT: 3,
 		RIGHT: 4
 	};
+	const ZERO_WHEELS = { left: 0, right: 0 };
 	const STRAIGHT_SPEED = 50;
 	const MINIMUM_WHEEL_SPEED = 18;
 	const GAIN_BASE_SPEED = 2.0;
@@ -858,15 +859,13 @@
 							return wheels;
 						}
 					} else {
-						return this.wheels;
+						return ZERO_WHEELS;
 					}
 				},
 				turn: function(targetRadian) {
 					var currentRadian = this.theta * Math.PI / 180.0;
-					console.log('turn1 ' + currentRadian);
 					var diff = this.validateRadian(targetRadian - currentRadian);
 					var mag = Math.abs(diff);
-					console.log('turn2 ' + mag + ', ' + tolerance.angle);
 					var direction = (diff > 0) ? 1 : -1;
 					if(mag > tolerance.angle) {
 						var value = 0;
@@ -875,7 +874,6 @@
 						var wheels = this.wheels;
 						wheels.left = -value;
 						wheels.right = value;
-						console.log(wheels);
 						return wheels;
 					}
 				},
@@ -888,21 +886,19 @@
 						var targetRadian = Math.atan2(targetY - y, targetX - x);
 						return this.turn(targetRadian);
 					} else {
-						return this.wheels;
+						return ZERO_WHEELS;
 					}
 				},
 				turnToDegree: function() {
 					var targetDegree = this.targetDegree;
-					console.log(targetDegree);
 					if(targetDegree > -200) {
 						var targetRadian = targetDegree * Math.PI / 180.0;
 						return this.turn(targetRadian);
 					} else {
-						return this.wheels;
+						return ZERO_WHEELS;
 					}
 				},
 				validateRadian: function(radian) {
-					console.log('validate ' + PI_2);
 					if(radian > Math.PI) return radian - PI_2;
 					else if(radian < -Math.PI) return radian + PI_2;
 					return radian;
@@ -1133,7 +1129,6 @@
 		} else if(navi.command == 2) {
 			wheels = navi.turnToXY();
 		} else if(navi.command == 3) {
-			console.log('test4');
 			wheels = navi.turnToDegree();
 		}
 		if(wheels) {
@@ -1836,28 +1831,14 @@
 	
 	ext.turnInDirectionOfDegrees = function(degree, callback) {
 		degree = parseFloat(degree);
-		console.log('test1');
 		if(typeof degree == 'number') {
-			console.log('test2');
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
-			console.log('test2-1');
 			boardCommand = 0;
 			setLineTracerMode(0);
-			console.log('test2-2');
 			var navi = getNavigator();
-			console.log('test2-3');
 			navi.clear();
-			console.log('test2-4');
 			navi.setTargetDegree(degree);
-			console.log('test2-5');
 			navi.callback = callback;
-			console.log('test2-6');
 			navi.command = 3;
-			console.log('test3');
 		} else {
 			callback();
 		}
@@ -1962,11 +1943,6 @@
 		index = parseInt(index);
 		degree = parseFloat(degree);
 		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
 			var id = 'image' + index;
 			var image = getArImage(id, index);
 			image['theta'] = degree;
