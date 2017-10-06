@@ -222,6 +222,11 @@
 			['r', 'y acceleration', 'turtleAccelerationY'],
 			['r', 'z acceleration', 'turtleAccelerationZ'],
 			['-'],
+			['w', 'connect to ip: %s port: %n as %s', 'connectToIpPortAs', '127.0.0.1', 60000, 'name'],
+			[' ', 'send %s to %s', 'sendTo', 'message', 'receiver'],
+			[' ', 'broadcast %s', 'broadcast', 'message'],
+			['b', '%s received?', 'messageReceived', 'message'],
+			['-'],
 			[' ', 'set robot\'s marker to %n', 'turtleSetRobotMarkerTo', 0],
 			['w', 'move %m.forward_backward to x: %n y: %n', 'turtleMoveToXY', 'forward', 320, 240],
 			['w', 'turn in direction of x: %n y: %n', 'turtleTurnInDirectionOfXY', 320, 240],
@@ -605,7 +610,7 @@
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'button_state': ['bosgan', 'ikki-marta-bosgan', 'uzoq-bosganmi'],
-			'camera_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyohrang'],
+			'camera_color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh'],
 			'color_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'kengligi', 'balandligi', 'maydoni'],
 			'marker_position': ['x-holati', 'y-holati', 'chap-holati', 'o\'ng-holati', 'tepada-holati', 'pastda-holati', 'orientatsiya', 'kengligi', 'balandligi', 'maydoni']
 		}
