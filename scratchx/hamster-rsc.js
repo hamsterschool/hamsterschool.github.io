@@ -1863,6 +1863,7 @@
 		console.log(marker + ', ' + value);
 		if((typeof marker == 'number') && marker >= 0) {
 			marker = markers[marker];
+			console.log(marker);
 			if(marker) {
 				var v = marker[value];
 				if(typeof v == 'number') return v;
