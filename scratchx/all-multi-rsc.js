@@ -4781,11 +4781,6 @@
 		if(robot) {
 			degree = parseFloat(degree);
 			if(typeof degree == 'number') {
-				if(degree > 180) {
-					while(degree > 180) degree -= 360;
-				} else if(degree < -180) {
-					while(degree < -180) degree += 360;
-				}
 				robot.resetData();
 				var navi = robot.getNavigator();
 				navi.clear();
@@ -4899,11 +4894,6 @@
 		index = parseInt(index);
 		degree = parseFloat(degree);
 		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
 			var id = 'image' + index;
 			var image = getArImage(id, index);
 			image['theta'] = degree;
