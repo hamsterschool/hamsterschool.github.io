@@ -1967,6 +1967,8 @@
 	};
 
 	ext._getStatus = function() {
+		chat.messages = {};
+		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
