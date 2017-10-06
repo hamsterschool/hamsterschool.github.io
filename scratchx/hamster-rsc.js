@@ -1838,12 +1838,18 @@
 			} else if(degree < -180) {
 				while(degree < -180) degree += 360;
 			}
+			console.log('test2-1');
 			boardCommand = 0;
 			setLineTracerMode(0);
+			console.log('test2-2');
 			var navi = getNavigator();
+			console.log('test2-3');
 			navi.clear();
+			console.log('test2-4');
 			navi.setTargetDegree(degree);
+			console.log('test2-5');
 			navi.callback = callback;
+			console.log('test2-6');
 			navi.command = 3;
 			console.log('test3');
 		} else {
