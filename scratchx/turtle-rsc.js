@@ -1123,7 +1123,7 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					sock.onmessage = function(message) { // message: MessageEvent
+					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
 							var data;
