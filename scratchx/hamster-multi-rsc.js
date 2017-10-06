@@ -1,7 +1,11 @@
 (function(ext) {
 
 	var robots = {};
-	var packet = {};
+	var packet = {
+		extension: {
+			module: 'extension'
+		}
+	};
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -1367,15 +1371,10 @@
 	};
 	
 	function getArImage(id, index) {
-		var extension = packet.extension;
-		if(extension === undefined) {
-			extension = {};
-			packet.extension = extension;
-		}
-		var ar = extension.ar;
+		var ar = packet.extension.ar;
 		if(ar === undefined) {
 			ar = {};
-			extension.ar = ar;
+			packet.extension.ar = ar;
 		}
 		var image = ar[id];
 		if(image === undefined) {
@@ -1390,7 +1389,7 @@
 		for(var i in robots) {
 			robots[i].reset();
 		}
-		packet.extension = {};
+		packet.extension.ar = {};
 		chat.messages = {};
 		colors = {};
 		markers = {};
@@ -1602,7 +1601,11 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(data.type == 1) {
+								if(i == 'connection') {
+									if(data.module == 'hamster') {
+										connectionState = data.state;
+									}
+								} else {
 									if(data.module == 'extension') {
 										if(data.colors) colors = data.colors;
 										if(data.markers) markers = data.markers;
@@ -1616,8 +1619,6 @@
 											if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
 										}
 									}
-								} else if(data.type == 0 && data.module == 'hamster') {
-									connectionState = data.state;
 								}
 							}
 						} catch (e) {
