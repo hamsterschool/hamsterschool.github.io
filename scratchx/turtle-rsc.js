@@ -44,8 +44,12 @@
 		motionRadius: 0
 	};
 	var packet = {
-		turtle: motoring
+		robot: motoring,
+		extension: {
+			module: 'extension'
+		}
  	};
+	const ZERO_WHEELS = { left: 0, right: 0 };
 	const STRAIGHT_SPEED = 50;
 	const MINIMUM_WHEEL_SPEED = 18;
 	const GAIN_BASE_SPEED = 2.0;
@@ -927,7 +931,7 @@
 							return wheels;
 						}
 					} else {
-						return this.wheels;
+						return ZERO_WHEELS;
 					}
 				},
 				turn: function(targetRadian) {
@@ -954,7 +958,7 @@
 						var targetRadian = Math.atan2(targetY - y, targetX - x);
 						return this.turn(targetRadian);
 					} else {
-						return this.wheels;
+						return ZERO_WHEELS;
 					}
 				},
 				turnToDegree: function() {
@@ -962,11 +966,13 @@
 					if(targetDegree > -200) {
 						var targetRadian = targetDegree * Math.PI / 180.0;
 						return this.turn(targetRadian);
+					} else {
+						return ZERO_WHEELS;
 					}
 				},
 				validateRadian: function(radian) {
-					if(radian > Math.PI) return radian - this.PI_2;
-					else if(radian < -Math.PI) return radian + this.PI_2;
+					if(radian > Math.PI) return radian - PI_2;
+					else if(radian < -Math.PI) return radian + PI_2;
 					return radian;
 				}
 			};
@@ -975,15 +981,10 @@
 	}
 	
 	function getArImage(id, index) {
-		var extension = packet.extension;
-		if(extension === undefined) {
-			extension = {};
-			packet.extension = extension;
-		}
-		var ar = extension.ar;
+		var ar = packet.extension.ar;
 		if(ar === undefined) {
 			ar = {};
-			extension.ar = ar;
+			packet.extension.ar = ar;
 		}
 		var image = ar[id];
 		if(image === undefined) {
@@ -1015,7 +1016,6 @@
 		motoring.motionSpeed = 0;
 		motoring.motionValue = 0;
 		motoring.motionRadius = 0;
-		packet.extension = {};
 
 		pulseCallback = undefined;
 		soundId = 0;
@@ -1027,6 +1027,7 @@
 		longPressed = false;
 		colorPattern = -1;
 		tempo = 60;
+		packet.extension.ar = {};
 		chat.messages = {};
 		colors = {};
 		markers = {};
@@ -1102,7 +1103,6 @@
 		} else if(navi.command == 3) {
 			wheels = navi.turnToDegree();
 		}
-		var motoring = tx.motoring;
 		if(wheels) {
 			motoring.leftWheel = wheels.left;
 			motoring.rightWheel = wheels.right;
@@ -1112,7 +1112,7 @@
 			navi.command = 0;
 			var callback = navi.callback;
 			navi.callback = undefined;
-			callback();
+			if(callback) callback();
 		}
 	}
 	
@@ -1129,7 +1129,11 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(data.type == 1) {
+								if(i == 'connection') {
+									if(data.module == 'turtle') {
+										connectionState = data.state;
+									}
+								} else {
 									if(data.module == 'extension') {
 										if(data.colors) colors = data.colors;
 										if(data.markers) markers = data.markers;
@@ -1139,8 +1143,6 @@
 										handleSensory();
 										if(navigator && navigator.callback) handleNavigation();
 									}
-								} else if(data.type == 0 && data.module == 'turtle') {
-									connectionState = data.state;
 								}
 							}
 						} catch (e) {
@@ -1760,7 +1762,7 @@
 			navi.clear();
 			navi.setTargetPosition(x, y);
 			navi.setBackward(VALUES[direction] == BACKWARD);
-			navi.allback = callback;
+			navi.callback = callback;
 			navi.command = 1;
 		} else {
 			callback();
@@ -1787,11 +1789,6 @@
 	ext.turtleTurnInDirectionOfDegrees = function(degree, callback) {
 		degree = parseFloat(degree);
 		if(typeof degree == 'number') {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
 			setPulse(0);
 			setLineTracerMode(0);
 			setMotion(0, 0, 0, 0, 0);
@@ -1904,11 +1901,6 @@
 		index = parseInt(index);
 		degree = parseFloat(degree);
 		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
 			var id = 'image' + index;
 			var image = getArImage(id, index);
 			image['theta'] = degree;
@@ -1930,6 +1922,7 @@
 		doubleClicked = false;
 		longPressed = false;
 		colorPattern = -1;
+		chat.messages = {};
 		
 		switch(connectionState) {
 			case STATE.CONNECTED:
