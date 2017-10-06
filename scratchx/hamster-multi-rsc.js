@@ -1372,7 +1372,7 @@
 				return radian;
 			}
 		};
-	};
+	}
 	
 	function getArImage(id, index) {
 		var ar = packet.extension.ar;
