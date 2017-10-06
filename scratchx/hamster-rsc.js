@@ -34,7 +34,8 @@
 		motion: 0
 	};
 	var packet = {
-		hamster: motoring
+		hamster: motoring,
+		extension: {}
 	};
 	const MOTION = {
 		NONE: 0,
@@ -904,10 +905,6 @@
 	
 	function getArImage(id, index) {
 		var extension = packet.extension;
-		if(extension === undefined) {
-			extension = {};
-			packet.extension = extension;
-		}
 		var ar = extension.ar;
 		if(ar === undefined) {
 			ar = {};
@@ -1156,7 +1153,11 @@
 							var data;
 							for(var i in received) {
 								data = received[i];
-								if(data.type == 1) {
+								if(i == 'connection') {
+									if(data.module == 'hamster') {
+										connectionState = data.state;
+									}
+								} else {
 									if(data.module == 'extension') {
 										if(data.colors) colors = data.colors;
 										if(data.markers) markers = data.markers;
@@ -1167,8 +1168,6 @@
 										if(boardCallback) handleBoard();
 										if(navigator && navigator.callback) handleNavigation();
 									}
-								} else if(data.type == 0 && data.module == 'hamster') {
-									connectionState = data.state;
 								}
 							}
 						} catch (e) {
