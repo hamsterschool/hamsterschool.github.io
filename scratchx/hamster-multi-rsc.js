@@ -13,6 +13,7 @@
 		LEFT: 3,
 		RIGHT: 4
 	};
+	const ZERO_WHEELS = { left: 0, right: 0 };
 	const STRAIGHT_SPEED = 50;
 	const MINIMUM_WHEEL_SPEED = 18;
 	const GAIN_BASE_SPEED = 2.0;
@@ -1325,7 +1326,7 @@
 						return wheels;
 					}
 				} else {
-					return this.wheels;
+					return ZERO_WHEELS;
 				}
 			},
 			turn: function(targetRadian) {
@@ -1352,7 +1353,7 @@
 					var targetRadian = Math.atan2(targetY - y, targetX - x);
 					return this.turn(targetRadian);
 				} else {
-					return this.wheels;
+					return ZERO_WHEELS;
 				}
 			},
 			turnToDegree: function() {
@@ -1360,11 +1361,13 @@
 				if(targetDegree > -200) {
 					var targetRadian = targetDegree * Math.PI / 180.0;
 					return this.turn(targetRadian);
+				} else {
+					return ZERO_WHEELS;
 				}
 			},
 			validateRadian: function(radian) {
-				if(radian > Math.PI) return radian - this.PI_2;
-				else if(radian < -Math.PI) return radian + this.PI_2;
+				if(radian > Math.PI) return radian - PI_2;
+				else if(radian < -Math.PI) return radian + PI_2;
 				return radian;
 			}
 		};
@@ -1584,7 +1587,7 @@
 			navi.command = 0;
 			var callback = navi.callback;
 			navi.callback = undefined;
-			callback();
+			if(callback) callback();
 		}
 	}
 
@@ -2846,7 +2849,7 @@
 				navi.clear();
 				navi.setTargetPosition(x, y);
 				navi.setBackward(VALUES[direction] == BACKWARD);
-				navi.allback = callback;
+				navi.callback = callback;
 				navi.command = 1;
 			} else {
 				callback();
@@ -2882,11 +2885,6 @@
 		if(robot) {
 			degree = parseFloat(degree);
 			if(typeof degree == 'number') {
-				if(degree > 180) {
-					while(degree > 180) degree -= 360;
-				} else if(degree < -180) {
-					while(degree < -180) degree += 360;
-				}
 				robot.boardCommand = 0;
 				setLineTracerMode(robot, 0);
 				var navi = robot.getNavigator();
@@ -3001,11 +2999,6 @@
 		index = parseInt(index);
 		degree = parseFloat(degree);
 		if((typeof index == 'number') && index >= 0 && (typeof degree == 'number')) {
-			if(degree > 180) {
-				while(degree > 180) degree -= 360;
-			} else if(degree < -180) {
-				while(degree < -180) degree += 360;
-			}
 			var id = 'image' + index;
 			var image = getArImage(id, index);
 			image['theta'] = degree;
