@@ -1379,7 +1379,7 @@
 				socket = sock;
 				sock.onopen = function() {
 					var slaveVersion = 1;
-					sock.onmessage = function(message) { // message: MessageEvent
+					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
 							slaveVersion = received.version || 0;
@@ -1401,7 +1401,7 @@
 											if(robot) {
 												robot.sensory = data;
 												handleSensory(robot);
-												if(robot.navigator && robot.navigator.callback) handleNavigation();
+												if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
 											}
 										}
 									}
