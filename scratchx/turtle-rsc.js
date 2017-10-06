@@ -44,6 +44,7 @@
 		motionRadius: 0
 	};
 	var packet = {
+		version: 1,
 		robot: motoring,
 		extension: {
 			module: 'extension'
@@ -1123,25 +1124,34 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
+					var slaveVersion = 1;
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(i == 'connection') {
-									if(data.module == 'turtle') {
-										connectionState = data.state;
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								if(received.module == 'turtle') {
+									connectionState = received.state;
+								}
+							} else {
+								if(slaveVersion == 1) {
+									var data;
+									for(var i in received) {
+										data = received[i];
+										if(data.module == 'extension') {
+											if(data.colors) colors = data.colors;
+											if(data.markers) markers = data.markers;
+											if(data.tolerance) tolerance = data.tolerance;
+										} else if(data.module == 'turtle' && data.index == 0) {
+											sensory = data;
+											handleSensory();
+											if(navigator && navigator.callback) handleNavigation();
+										}
 									}
 								} else {
-									if(data.module == 'extension') {
-										if(data.colors) colors = data.colors;
-										if(data.markers) markers = data.markers;
-										if(data.tolerance) tolerance = data.tolerance;
-									} else if(data.module == 'turtle' && data.index == 0) {
-										sensory = data;
+									if(received.module == 'turtle' && received.index == 0) {
+										sensory = received;
 										handleSensory();
-										if(navigator && navigator.callback) handleNavigation();
 									}
 								}
 							}
@@ -1164,7 +1174,9 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json = JSON.stringify(packet);
+									var json;
+									if(slaveVersion == 1) json = JSON.stringify(packet);
+									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
 									clearMotoring();
 								} catch (e) {
