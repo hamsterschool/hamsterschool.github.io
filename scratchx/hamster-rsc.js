@@ -35,7 +35,9 @@
 	};
 	var packet = {
 		hamster: motoring,
-		extension: {}
+		extension: {
+			module: 'extension'
+		}
 	};
 	const MOTION = {
 		NONE: 0,
@@ -904,11 +906,10 @@
 	}
 	
 	function getArImage(id, index) {
-		var extension = packet.extension;
-		var ar = extension.ar;
+		var ar = packet.extension.ar;
 		if(ar === undefined) {
 			ar = {};
-			extension.ar = ar;
+			packet.extension.ar = ar;
 		}
 		var image = ar[id];
 		if(image === undefined) {
@@ -934,7 +935,6 @@
 		motoring.ioModeA = 0;
 		motoring.ioModeB = 0;
 		motoring.motion = 0;
-		packet.extension = {};
 		
 		lineTracerCallback = undefined;
 		boardCommand = 0;
@@ -942,6 +942,7 @@
 		boardCount = 0;
 		boardCallback = undefined;
 		tempo = 60;
+		packet.extension.ar = {};
 		chat.messages = {};
 		colors = {};
 		markers = {};
