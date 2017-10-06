@@ -1,7 +1,12 @@
 (function(ext) {
 
 	var robots = {};
-	var packet = {};
+	var packet = {
+		version: 1,
+		extension: {
+			module: 'extension'
+		}
+	};
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -11,6 +16,7 @@
 	};
 	const HAMSTER = 'hamster';
 	const TURTLE = 'turtle';
+	const ZERO_WHEELS = { left: 0, right: 0 };
 	const STRAIGHT_SPEED = 50;
 	const MINIMUM_WHEEL_SPEED = 18;
 	const GAIN_BASE_SPEED = 2.0;
@@ -2486,7 +2492,7 @@
 						return wheels;
 					}
 				} else {
-					return this.wheels;
+					return ZERO_WHEELS;
 				}
 			},
 			turn: function(targetRadian) {
@@ -2513,7 +2519,7 @@
 					var targetRadian = Math.atan2(targetY - y, targetX - x);
 					return this.turn(targetRadian);
 				} else {
-					return this.wheels;
+					return ZERO_WHEELS;
 				}
 			},
 			turnToDegree: function() {
@@ -2521,26 +2527,23 @@
 				if(targetDegree > -200) {
 					var targetRadian = targetDegree * Math.PI / 180.0;
 					return this.turn(targetRadian);
+				} else {
+					return ZERO_WHEELS;
 				}
 			},
 			validateRadian: function(radian) {
-				if(radian > Math.PI) return radian - this.PI_2;
-				else if(radian < -Math.PI) return radian + this.PI_2;
+				if(radian > Math.PI) return radian - PI_2;
+				else if(radian < -Math.PI) return radian + PI_2;
 				return radian;
 			}
 		};
 	}
 	
 	function getArImage(id, index) {
-		var extension = packet.extension;
-		if(extension === undefined) {
-			extension = {};
-			packet.extension = extension;
-		}
-		var ar = extension.ar;
+		var ar = packet.extension.ar;
 		if(ar === undefined) {
 			ar = {};
-			extension.ar = ar;
+			packet.extension.ar = ar;
 		}
 		var image = ar[id];
 		if(image === undefined) {
@@ -2555,7 +2558,7 @@
 		for(var i in robots) {
 			robots[i].reset();
 		}
-		packet.extension = {};
+		packet.extension.ar = {};
 		chat.messages = {};
 		colors = {};
 		markers = {};
@@ -2584,7 +2587,7 @@
 			navi.command = 0;
 			var callback = navi.callback;
 			navi.callback = undefined;
-			callback();
+			if(callback) callback();
 		}
 	}
 	
@@ -2595,27 +2598,39 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
+					var slaveVersion = 1;
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
 							var received = JSON.parse(message.data);
-							var data;
-							for(var i in received) {
-								data = received[i];
-								if(data.type == 1) {
-									if(data.module == 'extension') {
-										if(data.colors) colors = data.colors;
-										if(data.markers) markers = data.markers;
-										if(data.tolerance) tolerance = data.tolerance;
-									} else if(data.index >= 0) {
-										var robot = getRobot(data.module, data.index);
-										if(robot) {
-											robot.sensory = data;
-											robot.handleSensory();
-											if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								connectionState = received.state;
+							} else {
+								if(slaveVersion == 1) {
+									var data;
+									for(var i in received) {
+										data = received[i];
+										if(data.module == 'extension') {
+											if(data.colors) colors = data.colors;
+											if(data.markers) markers = data.markers;
+											if(data.tolerance) tolerance = data.tolerance;
+										} else if(data.index >= 0) {
+											var robot = getRobot(data.module, data.index);
+											if(robot) {
+												robot.sensory = data;
+												robot.handleSensory();
+												if(robot.navigator && robot.navigator.callback) handleNavigation(robot);
+											}
 										}
 									}
-								} else if(data.type == 0) {
-									connectionState = data.state;
+								} else {
+									if(received.index >= 0) {
+										var robot = getRobot(received.module, received.index);
+										if(robot) {
+											robot.sensory = received;
+											robot.handleSensory();
+										}
+									}
 								}
 							}
 						} catch (e) {
@@ -4729,7 +4744,7 @@
 				navi.clear();
 				navi.setTargetPosition(x, y);
 				navi.setBackward(VALUES[direction] == BACKWARD);
-				navi.allback = callback;
+				navi.callback = callback;
 				navi.command = 1;
 			} else {
 				callback();
@@ -4906,7 +4921,9 @@
 	};
 
 	ext._getStatus = function() {
+		chat.messages = {};
 		clearEvents();
+		
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
