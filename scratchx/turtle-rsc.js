@@ -790,7 +790,6 @@
 	}
 	
 	function setLineTracerGain(gain) {
-		var motoring = tx.motoring;
 		motoring.lineTracerGain = gain;
 		motoring.map |= 0x00400000;
 	}
