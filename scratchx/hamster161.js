@@ -684,6 +684,13 @@
 				socket = sock;
 				sock.onopen = function() {
 					var slaveVersion = 1;
+					var decode = function(data) {
+						if(data.module == 'hamster' && data.index == 0) {
+							sensory = data;
+							if(lineTracerCallback) handleLineTracer();
+							if(boardCallback) handleBoard();
+						}
+					};
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
@@ -694,21 +701,11 @@
 								}
 							} else {
 								if(slaveVersion == 1) {
-									var data;
 									for(var i in received) {
-										data = received[i];
-										if(data.module == 'hamster' && data.index == 0) {
-											sensory = data;
-											if(lineTracerCallback) handleLineTracer();
-											if(boardCallback) handleBoard();
-										}
+										decode(received[i]);
 									}
 								} else {
-									if(received.module == 'hamster' && received.index == 0) {
-										sensory = received;
-										if(lineTracerCallback) handleLineTracer();
-										if(boardCallback) handleBoard();
-									}
+									decode(received);
 								}
 							}
 						} catch (e) {
