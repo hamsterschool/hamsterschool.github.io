@@ -1645,6 +1645,15 @@
 				socket = sock;
 				sock.onopen = function() {
 					var slaveVersion = 1;
+					var decode = function(data) {
+						if(data.index >= 0) {
+							var robot = getRobot(data.module, data.index);
+							if(robot) {
+								robot.sensory = data;
+								robot.handleSensory();
+							}
+						}
+					};
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
@@ -1653,25 +1662,11 @@
 								connectionState = received.state;
 							} else {
 								if(slaveVersion == 1) {
-									var data;
 									for(var i in received) {
-										data = received[i];
-										if(data.index >= 0) {
-											var robot = getRobot(data.module, data.index);
-											if(robot) {
-												robot.sensory = data;
-												robot.handleSensory();
-											}
-										}
+										decode(received[i]);
 									}
 								} else {
-									if(received.index >= 0) {
-										var robot = getRobot(received.module, received.index);
-										if(robot) {
-											robot.sensory = received;
-											robot.handleSensory();
-										}
-									}
+									decode(received);
 								}
 							}
 						} catch (e) {
