@@ -812,6 +812,15 @@
 				socket = sock;
 				sock.onopen = function() {
 					var slaveVersion = 1;
+					var decode = function(data) {
+						if(data.module == 'turtle' && data.index >= 0) {
+							var robot = getRobot(data.index);
+							if(robot) {
+								robot.sensory = data;
+								handleSensory(robot);
+							}
+						}
+					};
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
@@ -822,25 +831,11 @@
 								}
 							} else {
 								if(slaveVersion == 1) {
-									var data;
 									for(var i in received) {
-										data = received[i];
-										if(data.module == 'turtle' && data.index >= 0) {
-											var robot = getRobot(data.index);
-											if(robot) {
-												robot.sensory = data;
-												handleSensory(robot);
-											}
-										}
+										decode(received[i]);
 									}
 								} else {
-									if(received.module == 'turtle' && received.index >= 0) {
-										var robot = getRobot(received.index);
-										if(robot) {
-											robot.sensory = received;
-											handleSensory(robot);
-										}
-									}
+									decode(received);
 								}
 							}
 						} catch (e) {
