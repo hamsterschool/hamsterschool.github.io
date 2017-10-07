@@ -34,7 +34,8 @@
 		motion: 0
 	};
 	var packet = {
-		hamster: motoring
+		version: 1,
+		robot: motoring
 	};
 	const MOTION = {
 		NONE: 0,
@@ -682,18 +683,32 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
+					var slaveVersion = 1;
 					sock.onmessage = function(message) { // message: MessageEvent
 						try {
-							var data = JSON.parse(message.data);
-							if(data.module == 'hamster') {
-								if(data.type == 1) {
-									if(data.index == 0) {
-										sensory = data;
+							var received = JSON.parse(message.data);
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								if(received.module == 'hamster') {
+									connectionState = received.state;
+								}
+							} else {
+								if(slaveVersion == 1) {
+									var data;
+									for(var i in received) {
+										data = received[i];
+										if(data.module == 'hamster' && data.index == 0) {
+											sensory = data;
+											if(lineTracerCallback) handleLineTracer();
+											if(boardCallback) handleBoard();
+										}
+									}
+								} else {
+									if(received.module == 'hamster' && received.index == 0) {
+										sensory = received;
 										if(lineTracerCallback) handleLineTracer();
 										if(boardCallback) handleBoard();
 									}
-								} else if(data.type == 0) {
-									connectionState = data.state;
 								}
 							}
 						} catch (e) {
@@ -715,7 +730,9 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json = JSON.stringify(packet);
+									var json;
+									if(slaveVersion == 1) json = JSON.stringify(packet);
+									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
 									clearMotoring();
 								} catch (e) {
