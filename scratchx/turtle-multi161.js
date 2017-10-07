@@ -1,7 +1,9 @@
 (function(ext) {
 
 	var robots = {};
-	var packet = {};
+	var packet = {
+		version: 1
+	};
 	var connectionState = 1;
 	var timeouts = [];
 	var socket = undefined;
@@ -809,20 +811,36 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					sock.onmessage = function(message) { // message: MessageEvent
+					var slaveVersion = 1;
+					sock.onmessage = function(message) {
 						try {
-							var data = JSON.parse(message.data);
-							if(data.module == 'turtle') {
-								if(data.type == 1) {
-									if(data.index >= 0) {
-										var robot = getRobot(data.index);
+							var received = JSON.parse(message.data);
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								if(received.module == 'turtle') {
+									connectionState = received.state;
+								}
+							} else {
+								if(slaveVersion == 1) {
+									var data;
+									for(var i in received) {
+										data = received[i];
+										if(data.module == 'turtle' && data.index >= 0) {
+											var robot = getRobot(data.index);
+											if(robot) {
+												robot.sensory = data;
+												handleSensory(robot);
+											}
+										}
+									}
+								} else {
+									if(received.module == 'turtle' && received.index >= 0) {
+										var robot = getRobot(received.index);
 										if(robot) {
-											robot.sensory = data;
+											robot.sensory = received;
 											handleSensory(robot);
 										}
 									}
-								} else if(data.type == 0) {
-									connectionState = data.state;
 								}
 							}
 						} catch (e) {
