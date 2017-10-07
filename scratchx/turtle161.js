@@ -665,6 +665,12 @@
 				socket = sock;
 				sock.onopen = function() {
 					var slaveVersion = 1;
+					var decode = function(data) {
+						if(data.module == 'turtle' && data.index == 0) {
+							sensory = data;
+							handleSensory();
+						}
+					};
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
@@ -675,19 +681,11 @@
 								}
 							} else {
 								if(slaveVersion == 1) {
-									var data;
 									for(var i in received) {
-										data = received[i];
-										if(data.module == 'turtle' && data.index == 0) {
-											sensory = data;
-											handleSensory();
-										}
+										decode(received[i]);
 									}
 								} else {
-									if(received.module == 'turtle' && received.index == 0) {
-										sensory = received;
-										handleSensory();
-									}
+									decode(received);
 								}
 							}
 						} catch (e) {
@@ -709,7 +707,9 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json = JSON.stringify(packet);
+									var json;
+									if(slaveVersion == 1) json = JSON.stringify(packet);
+									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
 									clearMotoring();
 								} catch (e) {
