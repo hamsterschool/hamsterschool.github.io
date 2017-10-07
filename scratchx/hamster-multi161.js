@@ -1,7 +1,9 @@
 (function(ext) {
 
 	var robots = {};
-	var packet = {};
+	var packet = {
+		version: 1
+	};
 	const MOTION = {
 		NONE: 0,
 		FORWARD: 1,
@@ -931,21 +933,32 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					sock.onmessage = function(message) { // message: MessageEvent
+					var slaveVersion = 1;
+					var decode = function(data) {
+						if(data.module == 'hamster' && data.index >= 0) {
+							var robot = getRobot(data.index);
+							if(robot) {
+								robot.sensory = data;
+								if(robot.lineTracerCallback) handleLineTracer(robot);
+								if(robot.boardCallback) handleBoard(robot);
+							}
+						}
+					};
+					sock.onmessage = function(message) {
 						try {
-							var data = JSON.parse(message.data);
-							if(data.module == 'hamster') {
-								if(data.type == 1) {
-									if(data.index >= 0) {
-										var robot = getRobot(data.index);
-										if(robot) {
-											robot.sensory = data;
-											if(robot.lineTracerCallback) handleLineTracer(robot);
-											if(robot.boardCallback) handleBoard(robot);
-										}
+							var received = JSON.parse(message.data);
+							slaveVersion = received.version || 0;
+							if(received.type == 0) {
+								if(received.module == 'hamster') {
+									connectionState = received.state;
+								}
+							} else {
+								if(slaveVersion == 1) {
+									for(var i in received) {
+										decode(received[i]);
 									}
-								} else if(data.type == 0) {
-									connectionState = data.state;
+								} else {
+									decode(received);
 								}
 							}
 						} catch (e) {
