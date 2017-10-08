@@ -49,9 +49,9 @@
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
-		en: 'Hamster',
-		ko: '햄스터',
-		uz: 'Hamster'
+		en: 'Robot',
+		ko: '로봇',
+		uz: 'Robot'
 	};
 	const BLOCKS = {
 		en1: [
