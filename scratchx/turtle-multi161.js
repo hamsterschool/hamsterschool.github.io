@@ -21,9 +21,9 @@
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot bog\'lanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
-		en: 'Turtle',
-		ko: '거북이',
-		uz: 'Turtle'
+		en: 'Robot',
+		ko: '로봇',
+		uz: 'Robot'
 	};
 	const BLOCKS = {
 		en1: [
