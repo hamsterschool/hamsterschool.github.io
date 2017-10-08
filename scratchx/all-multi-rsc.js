@@ -1045,10 +1045,10 @@
 			[' ', '%s 을(를) 모두에게 보내기', 'broadcast', '메시지'],
 			['b', '%s 을(를) 받았는가?', 'messageReceived', '메시지'],
 			['-'],
-			[' ', '%m.robots %n : 로봇의 마커를 %n (으)로 정하기', 'setRobotMarkerTo', '햄스터', 0, 0],
-			['w', '%m.robots %n : %m.forward_backward x %n y %n 위치로 이동하기', 'moveToXY', '햄스터', 0, '앞으로', 320, 240],
-			['w', '%m.robots %n : x %n y %n 방향으로 돌기', 'turnInDirectionOfXY', '햄스터', 0, 320, 240],
-			['w', '%m.robots %n : %n 도 방향으로 돌기', 'turnInDirectionOfDegrees', '햄스터', 0, 90],
+			[' ', '%m.robots %n : 로봇의 마커를 %n (으)로 정하기', 'robotSetRobotMarkerTo', '햄스터', 0, 0],
+			['w', '%m.robots %n : %m.forward_backward x %n y %n 위치로 이동하기', 'robotMoveToXY', '햄스터', 0, '앞으로', 320, 240],
+			['w', '%m.robots %n : x %n y %n 방향으로 돌기', 'robotTurnInDirectionOfXY', '햄스터', 0, 320, 240],
+			['w', '%m.robots %n : %n 도 방향으로 돌기', 'robotTurnInDirectionOfDegrees', '햄스터', 0, 90],
 			['r', '%m.camera_color 의 %m.color_position', 'dataOfColorObject', '빨간색', 'x-좌표'],
 			['r', '마커 %n 의 %m.marker_position', 'dataOfMarker', 0, 'x-좌표'],
 			['r', '마커 %n 에서 마커 %n 까지의 거리', 'distanceFromMarkerToMarker', 0, 1],
@@ -1547,10 +1547,10 @@
 			[' ', '%s ni hammaga yuboring', 'broadcast', 'xabar'],
 			['b', '%s ni qabul qiling?', 'messageReceived', 'xabar'],
 			['-'],
-			[' ', '%m.robots %n : robotning markerini %n ga sozlash', 'setRobotMarkerTo', 'Hamster', 0, 0],
-			['w', '%m.robots %n : %m.forward_backward x: %n y: %n tomonga yurish', 'moveToXY', 'Hamster', 0, 'oldinga', 320, 240],
-			['w', '%m.robots %n : x: %n y: %n tomonga o\'girilish', 'turnInDirectionOfXY', 'Hamster', 0, 320, 240],
-			['w', '%m.robots %n : %n daraja tomonga o\'girilish', 'turnInDirectionOfDegrees', 'Hamster', 0, 90],
+			[' ', '%m.robots %n : robotning markerini %n ga sozlash', 'robotSetRobotMarkerTo', 'Hamster', 0, 0],
+			['w', '%m.robots %n : %m.forward_backward x: %n y: %n tomonga yurish', 'robotMoveToXY', 'Hamster', 0, 'oldinga', 320, 240],
+			['w', '%m.robots %n : x: %n y: %n tomonga o\'girilish', 'robotTurnInDirectionOfXY', 'Hamster', 0, 320, 240],
+			['w', '%m.robots %n : %n daraja tomonga o\'girilish', 'robotTurnInDirectionOfDegrees', 'Hamster', 0, 90],
 			['r', '%m.camera_color ning %m.color_position', 'dataOfColorObject', 'qizil', 'x-holati'],
 			['r', 'marker %n ning %m.marker_position', 'dataOfMarker', 0, 'x-holati'],
 			['r', 'marker %n dan marker %n gacha masofa', 'distanceFromMarkerToMarker', 0, 1],
@@ -4720,7 +4720,7 @@
 		return chat.messages[message] === true;
 	};
 	
-	ext.setRobotMarkerTo = function(robot, index, marker) {
+	ext.robotSetRobotMarkerTo = function(robot, index, marker) {
 		var module = MODULES[robot];
 		robot = getRobot(module, index);
 		if(robot) {
@@ -4732,7 +4732,7 @@
 		}
 	};
 	
-	ext.moveToXY = function(robot, index, direction, x, y, callback) {
+	ext.robotMoveToXY = function(robot, index, direction, x, y, callback) {
 		var module = MODULES[robot];
 		robot = getRobot(module, index);
 		if(robot) {
@@ -4754,7 +4754,7 @@
 		}
 	};
 	
-	ext.turnInDirectionOfXY = function(robot, index, x, y, callback) {
+	ext.robotTurnInDirectionOfXY = function(robot, index, x, y, callback) {
 		var module = MODULES[robot];
 		robot = getRobot(module, index);
 		if(robot) {
@@ -4775,7 +4775,7 @@
 		}
 	};
 	
-	ext.turnInDirectionOfDegrees = function(robot, index, degree, callback) {
+	ext.robotTurnInDirectionOfDegrees = function(robot, index, degree, callback) {
 		var module = MODULES[robot];
 		robot = getRobot(module, index);
 		if(robot) {
