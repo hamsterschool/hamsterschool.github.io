@@ -2712,7 +2712,7 @@
 	};
 	
 	ext.gripper = function(index, action, callback) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			action = VALUES[action];
 			setIoModeA(robot, 10);
@@ -2736,7 +2736,7 @@
 	};
 	
 	ext.clearGripper = function(index) {
-		var robot = getRobot(index);
+		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			setIoModeA(robot, 10);
 			setIoModeB(robot, 10);
