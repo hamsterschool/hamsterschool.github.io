@@ -150,7 +150,7 @@
 			[' ', 'change output %m.port by %n', 'changeOutputBy', 'A', 10],
 			[' ', 'set output %m.port to %n', 'setOutputTo', 'A', 100],
 			['w', '%m.open_close gripper', 'gripper', 'open'],
-			[' ', 'clear gripper', 'clearGripper'],
+			[' ', 'release gripper', 'releaseGripper'],
 			['r', 'input A', 'inputA'],
 			['r', 'input B', 'inputB']
 		],
@@ -232,7 +232,7 @@
 			[' ', '출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 'A', 10],
 			[' ', '출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 'A', 100],
 			['w', '집게 %m.open_close', 'gripper', '열기'],
-			[' ', '집게 끄기', 'clearGripper'],
+			[' ', '집게 끄기', 'releaseGripper'],
 			['r', '입력 A', 'inputA'],
 			['r', '입력 B', 'inputB']
 		],
@@ -314,7 +314,7 @@
 			[' ', '%m.port portni %n ga o\'zgartirish', 'changeOutputBy', 'A', 10],
 			[' ', '%m.port portni %n ga sozlash', 'setOutputTo', 'A', 100],
 			['w', 'gripperni %m.open_close', 'gripper', 'oching'],
-			[' ', 'gripperni o\'chirish', 'clearGripper'],
+			[' ', 'gripperni ozod qilish', 'releaseGripper'],
 			['r', 'A kirish', 'inputA'],
 			['r', 'B kirish', 'inputB']
 		]
@@ -1256,7 +1256,7 @@
 		timeouts.push(timer);
 	};
 	
-	ext.clearGripper = function() {
+	ext.releaseGripper = function() {
 		setIoModeA(10);
 		setIoModeB(10);
 		motoring.outputA = 0;
