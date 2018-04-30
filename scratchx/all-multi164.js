@@ -220,7 +220,7 @@
 			[' ', 'Hamster %n : change output %m.port by %n', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : set output %m.port to %n', 'setOutputTo', 0, 'A', 100],
 			['w', 'Hamster %n : %m.open_close gripper', 'gripper', 0, 'open'],
-			[' ', 'Hamster %n : clear gripper', 'clearGripper', 0],
+			[' ', 'Hamster %n : release gripper', 'releaseGripper', 0],
 			['r', 'Hamster[0]: input A', 'inputA0'],
 			['r', 'Hamster[0]: input B', 'inputB0'],
 			['r', 'Hamster[1]: input A', 'inputA1'],
@@ -502,7 +502,7 @@
 			[' ', '햄스터 %n : 출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 0, 'A', 10],
 			[' ', '햄스터 %n : 출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 0, 'A', 100],
 			['w', '햄스터 %n : 집게 %m.open_close', 'gripper', 0, '열기'],
-			[' ', '햄스터 %n : 집게 끄기', 'clearGripper', 0],
+			[' ', '햄스터 %n : 집게 끄기', 'releaseGripper', 0],
 			['r', '햄스터[0]: 입력 A', 'inputA0'],
 			['r', '햄스터[0]: 입력 B', 'inputB0'],
 			['r', '햄스터[1]: 입력 A', 'inputA1'],
@@ -784,7 +784,7 @@
 			[' ', 'Hamster %n : %m.port portni %n ga o\'zgartirish', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : %m.port portni %n ga sozlash', 'setOutputTo', 0, 'A', 100],
 			['w', 'Hamster %n : gripperni %m.open_close', 'gripper', 0, 'oching'],
-			[' ', 'Hamster %n : gripperni o\'chirish', 'clearGripper', 0],
+			[' ', 'Hamster %n : gripperni ozod qilish', 'releaseGripper', 0],
 			['r', 'Hamster[0]: A kirish', 'inputA0'],
 			['r', 'Hamster[0]: B kirish', 'inputB0'],
 			['r', 'Hamster[1]: A kirish', 'inputA1'],
@@ -2735,7 +2735,7 @@
 		}
 	};
 	
-	ext.clearGripper = function(index) {
+	ext.releaseGripper = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) {
 			setIoModeA(robot, 10);
