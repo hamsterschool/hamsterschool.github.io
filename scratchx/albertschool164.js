@@ -876,6 +876,7 @@
 	};
 	
 	ext.moveToOnBoard = function(x, y, callback) {
+		console.log('moveOnBoard ' + x + ',' + y);
 		x = parseInt(x);
 		y = parseInt(y);
 		motoring.motion = MOTION.NONE;
@@ -892,6 +893,7 @@
 			motoring.rightWheel = 0;
 			navigation.mode = 1;
 			navigation.callback = callback;
+			console.log(navigation.callback);
 		} else {
 			callback();
 		}
