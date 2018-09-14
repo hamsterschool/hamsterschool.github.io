@@ -1080,7 +1080,7 @@
 	};
 	
 	ext.backOid = function() {
-		return sensory.backOid;
+		return sensory.rearOid;
 	};
 	
 	ext.positionX = function() {
