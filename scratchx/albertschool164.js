@@ -544,6 +544,7 @@
 			if(x >= 0) navigation.current.x = x;
 			if(y >= 0) navigation.current.y = y;
 			navigation.current.theta = sensory.orientation;
+			console.log(x + ',' + y + ',' + sensory.positionX + ',' + sensory.positionY + ',' + sensory.orientation);
 			switch(navigation.state) {
 				case 1: {
 					if(navigation.initialized == false) {
@@ -876,7 +877,6 @@
 	};
 	
 	ext.moveToOnBoard = function(x, y, callback) {
-		console.log('moveOnBoard ' + x + ',' + y);
 		x = parseInt(x);
 		y = parseInt(y);
 		motoring.motion = MOTION.NONE;
