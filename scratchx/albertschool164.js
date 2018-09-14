@@ -832,11 +832,9 @@
 			which = VALUES[which];
 			if(which === LEFT) {
 				motoring.leftWheel += speed;
-			}
-			else if(which === RIGHT) {
+			} else if(which === RIGHT) {
 				motoring.rightWheel += speed;
-			}
-			else {
+			} else {
 				motoring.leftWheel += speed;
 				motoring.rightWheel += speed;
 			}
@@ -878,8 +876,8 @@
 	ext.moveToOnBoard = function(x, y, callback) {
 		x = parseInt(x);
 		y = parseInt(y);
+		motoring.motion = MOTION.NONE;
 		if(typeof x == 'number' && typeof y == 'number' && x >= 0 && x < navigation.board.width && y >= 0 && y < navigation.board.height) {
-			navigation.callback = callback;
 			navigation.initialized = false;
 			navigation.state = 1;
 			navigation.current.x = -1;
@@ -891,13 +889,16 @@
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			navigation.mode = 1;
+			navigation.callback = callback;
+		} else {
+			callback();
 		}
 	};
 	
 	ext.setOrientationToOnBoard = function(orientation, callback) {
 		orientation = parseInt(orientation);
+		motoring.motion = MOTION.NONE;
 		if(typeof orientation == 'number') {
-			navigation.callback = callback;
 			navigation.state = 1;
 			navigation.current.theta = -200;
 			navigation.target.theta = orientation;
@@ -905,6 +906,9 @@
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			navigation.mode = 2;
+			navigation.callback = callback;
+		} else {
+			callback();
 		}
 	};
 
@@ -1071,6 +1075,14 @@
 		return sensory.accelerationZ;
 	};
 	
+	ext.frontOid = function() {
+		return sensory.frontOid;
+	};
+	
+	ext.backOid = function() {
+		return sensory.backOid;
+	};
+	
 	ext.positionX = function() {
 		return sensory.positionX;
 	};
@@ -1100,7 +1112,7 @@
 	};
 
 	ext.handFound = function() {
-		return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+		return sensory.handFound || sensory.leftProximity > 40 || sensory.rightProximity > 40;
 	};
 
 	ext._getStatus = function() {
