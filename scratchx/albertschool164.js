@@ -5,32 +5,32 @@
 		signalStrength: 0,
 		leftProximity: 0,
 		rightProximity: 0,
-		leftFloor: 0,
-		rightFloor: 0,
 		accelerationX: 0,
 		accelerationY: 0,
 		accelerationZ: 0,
+		positionX: -1,
+		positionY: -1,
+		orientation: -200,
 		light: 0,
 		temperature: 0,
-		inputA: 0,
-		inputB: 0,
-		lineTracerState: 0
+		battery: 0,
+		frontOid: -1,
+		rearOid: -1
 	};
 	var motoring = {
-		module: 'hamster',
-		map: 0xfc000000,
+		module: 'albertschool',
+		map: 0xbe000000,
 		leftWheel: 0,
 		rightWheel: 0,
 		buzzer: 0,
-		outputA: 0,
-		outputB: 0,
-		leftLed: 0,
-		rightLed: 0,
+		topology: 0,
+		leftEye: 0,
+		rightEye: 0,
 		note: 0,
-		lineTracerMode: 0,
-		lineTracerSpeed: 5,
-		ioModeA: 0,
-		ioModeB: 0,
+		bodyLed: 0,
+		frontLed: 0,
+		boardWidth: 0,
+		boardHeight: 0,
 		motion: 0
 	};
 	var packet = {
@@ -45,15 +45,181 @@
 		RIGHT: 4
 	};
 	var connectionState = 1;
-	var lineTracerCallback = undefined;
-	var boardCommand = 0;
-	var boardState = 0;
-	var boardCount = 0;
-	var boardCallback = undefined;
 	var tempo = 60;
 	var timeouts = [];
 	var socket = undefined;
 	var canSend = false;
+	var navigation = {
+		callback: undefined,
+		mode: 0,
+		state: 0,
+		initialized: false,
+		board: { width: 0, height: 0 },
+		current: { x: -1, y: -1, theta: -200 },
+		target: { x: -1, y: -1, theta: -200 },
+		clear: function() {
+			this.callback = undefined;
+			this.mode = 0;
+			this.state = 0;
+			this.initialized = false;
+			this.board.width = 0;
+			this.board.height = 0;
+			this.current.x = -1;
+			this.current.y = -1;
+			this.current.theta = -200;
+			this.target.x = -1;
+			this.target.y = -1;
+			this.target.theta = -200;
+		}
+	};
+	var controller = {
+		PI: 3.14159265,
+		PI2: 6.2831853,
+		prevDirection: 0,
+		prevDirectionFinal: 0,
+		directionCount: 0,
+		directionCountFinal: 0,
+		positionCount: 0,
+		positionCountFinal: 0,
+		GAIN_ANGLE: 30,
+		GAIN_ANGLE_FINE: 30,
+		GAIN_POSITION_FINE: 30,
+		STRAIGHT_SPEED: 30,
+		MAX_BASE_SPEED: 30,
+		GAIN_BASE_SPEED: 1.5,
+		GAIN_POSITION: 52.5,
+		POSITION_TOLERANCE_FINE: 3,
+		POSITION_TOLERANCE_FINE_LARGE: 5,
+		POSITION_TOLERANCE_ROUGH: 5,
+		POSITION_TOLERANCE_ROUGH_LARGE: 10,
+		ORIENTATION_TOLERANCE_FINAL: 0.087,
+		ORIENTATION_TOLERANCE_FINAL_LARGE: 0.122,
+		ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE: 0.262,
+		ORIENTATION_TOLERANCE_ROUGH: 0.122,
+		ORIENTATION_TOLERANCE_ROUGH_LARGE: 0.262,
+		ORIENTATION_TOLERANCE_ROUGH_LARGE_LARGE: 0.524,
+		MINIMUM_WHEEL_SPEED: 18,
+		MINIMUM_WHEEL_SPEED_FINE: 15,
+		clear: function() {
+			this.prevDirection = 0;
+			this.prevDirectionFinal = 0;
+			this.directionCount = 0;
+			this.directionCountFinal = 0;
+			this.positionCount = 0;
+			this.positionCountFinal = 0;
+		},
+		controlAngle: function(currentRadian, targetRadian) {
+			var diff = this.validateRadian(targetRadian - currentRadian);
+			var mag = Math.abs(diff);
+			if(mag < this.ORIENTATION_TOLERANCE_ROUGH) return false;
+			
+			var direction = diff > 0 ? 1 : -1;
+			if (mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && direction * this.prevDirection < 0)
+				return false;
+			this.prevDirection = direction;
+			
+			var value = 0;
+			if(diff > 0) {
+				value = Math.log(1 + mag) * this.GAIN_ANGLE;
+				if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+			} else {
+				value = -Math.log(1 + mag) * this.GAIN_ANGLE;
+				if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+			}
+			value = parseInt(value);
+			robot.motoring.leftWheel.write(-value);
+			robot.motoring.rightWheel.write(value);
+			return true;
+		},
+		controlAngleFine: function(currentRadian, targetRadian) {
+			var diff = this.validateRadian(targetRadian - currentRadian);
+			var mag = Math.abs(diff);
+			if (mag < this.ORIENTATION_TOLERANCE_FINAL) return false;
+			
+			var direction = diff > 0 ? 1 : -1;
+			if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE && direction * this.prevDirectionFinal < 0) return false;
+			if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE && direction * this.prevDirectionFinal < 0) {
+				if(++this.directionCountFinal > 3) return false;
+			}
+			this.prevDirectionFinal = direction;
+			
+			var value = 0;
+			if(diff > 0) {
+				value = Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+				if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+			} else {
+				value = -Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+				if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+			}
+			value = parseInt(value);
+			robot.motoring.leftWheel.write(-value);
+			robot.motoring.rightWheel.write(value);
+			return true;
+		},
+		controlPositionFine: function(currentX, currentY, currentRadian, targetX, targetY) {
+			var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+			var diff = this.validateRadian(targetRadian - currentRadian);
+			var mag = Math.abs(diff);
+			var ex = targetX - currentX;
+			var ey = targetY - currentY;
+			var dist = Math.sqrt(ex * ex + ey * ey);
+			if (dist < this.POSITION_TOLERANCE_FINE) return false;
+			if(dist < this.POSITION_TOLERANCE_FINE_LARGE) {
+				if(++this.positionCountFinal > 5) {
+					this.positionCountFinal = 0;
+					return false;
+				}
+			}
+			var value = 0;
+			if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+			else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+			value = parseInt(value);
+			robot.motoring.leftWheel.write(this.MINIMUM_WHEEL_SPEED_FINE - value);
+			robot.motoring.rightWheel.write(this.MINIMUM_WHEEL_SPEED_FINE + value);
+			return true;
+		},
+		controlPosition: function(currentX, currentY, currentRadian, targetX, targetY) {
+			var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+			var diff = this.validateRadian(targetRadian - currentRadian);
+			var mag = Math.abs(diff);
+			var ex = targetX - currentX;
+			var ey = targetY - currentY;
+			var dist = Math.sqrt(ex * ex + ey * ey);
+			if(dist < this.POSITION_TOLERANCE_ROUGH) return false;
+			if(dist < this.POSITION_TOLERANCE_ROUGH_LARGE) {
+				if(++this.positionCount > 10) {
+					this.positionCount = 0;
+					return false;
+				}
+			} else {
+				this.positionCount = 0;
+			}
+			if(mag < 0.01) {
+				robot.motoring.leftWheel.write(this.STRAIGHT_SPEED);
+				robot.motoring.rightWheel.write(this.STRAIGHT_SPEED);
+			} else {
+				var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
+				if(base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
+				
+				var value = 0;
+				if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION;
+				else value = -Math.log(1 + mag) * this.GAIN_POSITION;
+				base = parseInt(base);
+				value = parseInt(value);
+				robot.motoring.leftWheel.write(base - value);
+				robot.motoring.rightWheel.write(base + value);
+			}
+			return true;
+		},
+		validateRadian: function(radian) {
+			if(radian > this.PI) return radian - this.PI2;
+			else if(radian < -this.PI) return radian + this.PI2;
+			return radian;
+		},
+		toRadian: function(degree) {
+			return degree * 3.14159265 / 180.0;
+		}
+	};
 	const STATE = {
 		CONNECTING: 1,
 		CONNECTED: 2,
@@ -63,40 +229,36 @@
 	};
 	const STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
-		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
-		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
+		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ]
 	};
 	const EXTENSION_NAME = {
-		en: 'Hamster',
-		ko: '햄스터',
-		uz: 'Hamster'
+		en: 'Albert School',
+		ko: '알버트 스쿨'
 	};
 	const BLOCKS = {
 		en1: [
-			['w', 'move forward once on board', 'boardMoveForward'],
-			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
+			['w', 'move forward', 'moveForward'],
+			['w', 'move backward', 'moveBackward'],
+			['w', 'turn %m.left_right', 'turn', 'left'],
 			['-'],
-			['w', 'move forward 1 sec', 'moveForward'],
-			['w', 'move backward 1 sec', 'moveBackward'],
-			['w', 'turn %m.left_right 1 sec', 'turn', 'left'],
-			['-'],
-			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
-			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
+			[' ', 'set %m.left_right_both eye to %m.color', 'setEyeTo', 'left', 'red'],
+			[' ', 'clear %m.left_right_both eye', 'clearEye', 'left'],
+			[' ', 'turn body led %m.on_off', 'turnBodyLed', 'on'],
+			[' ', 'turn front led %m.on_off', 'turnFrontLed', 'on'],
 			['-'],
 			['w', 'beep', 'beep'],
 			['-'],
 			['b', 'hand found?', 'handFound']
 		],
 		en2: [
-			['w', 'move forward once on board', 'boardMoveForward'],
-			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			['-'],
 			['w', 'move forward %n secs', 'moveForwardForSecs', 1],
 			['w', 'move backward %n secs', 'moveBackwardForSecs', 1],
 			['w', 'turn %m.left_right %n secs', 'turnForSecs', 'left', 1],
 			['-'],
-			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
-			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
+			[' ', 'set %m.left_right_both eye to %m.color', 'setEyeTo', 'left', 'red'],
+			[' ', 'clear %m.left_right_both eye', 'clearEye', 'left'],
+			[' ', 'turn body led %m.on_off', 'turnBodyLed', 'on'],
+			[' ', 'turn front led %m.on_off', 'turnFrontLed', 'on'],
 			['-'],
 			['w', 'beep', 'beep'],
 			['w', 'play note %m.note %m.octave for %d.beats beats', 'playNoteFor', 'C', '4', 0.5],
@@ -107,9 +269,6 @@
 			['b', 'hand found?', 'handFound']
 		],
 		en3: [
-			['w', 'move forward once on board', 'boardMoveForward'],
-			['w', 'turn %m.left_right once on board', 'boardTurn', 'left'],
-			['-'],
 			['w', 'move forward %n secs', 'moveForwardForSecs', 1],
 			['w', 'move backward %n secs', 'moveBackwardForSecs', 1],
 			['w', 'turn %m.left_right %n secs', 'turnForSecs', 'left', 1],
@@ -117,13 +276,15 @@
 			[' ', 'set wheels to left: %n right: %n', 'setBothWheelsTo', 30, 30],
 			[' ', 'change %m.left_right_both wheel by %n', 'changeWheelBy', 'left', 10],
 			[' ', 'set %m.left_right_both wheel to %n', 'setWheelTo', 'left', 30],
-			[' ', 'follow %m.black_white line with %m.left_right_both floor sensor', 'followLineUsingFloorSensor', 'black', 'left'],
-			['w', 'follow %m.black_white line until %m.left_right_front_rear intersection', 'followLineUntilIntersection', 'black', 'left'],
-			[' ', 'set following speed to %m.speed', 'setFollowingSpeedTo', '5'],
 			[' ', 'stop', 'stop'],
+			[' ', 'set board size to width: %d.board_size height: %d.board_size', 'setBoardSizeTo', 108, 76],
+			['w', 'move to x: %n y: %n on board', 'moveToOnBoard', 0, 0],
+			['w', 'turn towards %n degrees on board', 'setOrientationToOnBoard', 0],
 			['-'],
-			[' ', 'set %m.left_right_both led to %m.color', 'setLedTo', 'left', 'red'],
-			[' ', 'clear %m.left_right_both led', 'clearLed', 'left'],
+			[' ', 'set %m.left_right_both eye to %m.color', 'setEyeTo', 'left', 'red'],
+			[' ', 'clear %m.left_right_both eye', 'clearEye', 'left'],
+			[' ', 'turn body led %m.on_off', 'turnBodyLed', 'on'],
+			[' ', 'turn front led %m.on_off', 'turnFrontLed', 'on'],
 			['-'],
 			['w', 'beep', 'beep'],
 			[' ', 'change buzzer by %n', 'changeBuzzerBy', 10],
@@ -136,49 +297,43 @@
 			['-'],
 			['r', 'left proximity', 'leftProximity'],
 			['r', 'right proximity', 'rightProximity'],
-			['r', 'left floor', 'leftFloor'],
-			['r', 'right floor', 'rightFloor'],
 			['r', 'x acceleration', 'accelerationX'],
 			['r', 'y acceleration', 'accelerationY'],
 			['r', 'z acceleration', 'accelerationZ'],
+			['r', 'front oid', 'frontOid'],
+			['r', 'rear oid', 'backOid'],
+			['r', 'x position', 'positionX'],
+			['r', 'y position', 'positionY'],
+			['r', 'orientation', 'orientation'],
 			['r', 'light', 'light'],
 			['r', 'temperature', 'temperature'],
+			['r', 'battery', 'battery'],
 			['r', 'signal strength', 'signalStrength'],
-			['b', 'hand found?', 'handFound'],
-			['-'],
-			[' ', 'set port %m.port to %m.mode', 'setPortTo', 'A', 'analog input'],
-			[' ', 'change output %m.port by %n', 'changeOutputBy', 'A', 10],
-			[' ', 'set output %m.port to %n', 'setOutputTo', 'A', 100],
-			['w', '%m.open_close gripper', 'gripper', 'open'],
-			[' ', 'release gripper', 'releaseGripper'],
-			['r', 'input A', 'inputA'],
-			['r', 'input B', 'inputB']
+			['b', 'hand found?', 'handFound']
 		],
 		ko1: [
-			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
-			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
+			['w', '앞으로 이동하기', 'moveForward'],
+			['w', '뒤로 이동하기', 'moveBackward'],
+			['w', '%m.left_right 으로 돌기', 'turn', '왼쪽'],
 			['-'],
-			['w', '앞으로 1초 이동하기', 'moveForward'],
-			['w', '뒤로 1초 이동하기', 'moveBackward'],
-			['w', '%m.left_right 으로 1초 돌기', 'turn', '왼쪽'],
-			['-'],
-			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
-			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
+			[' ', '%m.left_right_both 눈을 %m.color 으로 정하기', 'setEyeTo', '왼쪽', '빨간색'],
+			[' ', '%m.left_right_both 눈 끄기', 'clearEye', '왼쪽'],
+			[' ', '몸통 LED %m.on_off', 'turnBodyLed', '켜기'],
+			[' ', '앞쪽 LED %m.on_off', 'turnFrontLed', '켜기'],
 			['-'],
 			['w', '삐 소리내기', 'beep'],
 			['-'],
 			['b', '손 찾음?', 'handFound']
 		],
 		ko2: [
-			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
-			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			['-'],
 			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
 			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
 			['-'],
-			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
-			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
+			[' ', '%m.left_right_both 눈을 %m.color 으로 정하기', 'setEyeTo', '왼쪽', '빨간색'],
+			[' ', '%m.left_right_both 눈 끄기', 'clearEye', '왼쪽'],
+			[' ', '몸통 LED %m.on_off', 'turnBodyLed', '켜기'],
+			[' ', '앞쪽 LED %m.on_off', 'turnFrontLed', '켜기'],
 			['-'],
 			['w', '삐 소리내기', 'beep'],
 			['w', '%m.note %m.octave 음을 %d.beats 박자 연주하기', 'playNoteFor', '도', '4', 0.5],
@@ -189,9 +344,6 @@
 			['b', '손 찾음?', 'handFound']
 		],
 		ko3: [
-			['w', '말판 앞으로 한 칸 이동하기', 'boardMoveForward'],
-			['w', '말판 %m.left_right 으로 한 번 돌기', 'boardTurn', '왼쪽'],
-			['-'],
 			['w', '앞으로 %n 초 이동하기', 'moveForwardForSecs', 1],
 			['w', '뒤로 %n 초 이동하기', 'moveBackwardForSecs', 1],
 			['w', '%m.left_right 으로 %n 초 돌기', 'turnForSecs', '왼쪽', 1],
@@ -199,13 +351,15 @@
 			[' ', '왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기', 'setBothWheelsTo', 30, 30],
 			[' ', '%m.left_right_both 바퀴 %n 만큼 바꾸기', 'changeWheelBy', '왼쪽', 10],
 			[' ', '%m.left_right_both 바퀴 %n (으)로 정하기', 'setWheelTo', '왼쪽', 30],
-			[' ', '%m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기', 'followLineUsingFloorSensor', '검은색', '왼쪽'],
-			['w', '%m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기', 'followLineUntilIntersection', '검은색', '왼쪽'],
-			[' ', '선 따라가기 속도를 %m.speed (으)로 정하기', 'setFollowingSpeedTo', '5'],
 			[' ', '정지하기', 'stop'],
+			[' ', '말판 크기를 폭 %d.board_size 높이 %d.board_size (으)로 정하기', 'setBoardSizeTo', 108, 76],
+			['w', '밑판 x: %n y: %n 위치로 이동하기', 'moveToOnBoard', 0, 0],
+			['w', '말판 %n 도 방향으로 바라보기', 'setOrientationToOnBoard', 0],
 			['-'],
-			[' ', '%m.left_right_both LED를 %m.color 으로 정하기', 'setLedTo', '왼쪽', '빨간색'],
-			[' ', '%m.left_right_both LED 끄기', 'clearLed', '왼쪽'],
+			[' ', '%m.left_right_both 눈을 %m.color 으로 정하기', 'setEyeTo', '왼쪽', '빨간색'],
+			[' ', '%m.left_right_both 눈 끄기', 'clearEye', '왼쪽'],
+			[' ', '몸통 LED %m.on_off', 'turnBodyLed', '켜기'],
+			[' ', '앞쪽 LED %m.on_off', 'turnFrontLed', '켜기'],
 			['-'],
 			['w', '삐 소리내기', 'beep'],
 			[' ', '버저 음을 %n 만큼 바꾸기', 'changeBuzzerBy', 10],
@@ -218,149 +372,41 @@
 			['-'],
 			['r', '왼쪽 근접 센서', 'leftProximity'],
 			['r', '오른쪽 근접 센서', 'rightProximity'],
-			['r', '왼쪽 바닥 센서', 'leftFloor'],
-			['r', '오른쪽 바닥 센서', 'rightFloor'],
 			['r', 'x축 가속도', 'accelerationX'],
 			['r', 'y축 가속도', 'accelerationY'],
 			['r', 'z축 가속도', 'accelerationZ'],
+			['r', '앞쪽 OID', 'frontOid'],
+			['r', '뒤쪽 OID', 'backOid'],
+			['r', 'x 위치', 'positionX'],
+			['r', 'y 위치', 'positionY'],
+			['r', '방향', 'orientation'],
 			['r', '밝기', 'light'],
 			['r', '온도', 'temperature'],
+			['r', '배터리', 'battery'],
 			['r', '신호 세기', 'signalStrength'],
-			['b', '손 찾음?', 'handFound'],
-			['-'],
-			[' ', '포트 %m.port 를 %m.mode 으로 정하기', 'setPortTo', 'A', '아날로그 입력'],
-			[' ', '출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 'A', 10],
-			[' ', '출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 'A', 100],
-			['w', '집게 %m.open_close', 'gripper', '열기'],
-			[' ', '집게 끄기', 'releaseGripper'],
-			['r', '입력 A', 'inputA'],
-			['r', '입력 B', 'inputB']
-		],
-		uz1: [
-			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			['-'],
-			['w', 'oldinga 1 soniya yurish', 'moveForward'],
-			['w', 'orqaga 1 soniya yurish', 'moveBackward'],
-			['w', '%m.left_right ga 1 soniya o\'girilish', 'turn', 'chap'],
-			['-'],
-			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
-			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			['-'],
-			['w', 'ovoz chiqarish', 'beep'],
-			['-'],
-			['b', 'qo\'l topildimi?', 'handFound']
-		],
-		uz2: [
-			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			['-'],
-			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
-			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
-			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
-			['-'],
-			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
-			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			['-'],
-			['w', 'ovoz chiqarish', 'beep'],
-			['w', '%m.note %m.octave notani %d.beats zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
-			['w', '%d.beats zarb tanaffus', 'restFor', 0.25],
-			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
-			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
-			['-'],
-			['b', 'qo\'l topildimi?', 'handFound']
-		],
-		uz3: [
-			['w', 'doskada bir marta oldinga yurish', 'boardMoveForward'],
-			['w', 'doskada bir marta %m.left_right ga o\'girish', 'boardTurn', 'chap'],
-			['-'],
-			['w', 'oldinga %n soniya yurish', 'moveForwardForSecs', 1],
-			['w', 'orqaga %n soniya yurish', 'moveBackwardForSecs', 1],
-			['w', '%m.left_right ga %n soniya o\'girilish', 'turnForSecs', 'chap', 1],
-			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga o\'zgartirish', 'changeBothWheelsBy', 10, 10],
-			[' ', 'chap g\'ildirakni %n o\'ng g\'ildirakni %n ga sozlash', 'setBothWheelsTo', 30, 30],
-			[' ', '%m.left_right_both g\'ildirakni %n ga o\'zgartirish', 'changeWheelBy', 'chap', 10],
-			[' ', '%m.left_right_both g\'ildirakni %n ga sozlash', 'setWheelTo', 'chap', 30],
-			[' ', '%m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish', 'followLineUsingFloorSensor', 'qora', 'chap'],
-			['w', '%m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish', 'followLineUntilIntersection', 'qora', 'chap'],
-			[' ', 'liniyada ergashish tezligini %m.speed ga sozlash', 'setFollowingSpeedTo', '5'],
-			[' ', 'to\'xtatish', 'stop'],
-			['-'],
-			[' ', '%m.left_right_both LEDni %m.color ga sozlash', 'setLedTo', 'chap', 'qizil'],
-			[' ', '%m.left_right_both LEDni o\'chirish', 'clearLed', 'chap'],
-			['-'],
-			['w', 'ovoz chiqarish', 'beep'],
-			[' ', 'buzerning ovozini %n ga o\'zgartirish', 'changeBuzzerBy', 10],
-			[' ', 'buzerning ovozini %n ga sozlash', 'setBuzzerTo', 1000],
-			[' ', 'buzerni o\'chirish', 'clearBuzzer'],
-			['w', '%m.note %m.octave notani %d.beats zarb ijro etish', 'playNoteFor', 'do', '4', 0.5],
-			['w', '%d.beats zarb tanaffus', 'restFor', 0.25],
-			[' ', 'temni %n ga o\'zgartirish', 'changeTempoBy', 20],
-			[' ', 'temni %n bpm ga sozlash', 'setTempoTo', 60],
-			['-'],
-			['r', 'chap yaqinlik', 'leftProximity'],
-			['r', 'o\'ng yaqinlik', 'rightProximity'],
-			['r', 'chap taglik', 'leftFloor'],
-			['r', 'o\'ng taglik', 'rightFloor'],
-			['r', 'x tezlanish', 'accelerationX'],
-			['r', 'y tezlanish', 'accelerationY'],
-			['r', 'z tezlanish', 'accelerationZ'],
-			['r', 'yorug\'lik', 'light'],
-			['r', 'harorat', 'temperature'],
-			['r', 'signal kuchi', 'signalStrength'],
-			['b', 'qo\'l topildimi?', 'handFound'],
-			['-'],
-			[' ', '%m.port portni %m.mode ga sozlash', 'setPortTo', 'A', 'analog kiritish'],
-			[' ', '%m.port portni %n ga o\'zgartirish', 'changeOutputBy', 'A', 10],
-			[' ', '%m.port portni %n ga sozlash', 'setOutputTo', 'A', 100],
-			['w', 'gripperni %m.open_close', 'gripper', 'oching'],
-			[' ', 'gripperni ozod qilish', 'releaseGripper'],
-			['r', 'A kirish', 'inputA'],
-			['r', 'B kirish', 'inputB']
+			['b', '손 찾음?', 'handFound']
 		]
 	};
 	const MENUS = {
 		en: {
 			'left_right': ['left', 'right'],
 			'left_right_both': ['left', 'right', 'both'],
-			'black_white': ['black', 'white'],
-			'left_right_front_rear': ['left', 'right', 'front', 'rear'],
-			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
+			'board_size': ['37', '53', '76', '108', '153', '217'],
 			'color': ['red', 'yellow', 'green', 'sky blue', 'blue', 'purple', 'white'],
+			'on_off': ['on', 'off'],
 			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
-			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'port': ['A', 'B', 'A and B'],
-			'mode': ['analog input', 'digital input', 'servo output', 'pwm output', 'digital output'],
-			'open_close': ['open', 'close']
+			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4']
 		},
 		ko: {
 			'left_right': ['왼쪽', '오른쪽'],
 			'left_right_both': ['왼쪽', '오른쪽', '양쪽'],
-			'black_white': ['검은색', '하얀색'],
-			'left_right_front_rear': ['왼쪽', '오른쪽', '앞쪽', '뒤쪽'],
-			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
+			'board_size': ['37', '53', '76', '108', '153', '217'],
 			'color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '하얀색'],
+			'on_off': ['켜기', '끄기'],
 			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
-			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'port': ['A', 'B', 'A와 B'],
-			'mode': ['아날로그 입력', '디지털 입력', '서보 출력', 'PWM 출력', '디지털 출력'],
-			'open_close': ['열기', '닫기']
-		},
-		uz: {
-			'left_right': ['chap', 'o\'ng'],
-			'left_right_both': ['chap', 'o\'ng', 'har ikki'],
-			'black_white': ['qora', 'oq'],
-			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
-			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
-			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'oq'],
-			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
-			'octave': ['1', '2', '3', '4', '5', '6', '7'],
-			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
-			'port': ['A', 'B', 'A va B'],
-			'mode': ['analog kiritish', 'raqamli kiritish', 'servo chiqish', 'pwm chiqish', 'raqamli chiqish'],
-			'open_close': ['oching', 'yoping']
+			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4']
 		}
 	};
 	
@@ -381,16 +427,12 @@
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var MODES = {};
 	var VALUES = {};
 	const LEFT = 1;
 	const RIGHT = 2;
 	const BOTH = 3;
-	const FRONT = 4;
-	const REAR = 5;
-	const WHITE = 6;
-	const OPEN = 7;
-	const CLOSE = 8;
+	const ON = 4;
+	const OFF = 5;
 	var tmp;
 	for(var i in MENUS) {
 		tmp = MENUS[i]['color'];
@@ -414,24 +456,13 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['mode'];
-		MODES[tmp[0]] = 0;
-		MODES[tmp[1]] = 1;
-		MODES[tmp[2]] = 8;
-		MODES[tmp[3]] = 9;
-		MODES[tmp[4]] = 10;
 		tmp = MENUS[i]['left_right_both'];
 		VALUES[tmp[0]] = LEFT;
 		VALUES[tmp[1]] = RIGHT;
 		VALUES[tmp[2]] = BOTH;
-		tmp = MENUS[i]['left_right_front_rear'];
-		VALUES[tmp[2]] = FRONT;
-		VALUES[tmp[3]] = REAR;
-		tmp = MENUS[i]['black_white'];
-		VALUES[tmp[1]] = WHITE;
-		tmp = MENUS[i]['open_close'];
-		VALUES[tmp[0]] = OPEN;
-		VALUES[tmp[1]] = CLOSE;
+		tmp = MENUS[i]['on_off'];
+		VALUES[tmp[0]] = ON;
+		VALUES[tmp[1]] = OFF;
 	}
 	
 	function removeTimeout(id) {
@@ -450,225 +481,127 @@
 	}
 	
 	function clearMotoring() {
-		motoring.map = 0xfc000000;
+		motoring.map = 0xbe000000;
 	}
 	
-	function setLeftLed(color) {
-		motoring.leftLed = color;
-		motoring.map |= 0x01000000;
-	}
-	
-	function setRightLed(color) {
-		motoring.rightLed = color;
+	function setLeftEye(color) {
+		motoring.leftEye = color;
 		motoring.map |= 0x00800000;
+	}
+	
+	function setRightEye(color) {
+		motoring.rightEye = color;
+		motoring.map |= 0x00400000;
 	}
 	
 	function setNote(note) {
 		motoring.note = note;
-		motoring.map |= 0x00400000;
-	}
-
-	function setLineTracerMode(mode) {
-		motoring.lineTracerMode = mode;
 		motoring.map |= 0x00200000;
 	}
-	
-	function setLineTracerSpeed(speed) {
-		motoring.lineTracerSpeed = speed;
+
+	function setBodyLed(onoff) {
+		motoring.bodyLed = onoff;
 		motoring.map |= 0x00100000;
 	}
 	
-	function setIoModeA(mode) {
-		motoring.ioModeA = mode;
+	function setFrontLed(onoff) {
+		motoring.frontLed = onoff;
 		motoring.map |= 0x00080000;
 	}
 	
-	function setIoModeB(mode) {
-		motoring.ioModeB = mode;
+	function setBoardSize(width, height) {
+		motoring.boardWidth = width;
+		motoring.boardHeight = height;
 		motoring.map |= 0x00040000;
 	}
-
+	
 	function reset() {
-		motoring.map = 0xfdfc0000;
+		motoring.map = 0x8ffc0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		motoring.buzzer = 0;
-		motoring.outputA = 0;
-		motoring.outputB = 0;
-		motoring.leftLed = 0;
-		motoring.rightLed = 0;
+		motoring.topology = 0;
+		motoring.leftEye = 0;
+		motoring.rightEye = 0;
 		motoring.note = 0;
-		motoring.lineTracerMode = 0;
-		motoring.lineTracerSpeed = 5;
-		motoring.ioModeA = 0;
-		motoring.ioModeB = 0;
+		motoring.bodyLed = 0;
+		motoring.frontLed = 0;
+		motoring.boardWidth = 0;
+		motoring.boardHeight = 0;
 		motoring.motion = 0;
-		
-		lineTracerCallback = undefined;
-		boardCommand = 0;
-		boardState = 0;
-		boardCount = 0;
-		boardCallback = undefined;
 		tempo = 60;
+		navigation.clear();
+		controller.clear();
 		removeAllTimeouts();
 	}
 	
-	function handleLineTracer() {
-		if(sensory.map & 0x00000010) {
-			if(sensory.lineTracerState == 0x40) {
-				setLineTracerMode(0);
-				var callback = lineTracerCallback;
-				lineTracerCallback = undefined;
-				if(callback) callback();
-			}
-		}
-	}
-	
-	function handleBoard() {
-		if(boardCommand == 1) {
-			switch(boardState) {
+	function handleNavigation() {
+		if(navigation.mode == 1) {
+			var x = sensory.positionX;
+			var y = sensory.positionY;
+			if(x >= 0) navigation.current.x = x;
+			if(y >= 0) navigation.current.y = y;
+			navigation.current.theta = sensory.orientation;
+			switch(navigation.state) {
 				case 1: {
-					if(boardCount < 2) {
-						if(sensory.leftFloor < 50 && sensory.rightFloor < 50)
-							boardCount ++;
-						else
-							boardCount = 0;
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						motoring.leftWheel = 45 + diff * 0.25;
-						motoring.rightWheel = 45 - diff * 0.25;
-					} else {
-						boardCount = 0;
-						boardState = 2;
+					if(navigation.initialized == false) {
+						if(navigation.current.x < 0 || navigation.current.y < 0) {
+							motoring.leftWheel.write(20);
+							motoring.rightWheel.write(-20);
+						} else {
+							navigation.initialized = true;
+						}
+					}
+					if(navigation.initialized) {
+						var current = controller.toRadian(navigation.current.theta);
+						var dx = navigation.target.x - navigation.current.x;
+						var dy = navigation.target.y - navigation.current.y;
+						var target = Math.atan2(dy, dx);
+						if(controller.controlAngle(current, target) == false) {
+							navigation.state = 2;
+						}
 					}
 					break;
 				}
 				case 2: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					motoring.leftWheel = 45 + diff * 0.25;
-					motoring.rightWheel = 45 - diff * 0.25;
-					boardState = 3;
-					var timer = setTimeout(function() {
-						boardState = 4;
-						removeTimeout(timer);
-					}, 250);
-					timeouts.push(timer);
-					break;
-				}
-				case 3: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					motoring.leftWheel = 45 + diff * 0.25;
-					motoring.rightWheel = 45 - diff * 0.25;
-					break;
-				}
-				case 4: {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					boardCommand = 0;
-					boardState = 0;
-					var callback = boardCallback;
-					boardCallback = undefined;
-					if(callback) callback();
-					break;
-				}
-			}
-		} else if(boardCommand == 2) {
-			switch(boardState) {
-				case 1: {
-					if(boardCount < 2) {
-						if(sensory.leftFloor > 50)
-							boardCount ++;
-					} else {
-						boardCount = 0;
-						boardState = 2;
-					}
-					break;
-				}
-				case 2: {
-					if(sensory.leftFloor < 20) {
-						boardState = 3;
+					if(controller.controlPosition(navigation.current.x, navigation.current.y, controller.toRadian(navigation.current.theta), navigation.target.x, navigation.target.y) == false) {
+						navigation.state = 3;
 					}
 					break;
 				}
 				case 3: {
-					if(boardCount < 2) {
-						if(sensory.leftFloor < 20)
-							boardCount ++;
-					} else {
-						boardCount = 0;
-						boardState = 4;
-					}
-					break;
-				}
-				case 4: {
-					if(sensory.leftFloor > 50) {
-						boardState = 5;
-					}
-					break;
-				}
-				case 5: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					if(diff > -15) {
-						motoring.leftWheel = 0;
-						motoring.rightWheel = 0;
-						boardCommand = 0;
-						boardState = 0;
-						var callback = boardCallback;
-						boardCallback = undefined;
+					if(controller.controlPositionFine(navigation.current.x, navigation.current.y, controller.toRadian(navigation.current.theta), navigation.target.x, navigation.target.y) == false) {
+						motoring.leftWheel.write(0);
+						motoring.rightWheel.write(0);
+						var callback = navigation.callback;
+						navigation.clear();
+						controller.clear();
 						if(callback) callback();
-					} else {
-						motoring.leftWheel = diff * 0.5;
-						motoring.rightWheel = -diff * 0.5;
 					}
 					break;
 				}
 			}
-		} else if(boardCommand == 3) {
-			switch(boardState) {
+		} else if(navigation.mode == 2) {
+			navigation.current.theta = sensory.orientation;
+			switch(navigation.state) {
 				case 1: {
-					if(boardCount < 2) {
-						if(sensory.rightFloor > 50)
-							boardCount ++;
-					} else {
-						boardCount = 0;
-						boardState = 2;
+					var current = controller.toRadian(navigation.current.theta);
+					var target = controller.toRadian(navigation.target.theta);
+					if(controller.controlAngle(current, target) == false) {
+						navigation.state = 2;
 					}
 					break;
 				}
 				case 2: {
-					if(sensory.rightFloor < 20) {
-						boardState = 3;
-					}
-					break;
-				}
-				case 3: {
-					if(boardCount < 2) {
-						if(sensory.rightFloor < 20)
-							boardCount ++;
-					} else {
-						boardCount = 0;
-						boardState = 4;
-					}
-					break;
-				}
-				case 4: {
-					if(sensory.rightFloor > 50) {
-						boardState = 5;
-					}
-					break;
-				}
-				case 5: {
-					var diff = sensory.rightFloor - sensory.leftFloor;
-					if(diff > -15) {
-						motoring.leftWheel = 0;
-						motoring.rightWheel = 0;
-						boardCommand = 0;
-						boardState = 0;
-						var callback = boardCallback;
-						boardCallback = undefined;
+					var current = controller.toRadian(navigation.current.theta);
+					var target = controller.toRadian(navigation.target.theta);
+					if(controller.controlAngleFine(current, target) == false) {
+						motoring.leftWheel.write(0);
+						motoring.rightWheel.write(0);
+						var callback = navigation.callback;
+						navigation.clear();
+						controller.clear();
 						if(callback) callback();
-					} else {
-						motoring.leftWheel = -diff * 0.5;
-						motoring.rightWheel = diff * 0.5;
 					}
 					break;
 				}
@@ -685,10 +618,9 @@
 				sock.onopen = function() {
 					var slaveVersion = 1;
 					var decode = function(data) {
-						if(data.module == 'hamster' && data.index == 0) {
+						if(data.module == 'albertschool' && data.index == 0) {
 							sensory = data;
-							if(lineTracerCallback) handleLineTracer();
-							if(boardCallback) handleBoard();
+							if(navigation.callback) handleNavigation();
 						}
 					};
 					sock.onmessage = function(message) {
@@ -696,7 +628,7 @@
 							var received = JSON.parse(message.data);
 							slaveVersion = received.version || 0;
 							if(received.type == 0) {
-								if(received.module == 'hamster') {
+								if(received.module == 'albertschool') {
 									connectionState = received.state;
 								}
 							} else {
@@ -758,38 +690,8 @@
 		}
 	}
 
-	ext.boardMoveForward = function(callback) {
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
-		motoring.leftWheel = 45;
-		motoring.rightWheel = 45;
-		boardCommand = 1;
-		boardState = 1;
-		boardCount = 0;
-		boardCallback = callback;
-	};
-
-	ext.boardTurn = function(direction, callback) {
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
-		if(VALUES[direction] === LEFT) {
-			boardCommand = 2;
-			motoring.leftWheel = -45;
-			motoring.rightWheel = 45;
-		} else {
-			boardCommand = 3;
-			motoring.leftWheel = 45;
-			motoring.rightWheel = -45;
-		}
-		boardState = 1;
-		boardCount = 0;
-		boardCallback = callback;
-	};
-	
 	ext.moveForward = function(callback) {
 		motoring.motion = MOTION.FORWARD;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		motoring.leftWheel = 30;
 		motoring.rightWheel = 30;
 		var timer = setTimeout(function() {
@@ -804,8 +706,6 @@
 	
 	ext.moveBackward = function(callback) {
 		motoring.motion = MOTION.BACKWARD;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		motoring.leftWheel = -30;
 		motoring.rightWheel = -30;
 		var timer = setTimeout(function() {
@@ -819,8 +719,6 @@
 	};
 	
 	ext.turn = function(direction, callback) {
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(VALUES[direction] === LEFT) {
 			motoring.motion = MOTION.LEFT;
 			motoring.leftWheel = -30;
@@ -842,8 +740,6 @@
 
 	ext.moveForwardForSecs = function(sec, callback) {
 		sec = parseFloat(sec);
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			motoring.motion = MOTION.FORWARD;
 			motoring.leftWheel = 30;
@@ -863,8 +759,6 @@
 
 	ext.moveBackwardForSecs = function(sec, callback) {
 		sec = parseFloat(sec);
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			motoring.motion = MOTION.BACKWARD;
 			motoring.leftWheel = -30;
@@ -884,8 +778,6 @@
 
 	ext.turnForSecs = function(direction, sec, callback) {
 		sec = parseFloat(sec);
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(sec && sec > 0) {
 			if(VALUES[direction] === LEFT) {
 				motoring.motion = MOTION.LEFT;
@@ -913,8 +805,6 @@
 		left = parseFloat(left);
 		right = parseFloat(right);
 		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(typeof left == 'number') {
 			motoring.leftWheel += left;
 		}
@@ -927,8 +817,6 @@
 		left = parseFloat(left);
 		right = parseFloat(right);
 		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(typeof left == 'number') {
 			motoring.leftWheel = left;
 		}
@@ -940,8 +828,6 @@
 	ext.changeWheelBy = function(which, speed) {
 		speed = parseFloat(speed);
 		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(typeof speed == 'number') {
 			which = VALUES[which];
 			if(which === LEFT) {
@@ -960,8 +846,6 @@
 	ext.setWheelTo = function(which, speed) {
 		speed = parseFloat(speed);
 		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		if(typeof speed == 'number') {
 			which = VALUES[which];
 			if(which === LEFT) {
@@ -972,85 +856,100 @@
 				motoring.leftWheel = speed;
 				motoring.rightWheel = speed;
 			}
-		}
-	};
-
-	ext.followLineUsingFloorSensor = function(color, which) {
-		var mode = 1;
-		which = VALUES[which];
-		if(which === RIGHT)
-			mode = 2;
-		else if(which === BOTH)
-			mode = 3;
-		if(VALUES[color] === WHITE)
-			mode += 7;
-		
-		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setLineTracerMode(mode);
-	};
-
-	ext.followLineUntilIntersection = function(color, which, callback) {
-		var mode = 4;
-		which = VALUES[which];
-		if(which === RIGHT)
-			mode = 5;
-		else if(which === FRONT)
-			mode = 6;
-		else if(which === REAR)
-			mode = 7;
-		if(VALUES[color] === WHITE)
-			mode += 7;
-		
-		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setLineTracerMode(mode);
-		lineTracerCallback = callback;
-	};
-
-	ext.setFollowingSpeedTo = function(speed) {
-		speed = parseInt(speed);
-		if(typeof speed == 'number') {
-			setLineTracerSpeed(speed);
 		}
 	};
 
 	ext.stop = function() {
 		motoring.motion = MOTION.NONE;
-		boardCommand = 0;
-		setLineTracerMode(0);
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 	};
+	
+	ext.setBoardSizeTo = function(width, height) {
+		width = parseInt(width);
+		height = parseInt(height);
+		if(width && height && width > 0 && height > 0) {
+			navigation.board.width = width;
+			navigation.board.height = height;
+			setBoardSize(width, height);
+		}
+	};
+	
+	ext.moveToOnBoard = function(x, y, callback) {
+		x = parseInt(x);
+		y = parseInt(y);
+		if(typeof x == 'number' && typeof y == 'number' && x >= 0 && x < navigation.board.width && y >= 0 && y < navigation.board.height) {
+			navigation.callback = callback;
+			navigation.initialized = false;
+			navigation.state = 1;
+			navigation.current.x = -1;
+			navigation.current.y = -1;
+			navigation.current.theta = -200;
+			navigation.target.x = x;
+			navigation.target.y = y;
+			controller.clear();
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			navigation.mode = 1;
+		}
+	};
+	
+	ext.setOrientationToOnBoard = function(orientation, callback) {
+		orientation = parseInt(orientation);
+		if(typeof orientation == 'number') {
+			navigation.callback = callback;
+			navigation.state = 1;
+			navigation.current.theta = -200;
+			navigation.target.theta = orientation;
+			controller.clear();
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			navigation.mode = 2;
+		}
+	};
 
-	ext.setLedTo = function(which, color) {
+	ext.setEyeTo = function(which, color) {
 		color = COLORS[color];
 		if(color && color > 0) {
 			which = VALUES[which];
 			if(which === LEFT) {
-				setLeftLed(color);
+				setLeftEye(color);
 			} else if(which === RIGHT) {
-				setRightLed(color);
+				setRightEye(color);
 			} else {
-				setLeftLed(color);
-				setRightLed(color);
+				setLeftEye(color);
+				setRightEye(color);
 			}
 		}
 	};
 
-	ext.clearLed = function(which) {
+	ext.clearEye = function(which) {
 		which = VALUES[which];
 		if(which === LEFT) {
-			setLeftLed(0);
+			setLeftEye(0);
 		} else if(which === RIGHT) {
-			setRightLed(0);
+			setRightEye(0);
 		} else {
-			setLeftLed(0);
-			setRightLed(0);
+			setLeftEye(0);
+			setRightEye(0);
+		}
+	};
+	
+	ext.turnBodyLed = function(onoff) {
+		onoff = VALUES[onoff];
+		if(onoff === ON) {
+			setBodyLed(1);
+		} else {
+			setBodyLed(0);
+		}
+	};
+	
+	ext.turnFrontLed = function(onoff) {
+		onoff = VALUES[onoff];
+		if(onoff === ON) {
+			setFrontLed(1);
+		} else {
+			setFrontLed(0);
 		}
 	};
 
@@ -1160,14 +1059,6 @@
 		return sensory.rightProximity;
 	};
 
-	ext.leftFloor = function() {
-		return sensory.leftFloor;
-	};
-
-	ext.rightFloor = function() {
-		return sensory.rightFloor;
-	};
-
 	ext.accelerationX = function() {
 		return sensory.accelerationX;
 	};
@@ -1179,6 +1070,18 @@
 	ext.accelerationZ = function() {
 		return sensory.accelerationZ;
 	};
+	
+	ext.positionX = function() {
+		return sensory.positionX;
+	};
+	
+	ext.positionY = function() {
+		return sensory.positionY;
+	};
+	
+	ext.orientation = function() {
+		return sensory.orientation;
+	};
 
 	ext.light = function() {
 		return sensory.light;
@@ -1186,6 +1089,10 @@
 
 	ext.temperature = function() {
 		return sensory.temperature;
+	};
+	
+	ext.battery = function() {
+		return sensory.battery;
 	};
 
 	ext.signalStrength = function() {
@@ -1196,81 +1103,6 @@
 		return sensory.leftProximity > 50 || sensory.rightProximity > 50;
 	};
 
-	ext.setPortTo = function(port, mode) {
-		mode = MODES[mode];
-		if(typeof mode == 'number') {
-			if(port == 'A') {
-				setIoModeA(mode);
-			} else if(port == 'B') {
-				setIoModeB(mode);
-			} else {
-				setIoModeA(mode);
-				setIoModeB(mode);
-			}
-		}
-	};
-
-	ext.changeOutputBy = function(port, value) {
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			if(port == 'A') {
-				motoring.outputA += value;
-			} else if(port == 'B') {
-				motoring.outputB += value;
-			} else {
-				motoring.outputA += value;
-				motoring.outputB += value;
-			}
-		}
-	};
-
-	ext.setOutputTo = function(port, value) {
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			if(port == 'A') {
-				motoring.outputA = value;
-			} else if(port == 'B') {
-				motoring.outputB = value;
-			} else {
-				motoring.outputA = value;
-				motoring.outputB = value;
-			}
-		}
-	};
-	
-	ext.gripper = function(action, callback) {
-		action = VALUES[action];
-		setIoModeA(10);
-		setIoModeB(10);
-		if(action == OPEN) {
-			motoring.outputA = 1;
-			motoring.outputB = 0;
-		} else {
-			motoring.outputA = 0;
-			motoring.outputB = 1;
-		}
-		var timer = setTimeout(function() {
-			removeTimeout(timer);
-			callback();
-		}, 500);
-		timeouts.push(timer);
-	};
-	
-	ext.releaseGripper = function() {
-		setIoModeA(10);
-		setIoModeB(10);
-		motoring.outputA = 0;
-		motoring.outputB = 0;
-	};
-
-	ext.inputA = function() {
-		return sensory.inputA;
-	};
-
-	ext.inputB = function() {
-		return sensory.inputB;
-	};
-	
 	ext._getStatus = function() {
 		switch(connectionState) {
 			case STATE.CONNECTED:
@@ -1293,7 +1125,7 @@
 	var descriptor = {
 		blocks: BLOCKS[lang + level],
 		menus: MENUS[lang],
-		url: "http://hamster.school"
+		url: "http://albert.school"
 	};
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
