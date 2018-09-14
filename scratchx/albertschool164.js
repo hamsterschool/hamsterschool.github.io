@@ -536,7 +536,9 @@
 	}
 	
 	function handleNavigation() {
+		console.log('handleNavigation');
 		if(navigation.mode == 1) {
+			console.log('move');
 			var x = sensory.positionX;
 			var y = sensory.positionY;
 			if(x >= 0) navigation.current.x = x;
