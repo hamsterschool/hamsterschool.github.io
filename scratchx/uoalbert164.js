@@ -829,13 +829,24 @@
 		}
 	};
 
-	ext.uoClearEye = function() {
-		motoring.leftEyeRed = 0;
-		motoring.leftEyeGreen = 0;
-		motoring.leftEyeBlue = 0;
-		motoring.rightEyeRed = 0;
-		motoring.rightEyeGreen = 0;
-		motoring.rightEyeBlue = 0;
+	ext.uoClearEye = function(which) {
+		which = VALUES[which];
+		if(which === LEFT) {
+			motoring.leftEyeRed = 0;
+			motoring.leftEyeGreen = 0;
+			motoring.leftEyeBlue = 0;
+		} else if(which === RIGHT) {
+			motoring.rightEyeRed = 0;
+			motoring.rightEyeGreen = 0;
+			motoring.rightEyeBlue = 0;
+		} else {
+			motoring.leftEyeRed = 0;
+			motoring.leftEyeGreen = 0;
+			motoring.leftEyeBlue = 0;
+			motoring.rightEyeRed = 0;
+			motoring.rightEyeGreen = 0;
+			motoring.rightEyeBlue = 0;
+		}
 	};
 
 	ext.uoPlaySound = function(sound) {
