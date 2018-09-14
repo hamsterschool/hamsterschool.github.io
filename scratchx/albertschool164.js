@@ -127,8 +127,8 @@
 				if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
 			}
 			value = parseInt(value);
-			robot.motoring.leftWheel.write(-value);
-			robot.motoring.rightWheel.write(value);
+			motoring.leftWheel = -value;
+			motoring.rightWheel = value;
 			return true;
 		},
 		controlAngleFine: function(currentRadian, targetRadian) {
@@ -152,8 +152,8 @@
 				if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
 			}
 			value = parseInt(value);
-			robot.motoring.leftWheel.write(-value);
-			robot.motoring.rightWheel.write(value);
+			motoring.leftWheel = -value;
+			motoring.rightWheel = value;
 			return true;
 		},
 		controlPositionFine: function(currentX, currentY, currentRadian, targetX, targetY) {
@@ -174,8 +174,8 @@
 			if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
 			else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
 			value = parseInt(value);
-			robot.motoring.leftWheel.write(this.MINIMUM_WHEEL_SPEED_FINE - value);
-			robot.motoring.rightWheel.write(this.MINIMUM_WHEEL_SPEED_FINE + value);
+			motoring.leftWheel = this.MINIMUM_WHEEL_SPEED_FINE - value;
+			motoring.rightWheel = this.MINIMUM_WHEEL_SPEED_FINE + value;
 			return true;
 		},
 		controlPosition: function(currentX, currentY, currentRadian, targetX, targetY) {
@@ -195,8 +195,8 @@
 				this.positionCount = 0;
 			}
 			if(mag < 0.01) {
-				robot.motoring.leftWheel.write(this.STRAIGHT_SPEED);
-				robot.motoring.rightWheel.write(this.STRAIGHT_SPEED);
+				motoring.leftWheel = this.STRAIGHT_SPEED;
+				motoring.rightWheel = this.STRAIGHT_SPEED;
 			} else {
 				var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
 				if(base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
@@ -206,8 +206,8 @@
 				else value = -Math.log(1 + mag) * this.GAIN_POSITION;
 				base = parseInt(base);
 				value = parseInt(value);
-				robot.motoring.leftWheel.write(base - value);
-				robot.motoring.rightWheel.write(base + value);
+				motoring.leftWheel = base - value;
+				motoring.rightWheel = base + value;
 			}
 			return true;
 		},
@@ -536,21 +536,18 @@
 	}
 	
 	function handleNavigation() {
-		console.log('handleNavigation');
 		if(navigation.mode == 1) {
-			console.log('move');
 			var x = sensory.positionX;
 			var y = sensory.positionY;
 			if(x >= 0) navigation.current.x = x;
 			if(y >= 0) navigation.current.y = y;
 			navigation.current.theta = sensory.orientation;
-			console.log(x + ',' + y + ',' + sensory.positionX + ',' + sensory.positionY + ',' + sensory.orientation);
 			switch(navigation.state) {
 				case 1: {
 					if(navigation.initialized == false) {
 						if(navigation.current.x < 0 || navigation.current.y < 0) {
-							motoring.leftWheel.write(20);
-							motoring.rightWheel.write(-20);
+							motoring.leftWheel = 20;
+							motoring.rightWheel = -20;
 						} else {
 							navigation.initialized = true;
 						}
@@ -574,8 +571,8 @@
 				}
 				case 3: {
 					if(controller.controlPositionFine(navigation.current.x, navigation.current.y, controller.toRadian(navigation.current.theta), navigation.target.x, navigation.target.y) == false) {
-						motoring.leftWheel.write(0);
-						motoring.rightWheel.write(0);
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
 						var callback = navigation.callback;
 						navigation.clear();
 						controller.clear();
@@ -599,8 +596,8 @@
 					var current = controller.toRadian(navigation.current.theta);
 					var target = controller.toRadian(navigation.target.theta);
 					if(controller.controlAngleFine(current, target) == false) {
-						motoring.leftWheel.write(0);
-						motoring.rightWheel.write(0);
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
 						var callback = navigation.callback;
 						navigation.clear();
 						controller.clear();
@@ -893,7 +890,6 @@
 			motoring.rightWheel = 0;
 			navigation.mode = 1;
 			navigation.callback = callback;
-			console.log(navigation.callback);
 		} else {
 			callback();
 		}
