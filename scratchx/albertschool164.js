@@ -15,7 +15,8 @@
 		temperature: 0,
 		battery: 0,
 		frontOid: -1,
-		rearOid: -1
+		rearOid: -1,
+		handFound: false
 	};
 	var motoring = {
 		module: 'albertschool',
