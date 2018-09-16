@@ -743,7 +743,7 @@
 		motoring.rightWheel = 0;
 		setPulse(0);
 		setLineTracerMode(0);
-		setMotion(1, 1, 0, LEVEL1_MOVE_CM, 0);
+		setMotion(11, 1, 0, LEVEL1_MOVE_CM, 0);
 		pulseCallback = callback;
 	};
 	
@@ -752,7 +752,7 @@
 		motoring.rightWheel = 0;
 		setPulse(0);
 		setLineTracerMode(0);
-		setMotion(2, 1, 0, LEVEL1_MOVE_CM, 0);
+		setMotion(12, 1, 0, LEVEL1_MOVE_CM, 0);
 		pulseCallback = callback;
 	};
 	
@@ -762,9 +762,9 @@
 		setPulse(0);
 		setLineTracerMode(0);
 		if(VALUES[direction] === LEFT) {
-			setMotion(3, 1, 0, LEVEL1_TURN_DEG, 0);
+			setMotion(13, 1, 0, LEVEL1_TURN_DEG, 0);
 		} else {
-			setMotion(4, 1, 0, LEVEL1_TURN_DEG, 0);
+			setMotion(14, 1, 0, LEVEL1_TURN_DEG, 0);
 		}
 		pulseCallback = callback;
 	};
