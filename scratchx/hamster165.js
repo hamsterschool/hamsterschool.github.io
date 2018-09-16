@@ -14,7 +14,8 @@
 		temperature: 0,
 		inputA: 0,
 		inputB: 0,
-		lineTracerState: 0
+		lineTracerState: 0,
+		handFound: false
 	};
 	var motoring = {
 		module: 'hamster',
@@ -1193,7 +1194,7 @@
 	};
 
 	ext.handFound = function() {
-		return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+		return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 	};
 
 	ext.setPortTo = function(port, mode) {
