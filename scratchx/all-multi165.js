@@ -2827,7 +2827,7 @@
 			motoring.rightWheel = 0;
 			setTurtlePulse(robot, 0);
 			setTurtleLineTracerMode(robot, 0);
-			setTurtleMotion(robot, 1, 1, 0, LEVEL1_MOVE_CM, 0);
+			setTurtleMotion(robot, 11, 1, 0, LEVEL1_MOVE_CM, 0);
 			robot.pulseCallback = callback;
 		} else {
 			callback();
@@ -2842,7 +2842,7 @@
 			motoring.rightWheel = 0;
 			setTurtlePulse(robot, 0);
 			setTurtleLineTracerMode(robot, 0);
-			setTurtleMotion(robot, 2, 1, 0, LEVEL1_MOVE_CM, 0);
+			setTurtleMotion(robot, 12, 1, 0, LEVEL1_MOVE_CM, 0);
 			robot.pulseCallback = callback;
 		} else {
 			callback();
@@ -2858,9 +2858,9 @@
 			setTurtlePulse(robot, 0);
 			setTurtleLineTracerMode(robot, 0);
 			if(VALUES[direction] === LEFT) {
-				setTurtleMotion(robot, 3, 1, 0, LEVEL1_TURN_DEG, 0);
+				setTurtleMotion(robot, 13, 1, 0, LEVEL1_TURN_DEG, 0);
 			} else {
-				setTurtleMotion(robot, 4, 1, 0, LEVEL1_TURN_DEG, 0);
+				setTurtleMotion(robot, 14, 1, 0, LEVEL1_TURN_DEG, 0);
 			}
 			robot.pulseCallback = callback;
 		} else {
