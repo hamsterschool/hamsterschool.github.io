@@ -894,7 +894,7 @@
 			motoring.rightWheel = 0;
 			setPulse(robot, 0);
 			setLineTracerMode(robot, 0);
-			setMotion(robot, 1, 1, 0, LEVEL1_MOVE_CM, 0);
+			setMotion(robot, 11, 1, 0, LEVEL1_MOVE_CM, 0);
 			robot.pulseCallback = callback;
 		} else {
 			callback();
@@ -909,7 +909,7 @@
 			motoring.rightWheel = 0;
 			setPulse(robot, 0);
 			setLineTracerMode(robot, 0);
-			setMotion(robot, 2, 1, 0, LEVEL1_MOVE_CM, 0);
+			setMotion(robot, 12, 1, 0, LEVEL1_MOVE_CM, 0);
 			robot.pulseCallback = callback;
 		} else {
 			callback();
@@ -925,9 +925,9 @@
 			setPulse(robot, 0);
 			setLineTracerMode(robot, 0);
 			if(VALUES[direction] === LEFT) {
-				setMotion(robot, 3, 1, 0, LEVEL1_TURN_DEG, 0);
+				setMotion(robot, 13, 1, 0, LEVEL1_TURN_DEG, 0);
 			} else {
-				setMotion(robot, 4, 1, 0, LEVEL1_TURN_DEG, 0);
+				setMotion(robot, 14, 1, 0, LEVEL1_TURN_DEG, 0);
 			}
 			robot.pulseCallback = callback;
 		} else {
