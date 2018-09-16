@@ -653,7 +653,8 @@
 				temperature: 0,
 				inputA: 0,
 				inputB: 0,
-				lineTracerState: 0
+				lineTracerState: 0,
+				handFound: false
 			};
 			robot.motoring = {
 				module: 'hamster',
@@ -1593,7 +1594,7 @@
 		var robot = getRobot(0);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
@@ -1663,7 +1664,7 @@
 		var robot = getRobot(1);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
@@ -1733,7 +1734,7 @@
 		var robot = getRobot(2);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
@@ -1803,7 +1804,7 @@
 		var robot = getRobot(3);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
@@ -1873,7 +1874,7 @@
 		var robot = getRobot(4);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
@@ -1943,7 +1944,7 @@
 		var robot = getRobot(5);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
 		} else {
 			return false;
 		}
