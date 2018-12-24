@@ -607,32 +607,21 @@
 						break;
 					}
 					case 2: {
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						motoring.leftWheel = 45 + diff * 0.25;
-						motoring.rightWheel = 45 - diff * 0.25;
-						boardState = 3;
-						var timer = setTimeout(function() {
-							boardState = 4;
-							removeTimeout(timer);
-						}, 250);
-						timeouts.push(timer);
-						break;
-					}
-					case 3: {
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						motoring.leftWheel = 45 + diff * 0.25;
-						motoring.rightWheel = 45 - diff * 0.25;
-						break;
-					}
-					case 4: {
-						motoring.leftWheel = 0;
-						motoring.rightWheel = 0;
-						boardId = 0;
-						boardCommand = 0;
-						boardState = 0;
-						var callback = boardCallback;
-						boardCallback = undefined;
-						if(callback) callback();
+						if(boardCount < 10) {
+							boardCount ++;
+							var diff = sensory.leftFloor - sensory.rightFloor;
+							motoring.leftWheel = 45 + diff * 0.25;
+							motoring.rightWheel = 45 - diff * 0.25;
+						} else {
+							motoring.leftWheel = 0;
+							motoring.rightWheel = 0;
+							boardId = 0;
+							boardCommand = 0;
+							boardState = 0;
+							var callback = boardCallback;
+							boardCallback = undefined;
+							if(callback) callback();
+						}
 						break;
 					}
 				}
