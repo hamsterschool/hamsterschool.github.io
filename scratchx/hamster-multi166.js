@@ -46,12 +46,7 @@
 			['-'],
 			['w', 'Hamster %n : beep', 'beep', 0],
 			['-'],
-			['b', 'Hamster[0]: hand found?', 'handFound0'],
-			['b', 'Hamster[1]: hand found?', 'handFound1'],
-			['b', 'Hamster[2]: hand found?', 'handFound2'],
-			['b', 'Hamster[3]: hand found?', 'handFound3'],
-			['b', 'Hamster[4]: hand found?', 'handFound4'],
-			['b', 'Hamster[5]: hand found?', 'handFound5']
+			['b', 'Hamster %n : hand found?', 'handFound', 0]
 		],
 		en2: [
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
@@ -70,12 +65,7 @@
 			[' ', 'Hamster %n : change tempo by %n', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : set tempo to %n bpm', 'setTempoTo', 0, 60],
 			['-'],
-			['b', 'Hamster[0]: hand found?', 'handFound0'],
-			['b', 'Hamster[1]: hand found?', 'handFound1'],
-			['b', 'Hamster[2]: hand found?', 'handFound2'],
-			['b', 'Hamster[3]: hand found?', 'handFound3'],
-			['b', 'Hamster[4]: hand found?', 'handFound4'],
-			['b', 'Hamster[5]: hand found?', 'handFound5']
+			['b', 'Hamster %n : hand found?', 'handFound', 0]
 		],
 		en3: [
 			['w', 'Hamster %n : move forward once on board', 'boardMoveForward', 0],
@@ -105,90 +95,25 @@
 			[' ', 'Hamster %n : change tempo by %n', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : set tempo to %n bpm', 'setTempoTo', 0, 60],
 			['-'],
-			['r', 'Hamster[0]: left proximity', 'leftProximity0'],
-			['r', 'Hamster[0]: right proximity', 'rightProximity0'],
-			['r', 'Hamster[0]: left floor', 'leftFloor0'],
-			['r', 'Hamster[0]: right floor', 'rightFloor0'],
-			['r', 'Hamster[0]: x acceleration', 'accelerationX0'],
-			['r', 'Hamster[0]: y acceleration', 'accelerationY0'],
-			['r', 'Hamster[0]: z acceleration', 'accelerationZ0'],
-			['r', 'Hamster[0]: light', 'light0'],
-			['r', 'Hamster[0]: temperature', 'temperature0'],
-			['r', 'Hamster[0]: signal strength', 'signalStrength0'],
-			['b', 'Hamster[0]: hand found?', 'handFound0'],
-			['r', 'Hamster[1]: left proximity', 'leftProximity1'],
-			['r', 'Hamster[1]: right proximity', 'rightProximity1'],
-			['r', 'Hamster[1]: left floor', 'leftFloor1'],
-			['r', 'Hamster[1]: right floor', 'rightFloor1'],
-			['r', 'Hamster[1]: x acceleration', 'accelerationX1'],
-			['r', 'Hamster[1]: y acceleration', 'accelerationY1'],
-			['r', 'Hamster[1]: z acceleration', 'accelerationZ1'],
-			['r', 'Hamster[1]: light', 'light1'],
-			['r', 'Hamster[1]: temperature', 'temperature1'],
-			['r', 'Hamster[1]: signal strength', 'signalStrength1'],
-			['b', 'Hamster[1]: hand found?', 'handFound1'],
-			['r', 'Hamster[2]: left proximity', 'leftProximity2'],
-			['r', 'Hamster[2]: right proximity', 'rightProximity2'],
-			['r', 'Hamster[2]: left floor', 'leftFloor2'],
-			['r', 'Hamster[2]: right floor', 'rightFloor2'],
-			['r', 'Hamster[2]: x acceleration', 'accelerationX2'],
-			['r', 'Hamster[2]: y acceleration', 'accelerationY2'],
-			['r', 'Hamster[2]: z acceleration', 'accelerationZ2'],
-			['r', 'Hamster[2]: light', 'light2'],
-			['r', 'Hamster[2]: temperature', 'temperature2'],
-			['r', 'Hamster[2]: signal strength', 'signalStrength2'],
-			['b', 'Hamster[2]: hand found?', 'handFound2'],
-			['r', 'Hamster[3]: left proximity', 'leftProximity3'],
-			['r', 'Hamster[3]: right proximity', 'rightProximity3'],
-			['r', 'Hamster[3]: left floor', 'leftFloor3'],
-			['r', 'Hamster[3]: right floor', 'rightFloor3'],
-			['r', 'Hamster[3]: x acceleration', 'accelerationX3'],
-			['r', 'Hamster[3]: y acceleration', 'accelerationY3'],
-			['r', 'Hamster[3]: z acceleration', 'accelerationZ3'],
-			['r', 'Hamster[3]: light', 'light3'],
-			['r', 'Hamster[3]: temperature', 'temperature3'],
-			['r', 'Hamster[3]: signal strength', 'signalStrength3'],
-			['b', 'Hamster[3]: hand found?', 'handFound3'],
-			['r', 'Hamster[4]: left proximity', 'leftProximity4'],
-			['r', 'Hamster[4]: right proximity', 'rightProximity4'],
-			['r', 'Hamster[4]: left floor', 'leftFloor4'],
-			['r', 'Hamster[4]: right floor', 'rightFloor4'],
-			['r', 'Hamster[4]: x acceleration', 'accelerationX4'],
-			['r', 'Hamster[4]: y acceleration', 'accelerationY4'],
-			['r', 'Hamster[4]: z acceleration', 'accelerationZ4'],
-			['r', 'Hamster[4]: light', 'light4'],
-			['r', 'Hamster[4]: temperature', 'temperature4'],
-			['r', 'Hamster[4]: signal strength', 'signalStrength4'],
-			['b', 'Hamster[4]: hand found?', 'handFound4'],
-			['r', 'Hamster[5]: left proximity', 'leftProximity5'],
-			['r', 'Hamster[5]: right proximity', 'rightProximity5'],
-			['r', 'Hamster[5]: left floor', 'leftFloor5'],
-			['r', 'Hamster[5]: right floor', 'rightFloor5'],
-			['r', 'Hamster[5]: x acceleration', 'accelerationX5'],
-			['r', 'Hamster[5]: y acceleration', 'accelerationY5'],
-			['r', 'Hamster[5]: z acceleration', 'accelerationZ5'],
-			['r', 'Hamster[5]: light', 'light5'],
-			['r', 'Hamster[5]: temperature', 'temperature5'],
-			['r', 'Hamster[5]: signal strength', 'signalStrength5'],
-			['b', 'Hamster[5]: hand found?', 'handFound5'],
+			['r', 'Hamster %n : left proximity', 'leftProximity', 0],
+			['r', 'Hamster %n : right proximity', 'rightProximity', 0],
+			['r', 'Hamster %n : left floor', 'leftFloor', 0],
+			['r', 'Hamster %n : right floor', 'rightFloor', 0],
+			['r', 'Hamster %n : x acceleration', 'accelerationX', 0],
+			['r', 'Hamster %n : y acceleration', 'accelerationY', 0],
+			['r', 'Hamster %n : z acceleration', 'accelerationZ', 0],
+			['r', 'Hamster %n : light', 'light', 0],
+			['r', 'Hamster %n : temperature', 'temperature', 0],
+			['r', 'Hamster %n : signal strength', 'signalStrength', 0],
+			['b', 'Hamster %n : hand found?', 'handFound', 0],
 			['-'],
 			[' ', 'Hamster %n : set port %m.port to %m.mode', 'setPortTo', 0, 'A', 'analog input'],
 			[' ', 'Hamster %n : change output %m.port by %n', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : set output %m.port to %n', 'setOutputTo', 0, 'A', 100],
 			['w', 'Hamster %n : %m.open_close gripper', 'gripper', 0, 'open'],
 			[' ', 'Hamster %n : release gripper', 'releaseGripper', 0],
-			['r', 'Hamster[0]: input A', 'inputA0'],
-			['r', 'Hamster[0]: input B', 'inputB0'],
-			['r', 'Hamster[1]: input A', 'inputA1'],
-			['r', 'Hamster[1]: input B', 'inputB1'],
-			['r', 'Hamster[2]: input A', 'inputA2'],
-			['r', 'Hamster[2]: input B', 'inputB2'],
-			['r', 'Hamster[3]: input A', 'inputA3'],
-			['r', 'Hamster[3]: input B', 'inputB3'],
-			['r', 'Hamster[4]: input A', 'inputA4'],
-			['r', 'Hamster[4]: input B', 'inputB4'],
-			['r', 'Hamster[5]: input A', 'inputA5'],
-			['r', 'Hamster[5]: input B', 'inputB5']
+			['r', 'Hamster %n : input A', 'inputA', 0],
+			['r', 'Hamster %n : input B', 'inputB', 0]
 		],
 		ko1: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
@@ -203,12 +128,7 @@
 			['-'],
 			['w', '햄스터 %n : 삐 소리내기', 'beep', 0],
 			['-'],
-			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
-			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
-			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
-			['b', '햄스터[3]: 손 찾음?', 'handFound3'],
-			['b', '햄스터[4]: 손 찾음?', 'handFound4'],
-			['b', '햄스터[5]: 손 찾음?', 'handFound5']
+			['b', '햄스터 %n : 손 찾음?', 'handFound', 0]
 		],
 		ko2: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
@@ -227,12 +147,7 @@
 			[' ', '햄스터 %n : 연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 0, 20],
 			[' ', '햄스터 %n : 연주 속도를 %n BPM으로 정하기', 'setTempoTo', 0, 60],
 			['-'],
-			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
-			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
-			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
-			['b', '햄스터[3]: 손 찾음?', 'handFound3'],
-			['b', '햄스터[4]: 손 찾음?', 'handFound4'],
-			['b', '햄스터[5]: 손 찾음?', 'handFound5']
+			['b', '햄스터 %n : 손 찾음?', 'handFound', 0]
 		],
 		ko3: [
 			['w', '햄스터 %n : 말판 앞으로 한 칸 이동하기', 'boardMoveForward', 0],
@@ -262,90 +177,25 @@
 			[' ', '햄스터 %n : 연주 속도를 %n 만큼 바꾸기', 'changeTempoBy', 0, 20],
 			[' ', '햄스터 %n : 연주 속도를 %n BPM으로 정하기', 'setTempoTo', 0, 60],
 			['-'],
-			['r', '햄스터[0]: 왼쪽 근접 센서', 'leftProximity0'],
-			['r', '햄스터[0]: 오른쪽 근접 센서', 'rightProximity0'],
-			['r', '햄스터[0]: 왼쪽 바닥 센서', 'leftFloor0'],
-			['r', '햄스터[0]: 오른쪽 바닥 센서', 'rightFloor0'],
-			['r', '햄스터[0]: x축 가속도', 'accelerationX0'],
-			['r', '햄스터[0]: y축 가속도', 'accelerationY0'],
-			['r', '햄스터[0]: z축 가속도', 'accelerationZ0'],
-			['r', '햄스터[0]: 밝기', 'light0'],
-			['r', '햄스터[0]: 온도', 'temperature0'],
-			['r', '햄스터[0]: 신호 세기', 'signalStrength0'],
-			['b', '햄스터[0]: 손 찾음?', 'handFound0'],
-			['r', '햄스터[1]: 왼쪽 근접 센서', 'leftProximity1'],
-			['r', '햄스터[1]: 오른쪽 근접 센서', 'rightProximity1'],
-			['r', '햄스터[1]: 왼쪽 바닥 센서', 'leftFloor1'],
-			['r', '햄스터[1]: 오른쪽 바닥 센서', 'rightFloor1'],
-			['r', '햄스터[1]: x축 가속도', 'accelerationX1'],
-			['r', '햄스터[1]: y축 가속도', 'accelerationY1'],
-			['r', '햄스터[1]: z축 가속도', 'accelerationZ1'],
-			['r', '햄스터[1]: 밝기', 'light1'],
-			['r', '햄스터[1]: 온도', 'temperature1'],
-			['r', '햄스터[1]: 신호 세기', 'signalStrength1'],
-			['b', '햄스터[1]: 손 찾음?', 'handFound1'],
-			['r', '햄스터[2]: 왼쪽 근접 센서', 'leftProximity2'],
-			['r', '햄스터[2]: 오른쪽 근접 센서', 'rightProximity2'],
-			['r', '햄스터[2]: 왼쪽 바닥 센서', 'leftFloor2'],
-			['r', '햄스터[2]: 오른쪽 바닥 센서', 'rightFloor2'],
-			['r', '햄스터[2]: x축 가속도', 'accelerationX2'],
-			['r', '햄스터[2]: y축 가속도', 'accelerationY2'],
-			['r', '햄스터[2]: z축 가속도', 'accelerationZ2'],
-			['r', '햄스터[2]: 밝기', 'light2'],
-			['r', '햄스터[2]: 온도', 'temperature2'],
-			['r', '햄스터[2]: 신호 세기', 'signalStrength2'],
-			['b', '햄스터[2]: 손 찾음?', 'handFound2'],
-			['r', '햄스터[3]: 왼쪽 근접 센서', 'leftProximity3'],
-			['r', '햄스터[3]: 오른쪽 근접 센서', 'rightProximity3'],
-			['r', '햄스터[3]: 왼쪽 바닥 센서', 'leftFloor3'],
-			['r', '햄스터[3]: 오른쪽 바닥 센서', 'rightFloor3'],
-			['r', '햄스터[3]: x축 가속도', 'accelerationX3'],
-			['r', '햄스터[3]: y축 가속도', 'accelerationY3'],
-			['r', '햄스터[3]: z축 가속도', 'accelerationZ3'],
-			['r', '햄스터[3]: 밝기', 'light3'],
-			['r', '햄스터[3]: 온도', 'temperature3'],
-			['r', '햄스터[3]: 신호 세기', 'signalStrength3'],
-			['b', '햄스터[3]: 손 찾음?', 'handFound3'],
-			['r', '햄스터[4]: 왼쪽 근접 센서', 'leftProximity4'],
-			['r', '햄스터[4]: 오른쪽 근접 센서', 'rightProximity4'],
-			['r', '햄스터[4]: 왼쪽 바닥 센서', 'leftFloor4'],
-			['r', '햄스터[4]: 오른쪽 바닥 센서', 'rightFloor4'],
-			['r', '햄스터[4]: x축 가속도', 'accelerationX4'],
-			['r', '햄스터[4]: y축 가속도', 'accelerationY4'],
-			['r', '햄스터[4]: z축 가속도', 'accelerationZ4'],
-			['r', '햄스터[4]: 밝기', 'light4'],
-			['r', '햄스터[4]: 온도', 'temperature4'],
-			['r', '햄스터[4]: 신호 세기', 'signalStrength4'],
-			['b', '햄스터[4]: 손 찾음?', 'handFound4'],
-			['r', '햄스터[5]: 왼쪽 근접 센서', 'leftProximity5'],
-			['r', '햄스터[5]: 오른쪽 근접 센서', 'rightProximity5'],
-			['r', '햄스터[5]: 왼쪽 바닥 센서', 'leftFloor5'],
-			['r', '햄스터[5]: 오른쪽 바닥 센서', 'rightFloor5'],
-			['r', '햄스터[5]: x축 가속도', 'accelerationX5'],
-			['r', '햄스터[5]: y축 가속도', 'accelerationY5'],
-			['r', '햄스터[5]: z축 가속도', 'accelerationZ5'],
-			['r', '햄스터[5]: 밝기', 'light5'],
-			['r', '햄스터[5]: 온도', 'temperature5'],
-			['r', '햄스터[5]: 신호 세기', 'signalStrength5'],
-			['b', '햄스터[5]: 손 찾음?', 'handFound5'],
+			['r', '햄스터 %n : 왼쪽 근접 센서', 'leftProximity', 0],
+			['r', '햄스터 %n : 오른쪽 근접 센서', 'rightProximity', 0],
+			['r', '햄스터 %n : 왼쪽 바닥 센서', 'leftFloor', 0],
+			['r', '햄스터 %n : 오른쪽 바닥 센서', 'rightFloor', 0],
+			['r', '햄스터 %n : x축 가속도', 'accelerationX', 0],
+			['r', '햄스터 %n : y축 가속도', 'accelerationY', 0],
+			['r', '햄스터 %n : z축 가속도', 'accelerationZ', 0],
+			['r', '햄스터 %n : 밝기', 'light', 0],
+			['r', '햄스터 %n : 온도', 'temperature', 0],
+			['r', '햄스터 %n : 신호 세기', 'signalStrength', 0],
+			['b', '햄스터 %n : 손 찾음?', 'handFound', 0],
 			['-'],
 			[' ', '햄스터 %n : 포트 %m.port 를 %m.mode 으로 정하기', 'setPortTo', 0, 'A', '아날로그 입력'],
 			[' ', '햄스터 %n : 출력 %m.port 를 %n 만큼 바꾸기', 'changeOutputBy', 0, 'A', 10],
 			[' ', '햄스터 %n : 출력 %m.port 를 %n (으)로 정하기', 'setOutputTo', 0, 'A', 100],
 			['w', '햄스터 %n : 집게 %m.open_close', 'gripper', 0, '열기'],
 			[' ', '햄스터 %n : 집게 끄기', 'releaseGripper', 0],
-			['r', '햄스터[0]: 입력 A', 'inputA0'],
-			['r', '햄스터[0]: 입력 B', 'inputB0'],
-			['r', '햄스터[1]: 입력 A', 'inputA1'],
-			['r', '햄스터[1]: 입력 B', 'inputB1'],
-			['r', '햄스터[2]: 입력 A', 'inputA2'],
-			['r', '햄스터[2]: 입력 B', 'inputB2'],
-			['r', '햄스터[3]: 입력 A', 'inputA3'],
-			['r', '햄스터[3]: 입력 B', 'inputB3'],
-			['r', '햄스터[4]: 입력 A', 'inputA4'],
-			['r', '햄스터[4]: 입력 B', 'inputB4'],
-			['r', '햄스터[5]: 입력 A', 'inputA5'],
-			['r', '햄스터[5]: 입력 B', 'inputB5']
+			['r', '햄스터 %n : 입력 A', 'inputA', 0],
+			['r', '햄스터 %n : 입력 B', 'inputB', 0]
 		],
 		uz1: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
@@ -360,12 +210,7 @@
 			['-'],
 			['w', 'Hamster %n : ovoz chiqarish', 'beep', 0],
 			['-'],
-			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
-			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
-			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
-			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
-			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
-			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5']
+			['b', 'Hamster %n : qo\'l topildimi?', 'handFound', 0]
 		],
 		uz2: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
@@ -384,12 +229,7 @@
 			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
 			['-'],
-			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
-			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
-			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
-			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
-			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
-			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5']
+			['b', 'Hamster %n : qo\'l topildimi?', 'handFound', 0]
 		],
 		uz3: [
 			['w', 'Hamster %n : doskada bir marta oldinga yurish', 'boardMoveForward', 0],
@@ -419,90 +259,25 @@
 			[' ', 'Hamster %n : temni %n ga o\'zgartirish', 'changeTempoBy', 0, 20],
 			[' ', 'Hamster %n : temni %n bpm ga sozlash', 'setTempoTo', 0, 60],
 			['-'],
-			['r', 'Hamster[0]: chap yaqinlik', 'leftProximity0'],
-			['r', 'Hamster[0]: o\'ng yaqinlik', 'rightProximity0'],
-			['r', 'Hamster[0]: chap taglik', 'leftFloor0'],
-			['r', 'Hamster[0]: o\'ng taglik', 'rightFloor0'],
-			['r', 'Hamster[0]: x tezlanish', 'accelerationX0'],
-			['r', 'Hamster[0]: y tezlanish', 'accelerationY0'],
-			['r', 'Hamster[0]: z tezlanish', 'accelerationZ0'],
-			['r', 'Hamster[0]: yorug\'lik', 'light0'],
-			['r', 'Hamster[0]: harorat', 'temperature0'],
-			['r', 'Hamster[0]: signal kuchi', 'signalStrength0'],
-			['b', 'Hamster[0]: qo\'l topildimi?', 'handFound0'],
-			['r', 'Hamster[1]: chap yaqinlik', 'leftProximity1'],
-			['r', 'Hamster[1]: o\'ng yaqinlik', 'rightProximity1'],
-			['r', 'Hamster[1]: chap taglik', 'leftFloor1'],
-			['r', 'Hamster[1]: o\'ng taglik', 'rightFloor1'],
-			['r', 'Hamster[1]: x tezlanish', 'accelerationX1'],
-			['r', 'Hamster[1]: y tezlanish', 'accelerationY1'],
-			['r', 'Hamster[1]: z tezlanish', 'accelerationZ1'],
-			['r', 'Hamster[1]: yorug\'lik', 'light1'],
-			['r', 'Hamster[1]: harorat', 'temperature1'],
-			['r', 'Hamster[1]: signal kuchi', 'signalStrength1'],
-			['b', 'Hamster[1]: qo\'l topildimi?', 'handFound1'],
-			['r', 'Hamster[2]: chap yaqinlik', 'leftProximity2'],
-			['r', 'Hamster[2]: o\'ng yaqinlik', 'rightProximity2'],
-			['r', 'Hamster[2]: chap taglik', 'leftFloor2'],
-			['r', 'Hamster[2]: o\'ng taglik', 'rightFloor2'],
-			['r', 'Hamster[2]: x tezlanish', 'accelerationX2'],
-			['r', 'Hamster[2]: y tezlanish', 'accelerationY2'],
-			['r', 'Hamster[2]: z tezlanish', 'accelerationZ2'],
-			['r', 'Hamster[2]: yorug\'lik', 'light2'],
-			['r', 'Hamster[2]: harorat', 'temperature2'],
-			['r', 'Hamster[2]: signal kuchi', 'signalStrength2'],
-			['b', 'Hamster[2]: qo\'l topildimi?', 'handFound2'],
-			['r', 'Hamster[3]: chap yaqinlik', 'leftProximity3'],
-			['r', 'Hamster[3]: o\'ng yaqinlik', 'rightProximity3'],
-			['r', 'Hamster[3]: chap taglik', 'leftFloor3'],
-			['r', 'Hamster[3]: o\'ng taglik', 'rightFloor3'],
-			['r', 'Hamster[3]: x tezlanish', 'accelerationX3'],
-			['r', 'Hamster[3]: y tezlanish', 'accelerationY3'],
-			['r', 'Hamster[3]: z tezlanish', 'accelerationZ3'],
-			['r', 'Hamster[3]: yorug\'lik', 'light3'],
-			['r', 'Hamster[3]: harorat', 'temperature3'],
-			['r', 'Hamster[3]: signal kuchi', 'signalStrength3'],
-			['b', 'Hamster[3]: qo\'l topildimi?', 'handFound3'],
-			['r', 'Hamster[4]: chap yaqinlik', 'leftProximity4'],
-			['r', 'Hamster[4]: o\'ng yaqinlik', 'rightProximity4'],
-			['r', 'Hamster[4]: chap taglik', 'leftFloor4'],
-			['r', 'Hamster[4]: o\'ng taglik', 'rightFloor4'],
-			['r', 'Hamster[4]: x tezlanish', 'accelerationX4'],
-			['r', 'Hamster[4]: y tezlanish', 'accelerationY4'],
-			['r', 'Hamster[4]: z tezlanish', 'accelerationZ4'],
-			['r', 'Hamster[4]: yorug\'lik', 'light4'],
-			['r', 'Hamster[4]: harorat', 'temperature4'],
-			['r', 'Hamster[4]: signal kuchi', 'signalStrength4'],
-			['b', 'Hamster[4]: qo\'l topildimi?', 'handFound4'],
-			['r', 'Hamster[5]: chap yaqinlik', 'leftProximity5'],
-			['r', 'Hamster[5]: o\'ng yaqinlik', 'rightProximity5'],
-			['r', 'Hamster[5]: chap taglik', 'leftFloor5'],
-			['r', 'Hamster[5]: o\'ng taglik', 'rightFloor5'],
-			['r', 'Hamster[5]: x tezlanish', 'accelerationX5'],
-			['r', 'Hamster[5]: y tezlanish', 'accelerationY5'],
-			['r', 'Hamster[5]: z tezlanish', 'accelerationZ5'],
-			['r', 'Hamster[5]: yorug\'lik', 'light5'],
-			['r', 'Hamster[5]: harorat', 'temperature5'],
-			['r', 'Hamster[5]: signal kuchi', 'signalStrength5'],
-			['b', 'Hamster[5]: qo\'l topildimi?', 'handFound5'],
+			['r', 'Hamster %n : chap yaqinlik', 'leftProximity', 0],
+			['r', 'Hamster %n : o\'ng yaqinlik', 'rightProximity', 0],
+			['r', 'Hamster %n : chap taglik', 'leftFloor', 0],
+			['r', 'Hamster %n : o\'ng taglik', 'rightFloor', 0],
+			['r', 'Hamster %n : x tezlanish', 'accelerationX', 0],
+			['r', 'Hamster %n : y tezlanish', 'accelerationY', 0],
+			['r', 'Hamster %n : z tezlanish', 'accelerationZ', 0],
+			['r', 'Hamster %n : yorug\'lik', 'light', 0],
+			['r', 'Hamster %n : harorat', 'temperature', 0],
+			['r', 'Hamster %n : signal kuchi', 'signalStrength', 0],
+			['b', 'Hamster %n : qo\'l topildimi?', 'handFound', 0],
 			['-'],
 			[' ', 'Hamster %n : %m.port portni %m.mode ga sozlash', 'setPortTo', 0, 'A', 'analog kiritish'],
 			[' ', 'Hamster %n : %m.port portni %n ga o\'zgartirish', 'changeOutputBy', 0, 'A', 10],
 			[' ', 'Hamster %n : %m.port portni %n ga sozlash', 'setOutputTo', 0, 'A', 100],
 			['w', 'Hamster %n : gripperni %m.open_close', 'gripper', 0, 'oching'],
 			[' ', 'Hamster %n : gripperni ozod qilish', 'releaseGripper', 0],
-			['r', 'Hamster[0]: A kirish', 'inputA0'],
-			['r', 'Hamster[0]: B kirish', 'inputB0'],
-			['r', 'Hamster[1]: A kirish', 'inputA1'],
-			['r', 'Hamster[1]: B kirish', 'inputB1'],
-			['r', 'Hamster[2]: A kirish', 'inputA2'],
-			['r', 'Hamster[2]: B kirish', 'inputB2'],
-			['r', 'Hamster[3]: A kirish', 'inputA3'],
-			['r', 'Hamster[3]: B kirish', 'inputB3'],
-			['r', 'Hamster[4]: A kirish', 'inputA4'],
-			['r', 'Hamster[4]: B kirish', 'inputB4'],
-			['r', 'Hamster[5]: A kirish', 'inputA5'],
-			['r', 'Hamster[5]: B kirish', 'inputB5']
+			['r', 'Hamster %n : A kirish', 'inputA', 0],
+			['r', 'Hamster %n : B kirish', 'inputB', 0]
 		]
 	};
 	const MENUS = {
@@ -527,7 +302,7 @@
 			'left_right_front_rear': ['왼쪽', '오른쪽', '앞쪽', '뒤쪽'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
 			'color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '하얀색'],
-			'note': ['도', '도#', '레', '미b', '미', '파', '파#', '솔', '솔#', '라', '시b', '시'],
+			'note': ['도', '도# (레b)', '레', '레# (미b)', '미', '파', '파# (솔b)', '솔', '솔# (라b)', '라', '라# (시b)', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A와 B'],
@@ -541,7 +316,7 @@
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
 			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'oq'],
-			'note': ['do', 'do#', 're', 'mib', 'mi', 'fa', 'fa#', 'sol', 'sol#', 'lya', 'sib', 'si'],
+			'note': ['do', 'do# (reb)', 're', 're# (mib)', 'mi', 'fa', 'fa# (solb)', 'sol', 'sol# (lyab)', 'lya', 'lya# (sib)', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A va B'],
@@ -674,11 +449,18 @@
 				ioModeB: 0,
 				motion: 0
 			};
+			robot.wheelId = 0;
+			robot.wheelTimer = undefined;
+			robot.lineTracerId = 0;
 			robot.lineTracerCallback = undefined;
+			robot.boardId = 0;
 			robot.boardCommand = 0;
 			robot.boardState = 0;
 			robot.boardCount = 0;
 			robot.boardCallback = undefined;
+			robot.noteId = 0;
+			robot.noteTimer1 = undefined;
+			robot.noteTimer2 = undefined;
 			robot.tempo = 60;
 			robot.reset = function() {
 				var motoring = robot.motoring;
@@ -697,11 +479,18 @@
 				motoring.ioModeB = 0;
 				motoring.motion = 0;
 				
+				robot.wheelId = 0;
+				robot.wheelTimer = undefined;
+				robot.lineTracerId = 0;
 				robot.lineTracerCallback = undefined;
+				robot.boardId = 0;
 				robot.boardCommand = 0;
 				robot.boardState = 0;
 				robot.boardCount = 0;
 				robot.boardCallback = undefined;
+				robot.noteId = 0;
+				robot.noteTimer1 = undefined;
+				robot.noteTimer2 = undefined;
 				robot.tempo = 60;
 			};
 			robot.clearMotoring = function() {
@@ -719,6 +508,47 @@
 		}
 	}
 	
+	function issueBoardId(robot) {
+		return (robot.boardId % 65535) + 1;
+	}
+	
+	function cancelBoard(robot) {
+		robot.boardId = 0;
+		robot.boardCommand = 0;
+		robot.boardState = 0;
+	}
+	
+	function issueWheelId(robot) {
+		return (robot.wheelId % 65535) + 1;
+	}
+	
+	function cancelWheel(robot) {
+		robot.wheelId = 0;
+		if(robot.wheelTimer !== undefined) {
+			removeTimeout(robot.wheelTimer);
+		}
+		robot.wheelTimer = undefined;
+	}
+	
+	function setLineTracerMode(robot, mode) {
+		robot.motoring.lineTracerMode = mode;
+		robot.motoring.map |= 0x00200000;
+	}
+	
+	function setLineTracerSpeed(robot, speed) {
+		robot.motoring.lineTracerSpeed = speed;
+		robot.motoring.map |= 0x00100000;
+	}
+	
+	function issueLineTracerId(robot) {
+		return (robot.lineTracerId % 65535) + 1;
+	}
+	
+	function cancelLineTracer(robot) {
+		robot.lineTracerId = 0;
+		setLineTracerMode(robot, 0);
+	}
+	
 	function setLeftLed(robot, color) {
 		robot.motoring.leftLed = color;
 		robot.motoring.map |= 0x01000000;
@@ -733,17 +563,23 @@
 		robot.motoring.note = note;
 		robot.motoring.map |= 0x00400000;
 	}
+	
+	function issueNoteId(robot) {
+		return (robot.noteId % 65535) + 1;
+	}
+	
+	function cancelNote(robot) {
+		robot.noteId = 0;
+		if(robot.noteTimer1 !== undefined) {
+			removeTimeout(robot, robot.noteTimer1);
+		}
+		if(robot.noteTimer2 !== undefined) {
+			removeTimeout(robot, robot.noteTimer2);
+		}
+		robot.noteTimer1 = undefined;
+		robot.noteTimer2 = undefined;
+	}
 
-	function setLineTracerMode(robot, mode) {
-		robot.motoring.lineTracerMode = mode;
-		robot.motoring.map |= 0x00200000;
-	}
-	
-	function setLineTracerSpeed(robot, speed) {
-		robot.motoring.lineTracerSpeed = speed;
-		robot.motoring.map |= 0x00100000;
-	}
-	
 	function setIoModeA(robot, mode) {
 		robot.motoring.ioModeA = mode;
 		robot.motoring.map |= 0x00080000;
@@ -763,9 +599,9 @@
 	
 	function handleLineTracer(robot) {
 		var sensory = robot.sensory;
-		if(sensory.map & 0x00000010) {
+		if(robot.lineTracerId > 0 && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
-				setLineTracerMode(robot, 0);
+				cancelLineTracer(robot);
 				var callback = robot.lineTracerCallback;
 				robot.lineTracerCallback = undefined;
 				if(callback) callback();
@@ -774,154 +610,159 @@
 	}
 	
 	function handleBoard(robot) {
-		var sensory = robot.sensory;
-		var motoring = robot.motoring;
-		if(robot.boardCommand == 1) {
-			switch(robot.boardState) {
-				case 1: {
-					if(robot.boardCount < 2) {
-						if(sensory.leftFloor < 50 && sensory.rightFloor < 50)
-							robot.boardCount ++;
-						else
+		if(robot.boardId > 0) {
+			var sensory = robot.sensory;
+			var motoring = robot.motoring;
+			if(robot.boardCommand == 1) {
+				switch(robot.boardState) {
+					case 1: {
+						if(robot.boardCount < 2) {
+							if(sensory.leftFloor < 50 && sensory.rightFloor < 50)
+								robot.boardCount ++;
+							else
+								robot.boardCount = 0;
+							var diff = sensory.leftFloor - sensory.rightFloor;
+							motoring.leftWheel = 45 + diff * 0.25;
+							motoring.rightWheel = 45 - diff * 0.25;
+						} else {
 							robot.boardCount = 0;
+							robot.boardState = 2;
+						}
+						break;
+					}
+					case 2: {
 						var diff = sensory.leftFloor - sensory.rightFloor;
 						motoring.leftWheel = 45 + diff * 0.25;
 						motoring.rightWheel = 45 - diff * 0.25;
-					} else {
-						robot.boardCount = 0;
-						robot.boardState = 2;
-					}
-					break;
-				}
-				case 2: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					motoring.leftWheel = 45 + diff * 0.25;
-					motoring.rightWheel = 45 - diff * 0.25;
-					robot.boardState = 3;
-					var timer = setTimeout(function() {
-						robot.boardState = 4;
-						removeTimeout(timer);
-					}, 250);
-					timeouts.push(timer);
-					break;
-				}
-				case 3: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					motoring.leftWheel = 45 + diff * 0.25;
-					motoring.rightWheel = 45 - diff * 0.25;
-					break;
-				}
-				case 4: {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					robot.boardCommand = 0;
-					robot.boardState = 0;
-					var callback = robot.boardCallback;
-					robot.boardCallback = undefined;
-					if(callback) callback();
-					break;
-				}
-			}
-		} else if(robot.boardCommand == 2) {
-			switch(robot.boardState) {
-				case 1: {
-					if(robot.boardCount < 2) {
-						if(sensory.leftFloor > 50)
-							robot.boardCount ++;
-					} else {
-						robot.boardCount = 0;
-						robot.boardState = 2;
-					}
-					break;
-				}
-				case 2: {
-					if(sensory.leftFloor < 20) {
 						robot.boardState = 3;
+						var timer = setTimeout(function() {
+							robot.boardState = 4;
+							removeTimeout(timer);
+						}, 250);
+						timeouts.push(timer);
+						break;
 					}
-					break;
-				}
-				case 3: {
-					if(robot.boardCount < 2) {
-						if(sensory.leftFloor < 20)
-							robot.boardCount ++;
-					} else {
-						robot.boardCount = 0;
-						robot.boardState = 4;
+					case 3: {
+						var diff = sensory.leftFloor - sensory.rightFloor;
+						motoring.leftWheel = 45 + diff * 0.25;
+						motoring.rightWheel = 45 - diff * 0.25;
+						break;
 					}
-					break;
-				}
-				case 4: {
-					if(sensory.leftFloor > 50) {
-						robot.boardState = 5;
-					}
-					break;
-				}
-				case 5: {
-					var diff = sensory.leftFloor - sensory.rightFloor;
-					if(diff > -15) {
+					case 4: {
 						motoring.leftWheel = 0;
 						motoring.rightWheel = 0;
+						robot.boardId = 0;
 						robot.boardCommand = 0;
 						robot.boardState = 0;
 						var callback = robot.boardCallback;
 						robot.boardCallback = undefined;
 						if(callback) callback();
-					} else {
-						motoring.leftWheel = diff * 0.5;
-						motoring.rightWheel = -diff * 0.5;
+						break;
 					}
-					break;
 				}
-			}
-		} else if(robot.boardCommand == 3) {
-			switch(robot.boardState) {
-				case 1: {
-					if(robot.boardCount < 2) {
-						if(sensory.rightFloor > 50)
-							robot.boardCount ++;
-					} else {
-						robot.boardCount = 0;
-						robot.boardState = 2;
+			} else if(robot.boardCommand == 2) {
+				switch(robot.boardState) {
+					case 1: {
+						if(robot.boardCount < 2) {
+							if(sensory.leftFloor > 50)
+								robot.boardCount ++;
+						} else {
+							robot.boardCount = 0;
+							robot.boardState = 2;
+						}
+						break;
 					}
-					break;
+					case 2: {
+						if(sensory.leftFloor < 20) {
+							robot.boardState = 3;
+						}
+						break;
+					}
+					case 3: {
+						if(robot.boardCount < 2) {
+							if(sensory.leftFloor < 20)
+								robot.boardCount ++;
+						} else {
+							robot.boardCount = 0;
+							robot.boardState = 4;
+						}
+						break;
+					}
+					case 4: {
+						if(sensory.leftFloor > 50) {
+							robot.boardState = 5;
+						}
+						break;
+					}
+					case 5: {
+						var diff = sensory.leftFloor - sensory.rightFloor;
+						if(diff > -15) {
+							motoring.leftWheel = 0;
+							motoring.rightWheel = 0;
+							robot.boardId = 0;
+							robot.boardCommand = 0;
+							robot.boardState = 0;
+							var callback = robot.boardCallback;
+							robot.boardCallback = undefined;
+							if(callback) callback();
+						} else {
+							motoring.leftWheel = diff * 0.5;
+							motoring.rightWheel = -diff * 0.5;
+						}
+						break;
+					}
 				}
-				case 2: {
-					if(sensory.rightFloor < 20) {
-						robot.boardState = 3;
+			} else if(robot.boardCommand == 3) {
+				switch(robot.boardState) {
+					case 1: {
+						if(robot.boardCount < 2) {
+							if(sensory.rightFloor > 50)
+								robot.boardCount ++;
+						} else {
+							robot.boardCount = 0;
+							robot.boardState = 2;
+						}
+						break;
 					}
-					break;
-				}
-				case 3: {
-					if(robot.boardCount < 2) {
-						if(sensory.rightFloor < 20)
-							robot.boardCount ++;
-					} else {
-						robot.boardCount = 0;
-						robot.boardState = 4;
+					case 2: {
+						if(sensory.rightFloor < 20) {
+							robot.boardState = 3;
+						}
+						break;
 					}
-					break;
-				}
-				case 4: {
-					if(sensory.rightFloor > 50) {
-						robot.boardState = 5;
+					case 3: {
+						if(robot.boardCount < 2) {
+							if(sensory.rightFloor < 20)
+								robot.boardCount ++;
+						} else {
+							robot.boardCount = 0;
+							robot.boardState = 4;
+						}
+						break;
 					}
-					break;
-				}
-				case 5: {
-					var diff = sensory.rightFloor - sensory.leftFloor;
-					if(diff > -15) {
-						motoring.leftWheel = 0;
-						motoring.rightWheel = 0;
-						robot.boardCommand = 0;
-						robot.boardState = 0;
-						var callback = robot.boardCallback;
-						robot.boardCallback = undefined;
-						if(callback) callback();
-					} else {
-						motoring.leftWheel = -diff * 0.5;
-						motoring.rightWheel = diff * 0.5;
+					case 4: {
+						if(sensory.rightFloor > 50) {
+							robot.boardState = 5;
+						}
+						break;
 					}
-					break;
+					case 5: {
+						var diff = sensory.rightFloor - sensory.leftFloor;
+						if(diff > -15) {
+							motoring.leftWheel = 0;
+							motoring.rightWheel = 0;
+							robot.boardId = 0;
+							robot.boardCommand = 0;
+							robot.boardState = 0;
+							var callback = robot.boardCallback;
+							robot.boardCallback = undefined;
+							if(callback) callback();
+						} else {
+							motoring.leftWheel = -diff * 0.5;
+							motoring.rightWheel = diff * 0.5;
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -1014,10 +855,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			motoring.motion = MOTION.NONE;
-			setLineTracerMode(robot, 0);
 			motoring.leftWheel = 45;
 			motoring.rightWheel = 45;
+			robot.boardId = issueBoardId(robot);
 			robot.boardCommand = 1;
 			robot.boardState = 1;
 			robot.boardCount = 0;
@@ -1031,8 +875,10 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			motoring.motion = MOTION.NONE;
-			setLineTracerMode(robot, 0);
 			if(VALUES[direction] === LEFT) {
 				robot.boardCommand = 2;
 				motoring.leftWheel = -45;
@@ -1042,6 +888,7 @@
 				motoring.leftWheel = 45;
 				motoring.rightWheel = -45;
 			}
+			robot.boardId = issueBoardId(robot);
 			robot.boardState = 1;
 			robot.boardCount = 0;
 			robot.boardCallback = callback;
@@ -1054,19 +901,24 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
+			var id = robot.wheelId = issueWheelId(robot);
 			motoring.motion = MOTION.FORWARD;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			motoring.leftWheel = 30;
 			motoring.rightWheel = 30;
-			var timer = setTimeout(function() {
-				motoring.motion = MOTION.NONE;
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
+			robot.wheelTimer = setTimeout(function() {
+				if(robot.wheelId == id) {
+					motoring.motion = MOTION.NONE;
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					cancelWheel(robot);
+					callback();
+				}
 			}, 1000);
-			timeouts.push(timer);
+			timeouts.push(robot.wheelTimer);
 		} else {
 			callback();
 		}
@@ -1076,19 +928,24 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
+			var id = robot.wheelId = issueWheelId(robot);
 			motoring.motion = MOTION.BACKWARD;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			motoring.leftWheel = -30;
 			motoring.rightWheel = -30;
-			var timer = setTimeout(function() {
-				motoring.motion = MOTION.NONE;
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
+			robot.wheelTimer = setTimeout(function() {
+				if(robot.wheelId == id) {
+					motoring.motion = MOTION.NONE;
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					cancelWheel(robot);
+					callback();
+				}
 			}, 1000);
-			timeouts.push(timer);
+			timeouts.push(robot.wheelTimer);
 		} else {
 			callback();
 		}
@@ -1098,8 +955,11 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+
+			var id = robot.wheelId = issueWheelId(robot);
 			if(VALUES[direction] === LEFT) {
 				motoring.motion = MOTION.LEFT;
 				motoring.leftWheel = -30;
@@ -1109,14 +969,16 @@
 				motoring.leftWheel = 30;
 				motoring.rightWheel = -30;
 			}
-			var timer = setTimeout(function() {
-				motoring.motion = MOTION.NONE;
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				removeTimeout(timer);
-				callback();
+			robot.wheelTimer = setTimeout(function() {
+				if(robot.wheelId == id) {
+					motoring.motion = MOTION.NONE;
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					cancelWheel(robot);
+					callback();
+				}
 			}, 1000);
-			timeouts.push(timer);
+			timeouts.push(robot.wheelTimer);
 		} else {
 			callback();
 		}
@@ -1126,21 +988,26 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			sec = parseFloat(sec);
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
+				var id = robot.wheelId = issueWheelId(robot);
 				motoring.motion = MOTION.FORWARD;
 				motoring.leftWheel = 30;
 				motoring.rightWheel = 30;
-				var timer = setTimeout(function() {
-					motoring.motion = MOTION.NONE;
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
+				robot.wheelTimer = setTimeout(function() {
+					if(robot.wheelId == id) {
+						motoring.motion = MOTION.NONE;
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
+						cancelWheel(robot);
+						callback();
+					}
 				}, sec * 1000);
-				timeouts.push(timer);
+				timeouts.push(robot.wheelTimer);
 			} else {
 				callback();
 			}
@@ -1153,21 +1020,26 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			sec = parseFloat(sec);
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
+				var id = robot.wheelId = issueWheelId(robot);
 				motoring.motion = MOTION.BACKWARD;
 				motoring.leftWheel = -30;
 				motoring.rightWheel = -30;
-				var timer = setTimeout(function() {
-					motoring.motion = MOTION.NONE;
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
+				robot.wheelTimer = setTimeout(function() {
+					if(robot.wheelId == id) {
+						motoring.motion = MOTION.NONE;
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
+						cancelWheel(robot);
+						callback();
+					}
 				}, sec * 1000);
-				timeouts.push(timer);
+				timeouts.push(robot.wheelTimer);
 			} else {
 				callback();
 			}
@@ -1180,10 +1052,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			sec = parseFloat(sec);
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(sec && sec > 0) {
+				var id = robot.wheelId = issueWheelId(robot);
 				if(VALUES[direction] === LEFT) {
 					motoring.motion = MOTION.LEFT;
 					motoring.leftWheel = -30;
@@ -1193,14 +1068,16 @@
 					motoring.leftWheel = 30;
 					motoring.rightWheel = -30;
 				}
-				var timer = setTimeout(function() {
-					motoring.motion = MOTION.NONE;
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					removeTimeout(timer);
-					callback();
+				robot.wheelTimer = setTimeout(function() {
+					if(robot.wheelId == id) {
+						motoring.motion = MOTION.NONE;
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
+						cancelWheel(robot);
+						callback();
+					}
 				}, sec * 1000);
-				timeouts.push(timer);
+				timeouts.push(robot.wheelTimer);
 			} else {
 				callback();
 			}
@@ -1213,11 +1090,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			left = parseFloat(left);
 			right = parseFloat(right);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(typeof left == 'number') {
 				motoring.leftWheel += left;
 			}
@@ -1231,11 +1110,13 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			left = parseFloat(left);
 			right = parseFloat(right);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(typeof left == 'number') {
 				motoring.leftWheel = left;
 			}
@@ -1249,10 +1130,12 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			speed = parseFloat(speed);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(typeof speed == 'number') {
 				which = VALUES[which];
 				if(which === LEFT) {
@@ -1273,10 +1156,12 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
+			cancelLineTracer(robot);
+			
 			speed = parseFloat(speed);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			if(typeof speed == 'number') {
 				which = VALUES[which];
 				if(which === LEFT) {
@@ -1304,10 +1189,12 @@
 			if(VALUES[color] === WHITE)
 				mode += 7;
 			
+			cancelBoard(robot);
+			cancelWheel(robot);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
+			robot.lineTracerId = 0;
 			setLineTracerMode(robot, mode);
 		}
 	};
@@ -1327,10 +1214,12 @@
 			if(VALUES[color] === WHITE)
 				mode += 7;
 			
+			cancelBoard(robot);
+			cancelWheel(robot);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
+			robot.lineTracerId = issueLineTracerId(robot);
 			setLineTracerMode(robot, mode);
 			robot.lineTracerCallback = callback;
 		} else {
@@ -1353,11 +1242,12 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelBoard(robot);
+			cancelWheel(robot);
 			motoring.motion = MOTION.NONE;
-			robot.boardCommand = 0;
-			setLineTracerMode(robot, 0);
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
+			cancelLineTracer(robot);
 		}
 	};
 
@@ -1400,14 +1290,18 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelNote(robot);
+			var id = robot.noteId = issueNoteId(robot);
 			motoring.buzzer = 440;
 			setNote(robot, 0);
-			var timer = setTimeout(function() {
-				motoring.buzzer = 0;
-				removeTimeout(timer);
-				callback();
+			robot.noteTimer1 = setTimeout(function() {
+				if(robot.noteId == id) {
+					motoring.buzzer = 0;
+					cancelNote(robot);
+					callback();
+				}
 			}, 200);
-			timeouts.push(timer);
+			timeouts.push(robot.noteTimer1);
 		} else {
 			callback();
 		}
@@ -1418,10 +1312,11 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			var buzzer = parseFloat(value);
+			cancelNote(robot);
+			setNote(robot, 0);
 			if(typeof buzzer == 'number') {
 				motoring.buzzer += buzzer;
 			}
-			setNote(robot, 0);
 		}
 	};
 
@@ -1430,10 +1325,11 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			var buzzer = parseFloat(value);
+			cancelNote(robot);
+			setNote(robot, 0);
 			if(typeof buzzer == 'number') {
 				motoring.buzzer = buzzer;
 			}
-			setNote(robot, 0);
 		}
 	};
 
@@ -1442,6 +1338,7 @@
 		if(robot) {
 			var motoring = robot.motoring;
 			motoring.buzzer = 0;
+			cancelNote(robot);
 			setNote(robot, 0);
 		}
 	};
@@ -1456,7 +1353,9 @@
 			if(tmp) beat = tmp;
 			else beat = parseFloat(beat);
 			motoring.buzzer = 0;
+			cancelNote(robot);
 			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && robot.tempo > 0) {
+				var id = robot.noteId = issueNoteId(robot);
 				note += (octave - 1) * 12;
 				setNote(robot, note);
 				var timeout = beat * 60 * 1000 / robot.tempo;
@@ -1465,18 +1364,23 @@
 					tail = 100;
 				}
 				if(tail > 0) {
-					var timer1 = setTimeout(function() {
-						setNote(robot, 0);
-						removeTimeout(timer1);
+					robot.noteTimer1 = setTimeout(function() {
+						if(robot.noteId == id) {
+							setNote(robot, 0);
+							removeTimeout(robot.noteTimer1);
+							robot.noteTimer1 = undefined;
+						}
 					}, timeout - tail);
-					timeouts.push(timer1);
+					timeouts.push(robot.noteTimer1);
 				}
-				var timer2 = setTimeout(function() {
-					setNote(robot, 0);
-					removeTimeout(timer2);
-					callback();
+				robot.noteTimer2 = setTimeout(function() {
+					if(robot.noteId == id) {
+						setNote(robot, 0);
+						cancelNote(robot);
+						callback();
+					}
 				}, timeout);
-				timeouts.push(timer2);
+				timeouts.push(robot.noteTimer2);
 			} else {
 				callback();
 			}
@@ -1493,13 +1397,17 @@
 			if(tmp) beat = tmp;
 			else beat = parseFloat(beat);
 			motoring.buzzer = 0;
+			cancelNote(robot);
 			setNote(robot, 0);
 			if(beat && beat > 0 && robot.tempo > 0) {
-				var timer = setTimeout(function() {
-					removeTimeout(timer);
-					callback();
+				var id = robot.noteId = issueNoteId(robot);
+				robot.noteTimer1 = setTimeout(function() {
+					if(robot.noteId == id) {
+						cancelNote(robot);
+						callback();
+					}
 				}, beat * 60 * 1000 / robot.tempo);
-				timeouts.push(timer);
+				timeouts.push(robot.noteTimer1);
 			} else {
 				callback();
 			}
@@ -1530,418 +1438,68 @@
 		}
 	};
 
-	ext.leftProximity0 = function() {
-		var robot = getRobot(0);
+	ext.leftProximity = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.leftProximity;
 		else return 0;
 	};
 
-	ext.rightProximity0 = function() {
-		var robot = getRobot(0);
+	ext.rightProximity = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.rightProximity;
 		else return 0;
 	};
 
-	ext.leftFloor0 = function() {
-		var robot = getRobot(0);
+	ext.leftFloor = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.leftFloor;
 		else return 0;
 	};
 
-	ext.rightFloor0 = function() {
-		var robot = getRobot(0);
+	ext.rightFloor = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.rightFloor;
 		else return 0;
 	};
 
-	ext.accelerationX0 = function() {
-		var robot = getRobot(0);
+	ext.accelerationX = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.accelerationX;
 		else return 0;
 	};
 
-	ext.accelerationY0 = function() {
-		var robot = getRobot(0);
+	ext.accelerationY = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.accelerationY;
 		else return 0;
 	};
 
-	ext.accelerationZ0 = function() {
-		var robot = getRobot(0);
+	ext.accelerationZ = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.accelerationZ;
 		else return 0;
 	};
 
-	ext.light0 = function() {
-		var robot = getRobot(0);
+	ext.light = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.light;
 		else return 0;
 	};
 
-	ext.temperature0 = function() {
-		var robot = getRobot(0);
+	ext.temperature = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.temperature;
 		else return 0;
 	};
 
-	ext.signalStrength0 = function() {
-		var robot = getRobot(0);
+	ext.signalStrength = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.signalStrength;
 		else return 0;
 	};
 
-	ext.handFound0 = function() {
-		var robot = getRobot(0);
-		if(robot) {
-			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
-		} else {
-			return false;
-		}
-	};
-
-	ext.leftProximity1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.leftProximity;
-		else return 0;
-	};
-
-	ext.rightProximity1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.rightProximity;
-		else return 0;
-	};
-
-	ext.leftFloor1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.leftFloor;
-		else return 0;
-	};
-
-	ext.rightFloor1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.rightFloor;
-		else return 0;
-	};
-
-	ext.accelerationX1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.accelerationX;
-		else return 0;
-	};
-
-	ext.accelerationY1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.accelerationY;
-		else return 0;
-	};
-
-	ext.accelerationZ1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.accelerationZ;
-		else return 0;
-	};
-
-	ext.light1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.light;
-		else return 0;
-	};
-
-	ext.temperature1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.temperature;
-		else return 0;
-	};
-
-	ext.signalStrength1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.signalStrength;
-		else return 0;
-	};
-
-	ext.handFound1 = function() {
-		var robot = getRobot(1);
-		if(robot) {
-			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
-		} else {
-			return false;
-		}
-	};
-
-	ext.leftProximity2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.leftProximity;
-		else return 0;
-	};
-
-	ext.rightProximity2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.rightProximity;
-		else return 0;
-	};
-
-	ext.leftFloor2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.leftFloor;
-		else return 0;
-	};
-
-	ext.rightFloor2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.rightFloor;
-		else return 0;
-	};
-
-	ext.accelerationX2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.accelerationX;
-		else return 0;
-	};
-
-	ext.accelerationY2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.accelerationY;
-		else return 0;
-	};
-
-	ext.accelerationZ2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.accelerationZ;
-		else return 0;
-	};
-
-	ext.light2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.light;
-		else return 0;
-	};
-
-	ext.temperature2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.temperature;
-		else return 0;
-	};
-
-	ext.signalStrength2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.signalStrength;
-		else return 0;
-	};
-
-	ext.handFound2 = function() {
-		var robot = getRobot(2);
-		if(robot) {
-			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
-		} else {
-			return false;
-		}
-	};
-
-	ext.leftProximity3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.leftProximity;
-		else return 0;
-	};
-
-	ext.rightProximity3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.rightProximity;
-		else return 0;
-	};
-
-	ext.leftFloor3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.leftFloor;
-		else return 0;
-	};
-
-	ext.rightFloor3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.rightFloor;
-		else return 0;
-	};
-
-	ext.accelerationX3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.accelerationX;
-		else return 0;
-	};
-
-	ext.accelerationY3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.accelerationY;
-		else return 0;
-	};
-
-	ext.accelerationZ3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.accelerationZ;
-		else return 0;
-	};
-
-	ext.light3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.light;
-		else return 0;
-	};
-
-	ext.temperature3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.temperature;
-		else return 0;
-	};
-
-	ext.signalStrength3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.signalStrength;
-		else return 0;
-	};
-
-	ext.handFound3 = function() {
-		var robot = getRobot(3);
-		if(robot) {
-			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
-		} else {
-			return false;
-		}
-	};
-
-	ext.leftProximity4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.leftProximity;
-		else return 0;
-	};
-
-	ext.rightProximity4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.rightProximity;
-		else return 0;
-	};
-
-	ext.leftFloor4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.leftFloor;
-		else return 0;
-	};
-
-	ext.rightFloor4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.rightFloor;
-		else return 0;
-	};
-
-	ext.accelerationX4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.accelerationX;
-		else return 0;
-	};
-
-	ext.accelerationY4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.accelerationY;
-		else return 0;
-	};
-
-	ext.accelerationZ4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.accelerationZ;
-		else return 0;
-	};
-
-	ext.light4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.light;
-		else return 0;
-	};
-
-	ext.temperature4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.temperature;
-		else return 0;
-	};
-
-	ext.signalStrength4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.signalStrength;
-		else return 0;
-	};
-
-	ext.handFound4 = function() {
-		var robot = getRobot(4);
-		if(robot) {
-			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
-		} else {
-			return false;
-		}
-	};
-
-	ext.leftProximity5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.leftProximity;
-		else return 0;
-	};
-
-	ext.rightProximity5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.rightProximity;
-		else return 0;
-	};
-
-	ext.leftFloor5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.leftFloor;
-		else return 0;
-	};
-
-	ext.rightFloor5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.rightFloor;
-		else return 0;
-	};
-
-	ext.accelerationX5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.accelerationX;
-		else return 0;
-	};
-
-	ext.accelerationY5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.accelerationY;
-		else return 0;
-	};
-
-	ext.accelerationZ5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.accelerationZ;
-		else return 0;
-	};
-
-	ext.light5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.light;
-		else return 0;
-	};
-
-	ext.temperature5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.temperature;
-		else return 0;
-	};
-
-	ext.signalStrength5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.signalStrength;
-		else return 0;
-	};
-
-	ext.handFound5 = function() {
-		var robot = getRobot(5);
+	ext.handFound = function(index) {
+		var robot = getRobot(index);
 		if(robot) {
 			var sensory = robot.sensory;
 			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
@@ -2039,78 +1597,18 @@
 		}
 	};
 
-	ext.inputA0 = function() {
-		var robot = getRobot(0);
+	ext.inputA = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.inputA;
 		else return 0;
 	};
 
-	ext.inputB0 = function() {
-		var robot = getRobot(0);
+	ext.inputB = function(index) {
+		var robot = getRobot(index);
 		if(robot) return robot.sensory.inputB;
 		else return 0;
 	};
 
-	ext.inputA1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.inputA;
-		else return 0;
-	};
-
-	ext.inputB1 = function() {
-		var robot = getRobot(1);
-		if(robot) return robot.sensory.inputB;
-		else return 0;
-	};
-
-	ext.inputA2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.inputA;
-		else return 0;
-	};
-
-	ext.inputB2 = function() {
-		var robot = getRobot(2);
-		if(robot) return robot.sensory.inputB;
-		else return 0;
-	};
-
-	ext.inputA3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.inputA;
-		else return 0;
-	};
-
-	ext.inputB3 = function() {
-		var robot = getRobot(3);
-		if(robot) return robot.sensory.inputB;
-		else return 0;
-	};
-
-	ext.inputA4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.inputA;
-		else return 0;
-	};
-
-	ext.inputB4 = function() {
-		var robot = getRobot(4);
-		if(robot) return robot.sensory.inputB;
-		else return 0;
-	};
-
-	ext.inputA5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.inputA;
-		else return 0;
-	};
-
-	ext.inputB5 = function() {
-		var robot = getRobot(5);
-		if(robot) return robot.sensory.inputB;
-		else return 0;
-	};
-	
 	ext._getStatus = function() {
 		switch(connectionState) {
 			case STATE.CONNECTED:
