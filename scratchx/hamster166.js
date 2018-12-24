@@ -462,7 +462,8 @@
 	}
 	
 	function issueBoardId() {
-		return (boardId % 65535) + 1;
+		boardId = (boardId % 65535) + 1;
+		return boardId;
 	}
 	
 	function cancelBoard() {
@@ -472,7 +473,8 @@
 	}
 	
 	function issueWheelId() {
-		return (wheelId % 65535) + 1;
+		wheelId = (wheelId % 65535) + 1;
+		return wheelId;
 	}
 	
 	function cancelWheel() {
@@ -494,7 +496,8 @@
 	}
 	
 	function issueLineTracerId() {
-		return (lineTracerId % 65535) + 1;
+		lineTracerId = (lineTracerId % 65535) + 1;
+		return lineTracerId;
 	}
 	
 	function cancelLineTracer() {
@@ -518,7 +521,8 @@
 	}
 	
 	function issueNoteId() {
-		return (noteId % 65535) + 1;
+		noteId = (noteId % 65535) + 1;
+		return noteId;
 	}
 	
 	function cancelNote() {
@@ -607,21 +611,32 @@
 						break;
 					}
 					case 2: {
-						if(boardCount < 10) {
-							boardCount ++;
-							var diff = sensory.leftFloor - sensory.rightFloor;
-							motoring.leftWheel = 45 + diff * 0.25;
-							motoring.rightWheel = 45 - diff * 0.25;
-						} else {
-							motoring.leftWheel = 0;
-							motoring.rightWheel = 0;
-							boardId = 0;
-							boardCommand = 0;
-							boardState = 0;
-							var callback = boardCallback;
-							boardCallback = undefined;
-							if(callback) callback();
-						}
+						var diff = sensory.leftFloor - sensory.rightFloor;
+						motoring.leftWheel = 45 + diff * 0.25;
+						motoring.rightWheel = 45 - diff * 0.25;
+						boardState = 3;
+						wheelTimer = setTimeout(function() {
+							boardState = 4;
+							removeTimeout(wheelTimer);
+						}, 250);
+						timeouts.push(wheelTimer);
+						break;
+					}
+					case 3: {
+						var diff = sensory.leftFloor - sensory.rightFloor;
+						motoring.leftWheel = 45 + diff * 0.25;
+						motoring.rightWheel = 45 - diff * 0.25;
+						break;
+					}
+					case 4: {
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
+						boardId = 0;
+						boardCommand = 0;
+						boardState = 0;
+						var callback = boardCallback;
+						boardCallback = undefined;
+						if(callback) callback();
 						break;
 					}
 				}
@@ -822,7 +837,7 @@
 		motoring.motion = MOTION.NONE;
 		motoring.leftWheel = 45;
 		motoring.rightWheel = 45;
-		boardId = issueBoardId();
+		issueBoardId();
 		boardCommand = 1;
 		boardState = 1;
 		boardCount = 0;
@@ -843,7 +858,7 @@
 			motoring.leftWheel = 45;
 			motoring.rightWheel = -45;
 		}
-		boardId = issueBoardId();
+		issueBoardId();
 		boardState = 1;
 		boardCount = 0;
 		boardCallback = callback;
@@ -854,7 +869,7 @@
 		cancelWheel();
 		cancelLineTracer();
 		
-		var id = wheelId = issueWheelId();
+		var id = issueWheelId();
 		motoring.motion = MOTION.FORWARD;
 		motoring.leftWheel = 30;
 		motoring.rightWheel = 30;
@@ -875,7 +890,7 @@
 		cancelWheel();
 		cancelLineTracer();
 		
-		var id = wheelId = issueWheelId();
+		var id = issueWheelId();
 		motoring.motion = MOTION.BACKWARD;
 		motoring.leftWheel = -30;
 		motoring.rightWheel = -30;
@@ -896,7 +911,7 @@
 		cancelWheel();
 		cancelLineTracer();
 		
-		var id = wheelId = issueWheelId();
+		var id = issueWheelId();
 		if(VALUES[direction] === LEFT) {
 			motoring.motion = MOTION.LEFT;
 			motoring.leftWheel = -30;
@@ -925,7 +940,7 @@
 		
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
-			var id = wheelId = issueWheelId();
+			var id = issueWheelId();
 			motoring.motion = MOTION.FORWARD;
 			motoring.leftWheel = 30;
 			motoring.rightWheel = 30;
@@ -951,7 +966,7 @@
 		
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
-			var id = wheelId = issueWheelId();
+			var id = issueWheelId();
 			motoring.motion = MOTION.BACKWARD;
 			motoring.leftWheel = -30;
 			motoring.rightWheel = -30;
@@ -977,7 +992,7 @@
 		
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
-			var id = wheelId = issueWheelId();
+			var id = issueWheelId();
 			if(VALUES[direction] === LEFT) {
 				motoring.motion = MOTION.LEFT;
 				motoring.leftWheel = -30;
@@ -1112,7 +1127,7 @@
 		motoring.motion = MOTION.NONE;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
-		lineTracerId = issueLineTracerId();
+		issueLineTracerId();
 		setLineTracerMode(mode);
 		lineTracerCallback = callback;
 	};
@@ -1162,7 +1177,7 @@
 
 	ext.beep = function(callback) {
 		cancelNote();
-		var id = noteId = issueNoteId();
+		var id = issueNoteId();
 		motoring.buzzer = 440;
 		setNote(0);
 		noteTimer1 = setTimeout(function() {
@@ -1208,7 +1223,7 @@
 		motoring.buzzer = 0;
 		cancelNote();
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
-			var id = noteId = issueNoteId();
+			var id = issueNoteId();
 			note += (octave - 1) * 12;
 			setNote(note);
 			var timeout = beat * 60 * 1000 / tempo;
@@ -1247,7 +1262,7 @@
 		cancelNote();
 		setNote(0);
 		if(beat && beat > 0 && tempo > 0) {
-			var id = noteId = issueNoteId();
+			var id = issueNoteId();
 			noteTimer1 = setTimeout(function() {
 				if(noteId == id) {
 					cancelNote();
