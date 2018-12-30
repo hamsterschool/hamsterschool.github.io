@@ -874,8 +874,6 @@
 			robot.boardState = 1;
 			robot.boardCount = 0;
 			robot.boardCallback = callback;
-		} else {
-			callback();
 		}
 	};
 
@@ -900,8 +898,6 @@
 			robot.boardState = 1;
 			robot.boardCount = 0;
 			robot.boardCallback = callback;
-		} else {
-			callback();
 		}
 	};
 	
@@ -927,8 +923,6 @@
 				}
 			}, 1000);
 			timeouts.push(robot.wheelTimer);
-		} else {
-			callback();
 		}
 	};
 	
@@ -954,8 +948,6 @@
 				}
 			}, 1000);
 			timeouts.push(robot.wheelTimer);
-		} else {
-			callback();
 		}
 	};
 	
@@ -987,8 +979,6 @@
 				}
 			}, 1000);
 			timeouts.push(robot.wheelTimer);
-		} else {
-			callback();
 		}
 	};
 
@@ -1019,8 +1009,6 @@
 			} else {
 				callback();
 			}
-		} else {
-			callback();
 		}
 	};
 
@@ -1051,8 +1039,6 @@
 			} else {
 				callback();
 			}
-		} else {
-			callback();
 		}
 	};
 
@@ -1089,8 +1075,6 @@
 			} else {
 				callback();
 			}
-		} else {
-			callback();
 		}
 	};
 	
@@ -1230,8 +1214,6 @@
 			issueLineTracerId(robot);
 			setLineTracerMode(robot, mode);
 			robot.lineTracerCallback = callback;
-		} else {
-			callback();
 		}
 	};
 
@@ -1310,8 +1292,6 @@
 				}
 			}, 200);
 			timeouts.push(robot.noteTimer1);
-		} else {
-			callback();
 		}
 	};
 
@@ -1392,8 +1372,6 @@
 			} else {
 				callback();
 			}
-		} else {
-			callback();
 		}
 	};
 
@@ -1419,8 +1397,6 @@
 			} else {
 				callback();
 			}
-		} else {
-			callback();
 		}
 	};
 
@@ -1589,8 +1565,6 @@
 				callback();
 			}, 500);
 			timeouts.push(timer);
-		} else {
-			callback();
 		}
 	};
 	
