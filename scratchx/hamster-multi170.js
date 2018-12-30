@@ -288,7 +288,7 @@
 			'left_right_front_rear': ['left', 'right', 'front', 'rear'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
 			'color': ['red', 'yellow', 'green', 'sky blue', 'blue', 'purple', 'white'],
-			'note': ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'],
+			'note': ['C', 'C♯ (D♭)', 'D', 'D♯ (E♭)', 'E', 'F', 'F♯ (G♭)', 'G', 'G♯ (A♭)', 'A', 'A♯ (B♭)', 'B'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A and B'],
@@ -302,7 +302,7 @@
 			'left_right_front_rear': ['왼쪽', '오른쪽', '앞쪽', '뒤쪽'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
 			'color': ['빨간색', '노란색', '초록색', '하늘색', '파란색', '자주색', '하얀색'],
-			'note': ['도', '도# (레b)', '레', '레# (미b)', '미', '파', '파# (솔b)', '솔', '솔# (라b)', '라', '라# (시b)', '시'],
+			'note': ['도', '도♯ (레♭)', '레', '레♯ (미♭)', '미', '파', '파♯ (솔♭)', '솔', '솔♯ (라♭)', '라', '라♯ (시♭)', '시'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A와 B'],
@@ -316,7 +316,7 @@
 			'left_right_front_rear': ['chap', 'o\'ng', 'old', 'orqa'],
 			'speed': ['1', '2', '3', '4', '5', '6', '7', '8'],
 			'color': ['qizil', 'sariq', 'yashil', 'moviy', 'ko\'k', 'siyoh', 'oq'],
-			'note': ['do', 'do# (reb)', 're', 're# (mib)', 'mi', 'fa', 'fa# (solb)', 'sol', 'sol# (lyab)', 'lya', 'lya# (sib)', 'si'],
+			'note': ['do', 'do♯ (re♭)', 're', 're♯ (mi♭)', 'mi', 'fa', 'fa♯ (sol♭)', 'sol', 'sol♯ (lya♭)', 'lya', 'lya♯ (si♭)', 'si'],
 			'octave': ['1', '2', '3', '4', '5', '6', '7'],
 			'beats': ['¼', '½', '¾', '1', '1¼', '1½', '1¾', '2', '3', '4'],
 			'port': ['A', 'B', 'A va B'],
@@ -517,6 +517,8 @@
 		robot.boardId = 0;
 		robot.boardCommand = 0;
 		robot.boardState = 0;
+		robot.boardCount = 0;
+		robot.boardCallback = undefined;
 	}
 	
 	function issueWheelId(robot) {
@@ -550,6 +552,7 @@
 	function cancelLineTracer(robot) {
 		robot.lineTracerId = 0;
 		setLineTracerMode(robot, 0);
+		robot.lineTracerCallback = undefined;
 	}
 	
 	function setLeftLed(robot, color) {
@@ -605,7 +608,8 @@
 		var sensory = robot.sensory;
 		if(robot.lineTracerId > 0 && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
-				cancelLineTracer(robot);
+				robot.lineTracerId = 0;
+				setLineTracerMode(robot, 0);
 				var callback = robot.lineTracerCallback;
 				robot.lineTracerCallback = undefined;
 				if(callback) callback();
@@ -1506,7 +1510,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var sensory = robot.sensory;
-			return sensory.handFound || sensory.leftProximity > 50 || sensory.rightProximity > 50;
+			return (sensory.handFound === undefined) ? (sensory.leftProximity > 50 || sensory.rightProximity > 50) : sensory.handFound;
 		} else {
 			return false;
 		}
