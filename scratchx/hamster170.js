@@ -1204,8 +1204,8 @@
 	};
 
 	ext.changeBuzzerBy = function(value) {
-		var buzzer = parseFloat(value);
 		cancelNote();
+		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
 			motoring.buzzer += buzzer;
 		}
@@ -1213,8 +1213,8 @@
 	};
 
 	ext.setBuzzerTo = function(value) {
-		var buzzer = parseFloat(value);
 		cancelNote();
+		var buzzer = parseFloat(value);
 		if(typeof buzzer == 'number') {
 			motoring.buzzer = buzzer;
 		}
@@ -1263,6 +1263,7 @@
 			}, timeout);
 			timeouts.push(noteTimer2);
 		} else {
+			setNote(0);
 			callback();
 		}
 	};
