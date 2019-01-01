@@ -46,6 +46,7 @@
 		RIGHT: 4
 	};
 	var connectionState = 1;
+	var blockId = 0;
 	var wheelId = 0;
 	var wheelTimer = undefined;
 	var lineTracerId = 0;
@@ -462,7 +463,7 @@
 	}
 	
 	function issueBoardId() {
-		boardId = (boardId % 65535) + 1;
+		boardId = blockId = (blockId % 65535) + 1;
 		return boardId;
 	}
 	
@@ -475,7 +476,7 @@
 	}
 	
 	function issueWheelId() {
-		wheelId = (wheelId % 65535) + 1;
+		wheelId = blockId = (blockId % 65535) + 1;
 		return wheelId;
 	}
 	
@@ -498,13 +499,12 @@
 	}
 	
 	function issueLineTracerId() {
-		lineTracerId = (lineTracerId % 65535) + 1;
+		lineTracerId = blockId = (blockId % 65535) + 1;
 		return lineTracerId;
 	}
 	
 	function cancelLineTracer() {
 		lineTracerId = 0;
-		setLineTracerMode(0);
 		lineTracerCallback = undefined;
 	}
 	
@@ -524,7 +524,7 @@
 	}
 	
 	function issueNoteId() {
-		noteId = (noteId % 65535) + 1;
+		noteId = blockId = (blockId % 65535) + 1;
 		return noteId;
 	}
 	
@@ -566,6 +566,7 @@
 		motoring.ioModeB = 0;
 		motoring.motion = 0;
 		
+		blockId = 0;
 		wheelId = 0;
 		wheelTimer = undefined;
 		lineTracerId = 0;
@@ -585,10 +586,9 @@
 	function handleLineTracer() {
 		if(lineTracerId > 0 && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
-				lineTracerId = 0;
 				setLineTracerMode(0);
 				var callback = lineTracerCallback;
-				lineTracerCallback = undefined;
+				cancelLineTracer();
 				if(callback) callback();
 			}
 		}
@@ -619,8 +619,11 @@
 						motoring.rightWheel = 45 - diff * 0.25;
 						boardState = 3;
 						wheelTimer = setTimeout(function() {
+							motoring.leftWheel = 0;
+							motoring.rightWheel = 0;
 							boardState = 4;
-							removeTimeout(wheelTimer);
+							if(wheelTimer !== undefined) removeTimeout(wheelTimer);
+							wheelTimer = undefined;
 						}, 250);
 						timeouts.push(wheelTimer);
 						break;
@@ -634,11 +637,8 @@
 					case 4: {
 						motoring.leftWheel = 0;
 						motoring.rightWheel = 0;
-						boardId = 0;
-						boardCommand = 0;
-						boardState = 0;
 						var callback = boardCallback;
-						boardCallback = undefined;
+						cancelBoard();
 						if(callback) callback();
 						break;
 					}
@@ -682,11 +682,8 @@
 						if(diff > -15) {
 							motoring.leftWheel = 0;
 							motoring.rightWheel = 0;
-							boardId = 0;
-							boardCommand = 0;
-							boardState = 0;
 							var callback = boardCallback;
-							boardCallback = undefined;
+							cancelBoard();
 							if(callback) callback();
 						} else {
 							motoring.leftWheel = diff * 0.5;
@@ -734,11 +731,8 @@
 						if(diff > -15) {
 							motoring.leftWheel = 0;
 							motoring.rightWheel = 0;
-							boardId = 0;
-							boardCommand = 0;
-							boardState = 0;
 							var callback = boardCallback;
-							boardCallback = undefined;
+							cancelBoard();
 							if(callback) callback();
 						} else {
 							motoring.leftWheel = -diff * 0.5;
@@ -837,21 +831,22 @@
 		cancelWheel();
 		cancelLineTracer();
 		
-		motoring.motion = MOTION.NONE;
+		issueBoardId();
 		motoring.leftWheel = 45;
 		motoring.rightWheel = 45;
-		issueBoardId();
+		motoring.motion = MOTION.NONE;
 		boardCommand = 1;
-		boardState = 1;
 		boardCount = 0;
+		boardState = 1;
 		boardCallback = callback;
+		setLineTracerMode(0);
 	};
 
 	ext.boardTurn = function(direction, callback) {
 		cancelWheel();
 		cancelLineTracer();
 		
-		motoring.motion = MOTION.NONE;
+		issueBoardId();
 		if(VALUES[direction] === LEFT) {
 			boardCommand = 2;
 			motoring.leftWheel = -45;
@@ -861,10 +856,11 @@
 			motoring.leftWheel = 45;
 			motoring.rightWheel = -45;
 		}
-		issueBoardId();
-		boardState = 1;
+		motoring.motion = MOTION.NONE;
 		boardCount = 0;
+		boardState = 1;
 		boardCallback = callback;
+		setLineTracerMode(0);
 	};
 	
 	ext.moveForward = function(callback) {
@@ -873,14 +869,15 @@
 		cancelLineTracer();
 		
 		var id = issueWheelId();
-		motoring.motion = MOTION.FORWARD;
 		motoring.leftWheel = 30;
 		motoring.rightWheel = 30;
+		motoring.motion = MOTION.FORWARD;
+		setLineTracerMode(0);
 		wheelTimer = setTimeout(function() {
 			if(wheelId == id) {
-				motoring.motion = MOTION.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
 				cancelWheel();
 				callback();
 			}
@@ -894,14 +891,15 @@
 		cancelLineTracer();
 		
 		var id = issueWheelId();
-		motoring.motion = MOTION.BACKWARD;
 		motoring.leftWheel = -30;
 		motoring.rightWheel = -30;
+		motoring.motion = MOTION.BACKWARD;
+		setLineTracerMode(0);
 		wheelTimer = setTimeout(function() {
 			if(wheelId == id) {
-				motoring.motion = MOTION.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
 				cancelWheel();
 				callback();
 			}
@@ -916,19 +914,20 @@
 		
 		var id = issueWheelId();
 		if(VALUES[direction] === LEFT) {
-			motoring.motion = MOTION.LEFT;
 			motoring.leftWheel = -30;
 			motoring.rightWheel = 30;
+			motoring.motion = MOTION.LEFT;
 		} else {
-			motoring.motion = MOTION.RIGHT;
 			motoring.leftWheel = 30;
 			motoring.rightWheel = -30;
+			motoring.motion = MOTION.RIGHT;
 		}
+		setLineTracerMode(0);
 		wheelTimer = setTimeout(function() {
 			if(wheelId == id) {
-				motoring.motion = MOTION.NONE;
 				motoring.leftWheel = 0;
 				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
 				cancelWheel();
 				callback();
 			}
@@ -941,17 +940,18 @@
 		cancelWheel();
 		cancelLineTracer();
 		
+		setLineTracerMode(0);
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
 			var id = issueWheelId();
-			motoring.motion = MOTION.FORWARD;
 			motoring.leftWheel = 30;
 			motoring.rightWheel = 30;
+			motoring.motion = MOTION.FORWARD;
 			wheelTimer = setTimeout(function() {
 				if(wheelId == id) {
-					motoring.motion = MOTION.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
+					motoring.motion = MOTION.NONE;
 					cancelWheel();
 					callback();
 				}
@@ -967,17 +967,18 @@
 		cancelWheel();
 		cancelLineTracer();
 		
+		setLineTracerMode(0);
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
 			var id = issueWheelId();
-			motoring.motion = MOTION.BACKWARD;
 			motoring.leftWheel = -30;
 			motoring.rightWheel = -30;
+			motoring.motion = MOTION.BACKWARD;
 			wheelTimer = setTimeout(function() {
 				if(wheelId == id) {
-					motoring.motion = MOTION.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
+					motoring.motion = MOTION.NONE;
 					cancelWheel();
 					callback();
 				}
@@ -993,23 +994,24 @@
 		cancelWheel();
 		cancelLineTracer();
 		
+		setLineTracerMode(0);
 		sec = parseFloat(sec);
 		if(sec && sec > 0) {
 			var id = issueWheelId();
 			if(VALUES[direction] === LEFT) {
-				motoring.motion = MOTION.LEFT;
 				motoring.leftWheel = -30;
 				motoring.rightWheel = 30;
+				motoring.motion = MOTION.LEFT;
 			} else {
-				motoring.motion = MOTION.RIGHT;
 				motoring.leftWheel = 30;
 				motoring.rightWheel = -30;
+				motoring.motion = MOTION.RIGHT;
 			}
 			wheelTimer = setTimeout(function() {
 				if(wheelId == id) {
-					motoring.motion = MOTION.NONE;
 					motoring.leftWheel = 0;
 					motoring.rightWheel = 0;
+					motoring.motion = MOTION.NONE;
 					cancelWheel();
 					callback();
 				}
@@ -1027,13 +1029,14 @@
 		
 		left = parseFloat(left);
 		right = parseFloat(right);
-		motoring.motion = MOTION.NONE;
 		if(typeof left == 'number') {
 			motoring.leftWheel += left;
 		}
 		if(typeof right == 'number') {
 			motoring.rightWheel += right;
 		}
+		motoring.motion = MOTION.NONE;
+		setLineTracerMode(0);
 	};
 
 	ext.setBothWheelsTo = function(left, right) {
@@ -1043,13 +1046,14 @@
 		
 		left = parseFloat(left);
 		right = parseFloat(right);
-		motoring.motion = MOTION.NONE;
 		if(typeof left == 'number') {
 			motoring.leftWheel = left;
 		}
 		if(typeof right == 'number') {
 			motoring.rightWheel = right;
 		}
+		motoring.motion = MOTION.NONE;
+		setLineTracerMode(0);
 	};
 
 	ext.changeWheelBy = function(which, speed) {
@@ -1058,7 +1062,6 @@
 		cancelLineTracer();
 		
 		speed = parseFloat(speed);
-		motoring.motion = MOTION.NONE;
 		if(typeof speed == 'number') {
 			which = VALUES[which];
 			if(which === LEFT) {
@@ -1072,6 +1075,8 @@
 				motoring.rightWheel += speed;
 			}
 		}
+		motoring.motion = MOTION.NONE;
+		setLineTracerMode(0);
 	};
 
 	ext.setWheelTo = function(which, speed) {
@@ -1080,7 +1085,6 @@
 		cancelLineTracer();
 		
 		speed = parseFloat(speed);
-		motoring.motion = MOTION.NONE;
 		if(typeof speed == 'number') {
 			which = VALUES[which];
 			if(which === LEFT) {
@@ -1092,9 +1096,15 @@
 				motoring.rightWheel = speed;
 			}
 		}
+		motoring.motion = MOTION.NONE;
+		setLineTracerMode(0);
 	};
 
 	ext.followLineUsingFloorSensor = function(color, which) {
+		cancelBoard();
+		cancelWheel();
+		cancelLineTracer();
+		
 		var mode = 1;
 		which = VALUES[which];
 		if(which === RIGHT)
@@ -1104,16 +1114,16 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
-		cancelBoard();
-		cancelWheel();
-		motoring.motion = MOTION.NONE;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
-		lineTracerId = 0;
+		motoring.motion = MOTION.NONE;
 		setLineTracerMode(mode);
 	};
 
 	ext.followLineUntilIntersection = function(color, which, callback) {
+		cancelBoard();
+		cancelWheel();
+		
 		var mode = 4;
 		which = VALUES[which];
 		if(which === RIGHT)
@@ -1125,11 +1135,9 @@
 		if(VALUES[color] === WHITE)
 			mode += 7;
 		
-		cancelBoard();
-		cancelWheel();
-		motoring.motion = MOTION.NONE;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
+		motoring.motion = MOTION.NONE;
 		issueLineTracerId();
 		setLineTracerMode(mode);
 		lineTracerCallback = callback;
@@ -1145,10 +1153,12 @@
 	ext.stop = function() {
 		cancelBoard();
 		cancelWheel();
-		motoring.motion = MOTION.NONE;
+		cancelLineTracer();
+		
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
-		cancelLineTracer();
+		motoring.motion = MOTION.NONE;
+		setLineTracerMode(0);
 	};
 
 	ext.setLedTo = function(which, color) {
@@ -1196,35 +1206,35 @@
 	ext.changeBuzzerBy = function(value) {
 		var buzzer = parseFloat(value);
 		cancelNote();
-		setNote(0);
 		if(typeof buzzer == 'number') {
 			motoring.buzzer += buzzer;
 		}
+		setNote(0);
 	};
 
 	ext.setBuzzerTo = function(value) {
 		var buzzer = parseFloat(value);
 		cancelNote();
-		setNote(0);
 		if(typeof buzzer == 'number') {
 			motoring.buzzer = buzzer;
 		}
+		setNote(0);
 	};
 
 	ext.clearBuzzer = function() {
-		motoring.buzzer = 0;
 		cancelNote();
+		motoring.buzzer = 0;
 		setNote(0);
 	};
 	
 	ext.playNoteFor = function(note, octave, beat, callback) {
+		cancelNote();
 		note = NOTES[note];
 		octave = parseInt(octave);
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
-		cancelNote();
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
 			var id = issueNoteId();
 			note += (octave - 1) * 12;
@@ -1258,11 +1268,11 @@
 	};
 
 	ext.restFor = function(beat, callback) {
+		cancelNote();
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
 		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
-		cancelNote();
 		setNote(0);
 		if(beat && beat > 0 && tempo > 0) {
 			var id = issueNoteId();
