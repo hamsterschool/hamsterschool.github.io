@@ -157,7 +157,6 @@
 	}
 	
 	function setPan(value) {
-		console.log(value);
 		motoring.pan = value;
 		motoring.map |= 0x40000000;
 	}
