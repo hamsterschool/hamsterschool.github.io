@@ -266,9 +266,18 @@
 	}
 	
 	function handleSensory() {
-		if(sensory.map & 0x00008000) removeTouchCallbacks();
-		if(sensory.map & 0x00004000) removeLongPressCallbacks();
-		if(sensory.map & 0x00002000) removeCallCallbacks();
+		if(sensory.map & 0x00008000) {
+			touched = true;
+			removeTouchCallbacks();
+		}
+		if(sensory.map & 0x00004000) {
+			longPressed = true;
+			removeLongPressCallbacks();
+		}
+		if(sensory.map & 0x00002000) {
+			called = true;
+			removeCallCallbacks();
+		}
 		if(sensory.map & 0x00001000) {
 			listenResult = sensory.listen;
 			if(listenResult) removeListenCallbacks(listenResult);
