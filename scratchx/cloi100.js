@@ -8,24 +8,25 @@
 		map: 0x80000000,
 		pan: 0,
 		tilt: 0,
-		floorLed: 0,
-		face: 0,
-		tts: undefined,
-		command: undefined
+		color: 0,
+		red: 0,
+		green: 0,
+		blue: 0,
+		face: 0
  	};
 	var packet = {
 		version: 1,
 		robot: motoring
  	};
 	var connectionState = 1;
-	var touched = false;
-	var longPressed = false;
-	var called = false;
-	var listenResult = '';
-	var touchCallbacks = [];
-	var longPressCallbacks = [];
-	var callCallbacks = [];
-	var listenCallbacks = {};
+	var faceTouched = false;
+	var faceFlicked = false;
+	var headTouched = false;
+	var bodyTouched = false;
+	var faceTouchCallbacks = [];
+	var faceFlickCallbacks = [];
+	var headTouchCallbacks = [];
+	var bodyTouchCallbacks = [];
 	var socket = undefined;
 	var canSend = false;
 	const STATE = {
@@ -48,51 +49,41 @@
 			[' ', 'turn %m.left_right %n degrees', 'cloiPan', 'left', 5],
 			[' ', 'turn %m.up_down %n degrees', 'cloiTilt', 'up', 5],
 			['-'],
-			[' ', 'set face to %m.face', 'cloiSetFace', 'smile'],
-			[' ', 'blink %m.floor_color led on floor', 'cloiBlinkFloorLed', 'red'],
-			['-'],
-			[' ', 'say %s', 'cloiSay', 'hello'],
+			[' ', 'set face to %m.face', 'cloiSetFace', 'happy'],
+			[' ', 'blink led in %m.color', 'cloiSetColor', 'red'],
+			[' ', 'blink led in r: %n g: %n b: %n', 'cloiSetRgb', 255, 0, 0],
 			['-'],
 			['w', 'wait until %m.wait_until', 'cloiWaitUntil', 'face touched'],
-			['b', '%m.is ?', 'cloiIs', 'face touched'],
-			['-'],
-			[' ', 'order %s command', 'cloiCommand', 'weather'],
-			['w', 'wait until %s command', 'cloiWaitUntilListen', 'weather'],
-			['r', 'command', 'cloiListenResult']
+			['b', '%m.is ?', 'cloiIs', 'face touched']
 		],
 		ko: [
 			[' ', '%m.left_right 으로 %n 도 회전하기', 'cloiPan', '왼쪽', 5],
 			[' ', '%m.up_down 으로 %n 도 회전하기', 'cloiTilt', '위쪽', 5],
 			['-'],
-			[' ', '얼굴 표정을 %m.face 으로 정하기', 'cloiSetFace', '웃음'],
-			[' ', '바닥 LED를 %m.floor_color 으로 깜박이기', 'cloiBlinkFloorLed', '빨간색'],
-			['-'],
-			[' ', '%s 말하기', 'cloiSay', '안녕'],
+			[' ', '얼굴 표정을 %m.face (으)로 정하기', 'cloiSetFace', '행복'],
+			[' ', 'LED를 %m.color 으로 깜박이기', 'cloiSetColor', '빨간색'],
+			[' ', 'LED를 R: %n G: %n B: %n (으)로 깜박이기', 'cloiSetRgb', 255, 0, 0],
 			['-'],
 			['w', '%m.wait_until 때까지 기다리기', 'cloiWaitUntil', '얼굴을 터치할'],
-			['b', '%m.is ?', 'cloiIs', '얼굴을 터치했는가'],
-			['-'],
-			[' ', '%s 명령하기', 'cloiCommand', '날씨'],
-			['w', '%s 명령 기다리기', 'cloiWaitUntilListen', '날씨'],
-			['r', '명령', 'cloiListenResult']
+			['b', '%m.is ?', 'cloiIs', '얼굴을 터치했는가']
 		]
 	};
 	const MENUS = {
 		en: {
 			'left_right': ['left', 'right'],
 			'up_down': ['up', 'down'],
-			'face': ['smile', 'sad', 'love'],
-			'floor_color': ['red', 'yellow', 'green', 'blue'],
-			'wait_until': ['face touched', 'head long pressed', 'called'],
-			'is': ['face touched', 'head long pressed', 'called']
+			'face': ['neutral', 'happy', 'smile', 'love', 'wink', 'sad', 'dizzy', 'curious', 'bored', 'flustered', 'unpleasant', 'thinking', 'wakeup'],
+			'color': ['red', 'orange', 'green', 'violet'],
+			'wait_until': ['face touched', 'face flicked', 'head touched', 'body touched'],
+			'is': ['face touched', 'face flicked', 'head touched', 'body touched']
 		},
 		ko: {
 			'left_right': ['왼쪽', '오른쪽'],
 			'up_down': ['위쪽', '아래쪽'],
-			'face': ['웃음', '슬픔', '사랑'],
-			'floor_color': ['빨간색', '노란색', '초록색', '파란색'],
-			'wait_until': ['얼굴을 터치할', '머리를 길게 눌렀다 뗄', '호출할'],
-			'is': ['얼굴을 터치했는가', '머리를 길게 눌렀다 뗐는가', '호출했는가']
+			'face': ['무표정', '행복', '웃음', '사랑', '윙크', '슬픔', '어지러움', '궁금함', '지루함', '당황함', '불쾌함', '생각 중', '잠을 깸'],
+			'color': ['빨간색', '주황색', '초록색', '보라색'],
+			'wait_until': ['얼굴을 터치할', '얼굴 화면을 빠르게 넘길', '머리를 터치할', '몸을 터치할'],
+			'is': ['얼굴을 터치했는가', '얼굴 화면을 빠르게 넘겼는가', '머리를 터치했는가', '몸을 터치했는가']
 		}
 	};
 	
@@ -110,40 +101,54 @@
 		}
 	}
 
-	var FLOOR_COLORS = {};
+	var COLORS = {};
 	var FACES = {};
 	var WAIT_UNTILS = {};
 	var EVENTS = {};
 	var VALUES = {};
-	const WAIT_UNTIL_TOUCHED = 1;
-	const WAIT_UNTIL_LONG_PRESSED = 2;
-	const WAIT_UNTIL_CALLED = 3;
-	const IS_TOUCHED = 1;
-	const IS_LONG_PRESSED = 2;
-	const IS_CALLED = 3;
+	const WAIT_UNTIL_FACE_TOUCHED = 1;
+	const WAIT_UNTIL_FACE_FLICKED = 2;
+	const WAIT_UNTIL_HEAD_TOUCHED = 3;
+	const WAIT_UNTIL_BODY_TOUCHED = 4;
+	const IS_FACE_TOUCHED = 1;
+	const IS_FACE_FLICKED = 2;
+	const IS_HEAD_TOUCHED = 3;
+	const IS_BODY_TOUCHED = 4;
 	const LEFT = 1;
 	const RIGHT = 2;
 	const UP = 3;
 	const DOWN = 4;
 	var tmp;
 	for(var i in MENUS) {
-		tmp = MENUS[i]['floor_color'];
-		FLOOR_COLORS[tmp[0]] = 2;
-		FLOOR_COLORS[tmp[1]] = 1;
-		FLOOR_COLORS[tmp[2]] = 3;
-		FLOOR_COLORS[tmp[3]] = 4;
+		tmp = MENUS[i]['color'];
+		COLORS[tmp[0]] = 'red';
+		COLORS[tmp[1]] = 'orange';
+		COLORS[tmp[2]] = 'green';
+		COLORS[tmp[3]] = 'purple';
 		tmp = MENUS[i]['face'];
-		FACES[tmp[0]] = 1;
-		FACES[tmp[1]] = 2;
-		FACES[tmp[2]] = 3;
+		FACES[tmp[0]] = 'neutral';
+		FACES[tmp[1]] = 'happy';
+		FACES[tmp[2]] = 'smile';
+		FACES[tmp[3]] = 'love';
+		FACES[tmp[4]] = 'wink';
+		FACES[tmp[5]] = 'sad';
+		FACES[tmp[6]] = 'dizzy';
+		FACES[tmp[7]] = 'curious';
+		FACES[tmp[8]] = 'bored';
+		FACES[tmp[9]] = 'flustered';
+		FACES[tmp[10]] = 'unpleasant';
+		FACES[tmp[11]] = 'thinking';
+		FACES[tmp[12]] = 'wakeup';
 		tmp = MENUS[i]['wait_until'];
-		WAIT_UNTILS[tmp[0]] = WAIT_UNTIL_TOUCHED;
-		WAIT_UNTILS[tmp[1]] = WAIT_UNTIL_LONG_PRESSED;
-		WAIT_UNTILS[tmp[2]] = WAIT_UNTIL_CALLED;
+		WAIT_UNTILS[tmp[0]] = WAIT_UNTIL_FACE_TOUCHED;
+		WAIT_UNTILS[tmp[1]] = WAIT_UNTIL_FACE_FLICKED;
+		WAIT_UNTILS[tmp[2]] = WAIT_UNTIL_HEAD_TOUCHED;
+		WAIT_UNTILS[tmp[3]] = WAIT_UNTIL_BODY_TOUCHED;
 		tmp = MENUS[i]['is'];
-		EVENTS[tmp[0]] = IS_TOUCHED;
-		EVENTS[tmp[1]] = IS_LONG_PRESSED;
-		EVENTS[tmp[2]] = IS_CALLED;
+		EVENTS[tmp[0]] = IS_FACE_TOUCHED;
+		EVENTS[tmp[1]] = IS_FACE_FLICKED;
+		EVENTS[tmp[2]] = IS_HEAD_TOUCHED;
+		EVENTS[tmp[3]] = IS_BODY_TOUCHED;
 		tmp = MENUS[i]['left_right'];
 		VALUES[tmp[0]] = LEFT;
 		VALUES[tmp[1]] = RIGHT;
@@ -166,122 +171,111 @@
 		motoring.map |= 0x20000000;
 	}
 	
-	function setFloorLed(value) {
-		motoring.floorLed = value;
+	function setColor(value) {
+		motoring.color = value;
 		motoring.map |= 0x10000000;
+	}
+	
+	function setRgb(r, g, b) {
+		motoring.red = r;
+		motoring.green = g;
+		motoring.blue = b;
+		motoring.map |= 0x08000000;
 	}
 
 	function setFace(value) {
 		motoring.face = value;
-		motoring.map |= 0x08000000;
-	}
-	
-	function setTts(value) {
-		motoring.tts = value;
 		motoring.map |= 0x04000000;
 	}
 	
-	function setCommand(value) {
-		motoring.command = value;
-		motoring.map |= 0x02000000;
+	function addFaceTouchCallback(callback) {
+		faceTouchCallbacks.push(callback);
 	}
 	
-	function addTouchCallback(callback) {
-		touchCallbacks.push(callback);
-	}
-	
-	function removeTouchCallbacks() {
+	function removeFaceTouchCallbacks() {
 		var callback;
-		for(var i in touchCallbacks) {
-			callback = touchCallbacks[i];
+		for(var i in faceTouchCallbacks) {
+			callback = faceTouchCallbacks[i];
 			if(callback) callback();
 		}
-		touchCallbacks = [];
+		faceTouchCallbacks = [];
 	}
 	
-	function addLongPressCallback(callback) {
-		longPressCallbacks.push(callback);
+	function addFaceFlickCallback(callback) {
+		faceFlickCallbacks.push(callback);
 	}
 	
-	function removeLongPressCallbacks() {
+	function removeFaceFlickCallbacks() {
 		var callback;
-		for(var i in longPressCallbacks) {
-			callback = longPressCallbacks[i];
+		for(var i in faceFlickCallbacks) {
+			callback = faceFlickCallbacks[i];
 			if(callback) callback();
 		}
-		longPressCallbacks = [];
+		faceFlickCallbacks = [];
 	}
 	
-	function addCallCallback(callback) {
-		callCallbacks.push(callback);
+	function addHeadTouchCallback(callback) {
+		headTouchCallbacks.push(callback);
 	}
 	
-	function removeCallCallbacks() {
+	function removeHeadTouchCallbacks() {
 		var callback;
-		for(var i in callCallbacks) {
-			callback = callCallbacks[i];
+		for(var i in headTouchCallbacks) {
+			callback = headTouchCallbacks[i];
 			if(callback) callback();
 		}
-		callCallbacks = [];
+		headTouchCallbacks = [];
 	}
 	
-	function addListenCallback(word, callback) {
-		var callbacks = listenCallbacks[word];
-		if(!callbacks) {
-			callbacks = [];
-			listenCallbacks[word] = callbacks;
-		}
-		callbacks.push(callback);
+	function addBodyTouchCallback(callback) {
+		bodyTouchCallbacks.push(callback);
 	}
 	
-	function removeListenCallbacks(word) {
-		var callbacks = listenCallbacks[word];
-		if(callbacks) {
-			var callback;
-			for(var i in callbacks) {
-				callback = callbacks[i];
-				if(callback) callback();
-			}
-			listenCallbacks[word] = [];
+	function removeBodyTouchCallbacks() {
+		var callback;
+		for(var i in bodyTouchCallbacks) {
+			callback = bodyTouchCallbacks[i];
+			if(callback) callback();
 		}
+		bodyTouchCallbacks = [];
 	}
 	
 	function reset() {
 		motoring.map = 0xfe000000;
 		motoring.pan = 0;
 		motoring.tilt = 0;
-		motoring.floorLed = 0;
+		motoring.color = 0;
+		motoring.red = 0;
+		motoring.green = 0;
+		motoring.blue = 0;
 		motoring.face = 0;
-		motoring.tts = undefined;
-		motoring.command = undefined;
 
-		touched = false;
-		longPressed = false;
-		called = false;
-		listenResult = '';
-		touchCallbacks = [];
-		longPressCallbacks = [];
-		callCallbacks = [];
-		listenCallbacks = {};
+		faceTouched = false;
+		faceFlicked = false;
+		headTouched = false;
+		bodyTouched = false;
+		faceTouchCallbacks = [];
+		faceFlickCallbacks = [];
+		headTouchCallbacks = [];
+		bodyTouchCallbacks = [];
 	}
 	
 	function handleSensory() {
 		if(sensory.map & 0x00008000) {
-			touched = true;
-			removeTouchCallbacks();
+			faceTouched = true;
+			removeFaceTouchCallbacks();
 		}
 		if(sensory.map & 0x00004000) {
-			longPressed = true;
-			removeLongPressCallbacks();
+			faceFlicked = true;
+			removeFaceFlickCallbacks();
 		}
 		if(sensory.map & 0x00002000) {
-			called = true;
-			removeCallCallbacks();
+			headTouched = true;
+			removeHeadTouchCallbacks();
 		}
 		if(sensory.map & 0x00001000) {
-			listenResult = sensory.listen;
-			if(listenResult) removeListenCallbacks(listenResult);
-			else listenResult = '';
+			bodyTouched = true;
+			removeBodyTouchCallbacks();
 		}
 	}
 	
@@ -390,21 +384,25 @@
 	
 	ext.cloiSetFace = function(face) {
 		face = FACES[face];
-		if(face && face > 0) {
+		if(face) {
 			setFace(face);
 		}
 	};
 
-	ext.cloiBlinkFloorLed = function(color) {
-		color = FLOOR_COLORS[color];
-		if(color && color > 0) {
-			setFloorLed(color);
-		}
+	ext.cloiSetColor = function(color) {
+		color = COLORS[color];
+		setColor(color);
 	};
-
-	ext.cloiSay = function(text) {
-		if(text !== undefined) {
-			setTts(text);
+	
+	ext.cloiSetRgb = function(red, green, blue) {
+		if((typeof red == 'number') && (typeof green == 'number') && (typeof blue == 'number')) {
+			if(red < 0) red = 0;
+			else if(red > 255) red = 255;
+			if(green < 0) green = 0;
+			else if(green > 255) green = 255;
+			if(blue < 0) blue = 0;
+			else if(blue > 255) blue = 255;
+			setRgb(red, green, blue);
 		}
 	};
 
@@ -412,14 +410,17 @@
 		value = WAIT_UNTILS[value];
 		if(value && value > 0) {
 			switch(value) {
-				case WAIT_UNTIL_TOUCHED:
-					addTouchCallback(callback);
+				case WAIT_UNTIL_FACE_TOUCHED:
+					addFaceTouchCallback(callback);
 					break;
-				case WAIT_UNTIL_LONG_PRESSED:
-					addLongPressCallback(callback);
+				case WAIT_UNTIL_FACE_FLICKED:
+					addFaceFlickCallback(callback);
 					break;
-				case WAIT_UNTIL_CALLED:
-					addCallCallback(callback);
+				case WAIT_UNTIL_HEAD_TOUCHED:
+					addHeadTouchCallback(callback);
+					break;
+				case WAIT_UNTIL_BODY_TOUCHED:
+					addBodyTouchCallback(callback);
 					break;
 			}
 		}
@@ -429,34 +430,20 @@
 		value = EVENTS[value];
 		if(value && value > 0) {
 			switch(value) {
-				case IS_TOUCHED: return touched;
-				case IS_LONG_PRESSED: return longPressed;
-				case IS_CALLED: return called;
+				case IS_FACE_TOUCHED: return faceTouched;
+				case IS_FACE_FLICKED: return faceFlicked;
+				case IS_HEAD_TOUCHED: return headTouched;
+				case IS_BODY_TOUCHED: return bodyTouched;
 			}
 		}
 		return false;
 	};
 	
-	ext.cloiCommand = function(text) {
-		if(text !== undefined) {
-			setCommand(text);
-		}
-	};
-	
-	ext.cloiWaitUntilListen = function(text, callback) {
-		if(text !== undefined) {
-			addListenCallback(text, callback);
-		}
-	};
-	
-	ext.cloiListenResult = function() {
-		return listenResult;
-	};
-
 	ext._getStatus = function() {
-		touched = false;
-		longPressed = false;
-		called = false;
+		faceTouched = false;
+		faceFlicked = false;
+		headTouched = false;
+		bodyTouched = false;
 		
 		switch(connectionState) {
 			case STATE.CONNECTED:
