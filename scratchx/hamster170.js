@@ -1,5 +1,5 @@
 (function(ext) {
-
+ 
 	var sensory = {
 		map: 0,
 		signalStrength: 0,
