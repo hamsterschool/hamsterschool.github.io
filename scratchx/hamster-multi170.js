@@ -452,9 +452,7 @@
 			robot.blockId = 0;
 			robot.wheelId = 0;
 			robot.wheelTimer = undefined;
-			robot.lineTracerId = 0;
 			robot.lineTracerCallback = undefined;
-			robot.boardId = 0;
 			robot.boardCommand = 0;
 			robot.boardState = 0;
 			robot.boardCount = 0;
@@ -483,9 +481,7 @@
 				robot.blockId = 0;
 				robot.wheelId = 0;
 				robot.wheelTimer = undefined;
-				robot.lineTracerId = 0;
 				robot.lineTracerCallback = undefined;
-				robot.boardId = 0;
 				robot.boardCommand = 0;
 				robot.boardState = 0;
 				robot.boardCount = 0;
@@ -508,19 +504,6 @@
 		for(var i in robots) {
 			robots[i].clearMotoring();
 		}
-	}
-	
-	function issueBoardId(robot) {
-		robot.boardId = robot.blockId = (robot.blockId % 65535) + 1;
-		return robot.boardId;
-	}
-	
-	function cancelBoard(robot) {
-		robot.boardId = 0;
-		robot.boardCommand = 0;
-		robot.boardState = 0;
-		robot.boardCount = 0;
-		robot.boardCallback = undefined;
 	}
 	
 	function issueWheelId(robot) {
@@ -546,14 +529,15 @@
 		robot.motoring.map |= 0x00100000;
 	}
 	
-	function issueLineTracerId(robot) {
-		robot.lineTracerId = robot.blockId = (robot.blockId % 65535) + 1;
-		return robot.lineTracerId;
+	function cancelLineTracer(robot) {
+		robot.lineTracerCallback = undefined;
 	}
 	
-	function cancelLineTracer(robot) {
-		robot.lineTracerId = 0;
-		robot.lineTracerCallback = undefined;
+	function cancelBoard(robot) {
+		robot.boardCommand = 0;
+		robot.boardState = 0;
+		robot.boardCount = 0;
+		robot.boardCallback = undefined;
 	}
 	
 	function setLeftLed(robot, color) {
@@ -607,7 +591,7 @@
 	
 	function handleLineTracer(robot) {
 		var sensory = robot.sensory;
-		if(robot.lineTracerId > 0 && (sensory.map & 0x00000010) != 0) {
+		if(robot.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
 				setLineTracerMode(robot, 0);
 				var callback = robot.lineTracerCallback;
@@ -618,7 +602,7 @@
 	}
 	
 	function handleBoard(robot) {
-		if(robot.boardId > 0) {
+		if(robot.boardCallback) {
 			var sensory = robot.sensory;
 			var motoring = robot.motoring;
 			if(robot.boardCommand == 1) {
@@ -860,7 +844,6 @@
 			cancelWheel(robot);
 			cancelLineTracer(robot);
 			
-			issueBoardId(robot);
 			motoring.leftWheel = 45;
 			motoring.rightWheel = 45;
 			motoring.motion = MOTION.NONE;
@@ -879,15 +862,14 @@
 			cancelWheel(robot);
 			cancelLineTracer(robot);
 			
-			issueBoardId(robot);
 			if(VALUES[direction] === LEFT) {
-				robot.boardCommand = 2;
 				motoring.leftWheel = -45;
 				motoring.rightWheel = 45;
+				robot.boardCommand = 2;
 			} else {
-				robot.boardCommand = 3;
 				motoring.leftWheel = 45;
 				motoring.rightWheel = -45;
+				robot.boardCommand = 3;
 			}
 			motoring.motion = MOTION.NONE;
 			robot.boardCount = 0;
@@ -989,13 +971,13 @@
 			cancelWheel(robot);
 			cancelLineTracer(robot);
 			
-			setLineTracerMode(robot, 0);
 			sec = parseFloat(sec);
 			if(sec && sec > 0) {
 				var id = issueWheelId(robot);
 				motoring.leftWheel = 30;
 				motoring.rightWheel = 30;
 				motoring.motion = MOTION.FORWARD;
+				setLineTracerMode(robot, 0);
 				robot.wheelTimer = setTimeout(function() {
 					if(robot.wheelId == id) {
 						motoring.leftWheel = 0;
@@ -1007,6 +989,10 @@
 				}, sec * 1000);
 				timeouts.push(robot.wheelTimer);
 			} else {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
+				setLineTracerMode(robot, 0);
 				callback();
 			}
 		}
@@ -1020,13 +1006,13 @@
 			cancelWheel(robot);
 			cancelLineTracer(robot);
 			
-			setLineTracerMode(robot, 0);
 			sec = parseFloat(sec);
 			if(sec && sec > 0) {
 				var id = issueWheelId(robot);
 				motoring.leftWheel = -30;
 				motoring.rightWheel = -30;
 				motoring.motion = MOTION.BACKWARD;
+				setLineTracerMode(robot, 0);
 				robot.wheelTimer = setTimeout(function() {
 					if(robot.wheelId == id) {
 						motoring.leftWheel = 0;
@@ -1038,6 +1024,10 @@
 				}, sec * 1000);
 				timeouts.push(robot.wheelTimer);
 			} else {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
+				setLineTracerMode(robot, 0);
 				callback();
 			}
 		}
@@ -1051,7 +1041,6 @@
 			cancelWheel(robot);
 			cancelLineTracer(robot);
 			
-			setLineTracerMode(robot, 0);
 			sec = parseFloat(sec);
 			if(sec && sec > 0) {
 				var id = issueWheelId(robot);
@@ -1064,6 +1053,7 @@
 					motoring.rightWheel = -30;
 					motoring.motion = MOTION.RIGHT;
 				}
+				setLineTracerMode(robot, 0);
 				robot.wheelTimer = setTimeout(function() {
 					if(robot.wheelId == id) {
 						motoring.leftWheel = 0;
@@ -1075,6 +1065,10 @@
 				}, sec * 1000);
 				timeouts.push(robot.wheelTimer);
 			} else {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				motoring.motion = MOTION.NONE;
+				setLineTracerMode(robot, 0);
 				callback();
 			}
 		}
@@ -1219,7 +1213,6 @@
 			motoring.leftWheel = 0;
 			motoring.rightWheel = 0;
 			motoring.motion = MOTION.NONE;
-			issueLineTracerId(robot);
 			setLineTracerMode(robot, mode);
 			robot.lineTracerCallback = callback;
 		}
@@ -1362,7 +1355,7 @@
 					robot.noteTimer1 = setTimeout(function() {
 						if(robot.noteId == id) {
 							setNote(robot, 0);
-							removeTimeout(robot.noteTimer1);
+							if(robot.noteTimer1 !== undefined) removeTimeout(robot.noteTimer1);
 							robot.noteTimer1 = undefined;
 						}
 					}, timeout - tail);
