@@ -514,7 +514,7 @@
 			robot.blockId = 0;
 			robot.motionCallback = undefined;
 			robot.lineTracerCallback = undefined;
-			robot.sound = 0;
+			robot.currentSound = 0;
 			robot.soundRepeat = 1;
 			robot.soundCallback = undefined;
 			robot.noteId = 0;
@@ -551,7 +551,7 @@
 				robot.blockId = 0;
 				robot.motionCallback = undefined;
 				robot.lineTracerCallback = undefined;
-				robot.sound = 0;
+				robot.currentSound = 0;
 				robot.soundRepeat = 1;
 				robot.soundCallback = undefined;
 				robot.noteId = 0;
@@ -659,7 +659,7 @@
 		if(typeof count != 'number') count = 1;
 		if(count < 0) count = -1;
 		if(count) {
-			robot.sound = sound;
+			robot.currentSound = sound;
 			robot.soundRepeat = count;
 			setSound(robot, sound);
 		}
@@ -702,21 +702,21 @@
 		}
 		if(robot.soundCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.soundState == 0) {
-				if(robot.sound > 0) {
+				if(robot.currentSound > 0) {
 					if(robot.soundRepeat < 0) {
-						runSound(robot, robot.sound, -1);
+						runSound(robot, robot.currentSound, -1);
 					} else if(robot.soundRepeat > 1) {
 						robot.soundRepeat --;
-						runSound(robot, robot.sound, robot.soundRepeat);
+						runSound(robot, robot.currentSound, robot.soundRepeat);
 					} else {
-						robot.sound = 0;
+						robot.currentSound = 0;
 						robot.soundRepeat = 1;
 						var callback = robot.soundCallback;
 						cancelSound(robot);
 						if(callback) callback();
 					}
 				} else {
-					robot.sound = 0;
+					robot.currentSound = 0;
 					robot.soundRepeat = 1;
 					var callback = robot.soundCallback;
 					cancelSound(robot);
