@@ -588,13 +588,13 @@
 		motoring.map |= 0x01000000;
 	}
 	
-	function runSound(snd, count) {
+	function runSound(sound, count) {
 		if(typeof count != 'number') count = 1;
 		if(count < 0) count = -1;
 		if(count) {
-			sound = snd;
+			currentSound = sound;
 			soundRepeat = count;
-			setSound(snd);
+			setSound(sound);
 		}
 	}
 	
@@ -627,7 +627,7 @@
 		blockId = 0;
 		motionCallback = undefined;
 		lineTracerCallback = undefined;
-		sound = 0;
+		currentSound = 0;
 		soundRepeat = 1;
 		soundCallback = undefined;
 		noteId = 0;
@@ -666,21 +666,21 @@
 		}
 		if(soundCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.soundState == 0) {
-				if(sound > 0) {
+				if(currentSound > 0) {
 					if(soundRepeat < 0) {
-						runSound(sound, -1);
+						runSound(currentSound, -1);
 					} else if(soundRepeat > 1) {
 						soundRepeat --;
-						runSound(sound, soundRepeat);
+						runSound(currentSound, soundRepeat);
 					} else {
-						sound = 0;
+						currentSound = 0;
 						soundRepeat = 1;
 						var callback = soundCallback;
 						cancelSound();
 						if(callback) callback();
 					}
 				} else {
-					sound = 0;
+					currentSound = 0;
 					soundRepeat = 1;
 					var callback = soundCallback;
 					cancelSound();
