@@ -664,7 +664,7 @@
 				if(callback) callback();
 			}
 		}
-		if(soundCallback && (sensory.map & 0x00000010) != 0) {
+		if((sensory.map & 0x00000010) != 0) {
 			if(sensory.soundState == 0) {
 				if(currentSound > 0) {
 					if(soundRepeat < 0) {
