@@ -700,7 +700,7 @@
 				if(callback) callback();
 			}
 		}
-		if(robot.soundCallback && (sensory.map & 0x00000010) != 0) {
+		if((sensory.map & 0x00000010) != 0) {
 			if(sensory.soundState == 0) {
 				if(robot.currentSound > 0) {
 					if(robot.soundRepeat < 0) {
