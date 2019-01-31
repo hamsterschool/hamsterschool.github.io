@@ -460,6 +460,8 @@
 			robot.noteId = 0;
 			robot.noteTimer1 = undefined;
 			robot.noteTimer2 = undefined;
+			robot.ioId = 0;
+			robot.ioTimer = undefined;
 			robot.tempo = 60;
 			robot.reset = function() {
 				var motoring = robot.motoring;
@@ -489,6 +491,8 @@
 				robot.noteId = 0;
 				robot.noteTimer1 = undefined;
 				robot.noteTimer2 = undefined;
+				robot.ioId = 0;
+				robot.ioTimer = undefined;
 				robot.tempo = 60;
 			};
 			robot.clearMotoring = function() {
@@ -580,6 +584,19 @@
 	function setIoModeB(robot, mode) {
 		robot.motoring.ioModeB = mode;
 		robot.motoring.map |= 0x00040000;
+	}
+	
+	function issueIoId(robot) {
+		robot.ioId = robot.blockId = (robot.blockId % 65535) + 1;
+		return robot.ioId;
+	}
+	
+	function cancelIo(robot) {
+		robot.ioId = 0;
+		if(robot.ioTimer !== undefined) {
+			removeTimeout(robot.ioTimer);
+		}
+		robot.ioTimer = undefined;
 	}
 
 	function reset() {
@@ -1497,6 +1514,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelIo(robot);
 			mode = MODES[mode];
 			if(typeof mode == 'number') {
 				if(port == 'A') {
@@ -1515,6 +1533,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelIo(robot);
 			value = parseFloat(value);
 			if(typeof value == 'number') {
 				if(port == 'A') {
@@ -1533,6 +1552,7 @@
 		var robot = getRobot(index);
 		if(robot) {
 			var motoring = robot.motoring;
+			cancelIo(robot);
 			value = parseFloat(value);
 			if(typeof value == 'number') {
 				if(port == 'A') {
@@ -1550,10 +1570,13 @@
 	ext.gripper = function(index, action, callback) {
 		var robot = getRobot(index);
 		if(robot) {
-			action = VALUES[action];
+			var motoring = robot.motoring;
+			cancelIo(robot);
+			
+			var id = issueIoId(robot);
 			setIoModeA(robot, 10);
 			setIoModeB(robot, 10);
-			var motoring = robot.motoring;
+			action = VALUES[action];
 			if(action == OPEN) {
 				motoring.outputA = 1;
 				motoring.outputB = 0;
@@ -1561,9 +1584,11 @@
 				motoring.outputA = 0;
 				motoring.outputB = 1;
 			}
-			var timer = setTimeout(function() {
-				removeTimeout(timer);
-				callback();
+			robot.ioTimer = setTimeout(function() {
+				if(robot.ioId == id) {
+					cancelIo(robot);
+					callback();
+				}
 			}, 500);
 			timeouts.push(timer);
 		}
@@ -1572,9 +1597,10 @@
 	ext.releaseGripper = function(index) {
 		var robot = getRobot(index);
 		if(robot) {
+			var motoring = robot.motoring;
+			cancelIo(robot);
 			setIoModeA(robot, 10);
 			setIoModeB(robot, 10);
-			var motoring = robot.motoring;
 			motoring.outputA = 0;
 			motoring.outputB = 0;
 		}
