@@ -426,7 +426,7 @@
 	const RIGHT = 5;
 	const BACK = 6;
 	const HEAD = 7;
-	const LEVEL1_MOVE_CM = 12;
+	const LEVEL1_MOVE_CM = 6;
 	const LEVEL1_TURN_DEG = 90;
 	var tmp;
 	for(var i in MENUS) {
