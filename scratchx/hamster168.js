@@ -57,6 +57,8 @@
 	var noteId = 0;
 	var noteTimer1 = undefined;
 	var noteTimer2 = undefined;
+	var ioId = 0;
+	var ioTimer = undefined;
 	var tempo = 60;
 	var timeouts = [];
 	var socket = undefined;
@@ -535,6 +537,19 @@
 		motoring.ioModeB = mode;
 		motoring.map |= 0x00040000;
 	}
+	
+	function issueIoId() {
+		ioId = blockId = (blockId % 65535) + 1;
+		return ioId;
+	}
+	
+	function cancelIo() {
+		ioId = 0;
+		if(ioTimer !== undefined) {
+			removeTimeout(ioTimer);
+		}
+		ioTimer = undefined;
+	}
 
 	function reset() {
 		motoring.map = 0xfdfc0000;
@@ -563,6 +578,8 @@
 		noteId = 0;
 		noteTimer1 = undefined;
 		noteTimer2 = undefined;
+		ioId = 0;
+		ioTimer = undefined;
 		tempo = 60;
 		removeAllTimeouts();
 	}
@@ -1343,6 +1360,7 @@
 	};
 
 	ext.setPortTo = function(port, mode) {
+		cancelIo();
 		mode = MODES[mode];
 		if(typeof mode == 'number') {
 			if(port == 'A') {
@@ -1357,6 +1375,7 @@
 	};
 
 	ext.changeOutputBy = function(port, value) {
+		cancelIo();
 		value = parseFloat(value);
 		if(typeof value == 'number') {
 			if(port == 'A') {
@@ -1371,6 +1390,7 @@
 	};
 
 	ext.setOutputTo = function(port, value) {
+		cancelIo();
 		value = parseFloat(value);
 		if(typeof value == 'number') {
 			if(port == 'A') {
@@ -1385,9 +1405,12 @@
 	};
 	
 	ext.gripper = function(action, callback) {
-		action = VALUES[action];
+		cancelIo();
+		
+		var id = issueIoId();
 		setIoModeA(10);
 		setIoModeB(10);
+		action = VALUES[action];
 		if(action == OPEN) {
 			motoring.outputA = 1;
 			motoring.outputB = 0;
@@ -1395,14 +1418,17 @@
 			motoring.outputA = 0;
 			motoring.outputB = 1;
 		}
-		var timer = setTimeout(function() {
-			removeTimeout(timer);
-			callback();
+		ioTimer = setTimeout(function() {
+			if(ioId == id) {
+				cancelIo();
+				callback();
+			}
 		}, 500);
-		timeouts.push(timer);
+		timeouts.push(ioTimer);
 	};
 	
 	ext.releaseGripper = function() {
+		cancelIo();
 		setIoModeA(10);
 		setIoModeB(10);
 		motoring.outputA = 0;
