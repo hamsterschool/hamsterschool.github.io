@@ -2194,7 +2194,7 @@
 					callback();
 				}
 			}, 500);
-			timeouts.push(timer);
+			timeouts.push(robot.ioTimer);
 		}
 	};
 	
