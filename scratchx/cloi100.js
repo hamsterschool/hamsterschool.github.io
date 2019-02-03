@@ -15,7 +15,6 @@
 		face: 0
  	};
 	var packet = {
-		version: 1,
 		robot: motoring
  	};
 	var connectionState = 1;
@@ -286,7 +285,6 @@
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onopen = function() {
-					var slaveVersion = 1;
 					var decode = function(data) {
 						if(data.module == 'cloi' && data.index == 0) {
 							sensory = data;
@@ -296,18 +294,13 @@
 					sock.onmessage = function(message) {
 						try {
 							var received = JSON.parse(message.data);
-							slaveVersion = received.version || 0;
 							if(received.type == 0) {
 								if(received.module == 'cloi') {
 									connectionState = received.state;
 								}
 							} else {
-								if(slaveVersion == 1) {
-									for(var i in received) {
-										decode(received[i]);
-									}
-								} else {
-									decode(received);
+								for(var i in received) {
+									decode(received[i]);
 								}
 							}
 						} catch (e) {
@@ -329,9 +322,7 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json;
-									if(slaveVersion == 1) json = JSON.stringify(packet);
-									else json = JSON.stringify(packet.robot);
+									var json = JSON.stringify(packet);
 									if(canSend && socket) socket.send(json);
 									clearMotoring();
 								} catch (e) {
