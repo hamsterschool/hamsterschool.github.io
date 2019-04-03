@@ -14,11 +14,13 @@
 		temperature: 0,
 		inputA: 0,
 		inputB: 0,
+		tilt: 0,
 		lineTracerState: 0,
+		batteryState: 2,
 		handFound: false
 	};
 	var motoring = {
-    cluster: 'hamster',
+    		group: 'hamster',
 		module: 'hamster',
 		map: 0xfc000000,
 		leftWheel: 0,
@@ -74,11 +76,13 @@
 	const STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
 		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
+		ja: [ 'ロボットコーディングソフトウェアを実行してください。', 'ロボットが接続されていません。', '正常です。' ],
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
 		en: 'Hamster',
 		ko: '햄스터',
+		ja: 'ハムスター',
 		uz: 'Hamster'
 	};
 	const BLOCKS = {
@@ -114,7 +118,8 @@
 			[" ", "change tempo by %n", "changeTempoBy", 20],
 			[" ", "set tempo to %n bpm", "setTempoTo", 60],
 			["-"],
-			["b", "hand found?", "handFound"]
+			["b", "hand found?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "tilt forward"]
 		],
 		en3: [
 			["w", "move forward once on board", "boardMoveForward"],
@@ -128,7 +133,7 @@
 			[" ", "change %m.left_right_both wheel by %n", "changeWheelBy", "left", 10],
 			[" ", "set %m.left_right_both wheel to %n", "setWheelTo", "left", 30],
 			[" ", "follow %m.black_white line with %m.left_right_both floor sensor", "followLineUsingFloorSensor", "black", "left"],
-			["w", "follow %m.black_white line until %m.left_right_front_rear intersection", "followLineUntilIntersection", "black", "left"],
+			["w", "follow %m.black_white line until %m.left_right_front_rear intersection", "followLineUntilIntersection", "black", "front"],
 			[" ", "set following speed to %m.speed", "setFollowingSpeedTo", "5"],
 			[" ", "stop", "stop"],
 			["-"],
@@ -139,6 +144,7 @@
 			[" ", "change buzzer by %n", "changeBuzzerBy", 10],
 			[" ", "set buzzer to %n", "setBuzzerTo", 1000],
 			[" ", "clear buzzer", "clearBuzzer"],
+			[" ", "play note %m.note %m.octave", "playNote", "C", "4"],
 			["w", "play note %m.note %m.octave for %d.beats beats", "playNoteFor", "C", "4", 0.5],
 			["w", "rest for %d.beats beats", "restFor", 0.25],
 			[" ", "change tempo by %n", "changeTempoBy", 20],
@@ -155,6 +161,8 @@
 			["r", "temperature", "temperature"],
 			["r", "signal strength", "signalStrength"],
 			["b", "hand found?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "tilt forward"],
+			["b", "battery %m.battery ?", "battery", "normal"],
 			["-"],
 			[" ", "set port %m.port to %m.mode", "setPortTo", "A", "analog input"],
 			[" ", "change output %m.port by %n", "changeOutputBy", "A", 10],
@@ -196,7 +204,8 @@
 			[" ", "연주 속도를 %n 만큼 바꾸기", "changeTempoBy", 20],
 			[" ", "연주 속도를 %n BPM으로 정하기", "setTempoTo", 60],
 			["-"],
-			["b", "손 찾음?", "handFound"]
+			["b", "손 찾음?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "앞으로 기울임"]
 		],
 		ko3: [
 			["w", "말판 앞으로 한 칸 이동하기", "boardMoveForward"],
@@ -210,7 +219,7 @@
 			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "changeWheelBy", "왼쪽", 10],
 			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "setWheelTo", "왼쪽", 30],
 			[" ", "%m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기", "followLineUsingFloorSensor", "검은색", "왼쪽"],
-			["w", "%m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기", "followLineUntilIntersection", "검은색", "왼쪽"],
+			["w", "%m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기", "followLineUntilIntersection", "검은색", "앞쪽"],
 			[" ", "선 따라가기 속도를 %m.speed (으)로 정하기", "setFollowingSpeedTo", "5"],
 			[" ", "정지하기", "stop"],
 			["-"],
@@ -221,6 +230,7 @@
 			[" ", "버저 음을 %n 만큼 바꾸기", "changeBuzzerBy", 10],
 			[" ", "버저 음을 %n (으)로 정하기", "setBuzzerTo", 1000],
 			[" ", "버저 끄기", "clearBuzzer"],
+			[" ", "%m.note %m.octave 음을 연주하기", "playNote", "도", "4"],
 			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "playNoteFor", "도", "4", 0.5],
 			["w", "%d.beats 박자 쉬기", "restFor", 0.25],
 			[" ", "연주 속도를 %n 만큼 바꾸기", "changeTempoBy", 20],
@@ -237,6 +247,8 @@
 			["r", "온도", "temperature"],
 			["r", "신호 세기", "signalStrength"],
 			["b", "손 찾음?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "앞으로 기울임"],
+			["b", "배터리 %m.battery ?", "battery", "정상"],
 			["-"],
 			[" ", "포트 %m.port 를 %m.mode 으로 정하기", "setPortTo", "A", "아날로그 입력"],
 			[" ", "출력 %m.port 를 %n 만큼 바꾸기", "changeOutputBy", "A", 10],
@@ -245,6 +257,92 @@
 			[" ", "집게 끄기", "releaseGripper"],
 			["r", "입력 A", "inputA"],
 			["r", "입력 B", "inputB"]
+		],
+		ja1: [
+			["w", "ボード板上で前へ動かす", "boardMoveForward"],
+			["w", "ボード板上で %m.left_right に回す", "boardTurn", "左"],
+			["-"],
+			["w", "前へ動かす", "moveForward"],
+			["w", "後ろへ動かす", "moveBackward"],
+			["w", "%m.left_right に回す", "turn", "左"],
+			["-"],
+			[" ", "%m.left_right_both LEDを %m.color にする", "setLedTo", "左", "赤色"],
+			[" ", "%m.left_right_both LEDをオフ", "clearLed", "左"],
+			["-"],
+			["w", "ビープ", "beep"],
+			["-"],
+			["b", "手を見つけたか?", "handFound"]
+		],
+		ja2: [
+			["w", "ボード板上で前へ動かす", "boardMoveForward"],
+			["w", "ボード板上で %m.left_right に回す", "boardTurn", "左"],
+			["-"],
+			["w", "前へ %n 秒動かす", "moveForwardForSecs", 1],
+			["w", "後ろへ %n 秒動かす", "moveBackwardForSecs", 1],
+			["w", "%m.left_right に %n 秒回す", "turnForSecs", "左", 1],
+			["-"],
+			[" ", "%m.left_right_both LEDを %m.color にする", "setLedTo", "左", "赤色"],
+			[" ", "%m.left_right_both LEDをオフ", "clearLed", "左"],
+			["-"],
+			["w", "ビープ", "beep"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "playNoteFor", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "restFor", 0.25],
+			[" ", "テンポを %n ずつ変える", "changeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "setTempoTo", 60],
+			["-"],
+			["b", "手を見つけたか?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "前に傾けたか"]
+		],
+		ja3: [
+			["w", "ボード板上で前へ動かす", "boardMoveForward"],
+			["w", "ボード板上で %m.left_right に回す", "boardTurn", "左"],
+			["-"],
+			["w", "前へ %n 秒動かす", "moveForwardForSecs", 1],
+			["w", "後ろへ %n 秒動かす", "moveBackwardForSecs", 1],
+			["w", "%m.left_right に %n 秒回す", "turnForSecs", "左", 1],
+			[" ", "左車輪を %n 右車輪を %n ずつ変える", "changeBothWheelsBy", 10, 10],
+			[" ", "左車輪を %n 右車輪を %n にする", "setBothWheelsTo", 30, 30],
+			[" ", "%m.left_right_both 車輪を %n ずつ変える", "changeWheelBy", "左", 10],
+			[" ", "%m.left_right_both 車輪を %n にする", "setWheelTo", "左", 30],
+			[" ", "%m.black_white 線を %m.left_right_both フロアセンサーで追従する", "followLineUsingFloorSensor", "黒色", "左"],
+			["w", "%m.black_white 線を追従して %m.left_right_front_rear 交差点まで動かす", "followLineUntilIntersection", "黒色", "前"],
+			[" ", "線を追従する速度を %m.speed にする", "setFollowingSpeedTo", "5"],
+			[" ", "停止する", "stop"],
+			["-"],
+			[" ", "%m.left_right_both LEDを %m.color にする", "setLedTo", "左", "赤色"],
+			[" ", "%m.left_right_both LEDをオフ", "clearLed", "左"],
+			["-"],
+			["w", "ビープ", "beep"],
+			[" ", "ブザー音を %n ずつ変える", "changeBuzzerBy", 10],
+			[" ", "ブザー音を %n にする", "setBuzzerTo", 1000],
+			[" ", "ブザー音を止める", "clearBuzzer"],
+			[" ", "%m.note %m.octave 音を鳴らす", "playNote", "ド", "4"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "playNoteFor", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "restFor", 0.25],
+			[" ", "テンポを %n ずつ変える", "changeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "setTempoTo", 60],
+			["-"],
+			["r", "左近接センサー", "leftProximity"],
+			["r", "右近接センサー", "rightProximity"],
+			["r", "左フロアセンサー", "leftFloor"],
+			["r", "右フロアセンサー", "rightFloor"],
+			["r", "x軸加速度", "accelerationX"],
+			["r", "y軸加速度", "accelerationY"],
+			["r", "z軸加速度", "accelerationZ"],
+			["r", "照度", "light"],
+			["r", "温度", "temperature"],
+			["r", "信号強度", "signalStrength"],
+			["b", "手を見つけたか?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "前に傾けたか"],
+			["b", "電池が %m.battery ?", "battery", "正常か"],
+			["-"],
+			[" ", "ポート %m.port を %m.mode にする", "setPortTo", "A", "アナログ入力"],
+			[" ", "出力 %m.port を %n ずつ変える", "changeOutputBy", "A", 10],
+			[" ", "出力 %m.port を %n にする", "setOutputTo", "A", 100],
+			["w", "グリッパを %m.open_close", "gripper", "開く"],
+			[" ", "グリッパをオフ", "releaseGripper"],
+			["r", "入力A", "inputA"],
+			["r", "入力B", "inputB"]
 		],
 		uz1: [
 			["w", "doskada bir marta oldinga yurish", "boardMoveForward"],
@@ -278,7 +376,8 @@
 			[" ", "temni %n ga o'zgartirish", "changeTempoBy", 20],
 			[" ", "temni %n bpm ga sozlash", "setTempoTo", 60],
 			["-"],
-			["b", "qo'l topildimi?", "handFound"]
+			["b", "qo'l topildimi?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "oldinga eğin"]
 		],
 		uz3: [
 			["w", "doskada bir marta oldinga yurish", "boardMoveForward"],
@@ -292,7 +391,7 @@
 			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "changeWheelBy", "chap", 10],
 			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "setWheelTo", "chap", 30],
 			[" ", "%m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish", "followLineUsingFloorSensor", "qora", "chap"],
-			["w", "%m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish", "followLineUntilIntersection", "qora", "chap"],
+			["w", "%m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish", "followLineUntilIntersection", "qora", "old"],
 			[" ", "liniyada ergashish tezligini %m.speed ga sozlash", "setFollowingSpeedTo", "5"],
 			[" ", "to'xtatish", "stop"],
 			["-"],
@@ -303,6 +402,7 @@
 			[" ", "buzerning ovozini %n ga o'zgartirish", "changeBuzzerBy", 10],
 			[" ", "buzerning ovozini %n ga sozlash", "setBuzzerTo", 1000],
 			[" ", "buzerni o'chirish", "clearBuzzer"],
+			[" ", "%m.note %m.octave notani ijro etish", "playNote", "do", "4"],
 			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "playNoteFor", "do", "4", 0.5],
 			["w", "%d.beats zarb tanaffus", "restFor", 0.25],
 			[" ", "temni %n ga o'zgartirish", "changeTempoBy", 20],
@@ -319,6 +419,8 @@
 			["r", "harorat", "temperature"],
 			["r", "signal kuchi", "signalStrength"],
 			["b", "qo'l topildimi?", "handFound"],
+			["b", "%m.tilt ?", "tilt", "oldinga eğin"],
+			["b", "batareya %m.battery ?", "battery", "normal"],
 			["-"],
 			[" ", "%m.port portni %m.mode ga sozlash", "setPortTo", "A", "analog kiritish"],
 			[" ", "%m.port portni %n ga o'zgartirish", "changeOutputBy", "A", 10],
@@ -340,9 +442,15 @@
 			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture"],
+			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
-			"open_close": ["open", "close"]
+			"open_close": ["open", "close"],
+			"forward_backward": ["forward", "backward"],
+			"move_unit": ["cm", "seconds", "pulses"],
+			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
+			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "sound effect up", "sound effect down", "robot", "dibidibidip", "random melody", "good job", "happy", "angry", "sad", "lullaby", "march", "birthday"]
 		},
 		ko: {
 			"left_right": ["왼쪽", "오른쪽"],
@@ -354,9 +462,35 @@
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "똑바로 놓음"],
+			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
 			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
-			"open_close": ["열기", "닫기"]
+			"open_close": ["열기", "닫기"],
+			"forward_backward": ["앞쪽", "뒤쪽"],
+			"move_unit": ["cm", "초", "펄스"],
+			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
+			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "올라가는 효과음", "내려가는 효과음", "로봇", "디비디비딥", "무작위 멜로디", "잘 했어요", "행복", "화남", "슬픔", "자장가", "행진", "생일"]
+		},
+		ja: {
+			"left_right": ["左", "右"],
+			"left_right_both": ["左", "右", "両"],
+			"black_white": ["黒色", "白色"],
+			"left_right_front_rear": ["左", "右", "前", "後"],
+			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "白色"],
+			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
+			"octave": ["1", "2", "3", "4", "5", "6", "7"],
+			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "通常置いたか"],
+			"battery": ["正常か", "足りないか", "ないか"],
+			"port": ["A", "B", "AとB"],
+			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
+			"open_close": ["開く", "閉める"],
+			"forward_backward": ["前", "後"],
+			"move_unit": ["cm", "秒", "パルス"],
+			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
+			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "上がる効果音", "下がる効果音", "ロボット", "ディバディバディップ", "ランダムメロディ", "よくやった", "幸福", "怒った", "悲しみ", "子守唄", "行進", "誕生"]
 		},
 		uz: {
 			"left_right": ["chap", "o'ng"],
@@ -368,9 +502,15 @@
 			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat"],
+			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
 			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
-			"open_close": ["oching", "yoping"]
+			"open_close": ["oching", "yoping"],
+			"forward_backward": ["old", "orqa"],
+			"move_unit": ["cm", "soniya", "puls"],
+			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
+			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "ovoz effekti yuqori", "ovoz effekti past", "robot", "dibidibidip", "tasodifiy ohang", "juda yaxshi", "baxtli", "badjahl", "xafa", "alla", "marsh", "tug'ilgan kun"]
 		}
 	};
 	
@@ -388,29 +528,52 @@
 		}
 	}
 
+	var PARTS = {};
+	var DIRECTIONS = {};
+	var TOWARDS = {};
+	var UNITS = {};
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
+	var SOUNDS = {};
 	var MODES = {};
+	var GRIPPERS = {};
 	var VALUES = {};
 	const LEFT = 1;
 	const RIGHT = 2;
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
-	const WHITE = 6;
-	const OPEN = 7;
-	const CLOSE = 8;
+	const FORWARD = 1;
+	const SECONDS = 1;
+	const OPEN = 1;
+	const CLOSE = 2;
+	const WHITE = 1;
 	var tmp;
 	for(var i in MENUS) {
-		tmp = MENUS[i]['color'];
+		tmp = MENUS[i]['left_right_both'];
+		PARTS[tmp[0]] = LEFT;
+		PARTS[tmp[1]] = RIGHT;
+		PARTS[tmp[2]] = BOTH;
+		tmp = MENUS[i]['left_right_front_rear'];
+		DIRECTIONS[tmp[0]] = LEFT;
+		DIRECTIONS[tmp[1]] = RIGHT;
+		DIRECTIONS[tmp[2]] = FRONT;
+		DIRECTIONS[tmp[3]] = REAR;
+		tmp = MENUS[i]['forward_backward'];
+		TOWARDS[tmp[0]] = FORWARD;
+		tmp = MENUS[i]['move_unit'];
+		UNITS[tmp[1]] = SECONDS;
+		tmp = MENUS[i]['led_color'];
 		COLORS[tmp[0]] = 4;
-		COLORS[tmp[1]] = 6;
-		COLORS[tmp[2]] = 2;
-		COLORS[tmp[3]] = 3;
-		COLORS[tmp[4]] = 1;
-		COLORS[tmp[5]] = 5;
-		COLORS[tmp[6]] = 7;
+		COLORS[tmp[1]] = 4;
+		COLORS[tmp[2]] = 6;
+		COLORS[tmp[3]] = 2;
+		COLORS[tmp[4]] = 3;
+		COLORS[tmp[5]] = 1;
+		COLORS[tmp[6]] = 5;
+		COLORS[tmp[7]] = 5;
+		COLORS[tmp[8]] = 7;
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -424,31 +587,26 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
+		tmp = MENUS[i]['sound_effect'];
+		SOUNDS[tmp[0]] = 1;
 		tmp = MENUS[i]['mode'];
 		MODES[tmp[0]] = 0;
 		MODES[tmp[1]] = 1;
 		MODES[tmp[2]] = 8;
 		MODES[tmp[3]] = 9;
 		MODES[tmp[4]] = 10;
-		tmp = MENUS[i]['left_right_both'];
-		VALUES[tmp[0]] = LEFT;
-		VALUES[tmp[1]] = RIGHT;
-		VALUES[tmp[2]] = BOTH;
-		tmp = MENUS[i]['left_right_front_rear'];
-		VALUES[tmp[2]] = FRONT;
-		VALUES[tmp[3]] = REAR;
-		tmp = MENUS[i]['black_white'];
-		VALUES[tmp[1]] = WHITE;
 		tmp = MENUS[i]['open_close'];
 		VALUES[tmp[0]] = OPEN;
 		VALUES[tmp[1]] = CLOSE;
+		tmp = MENUS[i]['black_white'];
+		VALUES[tmp[1]] = WHITE;
 	}
 	
 	function removeTimeout(id) {
 		clearTimeout(id);
-		var index = timeouts.indexOf(id);
-		if(index >= 0) {
-			timeouts.splice(index, 1);
+		var idx = timeouts.indexOf(id);
+		if(idx >= 0) {
+			timeouts.splice(idx, 1);
 		}
 	}
 
@@ -828,209 +986,93 @@
 			socket = undefined;
 		}
 	}
-
-	ext.boardMoveForward = function(callback) {
+	
+	function __board(leftVelocity, rightVelocity, command, callback) {
 		cancelWheel();
 		cancelLineTracer();
 		
-		motoring.leftWheel = 45;
-		motoring.rightWheel = 45;
+		motoring.leftWheel = leftVelocity;
+		motoring.rightWheel = rightVelocity;
 		motoring.motion = MOTION.NONE;
-		boardCommand = 1;
+		boardCommand = command;
 		boardCount = 0;
 		boardState = 1;
 		boardCallback = callback;
 		setLineTracerMode(0);
+	}
+
+	ext.boardMoveForward = function(callback) {
+		__board(45, 45, 1, callback);
 	};
 
 	ext.boardTurn = function(direction, callback) {
-		cancelWheel();
-		cancelLineTracer();
-		
-		if(VALUES[direction] === LEFT) {
-			motoring.leftWheel = -45;
-			motoring.rightWheel = 45;
-			boardCommand = 2;
+		if(DIRECTIONS[direction] === LEFT) {
+			__board(-45, 45, 2, callback);
 		} else {
-			motoring.leftWheel = 45;
-			motoring.rightWheel = -45;
-			boardCommand = 3;
+			__board(45, -45, 3, callback);
 		}
-		motoring.motion = MOTION.NONE;
-		boardCount = 0;
-		boardState = 1;
-		boardCallback = callback;
-		setLineTracerMode(0);
 	};
 	
-	ext.moveForward = function(callback) {
+	function __motion(type, leftVelocity, rightVelocity, secs, callback) {
 		cancelBoard();
 		cancelWheel();
 		cancelLineTracer();
 		
-		var id = issueWheelId();
-		motoring.leftWheel = 30;
-		motoring.rightWheel = 30;
-		motoring.motion = MOTION.FORWARD;
-		setLineTracerMode(0);
-		wheelTimer = setTimeout(function() {
-			if(wheelId == id) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				motoring.motion = MOTION.NONE;
-				cancelWheel();
-				callback();
-			}
-		}, 1000);
-		timeouts.push(wheelTimer);
+		secs = parseFloat(secs);
+		if(secs && secs > 0) {
+			var id = issueWheelId();
+			motoring.leftWheel = leftVelocity;
+			motoring.rightWheel = rightVelocity;
+			motoring.motion = type;
+			setLineTracerMode(0);
+			wheelTimer = setTimeout(function() {
+				if(wheelId == id) {
+					motoring.leftWheel = 0;
+					motoring.rightWheel = 0;
+					motoring.motion = MOTION.NONE;
+					cancelWheel();
+					callback();
+				}
+			}, secs * 1000);
+			timeouts.push(wheelTimer);
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = MOTION.NONE;
+			setLineTracerMode(0);
+			callback();
+		}
+	}
+	
+	ext.moveForward = function(callback) {
+		__motion(MOTION.FORWAR, 30, 30, 1, callback);
 	};
 	
 	ext.moveBackward = function(callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		var id = issueWheelId();
-		motoring.leftWheel = -30;
-		motoring.rightWheel = -30;
-		motoring.motion = MOTION.BACKWARD;
-		setLineTracerMode(0);
-		wheelTimer = setTimeout(function() {
-			if(wheelId == id) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				motoring.motion = MOTION.NONE;
-				cancelWheel();
-				callback();
-			}
-		}, 1000);
-		timeouts.push(wheelTimer);
+		__motion(MOTION.BACKWARD, -30, -30, 1, callback);
 	};
 	
 	ext.turn = function(direction, callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		var id = issueWheelId();
-		if(VALUES[direction] === LEFT) {
-			motoring.leftWheel = -30;
-			motoring.rightWheel = 30;
-			motoring.motion = MOTION.LEFT;
+		if(DIRECTIONS[direction] === LEFT) {
+			__motion(MOTION.LEFT, -30, 30, 1, callback);
 		} else {
-			motoring.leftWheel = 30;
-			motoring.rightWheel = -30;
-			motoring.motion = MOTION.RIGHT;
-		}
-		setLineTracerMode(0);
-		wheelTimer = setTimeout(function() {
-			if(wheelId == id) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				motoring.motion = MOTION.NONE;
-				cancelWheel();
-				callback();
-			}
-		}, 1000);
-		timeouts.push(wheelTimer);
-	};
-
-	ext.moveForwardForSecs = function(sec, callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		sec = parseFloat(sec);
-		if(sec && sec > 0) {
-			var id = issueWheelId();
-			motoring.leftWheel = 30;
-			motoring.rightWheel = 30;
-			motoring.motion = MOTION.FORWARD;
-			setLineTracerMode(0);
-			wheelTimer = setTimeout(function() {
-				if(wheelId == id) {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					motoring.motion = MOTION.NONE;
-					cancelWheel();
-					callback();
-				}
-			}, sec * 1000);
-			timeouts.push(wheelTimer);
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = MOTION.NONE;
-			setLineTracerMode(0);
-			callback();
+			__motion(MOTION.RIGHT, 30, -30, 1, callback);
 		}
 	};
 
-	ext.moveBackwardForSecs = function(sec, callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		sec = parseFloat(sec);
-		if(sec && sec > 0) {
-			var id = issueWheelId();
-			motoring.leftWheel = -30;
-			motoring.rightWheel = -30;
-			motoring.motion = MOTION.BACKWARD;
-			setLineTracerMode(0);
-			wheelTimer = setTimeout(function() {
-				if(wheelId == id) {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					motoring.motion = MOTION.NONE;
-					cancelWheel();
-					callback();
-				}
-			}, sec * 1000);
-			timeouts.push(wheelTimer);
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = MOTION.NONE;
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.moveForwardForSecs = function(secs, callback) {
+		__motion(MOTION.FORWARD, 30, 30, secs, callback);
 	};
 
-	ext.turnForSecs = function(direction, sec, callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		sec = parseFloat(sec);
-		if(sec && sec > 0) {
-			var id = issueWheelId();
-			if(VALUES[direction] === LEFT) {
-				motoring.leftWheel = -30;
-				motoring.rightWheel = 30;
-				motoring.motion = MOTION.LEFT;
-			} else {
-				motoring.leftWheel = 30;
-				motoring.rightWheel = -30;
-				motoring.motion = MOTION.RIGHT;
-			}
-			setLineTracerMode(0);
-			wheelTimer = setTimeout(function() {
-				if(wheelId == id) {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					motoring.motion = MOTION.NONE;
-					cancelWheel();
-					callback();
-				}
-			}, sec * 1000);
-			timeouts.push(wheelTimer);
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = MOTION.NONE;
-			setLineTracerMode(0);
-			callback();
+	ext.moveBackwardForSecs = function(secs, callback) {
+		__motion(MOTION.BACKWARD, -30, -30, secs, callback);
+	};
+
+	ext.turnForSecs = function(direction, secs, callback) {
+		if(DIRECTIONS[direction] === LEFT) {
+			__motion(MOTION.LEFT, -30, 30, secs, callback);
+		else {
+			__motion(MOTION.RIGHT, 30, -30, secs, callback);
 		}
 	};
 	
