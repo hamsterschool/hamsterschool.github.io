@@ -1,45 +1,9 @@
 (function(ext) {
 
-	var sensory = {
-		map: 0,
-		signalStrength: 0,
-		leftProximity: 0,
-		rightProximity: 0,
-		leftFloor: 0,
-		rightFloor: 0,
-		accelerationX: 0,
-		accelerationY: 0,
-		accelerationZ: 0,
-		light: 0,
-		temperature: 0,
-		inputA: 0,
-		inputB: 0,
-		tilt: 0,
-		lineTracerState: 0,
-		batteryState: 2,
-		handFound: false
-	};
-	var motoring = {
-    		group: 'hamster',
-		module: 'hamster',
-		map: 0xfc000000,
-		leftWheel: 0,
-		rightWheel: 0,
-		buzzer: 0,
-		outputA: 0,
-		outputB: 0,
-		leftLed: 0,
-		rightLed: 0,
-		note: 0,
-		lineTracerMode: 0,
-		lineTracerSpeed: 5,
-		ioModeA: 0,
-		ioModeB: 0,
-		motion: 0
-	};
+	var robots = {};
+	var robotsByGroup = {};
 	var packet = {
-		version: 1,
-		robot: motoring
+		version: 2
 	};
 	const MOTION = {
 		NONE: 0,
@@ -48,22 +12,8 @@
 		LEFT: 3,
 		RIGHT: 4
 	};
+	const HAMSTER = 'hamster';
 	var connectionState = 1;
-	var blockId = 0;
-	var wheelId = 0;
-	var wheelTimer = undefined;
-	var lineTracerCallback = undefined;
-	var boardCommand = 0;
-	var boardState = 0;
-	var boardCount = 0;
-	var boardCallback = undefined;
-	var noteId = 0;
-	var noteTimer1 = undefined;
-	var noteTimer2 = undefined;
-	var ioId = 0;
-	var ioTimer = undefined;
-	var tempo = 60;
-	var timeouts = [];
 	var socket = undefined;
 	var canSend = false;
 	const STATE = {
@@ -446,11 +396,7 @@
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
-			"open_close": ["open", "close"],
-			"forward_backward": ["forward", "backward"],
-			"move_unit": ["cm", "seconds", "pulses"],
-			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
-			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "sound effect up", "sound effect down", "robot", "dibidibidip", "random melody", "good job", "happy", "angry", "sad", "lullaby", "march", "birthday"]
+			"open_close": ["open", "close"]
 		},
 		ko: {
 			"left_right": ["왼쪽", "오른쪽"],
@@ -466,11 +412,7 @@
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
 			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
-			"open_close": ["열기", "닫기"],
-			"forward_backward": ["앞쪽", "뒤쪽"],
-			"move_unit": ["cm", "초", "펄스"],
-			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
-			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "올라가는 효과음", "내려가는 효과음", "로봇", "디비디비딥", "무작위 멜로디", "잘 했어요", "행복", "화남", "슬픔", "자장가", "행진", "생일"]
+			"open_close": ["열기", "닫기"]
 		},
 		ja: {
 			"left_right": ["左", "右"],
@@ -486,11 +428,7 @@
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
 			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
-			"open_close": ["開く", "閉める"],
-			"forward_backward": ["前", "後"],
-			"move_unit": ["cm", "秒", "パルス"],
-			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
-			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "上がる効果音", "下がる効果音", "ロボット", "ディバディバディップ", "ランダムメロディ", "よくやった", "幸福", "怒った", "悲しみ", "子守唄", "行進", "誕生"]
+			"open_close": ["開く", "閉める"]
 		},
 		uz: {
 			"left_right": ["chap", "o'ng"],
@@ -506,11 +444,7 @@
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
 			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
-			"open_close": ["oching", "yoping"],
-			"forward_backward": ["old", "orqa"],
-			"move_unit": ["cm", "soniya", "puls"],
-			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
-			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "ovoz effekti yuqori", "ovoz effekti past", "robot", "dibidibidip", "tasodifiy ohang", "juda yaxshi", "baxtli", "badjahl", "xafa", "alla", "marsh", "tug'ilgan kun"]
+			"open_close": ["oching", "yoping"]
 		}
 	};
 	
@@ -530,25 +464,28 @@
 
 	var PARTS = {};
 	var DIRECTIONS = {};
-	var TOWARDS = {};
-	var UNITS = {};
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
-	var MODES = {};
+	var IO_MODES = {};
 	var GRIPPERS = {};
+	var TILTS = {};
+	var BATTERY_STATES = {};
 	var VALUES = {};
 	const LEFT = 1;
 	const RIGHT = 2;
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
-	const FORWARD = 1;
-	const SECONDS = 1;
 	const OPEN = 1;
 	const CLOSE = 2;
 	const WHITE = 1;
+	const TILT_FORWARD = 1;
+	const TILT_BACKWARD = 2;
+	const TILT_LEFT = 3;
+	const TILT_RIGHT = 4;
+	const TILT_UPSIDEDOWN = 5;
+	const TILT_NORMAL = 6;
 	var tmp;
 	for(var i in MENUS) {
 		tmp = MENUS[i]['left_right_both'];
@@ -560,20 +497,14 @@
 		DIRECTIONS[tmp[1]] = RIGHT;
 		DIRECTIONS[tmp[2]] = FRONT;
 		DIRECTIONS[tmp[3]] = REAR;
-		tmp = MENUS[i]['forward_backward'];
-		TOWARDS[tmp[0]] = FORWARD;
-		tmp = MENUS[i]['move_unit'];
-		UNITS[tmp[1]] = SECONDS;
-		tmp = MENUS[i]['led_color'];
+		tmp = MENUS[i]['color'];
 		COLORS[tmp[0]] = 4;
-		COLORS[tmp[1]] = 4;
-		COLORS[tmp[2]] = 6;
-		COLORS[tmp[3]] = 2;
-		COLORS[tmp[4]] = 3;
-		COLORS[tmp[5]] = 1;
-		COLORS[tmp[6]] = 5;
-		COLORS[tmp[7]] = 5;
-		COLORS[tmp[8]] = 7;
+		COLORS[tmp[1]] = 6;
+		COLORS[tmp[2]] = 2;
+		COLORS[tmp[3]] = 3;
+		COLORS[tmp[4]] = 1;
+		COLORS[tmp[5]] = 5;
+		COLORS[tmp[6]] = 7;
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -587,14 +518,23 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound_effect'];
-		SOUNDS[tmp[0]] = 1;
 		tmp = MENUS[i]['mode'];
-		MODES[tmp[0]] = 0;
-		MODES[tmp[1]] = 1;
-		MODES[tmp[2]] = 8;
-		MODES[tmp[3]] = 9;
-		MODES[tmp[4]] = 10;
+		IO_MODES[tmp[0]] = 0;
+		IO_MODES[tmp[1]] = 1;
+		IO_MODES[tmp[2]] = 8;
+		IO_MODES[tmp[3]] = 9;
+		IO_MODES[tmp[4]] = 10;
+		tmp = MENUS[i]['tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_UPSIDEDOWN;
+		TILTS[tmp[5]] = TILT_NORMAL;
+		tmp = MENUS[i]['battery'];
+		BATTERY_STATES[tmp[0]] = 2;
+		BATTERY_STATES[tmp[1]] = 1;
+		BATTERY_STATES[tmp[2]] = 0;
 		tmp = MENUS[i]['open_close'];
 		VALUES[tmp[0]] = OPEN;
 		VALUES[tmp[1]] = CLOSE;
@@ -602,306 +542,1005 @@
 		VALUES[tmp[1]] = WHITE;
 	}
 	
-	function removeTimeout(id) {
-		clearTimeout(id);
-		var idx = timeouts.indexOf(id);
-		if(idx >= 0) {
-			timeouts.splice(idx, 1);
-		}
-	}
+	function createHamster(index) {
+		var robot = {};
+		robot.sensory = {
+			map: 0,
+			signalStrength: 0,
+			leftProximity: 0,
+			rightProximity: 0,
+			leftFloor: 0,
+			rightFloor: 0,
+			accelerationX: 0,
+			accelerationY: 0,
+			accelerationZ: 0,
+			light: 0,
+			temperature: 0,
+			inputA: 0,
+			inputB: 0,
+			tilt: 0,
+			lineTracerState: 0,
+			batteryState: 2,
+			handFound: false
+		};
+		robot.motoring = {
+			module: HAMSTER,
+			index: index,
+			map: 0xfc000000,
+			leftWheel: 0,
+			rightWheel: 0,
+			buzzer: 0,
+			outputA: 0,
+			outputB: 0,
+			leftLed: 0,
+			rightLed: 0,
+			note: 0,
+			lineTracerMode: 0,
+			lineTracerSpeed: 5,
+			ioModeA: 0,
+			ioModeB: 0,
+			motion: 0,
+			radius: 5
+		};
+		robot.blockId = 0;
+		robot.wheelId = 0;
+		robot.wheelTimer = undefined;
+		robot.lineTracerCallback = undefined;
+		robot.boardCommand = 0;
+		robot.boardState = 0;
+		robot.boardCount = 0;
+		robot.boardCallback = undefined;
+		robot.noteId = 0;
+		robot.noteTimer1 = undefined;
+		robot.noteTimer2 = undefined;
+		robot.ioId = 0;
+		robot.ioTimer = undefined;
+		robot.tempo = 60;
+		robot.timeouts = [];
+		robot.reset = function() {
+			var motoring = robot.motoring;
+			motoring.map = 0xfdfc0000;
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.buzzer = 0;
+			motoring.outputA = 0;
+			motoring.outputB = 0;
+			motoring.leftLed = 0;
+			motoring.rightLed = 0;
+			motoring.note = 0;
+			motoring.lineTracerMode = 0;
+			motoring.lineTracerSpeed = 5;
+			motoring.ioModeA = 0;
+			motoring.ioModeB = 0;
+			motoring.motion = 0;
+			motoring.radius = 5;
 
-	function removeAllTimeouts() {
-		for(var i in timeouts) {
-			clearTimeout(timeouts[i]);
-		}
-		timeouts = [];
-	}
-	
-	function clearMotoring() {
-		motoring.map = 0xfc000000;
-	}
-	
-	function issueWheelId() {
-		wheelId = blockId = (blockId % 65535) + 1;
-		return wheelId;
-	}
-	
-	function cancelWheel() {
-		wheelId = 0;
-		if(wheelTimer !== undefined) {
-			removeTimeout(wheelTimer);
-		}
-		wheelTimer = undefined;
-	}
-	
-	function setLineTracerMode(mode) {
-		motoring.lineTracerMode = mode;
-		motoring.map |= 0x00200000;
-	}
-	
-	function setLineTracerSpeed(speed) {
-		motoring.lineTracerSpeed = speed;
-		motoring.map |= 0x00100000;
-	}
-	
-	function cancelLineTracer() {
-		lineTracerCallback = undefined;
-	}
-	
-	function cancelBoard() {
-		boardCommand = 0;
-		boardState = 0;
-		boardCount = 0;
-		boardCallback = undefined;
-	}
-	
-	function setLeftLed(color) {
-		motoring.leftLed = color;
-		motoring.map |= 0x01000000;
-	}
-	
-	function setRightLed(color) {
-		motoring.rightLed = color;
-		motoring.map |= 0x00800000;
-	}
-	
-	function setNote(note) {
-		motoring.note = note;
-		motoring.map |= 0x00400000;
-	}
-	
-	function issueNoteId() {
-		noteId = blockId = (blockId % 65535) + 1;
-		return noteId;
-	}
-	
-	function cancelNote() {
-		noteId = 0;
-		if(noteTimer1 !== undefined) {
-			removeTimeout(noteTimer1);
-		}
-		if(noteTimer2 !== undefined) {
-			removeTimeout(noteTimer2);
-		}
-		noteTimer1 = undefined;
-		noteTimer2 = undefined;
-	}
+			robot.blockId = 0;
+			robot.wheelId = 0;
+			robot.wheelTimer = undefined;
+			robot.lineTracerCallback = undefined;
+			robot.boardCommand = 0;
+			robot.boardState = 0;
+			robot.boardCount = 0;
+			robot.boardCallback = undefined;
+			robot.noteId = 0;
+			robot.noteTimer1 = undefined;
+			robot.noteTimer2 = undefined;
+			robot.ioId = 0;
+			robot.ioTimer = undefined;
+			robot.tempo = 60;
 
-	function setIoModeA(mode) {
-		motoring.ioModeA = mode;
-		motoring.map |= 0x00080000;
-	}
-	
-	function setIoModeB(mode) {
-		motoring.ioModeB = mode;
-		motoring.map |= 0x00040000;
-	}
-	
-	function issueIoId() {
-		ioId = blockId = (blockId % 65535) + 1;
-		return ioId;
-	}
-	
-	function cancelIo() {
-		ioId = 0;
-		if(ioTimer !== undefined) {
-			removeTimeout(ioTimer);
-		}
-		ioTimer = undefined;
-	}
-
-	function reset() {
-		motoring.map = 0xfdfc0000;
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		motoring.buzzer = 0;
-		motoring.outputA = 0;
-		motoring.outputB = 0;
-		motoring.leftLed = 0;
-		motoring.rightLed = 0;
-		motoring.note = 0;
-		motoring.lineTracerMode = 0;
-		motoring.lineTracerSpeed = 5;
-		motoring.ioModeA = 0;
-		motoring.ioModeB = 0;
-		motoring.motion = 0;
-		
-		blockId = 0;
-		wheelId = 0;
-		wheelTimer = undefined;
-		lineTracerCallback = undefined;
-		boardCommand = 0;
-		boardState = 0;
-		boardCount = 0;
-		boardCallback = undefined;
-		noteId = 0;
-		noteTimer1 = undefined;
-		noteTimer2 = undefined;
-		ioId = 0;
-		ioTimer = undefined;
-		tempo = 60;
-		removeAllTimeouts();
-	}
-	
-	function handleLineTracer() {
-		if(lineTracerCallback && (sensory.map & 0x00000010) != 0) {
-			if(sensory.lineTracerState == 0x40) {
-				setLineTracerMode(0);
-				var callback = lineTracerCallback;
-				cancelLineTracer();
-				if(callback) callback();
+			robot.__removeAllTimeouts();
+		};
+		robot.__removeTimeout = function(id) {
+			clearTimeout(id);
+			var idx = robot.timeouts.indexOf(id);
+			if(idx >= 0) {
+				robot.timeouts.splice(idx, 1);
 			}
-		}
-	}
-	
-	function handleBoard() {
-		if(boardCallback) {
-			if(boardCommand == 1) {
-				switch(boardState) {
-					case 1: {
-						if(boardCount < 2) {
-							if(sensory.leftFloor < 50 && sensory.rightFloor < 50)
-								boardCount ++;
-							else
-								boardCount = 0;
+		};
+		robot.__removeAllTimeouts = function() {
+			var timeouts = robot.timeouts;
+			for(var i in timeouts) {
+				clearTimeout(timeouts[i]);
+			}
+			robot.timeouts = [];
+		};
+		robot.clearMotoring = function() {
+			robot.motoring.map = 0xfc000000;
+		};
+		robot.clearEvent = function() {
+		};
+		robot.__issueWheelId = function() {
+			robot.wheelId = robot.blockId = (robot.blockId % 65535) + 1;
+			return robot.wheelId;
+		};
+		robot.__cancelWheel = function() {
+			robot.wheelId = 0;
+			if(robot.wheelTimer !== undefined) {
+				robot.__removeTimeout(robot.wheelTimer);
+			}
+			robot.wheelTimer = undefined;
+		};
+		robot.__setLineTracerMode = function(mode) {
+			robot.motoring.lineTracerMode = mode;
+			robot.motoring.map |= 0x00200000;
+		};
+		robot.__setLineTracerSpeed = function(speed) {
+			robot.motoring.lineTracerSpeed = speed;
+			robot.motoring.map |= 0x00100000;
+		};
+		robot.__cancelLineTracer = function() {
+			robot.lineTracerCallback = undefined;
+		};
+		robot.__cancelBoard = function() {
+			robot.boardCommand = 0;
+			robot.boardState = 0;
+			robot.boardCount = 0;
+			robot.boardCallback = undefined;
+		};
+		robot.__setLeftLed = function(color) {
+			robot.motoring.leftLed = color;
+			robot.motoring.map |= 0x01000000;
+		};
+		robot.__setRightLed = function(color) {
+			robot.motoring.rightLed = color;
+			robot.motoring.map |= 0x00800000;
+		};
+		robot.__setNote = function(note) {
+			robot.motoring.note = note;
+			robot.motoring.map |= 0x00400000;
+		};
+		robot.__issueNoteId = function() {
+			robot.noteId = robot.blockId = (robot.blockId % 65535) + 1;
+			return robot.noteId;
+		};
+		robot.__cancelNote = function() {
+			robot.noteId = 0;
+			if(robot.noteTimer1 !== undefined) {
+				robot.__removeTimeout(robot.noteTimer1);
+			}
+			if(robot.noteTimer2 !== undefined) {
+				robot.__removeTimeout(robot.noteTimer2);
+			}
+			robot.noteTimer1 = undefined;
+			robot.noteTimer2 = undefined;
+		};
+		robot.__setIoModeA = function(mode) {
+			robot.motoring.ioModeA = mode;
+			robot.motoring.map |= 0x00080000;
+		};
+		robot.__setIoModeB = function(mode) {
+			robot.motoring.ioModeB = mode;
+			robot.motoring.map |= 0x00040000;
+		};
+		robot.__issueIoId = function() {
+			robot.ioId = robot.blockId = (robot.blockId % 65535) + 1;
+			return robot.ioId;
+		};
+		robot.__cancelIo = function() {
+			robot.ioId = 0;
+			if(robot.ioTimer !== undefined) {
+				robot.__removeTimeout(robot.ioTimer);
+			}
+			robot.ioTimer = undefined;
+		};
+		robot.handleSensory = function() {
+			var sensory = robot.sensory;
+			if(robot.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
+				if(sensory.lineTracerState == 0x40) {
+					robot.__setLineTracerMode(0);
+					var callback = robot.lineTracerCallback;
+					robot.__cancelLineTracer();
+					if(callback) callback();
+				}
+			}
+			if(robot.boardCallback) {
+				var motoring = robot.motoring;
+				if(robot.boardCommand == 1) {
+					switch(robot.boardState) {
+						case 1: {
+							if(robot.boardCount < 2) {
+								if(sensory.leftFloor < 50 && sensory.rightFloor < 50)
+									robot.boardCount ++;
+								else
+									robot.boardCount = 0;
+								var diff = sensory.leftFloor - sensory.rightFloor;
+								motoring.leftWheel = 45 + diff * 0.25;
+								motoring.rightWheel = 45 - diff * 0.25;
+							} else {
+								robot.boardCount = 0;
+								robot.boardState = 2;
+							}
+							break;
+						}
+						case 2: {
 							var diff = sensory.leftFloor - sensory.rightFloor;
 							motoring.leftWheel = 45 + diff * 0.25;
 							motoring.rightWheel = 45 - diff * 0.25;
-						} else {
-							boardCount = 0;
-							boardState = 2;
+							robot.boardState = 3;
+							robot.wheelTimer = setTimeout(function() {
+								motoring.leftWheel = 0;
+								motoring.rightWheel = 0;
+								robot.boardState = 4;
+								if(robot.wheelTimer !== undefined) robot.__removeTimeout(robot.wheelTimer);
+								robot.wheelTimer = undefined;
+							}, 250);
+							robot.timeouts.push(robot.wheelTimer);
+							break;
 						}
-						break;
-					}
-					case 2: {
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						motoring.leftWheel = 45 + diff * 0.25;
-						motoring.rightWheel = 45 - diff * 0.25;
-						boardState = 3;
-						wheelTimer = setTimeout(function() {
+						case 3: {
+							var diff = sensory.leftFloor - sensory.rightFloor;
+							motoring.leftWheel = 45 + diff * 0.25;
+							motoring.rightWheel = 45 - diff * 0.25;
+							break;
+						}
+						case 4: {
 							motoring.leftWheel = 0;
 							motoring.rightWheel = 0;
-							boardState = 4;
-							if(wheelTimer !== undefined) removeTimeout(wheelTimer);
-							wheelTimer = undefined;
-						}, 250);
-						timeouts.push(wheelTimer);
-						break;
-					}
-					case 3: {
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						motoring.leftWheel = 45 + diff * 0.25;
-						motoring.rightWheel = 45 - diff * 0.25;
-						break;
-					}
-					case 4: {
-						motoring.leftWheel = 0;
-						motoring.rightWheel = 0;
-						var callback = boardCallback;
-						cancelBoard();
-						if(callback) callback();
-						break;
-					}
-				}
-			} else if(boardCommand == 2) {
-				switch(boardState) {
-					case 1: {
-						if(boardCount < 2) {
-							if(sensory.leftFloor > 50)
-								boardCount ++;
-						} else {
-							boardCount = 0;
-							boardState = 2;
-						}
-						break;
-					}
-					case 2: {
-						if(sensory.leftFloor < 20) {
-							boardState = 3;
-						}
-						break;
-					}
-					case 3: {
-						if(boardCount < 2) {
-							if(sensory.leftFloor < 20)
-								boardCount ++;
-						} else {
-							boardCount = 0;
-							boardState = 4;
-						}
-						break;
-					}
-					case 4: {
-						if(sensory.leftFloor > 50) {
-							boardState = 5;
-						}
-						break;
-					}
-					case 5: {
-						var diff = sensory.leftFloor - sensory.rightFloor;
-						if(diff > -15) {
-							motoring.leftWheel = 0;
-							motoring.rightWheel = 0;
-							var callback = boardCallback;
-							cancelBoard();
+							var callback = robot.boardCallback;
+							robot.__cancelBoard();
 							if(callback) callback();
-						} else {
-							motoring.leftWheel = diff * 0.5;
-							motoring.rightWheel = -diff * 0.5;
+							break;
 						}
-						break;
 					}
-				}
-			} else if(boardCommand == 3) {
-				switch(boardState) {
-					case 1: {
-						if(boardCount < 2) {
-							if(sensory.rightFloor > 50)
-								boardCount ++;
-						} else {
-							boardCount = 0;
-							boardState = 2;
+				} else if(robot.boardCommand == 2) {
+					switch(robot.boardState) {
+						case 1: {
+							if(robot.boardCount < 2) {
+								if(sensory.leftFloor > 50)
+									robot.boardCount ++;
+							} else {
+								robot.boardCount = 0;
+								robot.boardState = 2;
+							}
+							break;
 						}
-						break;
+						case 2: {
+							if(sensory.leftFloor < 20) {
+								robot.boardState = 3;
+							}
+							break;
+						}
+						case 3: {
+							if(robot.boardCount < 2) {
+								if(sensory.leftFloor < 20)
+									robot.boardCount ++;
+							} else {
+								robot.boardCount = 0;
+								robot.boardState = 4;
+							}
+							break;
+						}
+						case 4: {
+							if(sensory.leftFloor > 50) {
+								robot.boardState = 5;
+							}
+							break;
+						}
+						case 5: {
+							var diff = sensory.leftFloor - sensory.rightFloor;
+							if(diff > -15) {
+								motoring.leftWheel = 0;
+								motoring.rightWheel = 0;
+								var callback = robot.boardCallback;
+								robot.__cancelBoard();
+								if(callback) callback();
+							} else {
+								motoring.leftWheel = diff * 0.5;
+								motoring.rightWheel = -diff * 0.5;
+							}
+							break;
+						}
 					}
-					case 2: {
-						if(sensory.rightFloor < 20) {
-							boardState = 3;
+				} else if(robot.boardCommand == 3) {
+					switch(robot.boardState) {
+						case 1: {
+							if(robot.boardCount < 2) {
+								if(sensory.rightFloor > 50)
+									robot.boardCount ++;
+							} else {
+								robot.boardCount = 0;
+								robot.boardState = 2;
+							}
+							break;
 						}
-						break;
-					}
-					case 3: {
-						if(boardCount < 2) {
-							if(sensory.rightFloor < 20)
-								boardCount ++;
-						} else {
-							boardCount = 0;
-							boardState = 4;
+						case 2: {
+							if(sensory.rightFloor < 20) {
+								robot.boardState = 3;
+							}
+							break;
 						}
-						break;
-					}
-					case 4: {
-						if(sensory.rightFloor > 50) {
-							boardState = 5;
+						case 3: {
+							if(robot.boardCount < 2) {
+								if(sensory.rightFloor < 20)
+									robot.boardCount ++;
+							} else {
+								robot.boardCount = 0;
+								robot.boardState = 4;
+							}
+							break;
 						}
-						break;
-					}
-					case 5: {
-						var diff = sensory.rightFloor - sensory.leftFloor;
-						if(diff > -15) {
-							motoring.leftWheel = 0;
-							motoring.rightWheel = 0;
-							var callback = boardCallback;
-							cancelBoard();
-							if(callback) callback();
-						} else {
-							motoring.leftWheel = -diff * 0.5;
-							motoring.rightWheel = diff * 0.5;
+						case 4: {
+							if(sensory.rightFloor > 50) {
+								robot.boardState = 5;
+							}
+							break;
 						}
-						break;
+						case 5: {
+							var diff = sensory.rightFloor - sensory.leftFloor;
+							if(diff > -15) {
+								motoring.leftWheel = 0;
+								motoring.rightWheel = 0;
+								var callback = robot.boardCallback;
+								robot.__cancelBoard();
+								if(callback) callback();
+							} else {
+								motoring.leftWheel = -diff * 0.5;
+								motoring.rightWheel = diff * 0.5;
+							}
+							break;
+						}
 					}
 				}
 			}
+		};
+		robot.__board = function(leftVelocity, rightVelocity, command, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			motoring.leftWheel = leftVelocity;
+			motoring.rightWheel = rightVelocity;
+			motoring.motion = 0;
+			robot.boardCommand = command;
+			robot.boardCount = 0;
+			robot.boardState = 1;
+			robot.boardCallback = callback;
+			robot.__setLineTracerMode(0);
+		};
+		robot.boardForward = function(callback) {
+			robot.__board(45, 45, 1, callback);
+		};
+		robot.boardTurn = function(direction, callback) {
+			if(direction == 'left') {
+				robot.__board(-45, 45, 2, callback);
+			} else {
+				robot.__board(45, -45, 3, callback);
+			}
+		};
+		robot.__motion = function(type, leftVelocity, rightVelocity, secs, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			secs = parseFloat(secs);
+			if(secs && secs > 0) {
+				var id = robot.__issueWheelId();
+				motoring.leftWheel = leftVelocity;
+				motoring.rightWheel = rightVelocity;
+				motoring.motion = type;
+				robot.__setLineTracerMode(0);
+				robot.wheelTimer = setTimeout(function() {
+					if(robot.wheelId == id) {
+						motoring.leftWheel = 0;
+						motoring.rightWheel = 0;
+						motoring.motion = 0;
+						robot.__cancelWheel();
+						callback();
+					}
+				}, secs * 1000);
+				robot.timeouts.push(robot.wheelTimer);
+			} else {
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				motoring.motion = 0;
+				robot.__setLineTracerMode(0);
+				callback();
+			}
+		};
+		robot.moveForward = function(callback) {
+			robot.__motion(1, 30, 30, 1, callback);
+		};
+		robot.moveBackward = function(callback) {
+			robot.__motion(2, -30, -30, 1, callback);
+		};
+		robot.turn = function(direction, callback) {
+			if(direction == 'left') {
+				robot.__motion(3, -30, 30, 1, callback);
+			} else {
+				robot.__motion(4, 30, -30, 1, callback);
+			}
+		};
+		robot.moveForwardSecs = function(secs, callback) {
+			robot.__motion(1, 30, 30, secs, callback);
+		};
+		robot.moveBackwardSecs = function(secs, callback) {
+			robot.__motion(2, -30, -30, secs, callback);
+		};
+		robot.turnSecs = function(direction, secs, callback) {
+			if(direction == 'left') {
+				robot.__motion(3, -30, 30, secs, callback);
+			} else {
+				robot.__motion(4, 30, -30, secs, callback);
+			}
+		};
+		robot.moveForwardUnit = function(value, unit, callback) {
+			if(unit == 'seconds') {
+				robot.moveForwardSecs(value, callback);
+			}
+		};
+		robot.moveBackwardUnit = function(value, unit, callback) {
+			if(unit == 'seconds') {
+				robot.moveBackwardSecs(value, callback);
+			}
+		};
+		robot.turnUnit = function(direction, value, unit, callback) {
+			if(unit == 'seconds') {
+				robot.turnSecs(direction, value, callback);
+			}
+		};
+		robot.pivotUnit = function(wheel, value, unit, toward, callback) {
+			if(unit == 'seconds') {
+				if(wheel == 'left') {
+					if(toward == 'forward') {
+						robot.__motion(5, 0, 30, value, callback);
+					} else {
+						robot.__motion(6, 0, -30, value, callback);
+					}
+				} else {
+					if(toward == 'forward') {
+						robot.__motion(7, 30, 0, value, callback);
+					} else {
+						robot.__motion(8, -30, 0, value, callback);
+					}
+				}
+			}
+		};
+		robot.swingUnit = function(wheel, value, unit, radius, toward, callback) {
+			if(unit == 'seconds') {
+				robot.motoring.radius = radius;
+				if(wheel == 'left') {
+					if(toward == 'forward') {
+						robot.__motion(9, 0, 0, value, callback);
+					} else {
+						robot.__motion(10, 0, 0, value, callback);
+					}
+				} else {
+					if(toward == 'forward') {
+						robot.__motion(11, 0, 0, value, callback);
+					} else {
+						robot.__motion(12, 0, 0, value, callback);
+					}
+				}
+			}
+		};
+		robot.penUnit = function(pen, value, unit, toward, callback) {
+			if(unit == 'seconds') {
+				if(pen == 'left') {
+					if(toward == 'forward') {
+						robot.__motion(13, 0, 0, value, callback);
+					} else {
+						robot.__motion(14, 0, 0, value, callback);
+					}
+				} else {
+					if(toward == 'forward') {
+						robot.__motion(15, 0, 0, value, callback);
+					} else {
+						robot.__motion(16, 0, 0, value, callback);
+					}
+				}
+			}
+		};
+		robot.setWheels = function(leftVelocity, rightVelocity) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			rightVelocity = parseFloat(rightVelocity);
+			leftVelocity = parseFloat(leftVelocity);
+			if(typeof leftVelocity == 'number') {
+				motoring.leftWheel = leftVelocity;
+			}
+			if(typeof rightVelocity == 'number') {
+				motoring.rightWheel = rightVelocity;
+			}
+			motoring.motion = 0;
+			robot.__setLineTracerMode(0);
+		};
+		robot.changeWheels = function(leftVelocity, rightVelocity) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			leftVelocity = parseFloat(leftVelocity);
+			rightVelocity = parseFloat(rightVelocity);
+			if(typeof leftVelocity == 'number') {
+				motoring.leftWheel += leftVelocity;
+			}
+			if(typeof rightVelocity == 'number') {
+				motoring.rightWheel += rightVelocity;
+			}
+			motoring.motion = 0;
+			robot.__setLineTracerMode(0);
+		};
+		robot.setWheel = function(wheel, velocity) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			velocity = parseFloat(velocity);
+			if(typeof velocity == 'number') {
+				if(wheel == 'left') {
+					motoring.leftWheel = velocity;
+				} else if(wheel == 'right') {
+					motoring.rightWheel = velocity;
+				} else {
+					motoring.leftWheel = velocity;
+					motoring.rightWheel = velocity;
+				}
+			}
+			motoring.motion = 0;
+			robot.__setLineTracerMode(0);
+		};
+		robot.changeWheel = function(wheel, velocity) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			velocity = parseFloat(velocity);
+			if(typeof velocity == 'number') {
+				if(wheel == 'left') {
+					motoring.leftWheel += velocity;
+				} else if(wheel == 'right') {
+					motoring.rightWheel += velocity;
+				} else {
+					motoring.leftWheel += velocity;
+					motoring.rightWheel += velocity;
+				}
+			}
+			motoring.motion = 0;
+			robot.__setLineTracerMode(0);
+		};
+		robot.followLine = function(color, sensor) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			var mode = 1;
+			if(sensor == 'right') mode = 2;
+			else if(sensor == 'both') mode = 3;
+			if(color == 'white') mode += 7;
+
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			robot.__setLineTracerMode(mode);
+		};
+		robot.followLineUntil = function(color, direction, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+
+			var mode = 4;
+			if(direction == 'right') mode = 5;
+			else if(direction == 'front') mode = 6;
+			else if(direction == 'rear') mode = 7;
+			if(color == 'white') mode += 7;
+
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			robot.__setLineTracerMode(mode);
+			robot.lineTracerCallback = callback;
+		};
+		robot.setLineTracerSpeed = function(speed) {
+			speed = parseInt(speed);
+			if(typeof speed == 'number') {
+				robot.__setLineTracerSpeed(speed);
+			}
+		};
+		robot.stop = function() {
+			var motoring = robot.motoring;
+			robot.__cancelBoard();
+			robot.__cancelWheel();
+			robot.__cancelLineTracer();
+
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			robot.__setLineTracerMode(0);
+		};
+		robot.setLed = function(led, color) {
+			color = COLORS[color];
+			if(color && color > 0) {
+				if(led == 'left') {
+					robot.__setLeftLed(color);
+				} else if(led == 'right') {
+					robot.__setRightLed(color);
+				} else {
+					robot.__setLeftLed(color);
+					robot.__setRightLed(color);
+				}
+			}
+		};
+		robot.clearLed = function(led) {
+			if(led == 'left') {
+				robot.__setLeftLed(0);
+			} else if(led == 'right') {
+				robot.__setRightLed(0);
+			} else {
+				robot.__setLeftLed(0);
+				robot.__setRightLed(0);
+			}
+		};
+		robot.setRgbArray = function(led, rgb) {
+		};
+		robot.setRgb = function(led, red, green, blue) {
+		};
+		robot.changeRgb = function(led, red, green, blue) {
+		};
+		robot.runBeep = function(count, id, callback) {
+			if(count) {
+				var motoring = robot.motoring;
+				motoring.buzzer = 440;
+				robot.__setNote(0);
+				robot.noteTimer1 = setTimeout(function() {
+					if(!id || robot.noteId == id) {
+						motoring.buzzer = 0;
+						if(robot.noteTimer1 !== undefined) robot.removeTimeout(robot.noteTimer1);
+						robot.noteTimer1 = undefined;
+					}
+				}, 100);
+				robot.timeouts.push(robot.noteTimer1);
+				robot.noteTimer2 = setTimeout(function() {
+					if(!id || robot.noteId == id) {
+						motoring.buzzer = 0;
+						if(robot.noteTimer2 !== undefined) robot.removeTimeout(robot.noteTimer2);
+						robot.noteTimer2 = undefined;
+						if(count < 0) {
+							robot.runBeep(-1, id);
+						} else if(count == 1) {
+							robot.__cancelNote();
+							if(id && callback) callback();
+						} else {
+							robot.runBeep(count - 1, id);
+						}
+					}
+				}, 200);
+				robot.timeouts.push(robot.noteTimer2);
+			}
+		};
+		robot.beep = function(callback) {
+			robot.__cancelNote();
+			var id = robot.__issueNoteId();
+			robot.runBeep(1, id, callback);
+		};
+		robot.playSound = function(sound, count) {
+			robot.__cancelNote();
+			robot.motoring.buzzer = 0;
+			robot.__setNote(0);
+			if(sound == 'beep' && count) {
+				robot.runBeep(count);
+			}
+		};
+		robot.playSoundUntil = function(sound, count, callback) {
+			robot.__cancelNote();
+			robot.motoring.buzzer = 0;
+			robot.__setNote(0);
+			if(sound == 'beep' && count) {
+				var id = robot.__issueNoteId();
+				robot.runBeep(count, id, callback);
+			}
+		};
+		robot.setBuzzer = function(hz) {
+			var motoring = robot.motoring;
+			robot.__cancelNote();
+
+			hz = parseFloat(hz);
+			if(typeof hz == 'number') {
+				motoring.buzzer = hz;
+			}
+			robot.__setNote(0);
+		};
+		robot.changeBuzzer = function(hz) {
+			var motoring = robot.motoring;
+			robot.__cancelNote();
+
+			hz = parseFloat(hz);
+			if(typeof hz == 'number') {
+				motoring.buzzer += hz;
+			}
+			robot.__setNote(0);
+		};
+		robot.clearBuzzer = function() {
+			robot.__cancelNote();
+			robot.motoring.buzzer = 0;
+			robot.__setNote(0);
+		};
+		robot.clearSound = function() {
+			robot.clearBuzzer();
+		};
+		robot.playNote = function(note, octave) {
+			var motoring = robot.motoring;
+			robot.__cancelNote();
+
+			note = NOTES[note];
+			octave = parseInt(octave);
+			motoring.buzzer = 0;
+			if(note && octave && octave > 0 && octave < 8) {
+				note += (octave - 1) * 12;
+				robot.__setNote(note);
+			} else {
+				robot.__setNote(0);
+			}
+		};
+		robot.playNoteBeat = function(note, octave, beat, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelNote();
+
+			note = NOTES[note];
+			octave = parseInt(octave);
+			var tmp = BEATS[beat];
+			if(tmp) beat = tmp;
+			else beat = parseFloat(beat);
+			motoring.buzzer = 0;
+			if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && robot.tempo > 0) {
+				var id = robot.__issueNoteId();
+				note += (octave - 1) * 12;
+				robot.__setNote(note);
+				var timeout = beat * 60 * 1000 / robot.tempo;
+				var tail = (timeout > 100) ? 100 : 0;
+				if(tail > 0) {
+					robot.noteTimer1 = setTimeout(function() {
+						if(robot.noteId == id) {
+							robot.__setNote(0);
+							if(robot.noteTimer1 !== undefined) robot.__removeTimeout(robot.noteTimer1);
+							robot.noteTimer1 = undefined;
+						}
+					}, timeout - tail);
+					robot.timeouts.push(robot.noteTimer1);
+				}
+				robot.noteTimer2 = setTimeout(function() {
+					if(robot.noteId == id) {
+						robot.__setNote(0);
+						robot.__cancelNote();
+						callback();
+					}
+				}, timeout);
+				robot.timeouts.push(robot.noteTimer2);
+			} else {
+				robot.__setNote(0);
+				callback();
+			}
+		};
+		robot.restBeat = function(beat, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelNote();
+
+			var tmp = BEATS[beat];
+			if(tmp) beat = tmp;
+			else beat = parseFloat(beat);
+			motoring.buzzer = 0;
+			robot.__setNote(0);
+			if(beat && beat > 0 && robot.tempo > 0) {
+				var id = robot.__issueNoteId();
+				robot.noteTimer1 = setTimeout(function() {
+					if(robot.noteId == id) {
+						robot.__cancelNote();
+						callback();
+					}
+				}, beat * 60 * 1000 / robot.tempo);
+				robot.timeouts.push(robot.noteTimer1);
+			} else {
+				callback();
+			}
+		};
+		robot.setTempo = function(bpm) {
+			bpm = parseFloat(bpm);
+			if(typeof bpm == 'number') {
+				robot.tempo = bpm;
+				if(robot.tempo < 1) robot.tempo = 1;
+			}
+		};
+		robot.changeTempo = function(bpm) {
+			bpm = parseFloat(bpm);
+			if(typeof bpm == 'number') {
+				robot.tempo += bpm;
+				if(robot.tempo < 1) robot.tempo = 1;
+			}
+		};
+		robot.getLeftProximity = function() {
+			return robot.sensory.leftProximity;
+		};
+		robot.getRightProximity = function() {
+			return robot.sensory.rightProximity;
+		};
+		robot.getLeftFloor = function() {
+			return robot.sensory.leftFloor;
+		};
+		robot.getRightFloor = function() {
+			return robot.sensory.rightFloor;
+		};
+		robot.getAccelerationX = function() {
+			return robot.sensory.accelerationX;
+		};
+		robot.getAccelerationY = function() {
+			return robot.sensory.accelerationY;
+		};
+		robot.getAccelerationZ = function() {
+			return robot.sensory.accelerationZ;
+		};
+		robot.getLight = function() {
+			return robot.sensory.light;
+		};
+		robot.getTemperature = function() {
+			return robot.sensory.temperature;
+		};
+		robot.getSignalStrength = function() {
+			return robot.sensory.signalStrength;
+		};
+		robot.checkHandFound = function() {
+			var sensory = robot.sensory;
+			return (sensory.handFound === undefined) ? (sensory.leftProximity > 50 || sensory.rightProximity > 50) : sensory.handFound;
+		};
+		robot.checkTilt = function(tilt) {
+			switch(TILTS[tilt]) {
+				case TILT_FORWARD: return robot.sensory.tilt == 1;
+				case TILT_BACKWARD: return robot.sensory.tilt == -1;
+				case TILT_LEFT: return robot.sensory.tilt == 2;
+				case TILT_RIGHT: return robot.sensory.tilt == -2;
+				case TILT_UPSIDEDOWN: return robot.sensory.tilt == 3;
+				case TILT_NORMAL: return robot.sensory.tilt == -3;
+			}
+			return false;
+		};
+		robot.checkBattery = function(battery) {
+			return robot.sensory.batteryState == BATTERY_STATES[battery];
+		};
+		robot.setIoMode = function(port, mode) {
+			robot.__cancelIo();
+			mode = IO_MODES[mode];
+			if(typeof mode == 'number') {
+				if(port == 'A') {
+					robot.__setIoModeA(mode);
+				} else if(port == 'B') {
+					robot.__setIoModeB(mode);
+				} else {
+					robot.__setIoModeA(mode);
+					robot.__setIoModeB(mode);
+				}
+			}
+		};
+		robot.setOutput = function(port, value) {
+			var motoring = robot.motoring;
+			robot.__cancelIo();
+			value = parseFloat(value);
+			if(typeof value == 'number') {
+				if(port == 'A') {
+					motoring.outputA = value;
+				} else if(port == 'B') {
+					motoring.outputB = value;
+				} else {
+					motoring.outputA = value;
+					motoring.outputB = value;
+				}
+			}
+		};
+		robot.changeOutput = function(port, value) {
+			var motoring = robot.motoring;
+			robot.__cancelIo();
+			value = parseFloat(value);
+			if(typeof value == 'number') {
+				if(port == 'A') {
+					motoring.outputA += value;
+				} else if(port == 'B') {
+					motoring.outputB += value;
+				} else {
+					motoring.outputA += value;
+					motoring.outputB += value;
+				}
+			}
+		};
+		robot.gripper = function(action, callback) {
+			var motoring = robot.motoring;
+			robot.__cancelIo();
+
+			var id = robot.__issueIoId();
+			robot.__setIoModeA(10);
+			robot.__setIoModeB(10);
+			if(action == 'open') {
+				motoring.outputA = 1;
+				motoring.outputB = 0;
+			} else {
+				motoring.outputA = 0;
+				motoring.outputB = 1;
+			}
+			robot.ioTimer = setTimeout(function() {
+				if(robot.ioId == id) {
+					robot.__cancelIo();
+					callback();
+				}
+			}, 500);
+			robot.timeouts.push(robot.ioTimer);
+		};
+		robot.releaseGripper = function() {
+			var motoring = robot.motoring;
+			robot.__cancelIo();
+			robot.__setIoModeA(10);
+			robot.__setIoModeB(10);
+			motoring.outputA = 0;
+			motoring.outputB = 0;
+		};
+		robot.getInputA = function() {
+			return robot.sensory.inputA;
+		};
+		robot.getInputB = function() {
+			return robot.sensory.inputB;
+		};
+		robot.writeSerial = function(mode, text, callback) {
+			robot.__cancelIo();
+		};
+		robot.readSerial = function(callback) {
+			robot.__cancelIo();
+		};
+		robot.readSerialUltil = function(delimiter, callback) {
+			robot.__cancelIo();
+		};
+		robot.setSerialRate = function(baud) {
+			robot.__cancelIo();
+		};
+		robot.getSerialInput = function() {
+			return '';
+		};
+	}
+	
+	function createHamsterS() {
+	}
+	
+	function getOrCreateRobot(group, module, index) {
+		var key = module + index;
+		var robot = robots[key];
+		if(!robot) {
+			if(module == HAMSTER) {
+				robot = createHamster();
+			} else if(module == HAMSTER_S) {
+				robot = createHamsterS();
+			}
+			if(robot) {
+				robots[key] = robot;
+				packet[key] = robot.motoring;
+			}
+		}
+		robotsByGroup[group + index] = robot;
+		return robot;
+	}
+	
+	function getRobot(group, index) {
+		return robotsByGroup[group + index];
+	}
+	
+	function clearMotorings() {
+		for(var i in robots) {
+			robots[i].clearMotoring();
+		}
+	}
+	
+	function clearEvents() {
+		for(var i in robots) {
+			robots[i].clearEvent();
+		}
+	}
+
+	function reset() {
+		for(var i in robots) {
+			robots[i].reset();
 		}
 	}
 	
@@ -909,42 +1548,43 @@
 		if('WebSocket' in window) {
 			try {
 				var sock = new WebSocket(url);
+				var slaveVersion = 1;
+				var decode = function(data) {
+					if(data.module == HAMSTER && data.index == 0) {
+						var robot = getOrCreateRobot(data.module, data.realModule, 0);
+						if(robot) {
+							robot.sensory = data;
+							robot.handleSensory();
+						}
+					}
+				};
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
-				sock.onopen = function() {
-					var slaveVersion = 1;
-					var decode = function(data) {
-						if(data.module == 'hamster' && data.index == 0) {
-							sensory = data;
-							if(lineTracerCallback) handleLineTracer();
-							if(boardCallback) handleBoard();
-						}
-					};
-					sock.onmessage = function(message) {
-						try {
-							var received = JSON.parse(message.data);
-							slaveVersion = received.version || 0;
-							if(received.type == 0) {
-								if(received.module == 'hamster') {
-									connectionState = received.state;
+				sock.onmessage = function(message) {
+					try {
+						var received = JSON.parse(message.data);
+						slaveVersion = received.version || 0;
+						if(received.type == 0) {
+							if(received.module == HAMSTER) {
+								connectionState = received.state;
+							}
+						} else {
+							if(slaveVersion == 1) {
+								for(var i in received) {
+									decode(received[i]);
 								}
 							} else {
-								if(slaveVersion == 1) {
-									for(var i in received) {
-										decode(received[i]);
-									}
-								} else {
-									decode(received);
-								}
+								decode(received);
 							}
-						} catch (e) {
 						}
-					};
-					sock.onclose = function() {
-						canSend = false;
-						connectionState = STATE.CLOSED;
-					};
-					
+					} catch (e) {
+					}
+				};
+				sock.onclose = function() {
+					canSend = false;
+					connectionState = STATE.CLOSED;
+				};
+				sock.onopen = function() {
 					if(!Date.now) {
 						Date.now = function() {
 							return new Date().getTime();
@@ -960,7 +1600,7 @@
 									if(slaveVersion == 1) json = JSON.stringify(packet);
 									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
-									clearMotoring();
+									clearMotorings();
 								} catch (e) {
 								}
 								targetTime += 20;
@@ -987,503 +1627,242 @@
 		}
 	}
 	
-	function __board(leftVelocity, rightVelocity, command, callback) {
-		cancelWheel();
-		cancelLineTracer();
-		
-		motoring.leftWheel = leftVelocity;
-		motoring.rightWheel = rightVelocity;
-		motoring.motion = MOTION.NONE;
-		boardCommand = command;
-		boardCount = 0;
-		boardState = 1;
-		boardCallback = callback;
-		setLineTracerMode(0);
-	}
-
 	ext.boardMoveForward = function(callback) {
-		__board(45, 45, 1, callback);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.boardForward(callback);
 	};
 
 	ext.boardTurn = function(direction, callback) {
-		if(DIRECTIONS[direction] === LEFT) {
-			__board(-45, 45, 2, callback);
-		} else {
-			__board(45, -45, 3, callback);
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.boardTurn(direction, callback);
 	};
 	
-	function __motion(type, leftVelocity, rightVelocity, secs, callback) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		secs = parseFloat(secs);
-		if(secs && secs > 0) {
-			var id = issueWheelId();
-			motoring.leftWheel = leftVelocity;
-			motoring.rightWheel = rightVelocity;
-			motoring.motion = type;
-			setLineTracerMode(0);
-			wheelTimer = setTimeout(function() {
-				if(wheelId == id) {
-					motoring.leftWheel = 0;
-					motoring.rightWheel = 0;
-					motoring.motion = MOTION.NONE;
-					cancelWheel();
-					callback();
-				}
-			}, secs * 1000);
-			timeouts.push(wheelTimer);
-		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = MOTION.NONE;
-			setLineTracerMode(0);
-			callback();
-		}
-	}
-	
 	ext.moveForward = function(callback) {
-		__motion(MOTION.FORWAR, 30, 30, 1, callback);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.moveForward(callback);
 	};
 	
 	ext.moveBackward = function(callback) {
-		__motion(MOTION.BACKWARD, -30, -30, 1, callback);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.moveBackward(callback);
 	};
 	
 	ext.turn = function(direction, callback) {
-		if(DIRECTIONS[direction] === LEFT) {
-			__motion(MOTION.LEFT, -30, 30, 1, callback);
-		} else {
-			__motion(MOTION.RIGHT, 30, -30, 1, callback);
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.turn(direction, callback);
 	};
 
 	ext.moveForwardForSecs = function(secs, callback) {
-		__motion(MOTION.FORWARD, 30, 30, secs, callback);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.moveForwardSecs(secs, callback);
 	};
 
 	ext.moveBackwardForSecs = function(secs, callback) {
-		__motion(MOTION.BACKWARD, -30, -30, secs, callback);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.moveBackwardSecs(secs, callback);
 	};
 
 	ext.turnForSecs = function(direction, secs, callback) {
-		if(DIRECTIONS[direction] === LEFT) {
-			__motion(MOTION.LEFT, -30, 30, secs, callback);
-		else {
-			__motion(MOTION.RIGHT, 30, -30, secs, callback);
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.turnSecs(direction, secs, callback);
 	};
 	
 	ext.changeBothWheelsBy = function(left, right) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		left = parseFloat(left);
-		right = parseFloat(right);
-		if(typeof left == 'number') {
-			motoring.leftWheel += left;
-		}
-		if(typeof right == 'number') {
-			motoring.rightWheel += right;
-		}
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.changeWheels(left, right);
 	};
 
 	ext.setBothWheelsTo = function(left, right) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		left = parseFloat(left);
-		right = parseFloat(right);
-		if(typeof left == 'number') {
-			motoring.leftWheel = left;
-		}
-		if(typeof right == 'number') {
-			motoring.rightWheel = right;
-		}
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setWheels(left, right);
 	};
 
 	ext.changeWheelBy = function(which, speed) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			which = VALUES[which];
-			if(which === LEFT) {
-				motoring.leftWheel += speed;
-			}
-			else if(which === RIGHT) {
-				motoring.rightWheel += speed;
-			}
-			else {
-				motoring.leftWheel += speed;
-				motoring.rightWheel += speed;
-			}
-		}
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.changeWheel(which, speed);
 	};
 
 	ext.setWheelTo = function(which, speed) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			which = VALUES[which];
-			if(which === LEFT) {
-				motoring.leftWheel = speed;
-			} else if(which === RIGHT) {
-				motoring.rightWheel = speed;
-			} else {
-				motoring.leftWheel = speed;
-				motoring.rightWheel = speed;
-			}
-		}
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setWheel(which, speed);
 	};
 
 	ext.followLineUsingFloorSensor = function(color, which) {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		var mode = 1;
-		which = VALUES[which];
-		if(which === RIGHT)
-			mode = 2;
-		else if(which === BOTH)
-			mode = 3;
-		if(VALUES[color] === WHITE)
-			mode += 7;
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(mode);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.fillowLine(color, which);
 	};
 
 	ext.followLineUntilIntersection = function(color, which, callback) {
-		cancelBoard();
-		cancelWheel();
-		
-		var mode = 4;
-		which = VALUES[which];
-		if(which === RIGHT)
-			mode = 5;
-		else if(which === FRONT)
-			mode = 6;
-		else if(which === REAR)
-			mode = 7;
-		if(VALUES[color] === WHITE)
-			mode += 7;
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(mode);
-		lineTracerCallback = callback;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.followLineUntil(color, which, callback);
 	};
 
 	ext.setFollowingSpeedTo = function(speed) {
-		speed = parseInt(speed);
-		if(typeof speed == 'number') {
-			setLineTracerSpeed(speed);
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setLineTracerSpeed(speed);
 	};
 
 	ext.stop = function() {
-		cancelBoard();
-		cancelWheel();
-		cancelLineTracer();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		motoring.motion = MOTION.NONE;
-		setLineTracerMode(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.stop();
 	};
 
 	ext.setLedTo = function(which, color) {
-		color = COLORS[color];
-		if(color && color > 0) {
-			which = VALUES[which];
-			if(which === LEFT) {
-				setLeftLed(color);
-			} else if(which === RIGHT) {
-				setRightLed(color);
-			} else {
-				setLeftLed(color);
-				setRightLed(color);
-			}
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setLed(which, color);
 	};
 
 	ext.clearLed = function(which) {
-		which = VALUES[which];
-		if(which === LEFT) {
-			setLeftLed(0);
-		} else if(which === RIGHT) {
-			setRightLed(0);
-		} else {
-			setLeftLed(0);
-			setRightLed(0);
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.clearLed(which);
 	};
 
 	ext.beep = function(callback) {
-		cancelNote();
-		var id = issueNoteId();
-		motoring.buzzer = 440;
-		setNote(0);
-		noteTimer1 = setTimeout(function() {
-			if(noteId == id) {
-				motoring.buzzer = 0;
-				cancelNote();
-				callback();
-			}
-		}, 200);
-		timeouts.push(noteTimer1);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.beep(callback);
 	};
 
 	ext.changeBuzzerBy = function(value) {
-		cancelNote();
-		var buzzer = parseFloat(value);
-		if(typeof buzzer == 'number') {
-			motoring.buzzer += buzzer;
-		}
-		setNote(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.changeBuzzer(value);
 	};
 
 	ext.setBuzzerTo = function(value) {
-		cancelNote();
-		var buzzer = parseFloat(value);
-		if(typeof buzzer == 'number') {
-			motoring.buzzer = buzzer;
-		}
-		setNote(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setBuzzer(value);
 	};
 
 	ext.clearBuzzer = function() {
-		cancelNote();
-		motoring.buzzer = 0;
-		setNote(0);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.clearBuzzer();
+	};
+	
+	ext.playNote = function(note, octave) {
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.playNote(note, octave);
 	};
 	
 	ext.playNoteFor = function(note, octave, beat, callback) {
-		cancelNote();
-		note = NOTES[note];
-		octave = parseInt(octave);
-		var tmp = BEATS[beat];
-		if(tmp) beat = tmp;
-		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
-		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
-			var id = issueNoteId();
-			note += (octave - 1) * 12;
-			setNote(note);
-			var timeout = beat * 60 * 1000 / tempo;
-			var tail = 0;
-			if(timeout > 100) {
-				tail = 100;
-			}
-			if(tail > 0) {
-				noteTimer1 = setTimeout(function() {
-					if(noteId == id) {
-						setNote(0);
-						if(noteTimer1 !== undefined) removeTimeout(noteTimer1);
-						noteTimer1 = undefined;
-					}
-				}, timeout - tail);
-				timeouts.push(noteTimer1);
-			}
-			noteTimer2 = setTimeout(function() {
-				if(noteId == id) {
-					setNote(0);
-					cancelNote();
-					callback();
-				}
-			}, timeout);
-			timeouts.push(noteTimer2);
-		} else {
-			setNote(0);
-			callback();
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
 	ext.restFor = function(beat, callback) {
-		cancelNote();
-		var tmp = BEATS[beat];
-		if(tmp) beat = tmp;
-		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
-		setNote(0);
-		if(beat && beat > 0 && tempo > 0) {
-			var id = issueNoteId();
-			noteTimer1 = setTimeout(function() {
-				if(noteId == id) {
-					cancelNote();
-					callback();
-				}
-			}, beat * 60 * 1000 / tempo);
-			timeouts.push(noteTimer1);
-		} else {
-			callback();
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.restBeat(beat, callback);
 	};
 
 	ext.changeTempoBy = function(value) {
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			tempo += value;
-			if(tempo < 1) tempo = 1;
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.changeTempo(value);
 	};
 
 	ext.setTempoTo = function(value) {
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			tempo = value;
-			if(tempo < 1) tempo = 1;
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setTempo(value);
 	};
 
 	ext.leftProximity = function() {
-		return sensory.leftProximity;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getLeftProximity();
+		return 0;
 	};
 
 	ext.rightProximity = function() {
-		return sensory.rightProximity;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getRightProximity();
+		return 0;
 	};
 
 	ext.leftFloor = function() {
-		return sensory.leftFloor;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getLeftFloor();
+		return 0;
 	};
 
 	ext.rightFloor = function() {
-		return sensory.rightFloor;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getRightFloor();
+		return 0;
 	};
 
 	ext.accelerationX = function() {
-		return sensory.accelerationX;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getAccelerationX();
+		return 0;
 	};
 
 	ext.accelerationY = function() {
-		return sensory.accelerationY;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getAccelerationY();
+		return 0;
 	};
 
 	ext.accelerationZ = function() {
-		return sensory.accelerationZ;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getAccelerationZ();
+		return 0;
 	};
 
 	ext.light = function() {
-		return sensory.light;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getLight();
+		return 0;
 	};
 
 	ext.temperature = function() {
-		return sensory.temperature;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getTemperature();
+		return 0;
 	};
 
 	ext.signalStrength = function() {
-		return sensory.signalStrength;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getSignalStrength();
+		return 0;
 	};
 
 	ext.handFound = function() {
-		return (sensory.handFound === undefined) ? (sensory.leftProximity > 50 || sensory.rightProximity > 50) : sensory.handFound;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.checkHandFound();
+		return false;
 	};
 
 	ext.setPortTo = function(port, mode) {
-		cancelIo();
-		mode = MODES[mode];
-		if(typeof mode == 'number') {
-			if(port == 'A') {
-				setIoModeA(mode);
-			} else if(port == 'B') {
-				setIoModeB(mode);
-			} else {
-				setIoModeA(mode);
-				setIoModeB(mode);
-			}
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setIoMode(port, mode);
 	};
 
 	ext.changeOutputBy = function(port, value) {
-		cancelIo();
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			if(port == 'A') {
-				motoring.outputA += value;
-			} else if(port == 'B') {
-				motoring.outputB += value;
-			} else {
-				motoring.outputA += value;
-				motoring.outputB += value;
-			}
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.changeOutput(port, value);
 	};
 
 	ext.setOutputTo = function(port, value) {
-		cancelIo();
-		value = parseFloat(value);
-		if(typeof value == 'number') {
-			if(port == 'A') {
-				motoring.outputA = value;
-			} else if(port == 'B') {
-				motoring.outputB = value;
-			} else {
-				motoring.outputA = value;
-				motoring.outputB = value;
-			}
-		}
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.setOutput(port, value);
 	};
 	
 	ext.gripper = function(action, callback) {
-		cancelIo();
-		
-		var id = issueIoId();
-		setIoModeA(10);
-		setIoModeB(10);
-		action = VALUES[action];
-		if(action == OPEN) {
-			motoring.outputA = 1;
-			motoring.outputB = 0;
-		} else {
-			motoring.outputA = 0;
-			motoring.outputB = 1;
-		}
-		ioTimer = setTimeout(function() {
-			if(ioId == id) {
-				cancelIo();
-				callback();
-			}
-		}, 500);
-		timeouts.push(ioTimer);
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.gripper(action, callback);
 	};
 	
 	ext.releaseGripper = function() {
-		cancelIo();
-		setIoModeA(10);
-		setIoModeB(10);
-		motoring.outputA = 0;
-		motoring.outputB = 0;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.releaseGripper();
 	};
 
 	ext.inputA = function() {
-		return sensory.inputA;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getInputA();
+		return 0;
 	};
 
 	ext.inputB = function() {
-		return sensory.inputB;
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) return robot.getInputB();
+		return 0;
 	};
 	
 	ext._getStatus = function() {
