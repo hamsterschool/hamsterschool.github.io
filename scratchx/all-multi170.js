@@ -3702,7 +3702,7 @@
 	};
 
 	HamsterS.prototype.setLed = function(led, color) {
-		const rgb = RGB_COLORS[color];
+		var rgb = RGB_COLORS[color];
 		if(rgb) {
 			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
 		}
@@ -4138,9 +4138,9 @@
 		this.__cancelIo();
 		this.__setIoModeA(this.serialRate);
 		this.__setIoModeB(this.serialRate);
-		const queue = this.writeQueue;
+		var queue = this.writeQueue;
 		queue.push(text, SERIAL_MODES[mode] != SERIAL_STRING);
-		const data = queue.pop();
+		var data = queue.pop();
 		if(data) {
 			this.writeSerialCallbacks.push(callback);
 			this.__setSerial(data);
@@ -4649,7 +4649,7 @@
 		var motoring = this.motoring;
 		this.__cancelMotion();
 
-		const mode = 60 + LINE_COLORS[color];
+		var mode = 60 + LINE_COLORS[color];
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		this.__setPulse(0);
@@ -4662,7 +4662,7 @@
 		var motoring = this.motoring;
 		this.__cancelMotion();
 
-		const mode = 70 + LINE_COLORS[color];
+		var mode = 70 + LINE_COLORS[color];
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		this.__setPulse(0);
@@ -4687,7 +4687,7 @@
 		var motoring = this.motoring;
 		this.__cancelMotion();
 
-		const mode = 20;
+		var mode = 20;
 		direction = DIRECTIONS[direction];
 		if(direction == RIGHT) mode = 30;
 		else if(direction === BACK) mode = 50;
@@ -4721,7 +4721,7 @@
 	};
 
 	Turtle.prototype.setHeadColor = function(color) {
-		const rgb = RGB_COLORS[color];
+		var rgb = RGB_COLORS[color];
 		if(rgb) {
 			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
 		}
