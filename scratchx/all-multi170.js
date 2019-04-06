@@ -3025,7 +3025,7 @@
 
 	HamsterS.prototype.__removeAllTimeouts = function() {
 		var timeouts = this.timeouts;
-		for(let i in timeouts) {
+		for(var i in timeouts) {
 			clearTimeout(timeouts[i]);
 		}
 		this.timeouts = [];
@@ -3169,7 +3169,7 @@
 	HamsterS.prototype.__setSerial = function(arr) {
 		var motoring = this.motoring;
 		if(motoring.serial == undefined) motoring.serial = new Array(19);
-		for(let i = 0; i < 19; ++i) {
+		for(var i = 0; i < 19; ++i) {
 			motoring.serial[i] = arr[i];
 		}
 		motoring.map2 |= 0x04000000;
@@ -3646,7 +3646,7 @@
 		this.__cancelMotion();
 		this.__cancelLineTracer();
 
-		let mode = 1;
+		var mode = 1;
 		sensor = PARTS[sensor];
 		if(sensor == RIGHT) mode = 2;
 		else if(sensor == BOTH) mode = 3;
@@ -3664,7 +3664,7 @@
 		this.__cancelBoard();
 		this.__cancelMotion();
 
-		let mode = 4;
+		var mode = 4;
 		direction = DIRECTIONS[direction];
 		if(direction == RIGHT) mode = 5;
 		else if(direction == FRONT) mode = 6;
