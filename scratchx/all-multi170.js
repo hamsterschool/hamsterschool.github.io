@@ -3803,7 +3803,7 @@
 	};
 
 	HamsterS.prototype.beep = function(callback) {
-		this.playSoundUntil(1, 1, callback);
+		this.playSoundUntil('beep', 1, callback);
 	};
 
 	HamsterS.prototype.playSound = function(sound, count) {
@@ -4027,14 +4027,13 @@
 	};
 
 	HamsterS.prototype.checkTilt = function(tilt) {
-		var sensory = this.sensory;
 		switch(TILTS[tilt]) {
-			case TILT_FORWARD: return sensory.tilt == 1;
-			case TILT_BACKWARD: return sensory.tilt == -1;
-			case TILT_LEFT: return sensory.tilt == 2;
-			case TILT_RIGHT: return sensory.tilt == -2;
-			case TILT_UPSIDEDOWN: return sensory.tilt == 3;
-			case TILT_NORMAL: return sensory.tilt == -3;
+			case TILT_FORWARD: return this.sensory.tilt == 1;
+			case TILT_BACKWARD: return this.sensory.tilt == -1;
+			case TILT_LEFT: return this.sensory.tilt == 2;
+			case TILT_RIGHT: return this.sensory.tilt == -2;
+			case TILT_UPSIDEDOWN: return this.sensory.tilt == 3;
+			case TILT_NORMAL: return this.sensory.tilt == -3;
 			case TILT_TAP: return this.tap;
 			case TILT_FREE_FALL: return this.freeFall;
 		}
