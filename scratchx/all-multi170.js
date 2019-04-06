@@ -1509,6 +1509,7 @@
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
+	const BACK = 5;
 	const FORWARD = 1;
 	const HEAD = 1;
 	const SECONDS = 2;
@@ -1541,6 +1542,8 @@
 		DIRECTIONS[tmp[1]] = RIGHT;
 		DIRECTIONS[tmp[2]] = FRONT;
 		DIRECTIONS[tmp[3]] = REAR;
+		tmp = MENUS[i]['left_right_back'];
+		DIRECTIONS[tmp[2]] = BACK;
 		tmp = MENUS[i]['forward_backward'];
 		TOWARDS[tmp[0]] = FORWARD;
 		tmp = MENUS[i]['head_tail'];
