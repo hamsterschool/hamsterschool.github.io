@@ -1335,7 +1335,7 @@
 			"when_button_state": ["clicked", "double-clicked", "long-pressed"],
 			"button_state": ["clicked", "double-clicked", "long-pressed"],
 			"forward_backward": ["forward", "backward"],
-			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "sound effect up", "sound effect down", "robot", "dibidibidip", "random melody", "good job", "happy", "angry", "sad", "lullaby", "march", "birthday"],
+			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"],
 			"s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture", "tap", "free fall"],
 			"s_mode": ["analog input", "digital input", "digital input (pull up)", "digital input (pull down)", "servo output", "pwm output", "digital output"],
 			"serial_output": ["string", "string line"],
@@ -1376,7 +1376,7 @@
 			"when_button_state": ["클릭했을", "더블클릭했을", "길게~눌렀을"],
 			"button_state": ["클릭했는가", "더블클릭했는가", "길게~눌렀는가"],
 			"forward_backward": ["앞쪽", "뒤쪽"],
-			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "올라가는 효과음", "내려가는 효과음", "로봇", "디비디비딥", "무작위 멜로디", "잘 했어요", "행복", "화남", "슬픔", "자장가", "행진", "생일"],
+			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "쩝", "로봇", "디비디비딥", "잘 했어요", "행복", "화남", "슬픔", "졸림", "행진", "생일"],
 			"s_tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "똑바로 놓음", "두드림", "자유 낙하"],
 			"s_mode": ["아날로그 입력", "디지털 입력", "디지털 입력 (풀업)", "디지털 입력 (풀다운)", "서보 출력", "PWM 출력", "디지털 출력"],
 			"serial_output": ["글자", "글자 한 줄"],
@@ -1417,7 +1417,7 @@
 			"when_button_state": ["クリックした", "ダブルクリックした", "長く押した"],
 			"button_state": ["クリックしたか", "ダブルクリックしたか", "長く押したか"],
 			"forward_backward": ["前", "後"],
-			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "上がる効果音", "下がる効果音", "ロボット", "ディバディバディップ", "ランダムメロディ", "よくやった", "幸福", "怒った", "悲しみ", "子守唄", "行進", "誕生"],
+			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "チョップ", "ロボット", "ディバディバディップ", "よくやった", "幸福", "怒った", "悲しみ", "睡眠", "行進", "誕生"],
 			"s_tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "通常置いたか", "叩いたか", "自由落下したか"],
 			"s_mode": ["アナログ入力", "デジタル入力", "デジタル入力 (プルアップ)", "デジタル入力 (プルダウン)", "サーボ出力", "PWM出力", "デジタル出力"],
 			"serial_output": ["文字列", "文字列1行"],
@@ -1458,7 +1458,7 @@
 			"when_button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
 			"button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
 			"forward_backward": ["old", "orqa"],
-			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "ovoz effekti yuqori", "ovoz effekti past", "robot", "dibidibidip", "tasodifiy ohang", "juda yaxshi", "baxtli", "badjahl", "xafa", "alla", "marsh", "tug'ilgan kun"],
+			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "chop", "robot", "dibidibidip", "juda yaxshi", "baxtli", "badjahl", "xafa", "uyqu", "marsh", "tug'ilgan kun"],
 			"s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat", "jo'mrak", "erkin tushish"],
 			"s_mode": ["analog kiritish", "raqamli kiritish", "raqamli kiritish (pull up)", "raqamli kiritish (pull down)", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
 			"serial_output": ["harf", "harf qator"],
@@ -1590,21 +1590,19 @@
 		tmp = MENUS[i]['sound_effect'];
 		SOUND_EFFECTS[tmp[0]] = 1; // beep
 		SOUND_EFFECTS[tmp[1]] = 2; // random beep
-		SOUND_EFFECTS[tmp[2]] = 3; // noise
-		SOUND_EFFECTS[tmp[3]] = 4; // siren
-		SOUND_EFFECTS[tmp[4]] = 5; // engine
-		SOUND_EFFECTS[tmp[5]] = 6; // sound effect up
-		SOUND_EFFECTS[tmp[6]] = 7; // sound effect down
-		SOUND_EFFECTS[tmp[7]] = 8; // robot
-		SOUND_EFFECTS[tmp[8]] = 9; // dibidibidip
-		SOUND_EFFECTS[tmp[9]] = 10; // random melody
-		SOUND_EFFECTS[tmp[10]] = 11; // good job
-		SOUND_EFFECTS[tmp[11]] = 12; // happy
-		SOUND_EFFECTS[tmp[12]] = 13; // angry
-		SOUND_EFFECTS[tmp[13]] = 14; // sad
-		SOUND_EFFECTS[tmp[14]] = 15; // lullaby
-		SOUND_EFFECTS[tmp[15]] = 16; // march
-		SOUND_EFFECTS[tmp[16]] = 17; // birthday
+		SOUND_EFFECTS[tmp[2]] = 10; // noise
+		SOUND_EFFECTS[tmp[3]] = 3; // siren
+		SOUND_EFFECTS[tmp[4]] = 4; // engine
+		SOUND_EFFECTS[tmp[5]] = 11; // chop
+		SOUND_EFFECTS[tmp[6]] = 5; // robot
+		SOUND_EFFECTS[tmp[7]] = 8; // dibidibidip
+		SOUND_EFFECTS[tmp[8]] = 9; // good job
+		SOUND_EFFECTS[tmp[9]] = 12; // happy
+		SOUND_EFFECTS[tmp[10]] = 13; // angry
+		SOUND_EFFECTS[tmp[11]] = 14; // sad
+		SOUND_EFFECTS[tmp[12]] = 15; // sleep
+		SOUND_EFFECTS[tmp[13]] = 6; // march
+		SOUND_EFFECTS[tmp[14]] = 7; // birthday
 		tmp = MENUS[i]['s_mode'];
 		IO_MODES[tmp[0]] = 0; // analog input
 		IO_MODES[tmp[1]] = 1; // digital input
