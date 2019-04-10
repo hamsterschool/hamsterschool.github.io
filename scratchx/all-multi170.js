@@ -217,7 +217,6 @@
 			["r", "Hamster %n : signal strength", "signalStrength", 0],
 			["h", "Hamster %n : when hand found", "whenHandFound", 0],
 			["h", "Hamster %n : when %m.when_tilt", "whenTilt", 0, "tilt forward"],
-			["h", "Hamster %n : when battery %m.when_battery", "whenBattery", 0, "normal"],
 			["b", "Hamster %n : hand found?", "handFound", 0],
 			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "tilt forward"],
 			["b", "Hamster %n : battery %m.battery ?", "battery", 0, "normal"],
@@ -280,7 +279,6 @@
 			["r", "HamsterS %n : signal strength", "sSignalStrength", 0],
 			["h", "HamsterS %n : when hand found", "sWhenHandFound", 0],
 			["h", "HamsterS %n : when %m.when_s_tilt", "sWhenTilt", 0, "tilt forward"],
-			["h", "HamsterS %n : when battery %m.when_battery", "sWhenBattery", 0, "normal"],
 			["b", "HamsterS %n : hand found?", "sHandFound", 0],
 			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "tilt forward"],
 			["b", "HamsterS %n : battery %m.battery ?", "sBattery", 0, "normal"],
@@ -340,7 +338,6 @@
 			["h", "Turtle %n : when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", 0, "red", "yellow"],
 			["h", "Turtle %n : when button %m.when_button_state", "turtleWhenButtonState", 0, "clicked"],
 			["h", "Turtle %n : when %m.when_tilt", "turtleWhenTilt", 0, "tilt forward"],
-			["h", "Turtle %n : when battery %m.when_battery", "turtleWhenBattery", 0, "normal"],
 			["b", "Turtle %n : touching %m.touching_color ?", "turtleTouchingColor", 0, "red"],
 			["b", "Turtle %n : color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", 0, "red", "yellow"],
 			["b", "Turtle %n : button %m.button_state ?", "turtleButtonState", 0, "clicked"],
@@ -532,7 +529,6 @@
 			["r", "햄스터 %n : 신호 세기", "signalStrength", 0],
 			["h", "햄스터 %n : 손 찾았을 때", "whenHandFound", 0],
 			["h", "햄스터 %n : %m.when_tilt 때", "whenTilt", 0, "앞으로 기울였을"],
-			["h", "햄스터 %n : 배터리 %m.when_battery 때", "whenBattery", 0, "정상일"],
 			["b", "햄스터 %n : 손 찾음?", "handFound", 0],
 			["b", "햄스터 %n : %m.tilt ?", "tilt", 0, "앞으로 기울임"],
 			["b", "햄스터 %n : 배터리 %m.battery ?", "battery", 0, "정상"],
@@ -595,7 +591,6 @@
 			["r", "햄스터S %n : 신호 세기", "sSignalStrength", 0],
 			["h", "햄스터S %n : 손 찾았을 때", "sWhenHandFound", 0],
 			["h", "햄스터S %n : %m.when_s_tilt 때", "sWhenTilt", 0, "앞으로 기울였을"],
-			["h", "햄스터S %n : 배터리 %m.when_battery 때", "sWhenBattery", 0, "정상일"],
 			["b", "햄스터S %n : 손 찾음?", "sHandFound", 0],
 			["b", "햄스터S %n : %m.s_tilt ?", "sTilt", 0, "앞으로 기울임"],
 			["b", "햄스터S %n : 배터리 %m.battery ?", "sBattery", 0, "정상"],
@@ -655,7 +650,6 @@
 			["h", "거북이 %n : 색깔 패턴이 %m.pattern_color %m.pattern_color 일 때", "turtleWhenColorPattern", 0, "빨간색", "노란색"],
 			["h", "거북이 %n : 버튼을 %m.when_button_state 때", "turtleWhenButtonState", 0, "클릭했을"],
 			["h", "거북이 %n : %m.when_tilt 때", "turtleWhenTilt", 0, "앞으로 기울였을"],
-			["h", "거북이 %n : 배터리 %m.when_battery 때", "turtleWhenBattery", 0, "정상일"],
 			["b", "거북이 %n : %m.touching_color 에 닿았는가?", "turtleTouchingColor", 0, "빨간색"],
 			["b", "거북이 %n : 색깔 패턴이 %m.pattern_color %m.pattern_color 인가?", "turtleIsColorPattern", 0, "빨간색", "노란색"],
 			["b", "거북이 %n : 버튼을 %m.button_state ?", "turtleButtonState", 0, "클릭했는가"],
@@ -847,7 +841,6 @@
 			["r", "ハムスター %n : 信号強度", "signalStrength", 0],
 			["h", "ハムスター %n : 手を見つけたとき", "whenHandFound", 0],
 			["h", "ハムスター %n : %m.when_tilt とき", "whenTilt", 0, "前に傾けた"],
-			["h", "ハムスター %n : 電池が %m.when_battery とき", "whenBattery", 0, "正常な"],
 			["b", "ハムスター %n : 手を見つけたか?", "handFound", 0],
 			["b", "ハムスター %n : %m.tilt ?", "tilt", 0, "前に傾けたか"],
 			["b", "ハムスター %n : 電池が %m.battery ?", "battery", 0, "正常か"],
@@ -910,7 +903,6 @@
 			["r", "ハムスターS %n : 信号強度", "sSignalStrength", 0],
 			["h", "ハムスターS %n : 手を見つけたとき", "sWhenHandFound", 0],
 			["h", "ハムスターS %n : %m.when_s_tilt とき", "sWhenTilt", 0, "前に傾けた"],
-			["h", "ハムスターS %n : 電池が %m.when_battery とき", "sWhenBattery", 0, "正常な"],
 			["b", "ハムスターS %n : 手を見つけたか?", "sHandFound", 0],
 			["b", "ハムスターS %n : %m.s_tilt ?", "sTilt", 0, "前に傾けたか"],
 			["b", "ハムスターS %n : 電池が %m.battery ?", "sBattery", 0, "正常か"],
@@ -970,7 +962,6 @@
 			["h", "カメ %n : 色パターンが %m.pattern_color %m.pattern_color であるとき", "turtleWhenColorPattern", 0, "赤色", "黄色"],
 			["h", "カメ %n : ボタンを %m.when_button_state とき", "turtleWhenButtonState", 0, "クリックした"],
 			["h", "カメ %n : %m.when_tilt とき", "turtleWhenTilt", 0, "前に傾けた"],
-			["h", "カメ %n : 電池が %m.when_battery とき", "turtleWhenBattery", 0, "正常な"],
 			["b", "カメ %n : %m.touching_color に触れたか?", "turtleTouchingColor", 0, "赤色"],
 			["b", "カメ %n : 色パターンが %m.pattern_color %m.pattern_color ですか?", "turtleIsColorPattern", 0, "赤色", "黄色"],
 			["b", "カメ %n : ボタンを %m.button_state ?", "turtleButtonState", 0, "クリックしたか"],
@@ -1162,7 +1153,6 @@
 			["r", "Hamster %n : signal kuchi", "signalStrength", 0],
 			["h", "Hamster %n : qo'l topilganda", "whenHandFound", 0],
 			["h", "Hamster %n : %m.when_tilt bo'lganda", "whenTilt", 0, "oldinga eğin"],
-			["h", "Hamster %n : batareya %m.when_battery bo'lganda", "whenBattery", 0, "normal"],
 			["b", "Hamster %n : qo'l topildimi?", "handFound", 0],
 			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "oldinga eğin"],
 			["b", "Hamster %n : batareya %m.battery ?", "battery", 0, "normal"],
@@ -1225,7 +1215,6 @@
 			["r", "HamsterS %n : signal kuchi", "sSignalStrength", 0],
 			["h", "HamsterS %n : qo'l topilganda", "sWhenHandFound", 0],
 			["h", "HamsterS %n : %m.when_s_tilt bo'lganda", "sWhenTilt", 0, "oldinga eğin"],
-			["h", "HamsterS %n : batareya %m.when_battery bo'lganda", "sWhenBattery", 0, "normal"],
 			["b", "HamsterS %n : qo'l topildimi?", "sHandFound", 0],
 			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "oldinga eğin"],
 			["b", "HamsterS %n : batareya %m.battery ?", "sBattery", 0, "normal"],
@@ -1285,7 +1274,6 @@
 			["h", "Turtle %n : rang naqshi %m.pattern_color %m.pattern_color bo'lganida", "turtleWhenColorPattern", 0, "qizil", "sariq"],
 			["h", "Turtle %n : tugmani %m.when_button_state da", "turtleWhenButtonState", 0, "bosgan"],
 			["h", "Turtle %n : %m.when_tilt bo'lganda", "turtleWhenTilt", 0, "oldinga eğin"],
-			["h", "Turtle %n : batareya %m.when_battery bo'lganda", "turtleWhenBattery", 0, "normal"],
 			["b", "Turtle %n : %m.touching_color ga tekkan?", "turtleTouchingColor", 0, "qizil"],
 			["b", "Turtle %n : rang naqshi %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", 0, "qizil", "sariq"],
 			["b", "Turtle %n : tugmani %m.button_state ?", "turtleButtonState", 0, "bosgan"],
@@ -1313,7 +1301,6 @@
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture"],
 			"when_s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture", "tap", "free fall"],
-			"when_battery": ["normal", "low", "empty"],
 			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture"],
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
@@ -1354,7 +1341,6 @@
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "똑바로 놓았을"],
 			"when_s_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "똑바로 놓았을", "두드렸을", "자유 낙하했을"],
-			"when_battery": ["정상일", "부족할", "없을"],
 			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "똑바로 놓음"],
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
@@ -1395,7 +1381,6 @@
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "通常置いた"],
 			"when_s_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "通常置いた", "叩いた", "自由落下した"],
-			"when_battery": ["正常な", "足りない", "ない"],
 			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "通常置いたか"],
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
@@ -1436,7 +1421,6 @@
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat"],
 			"when_s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat", "jo'mrak", "erkin tushish"],
-			"when_battery": ["normal", "past", "bo'sh"],
 			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat"],
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
@@ -5378,12 +5362,6 @@
 		return false;
 	};
 	
-	ext.whenBattery = function(index, state) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) return robot.checkBattery(state);
-		return false;
-	};
-	
 	ext.handFound = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkHandFound();
@@ -5681,12 +5659,6 @@
 		return false;
 	};
 	
-	ext.sWhenBattery = function(index, state) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) return robot.checkBattery(state);
-		return false;
-	};
-	
 	ext.sHandFound = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkHandFound();
@@ -5938,61 +5910,55 @@
 		if(robot) robot.setTempo(bpm);
 	};
 
-	ext.whenColorTouched = function(index, color) {
+	ext.turtleWhenColorTouched = function(index, color) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkTouchingColor(color);
 		return false;
 	};
 	
-	ext.whenColorPattern = function(index, color1, color2) {
+	ext.turtleWhenColorPattern = function(index, color1, color2) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkColorPattern(color1, color2);
 		return false;
 	};
 	
-	ext.whenButtonState = function(index, state) {
+	ext.turtleWhenButtonState = function(index, state) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkButtonEvent(state);
 		return false;
 	};
 	
-	ext.whenTilt = function(index, tilt) {
+	ext.turtleWhenTilt = function(index, tilt) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.whenBattery = function(index, state) {
-		var robot = getRobot(TURTLE, index);
-		if(robot) return robot.checkBattery(state);
-		return false;
-	};
-	
-	ext.touchingColor = function(index, color) {
+	ext.turtleTouchingColor = function(index, color) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkTouchingColor(color);
 		return false;
 	};
 	
-	ext.isColorPattern = function(index, color1, color2) {
+	ext.turtleIsColorPattern = function(index, color1, color2) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkColorPattern(color1, color2);
 		return false;
 	};
 	
-	ext.buttonState = function(index, state) {
+	ext.turtleButtonState = function(index, state) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkButtonEvent(state);
 		return false;
 	};
 	
-	ext.tilt = function(index, tilt) {
+	ext.turtleTilt = function(index, tilt) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.battery = function(index, state) {
+	ext.turtleBattery = function(index, state) {
 		var robot = getRobot(TURTLE, index);
 		if(robot) return robot.checkBattery(state);
 		return false;
