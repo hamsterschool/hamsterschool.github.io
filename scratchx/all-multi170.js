@@ -2278,18 +2278,33 @@
 	Hamster.prototype.moveForwardUnit = function(value, unit, callback) {
 		if(UNITS[unit] == SECONDS) {
 			this.moveForwardSecs(value, callback);
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
 	Hamster.prototype.moveBackwardUnit = function(value, unit, callback) {
 		if(UNITS[unit] == SECONDS) {
 			this.moveBackwardSecs(value, callback);
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
 	Hamster.prototype.turnUnit = function(direction, value, unit, callback) {
 		if(UNITS[unit] == SECONDS) {
 			this.turnSecs(direction, value, callback);
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
@@ -2308,25 +2323,44 @@
 					this.__motion(8, -30, 0, value, callback);
 				}
 			}
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
 	Hamster.prototype.swingUnit = function(wheel, value, unit, radius, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
-			this.motoring.radius = radius;
-			if(DIRECTIONS[wheel] == LEFT) {
-				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(9, 0, 0, value, callback);
+			radius = parseFloat(radius);
+			if((typeof radius == 'number') && radius >= 0) {
+				this.motoring.radius = radius;
+				if(DIRECTIONS[wheel] == LEFT) {
+					if(TOWARDS[toward] == FORWARD) {
+						this.__motion(9, 0, 0, value, callback);
+					} else {
+						this.__motion(10, 0, 0, value, callback);
+					}
 				} else {
-					this.__motion(10, 0, 0, value, callback);
+					if(TOWARDS[toward] == FORWARD) {
+						this.__motion(11, 0, 0, value, callback);
+					} else {
+						this.__motion(12, 0, 0, value, callback);
+					}
 				}
 			} else {
-				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(11, 0, 0, value, callback);
-				} else {
-					this.__motion(12, 0, 0, value, callback);
-				}
+				motoring.leftWheel = 0;
+				motoring.rightWheel = 0;
+				motoring.motion = 0;
+				this.__setLineTracerMode(0);
+				callback();
 			}
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
@@ -2345,6 +2379,11 @@
 					this.__motion(16, 0, 0, value, callback);
 				}
 			}
+		} else {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			motoring.motion = 0;
+			this.__setLineTracerMode(0);
 		}
 	};
 
@@ -2563,6 +2602,7 @@
 		this.__cancelNote();
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
+		count = parseInt(count);
 		if(SOUNDS[sound] == 1 && count) {
 			this.runBeep(count);
 		}
@@ -2572,6 +2612,7 @@
 		this.__cancelNote();
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
+		count = parseInt(count);
 		if(SOUNDS[sound] == 1 && count) {
 			var id = this.__issueNoteId();
 			this.runBeep(count, id, callback);
@@ -3183,7 +3224,7 @@
 		if(sensory.map2 & 0x00004000) self.tap = true;
 
 		if(self.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
-			if(sensory.lineTracerState == 2) {
+			if(sensory.lineTracerState == 0x40) {
 				self.__setLineTracerMode(0);
 				var callback = self.lineTracerCallback;
 				self.__cancelLineTracer();
