@@ -2568,7 +2568,7 @@
 			self.noteTimer1 = setTimeout(function() {
 				if(!id || self.noteId == id) {
 					motoring.buzzer = 0;
-					if(self.noteTimer1 !== undefined) self.removeTimeout(self.noteTimer1);
+					if(self.noteTimer1 !== undefined) self.__removeTimeout(self.noteTimer1);
 					self.noteTimer1 = undefined;
 				}
 			}, 100);
@@ -2576,7 +2576,7 @@
 			self.noteTimer2 = setTimeout(function() {
 				if(!id || self.noteId == id) {
 					motoring.buzzer = 0;
-					if(self.noteTimer2 !== undefined) self.removeTimeout(self.noteTimer2);
+					if(self.noteTimer2 !== undefined) self.__removeTimeout(self.noteTimer2);
 					self.noteTimer2 = undefined;
 					if(count < 0) {
 						self.runBeep(-1, id);
