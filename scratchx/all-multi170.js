@@ -2975,6 +2975,7 @@
 		this.serialRate = 176;
 		this.writeSerialCallbacks = [];
 		this.readSerialCallbacks = [];
+		this.serialInput = '';
 		this.freeFall = false;
 		this.tap = false;
 		this.tempo = 60;
@@ -3032,6 +3033,7 @@
 		this.serialRate = 176;
 		this.writeSerialCallbacks = [];
 		this.readSerialCallbacks = [];
+		this.serialInput = '';
 		this.freeFall = false;
 		this.tap = false;
 		this.tempo = 60;
@@ -3411,7 +3413,7 @@
 		if(self.readSerialCallbacks.length > 0) {
 			var tmp = self.readQueue.pop(self.serialDelimiter);
 			if(tmp) {
-				sensory.serial = tmp;
+				self.serialInput = tmp;
 				self.__fireReadSerialCallbacks();
 			}
 		}
@@ -4205,7 +4207,7 @@
 	};
 
 	HamsterS.prototype.getSerialInput = function() {
-		return this.sensory.serial;
+		return this.serialInput;
 	};
 	
 	function Turtle(index) {
