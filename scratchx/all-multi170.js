@@ -1617,6 +1617,15 @@
 		TILTS[tmp[5]] = TILT_NONE;
 		TILTS[tmp[6]] = TILT_TAP;
 		TILTS[tmp[7]] = TILT_FREE_FALL;
+		tmp = MENUS[i]['when_s_tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
+		TILTS[tmp[6]] = TILT_TAP;
+		TILTS[tmp[7]] = TILT_FREE_FALL;
 		tmp = MENUS[i]['battery'];
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
@@ -1657,6 +1666,10 @@
 		RGB_COLORS[tmp[7]] = [255, 0, 255];
 		RGB_COLORS[tmp[8]] = [255, 255, 255];
 		tmp = MENUS[i]['button_state'];
+		BUTTON_STATES[tmp[0]] = CLICKED;
+		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
+		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
+		tmp = MENUS[i]['when_button_state'];
 		BUTTON_STATES[tmp[0]] = CLICKED;
 		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
 		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
