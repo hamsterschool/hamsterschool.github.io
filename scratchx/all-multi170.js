@@ -4428,7 +4428,6 @@
 	};
 
 	Turtle.prototype.clearEvent = function() {
-		console.log('clearEvent');
 		this.clicked = false;
 		this.doubleClicked = false;
 		this.longPressed = false;
@@ -4521,7 +4520,6 @@
 		if(sensory.map & 0x00000400) self.doubleClicked = true;
 		if(sensory.map & 0x00000200) self.longPressed = true;
 		if(sensory.map & 0x00000080) self.colorPattern = sensory.colorPattern;
-		console.log('handleSensory');
 
 		if(self.lineTracerCallback && (sensory.map & 0x00000008) != 0) {
 			if(sensory.lineTracerState == 0x02) {
@@ -5079,7 +5077,6 @@
 	};
 
 	Turtle.prototype.checkButtonEvent = function(event) {
-		console.log('checkButtonEvent ' + event + ':' + BUTTON_STATES[event]);
 		switch(BUTTON_STATES[event]) {
 			case CLICKED: return this.clicked;
 			case DOUBLE_CLICKED: return this.doubleClicked;
