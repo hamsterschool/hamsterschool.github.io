@@ -1320,7 +1320,7 @@
 			"pattern_color": ["red", "yellow", "green", "sky blue", "blue", "purple"],
 			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
 			"sound": ["beep", "random beep", "siren", "engine", "robot", "march", "birthday", "dibidibidip", "good job"],
-			"when_button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
+			"when_button_state": ["clicked", "double-clicked", "long-pressed"],
 			"button_state": ["clicked", "double-clicked", "long-pressed"],
 			"forward_backward": ["forward", "backward"],
 			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"],
