@@ -5775,9 +5775,9 @@
 		return false;
 	};
 	
-	ext.sBattery = function(args) {
+	ext.sBattery = function(index, state) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) return robot.checkBattery(args.BATTERY);
+		if(robot) return robot.checkBattery(state);
 		return false;
 	};
 	
