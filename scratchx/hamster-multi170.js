@@ -534,8 +534,6 @@
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
-	const TILT_TAP = 7;
-	const TILT_FREE_FALL = 8;
 	const WHITE = 1;
 	
 	var tmp;
@@ -1795,11 +1793,6 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
-		this.serialDelimiter = 0;
-		this.serialRate = 176;
-		this.serialInput = '';
-		this.freeFall = false;
-		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
@@ -1851,11 +1844,6 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
-		this.serialDelimiter = 0;
-		this.serialRate = 176;
-		this.serialInput = '';
-		this.freeFall = false;
-		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
@@ -1885,8 +1873,6 @@
 	};
 
 	HamsterS.prototype.clearEvent = function() {
-		this.freeFall = false;
-		this.tap = false;
 	};
 
 	HamsterS.prototype.__setPulse = function(pulse) {
@@ -1996,15 +1982,6 @@
 			this.__removeTimeout(this.ioTimer);
 		}
 		this.ioTimer = undefined;
-	};
-
-	HamsterS.prototype.__setSerial = function(arr) {
-		var motoring = this.motoring;
-		if(motoring.serial == undefined) motoring.serial = new Array(19);
-		for(var i = 0; i < 19; ++i) {
-			motoring.serial[i] = arr[i];
-		}
-		motoring.map2 |= 0x04000000;
 	};
 
 	HamsterS.prototype.handleSensory = function() {
@@ -2850,8 +2827,6 @@
 			case TILT_RIGHT: return this.sensory.tilt == -2;
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
-			case TILT_TAP: return this.tap;
-			case TILT_FREE_FALL: return this.freeFall;
 		}
 		return false;
 	};
