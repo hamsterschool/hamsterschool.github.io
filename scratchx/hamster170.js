@@ -1795,13 +1795,6 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
-		this.serialDelimiter = 0;
-		this.serialRate = 176;
-		this.writeSerialCallbacks = [];
-		this.readSerialCallbacks = [];
-		this.serialInput = '';
-		this.freeFall = false;
-		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
@@ -1853,13 +1846,6 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
-		this.serialDelimiter = 0;
-		this.serialRate = 176;
-		this.writeSerialCallbacks = [];
-		this.readSerialCallbacks = [];
-		this.serialInput = '';
-		this.freeFall = false;
-		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
@@ -1883,30 +1869,12 @@
 		this.timeouts = [];
 	};
 
-	HamsterS.prototype.__fireWriteSerialCallbacks = function() {
-		var callbacks = this.writeSerialCallbacks;
-		for(var i in callbacks) {
-			callbacks[i]();
-		}
-		this.writeSerialCallbacks = [];
-	};
-
-	HamsterS.prototype.__fireReadSerialCallbacks = function() {
-		var callbacks = this.readSerialCallbacks;
-		for(var i in callbacks) {
-			callbacks[i]();
-		}
-		this.readSerialCallbacks = [];
-	};
-
 	HamsterS.prototype.clearMotoring = function() {
 		this.motoring.map = 0xfc000000;
 		this.motoring.map2 = 0xc0000000;
 	};
 
 	HamsterS.prototype.clearEvent = function() {
-		this.freeFall = false;
-		this.tap = false;
 	};
 
 	HamsterS.prototype.__setPulse = function(pulse) {
@@ -2016,15 +1984,6 @@
 			this.__removeTimeout(this.ioTimer);
 		}
 		this.ioTimer = undefined;
-	};
-
-	HamsterS.prototype.__setSerial = function(arr) {
-		var motoring = this.motoring;
-		if(motoring.serial == undefined) motoring.serial = new Array(19);
-		for(var i = 0; i < 19; ++i) {
-			motoring.serial[i] = arr[i];
-		}
-		motoring.map2 |= 0x04000000;
 	};
 
 	HamsterS.prototype.handleSensory = function() {
@@ -2870,8 +2829,6 @@
 			case TILT_RIGHT: return this.sensory.tilt == -2;
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
-			case TILT_TAP: return this.tap;
-			case TILT_FREE_FALL: return this.freeFall;
 		}
 		return false;
 	};
