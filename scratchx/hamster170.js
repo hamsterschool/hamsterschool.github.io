@@ -534,8 +534,6 @@
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
-	const TILT_TAP = 7;
-	const TILT_FREE_FALL = 8;
 	const WHITE = 1;
 	
 	var tmp;
