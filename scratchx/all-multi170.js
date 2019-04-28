@@ -5167,7 +5167,6 @@
 		for(var i in robots) {
 			robots[i].reset();
 		}
-		removeAllTimeouts();
 	}
 	
 	function open(url) {
