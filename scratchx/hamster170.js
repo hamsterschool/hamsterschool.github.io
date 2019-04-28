@@ -13,16 +13,6 @@
 		RIGHT: 4
 	};
 	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
-	const LED2RGB = {
-		0: [0, 0, 0],
-		1: [0, 0, 255],
-		2: [0, 255, 0],
-		3: [0, 255, 255],
-		4: [255, 0, 0],
-		5: [255, 0, 255],
-		6: [255, 255, 0],
-		7: [255, 255, 255]
-	};
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
 	var connectionState = 1;
@@ -2040,8 +2030,6 @@
 	HamsterS.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
-		if(sensory.map2 & 0x00008000) self.freeFall = true;
-		if(sensory.map2 & 0x00004000) self.tap = true;
 
 		if(self.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
@@ -2198,57 +2186,6 @@
 						break;
 					}
 				}
-			}
-		}
-		if(self.motionCallback && (sensory.map2 & 0x00000800) != 0) {
-			if(sensory.wheelState == 2) {
-				self.motoring.leftWheel = 0;
-				self.motoring.rightWheel = 0;
-				var callback = self.motionCallback;
-				self.__cancelMotion();
-				if(callback) callback();
-			}
-		}
-		if((sensory.map2 & 0x00000400) != 0) {
-			if(sensory.soundState == 0) {
-				if(self.currentSound > 0) {
-					if(self.soundRepeat < 0) {
-						self.__runSound(self.currentSound, -1);
-					} else if(self.soundRepeat > 1) {
-						self.soundRepeat --;
-						self.__runSound(self.currentSound, self.soundRepeat);
-					} else {
-						self.currentSound = 0;
-						self.soundRepeat = 1;
-						var callback = self.soundCallback;
-						self.__cancelSound();
-						if(callback) callback();
-					}
-				} else {
-					self.currentSound = 0;
-					self.soundRepeat = 1;
-					var callback = self.soundCallback;
-					self.__cancelSound();
-					if(callback) callback();
-				}
-			}
-		}
-		if(sensory.map2 & 0x00002000) {
-			if(sensory.serial) self.readQueue.push(sensory.serial);
-		}
-		if(sensory.map2 & 0x00000200) {
-			var tmp = self.writeQueue.pop();
-			if(tmp) {
-				self.__setSerial(tmp);
-			} else {
-				self.__fireWriteSerialCallbacks();
-			}
-		}
-		if(self.readSerialCallbacks.length > 0) {
-			var tmp = self.readQueue.pop(self.serialDelimiter);
-			if(tmp) {
-				self.serialInput = tmp;
-				self.__fireReadSerialCallbacks();
 			}
 		}
 	};
