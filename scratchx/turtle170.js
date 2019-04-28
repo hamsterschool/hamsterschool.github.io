@@ -1,68 +1,19 @@
 (function(ext) {
 
-	var sensory = {
-		map: 0,
-		signalStrength: 0,
-		colorRed: 0,
-		colorGreen: 0,
-		colorBlue: 0,
-		colorClear: 0,
-		floor: 0,
-		accelerationX: 0,
-		accelerationY: 0,
-		accelerationZ: 0,
-		temperature: 0,
-		button: 0,
-		colorNumber: -1,
-		colorPattern: -1,
-		pulseCount: 0,
-		wheelState: 0,
-		soundState: 0,
-		lineTracerState: 0
-	};
-	var motoring = {
-		module: 'turtle',
-		map: 0xf8000000,
-		leftWheel: 0,
-		rightWheel: 0,
-		ledRed: 0,
-		ledGreen: 0,
-		ledBlue: 0,
-		buzzer: 0,
-		pulse: 0,
-		note: 0,
-		sound: 0,
-		lineTracerMode: 0,
-		lineTracerGain: 5,
-		lineTracerSpeed: 5,
-		lamp: 1,
-		lock: 0,
-		motionType: 0,
-		motionUnit: 0,
-		motionSpeed: 0,
-		motionValue: 0,
-		motionRadius: 0
- 	};
+	var robots = {};
+	var robotsByGroup = {};
 	var packet = {
-		version: 1,
-		robot: motoring
- 	};
+		version: 2
+	};
+	const MOTION = {
+		NONE: 0,
+		FORWARD: 1,
+		BACKWARD: 2,
+		LEFT: 3,
+		RIGHT: 4
+	};
+	const TURTLE = 'turtle';
 	var connectionState = 1;
-	var blockId = 0;
-	var motionCallback = undefined;
-	var lineTracerCallback = undefined;
-	var currentSound = 0;
-	var soundRepeat = 1;
-	var soundCallback = undefined;
-	var noteId = 0;
-	var noteTimer1 = undefined;
-	var noteTimer2 = undefined;
-	var clicked = false;
-	var doubleClicked = false;
-	var longPressed = false;
-	var colorPattern = -1;
-	var tempo = 60;
-	var timeouts = [];
 	var socket = undefined;
 	var canSend = false;
 	const STATE = {
@@ -75,12 +26,14 @@
 	const STATE_MSG = {
 		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
 		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
+		ja: [ 'ロボットコーディングソフトウェアを実行してください。', 'ロボットが接続されていません。', '正常です。' ],
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
 		en: 'Turtle',
-		ko: '거북이',
-		uz: 'Turtle'
+		ko: '햄스터',
+		ja: 'ハムスター',
+		uz: 'Hamster'
 	};
 	const BLOCKS = {
 		en1: [
@@ -94,6 +47,8 @@
 			[" ", "play sound %m.sound", "turtlePlaySound", "beep"],
 			[" ", "clear sound", "turtleClearSound"],
 			["-"],
+			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
+			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
 			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
 			["b", "button %m.button_state ?", "turtleButtonState", "clicked"]
 		],
@@ -115,9 +70,14 @@
 			[" ", "change tempo by %n", "turtleChangeTempoBy", 20],
 			[" ", "set tempo to %n bpm", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
+			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
+			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
+			["h", "when %m.when_tilt", "turtleWhenTilt", 0, "tilt forward"],
 			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
 			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
-			["b", "button %m.button_state ?", "turtleButtonState", "clicked"]
+			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
+			["b", "%m.tilt ?", "turtleTilt", "tilt forward"]
 		],
 		en3: [
 			["w", "move forward %n %m.move_unit", "turtleMoveForwardUnit", 6, "cm"],
@@ -153,9 +113,15 @@
 			[" ", "change tempo by %n", "turtleChangeTempoBy", 20],
 			[" ", "set tempo to %n bpm", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
+			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
+			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
+			["h", "when %m.when_tilt", "turtleWhenTilt", 0, "tilt forward"],
 			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
 			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
 			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
+			["b", "%m.tilt ?", "turtleTilt", "tilt forward"],
+			["b", "battery %m.battery ?", "turtleBattery", "normal"],
 			["r", "color number", "turtleColorNumber"],
 			["r", "color pattern", "turtleColorPattern"],
 			["r", "floor", "turtleFloor"],
@@ -175,6 +141,8 @@
 			[" ", "%m.sound 소리 재생하기", "turtlePlaySound", "삐"],
 			[" ", "소리 끄기", "turtleClearSound"],
 			["-"],
+			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
+			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
 			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
 			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"]
 		],
@@ -196,9 +164,14 @@
 			[" ", "연주 속도를 %n 만큼 바꾸기", "turtleChangeTempoBy", 20],
 			[" ", "연주 속도를 %n BPM으로 정하기", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
+			["h", "색깔 패턴이 %m.pattern_color %m.pattern_color 일 때", "turtleWhenColorPattern", "빨간색", "노란색"],
+			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
+			["h", "%m.when_tilt 때", "turtleWhenTilt", "앞으로 기울였을"],
 			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
 			["b", "색깔 패턴이 %m.pattern_color %m.pattern_color 인가?", "turtleIsColorPattern", "빨간색", "노란색"],
-			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"]
+			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"],
+			["b", "%m.tilt ?", "turtleTilt", "앞으로 기울임"]
 		],
 		ko3: [
 			["w", "앞으로 %n %m.move_unit 이동하기", "turtleMoveForwardUnit", 6, "cm"],
@@ -234,9 +207,15 @@
 			[" ", "연주 속도를 %n 만큼 바꾸기", "turtleChangeTempoBy", 20],
 			[" ", "연주 속도를 %n BPM으로 정하기", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
+			["h", "색깔 패턴이 %m.pattern_color %m.pattern_color 일 때", "turtleWhenColorPattern", "빨간색", "노란색"],
+			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
+			["h", "%m.when_tilt 때", "turtleWhenTilt", "앞으로 기울였을"],
 			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
 			["b", "색깔 패턴이 %m.pattern_color %m.pattern_color 인가?", "turtleIsColorPattern", "빨간색", "노란색"],
 			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"],
+			["b", "%m.tilt ?", "turtleTilt", "앞으로 기울임"],
+			["b", "배터리 %m.battery ?", "turtleBattery", "정상"],
 			["r", "색깔 번호", "turtleColorNumber"],
 			["r", "색깔 패턴", "turtleColorPattern"],
 			["r", "바닥 센서", "turtleFloor"],
@@ -244,6 +223,100 @@
 			["r", "x축 가속도", "turtleAccelerationX"],
 			["r", "y축 가속도", "turtleAccelerationY"],
 			["r", "z축 가속도", "turtleAccelerationZ"]
+		],
+		ja1: [
+			["w", "前へ動かす", "turtleMoveForward"],
+			["w", "後ろへ動かす", "turtleMoveBackward"],
+			["w", "%m.left_right に回す", "turtleTurn", "左"],
+			["-"],
+			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
+			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			["-"],
+			[" ", "%m.sound 音を鳴らす", "turtlePlaySound", "ビープ"],
+			[" ", "音を止める", "turtleClearSound"],
+			["-"],
+			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
+			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
+			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
+			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"]
+		],
+		ja2: [
+			["w", "前へ %n %m.cm_sec 動かす", "turtleMoveForwardUnit", 6, "cm"],
+			["w", "後ろへ %n %m.cm_sec 動かす", "turtleMoveBackwardUnit", 6, "cm"],
+			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "turtleTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right に %n %m.deg_sec 半径 %n cmを %m.head_tail 方向に回す", "turtleTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "頭"],
+			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.head_tail 方向に回す", "turtlePivotAroundWheelUnitInDirection", "左", 90, "度", "頭"],
+			["-"],
+			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
+			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			["-"],
+			[" ", "%m.sound 音を %n 回鳴らす", "turtlePlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.sound 音を %n 回鳴らす", "turtlePlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "音を止める", "turtleClearSound"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "turtlePlayNoteForBeats", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "turtleRestForBeats", 0.25],
+			[" ", "テンポを %n ずつ変える", "turtleChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "turtleSetTempoTo", 60],
+			["-"],
+			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
+			["h", "色パターンが %m.pattern_color %m.pattern_color であるとき", "turtleWhenColorPattern", "赤色", "黄色"],
+			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
+			["h", "%m.when_tilt とき", "turtleWhenTilt", "前に傾けた"],
+			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
+			["b", "色パターンが %m.pattern_color %m.pattern_color ですか?", "turtleIsColorPattern", "赤色", "黄色"],
+			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"],
+			["b", "%m.tilt ?", "turtleTilt", "前に傾けたか"]
+		],
+		ja3: [
+			["w", "前へ %n %m.move_unit 動かす", "turtleMoveForwardUnit", 6, "cm"],
+			["w", "後ろへ %n %m.move_unit 動かす", "turtleMoveBackwardUnit", 6, "cm"],
+			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "turtleTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right に %n %m.turn_unit 半径 %n cmを %m.head_tail 方向に回す", "turtleTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "頭"],
+			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.head_tail 方向に回す", "turtlePivotAroundWheelUnitInDirection", "左", 90, "度", "頭"],
+			[" ", "左車輪を %n 右車輪を %n ずつ変える", "turtleChangeWheelsByLeftRight", 10, 10],
+			[" ", "左車輪を %n 右車輪を %n にする", "turtleSetWheelsToLeftRight", 50, 50],
+			[" ", "%m.left_right_both 車輪を %n ずつ変える", "turtleChangeWheelBy", "左", 10],
+			[" ", "%m.left_right_both 車輪を %n にする", "turtleSetWheelTo", "左", 50],
+			[" ", "%m.line_color 線を追従する", "turtleFollowLine", "黒色"],
+			["w", "黒色線を追従して %m.target_color まで動かす", "turtleFollowLineUntil", "赤色"],
+			["w", "%m.color_line 線を追従して黒色まで動かす", "turtleFollowLineUntilBlack", "赤色"],
+			["w", "黒色交差点を渡る", "turtleCrossIntersection"],
+			["w", "黒色交差点で %m.left_right_back に回す", "turtleTurnAtIntersection", "左"],
+			[" ", "線を追従する速度を %m.speed にする", "turtleSetFollowingSpeedTo", "5"],
+			[" ", "停止する", "turtleStop"],
+			["-"],
+			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
+			[" ", "頭LEDをR: %n G: %n B: %n ずつ変える", "turtleChangeHeadLedByRGB", 10, 0, 0],
+			[" ", "頭LEDをR: %n G: %n B: %n にする", "turtleSetHeadLedToRGB", 255, 0, 0],
+			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			["-"],
+			[" ", "%m.sound 音を %n 回鳴らす", "turtlePlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.sound 音を %n 回鳴らす", "turtlePlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "ブザー音を %n ずつ変える", "turtleChangeBuzzerBy", 10],
+			[" ", "ブザー音を %n にする", "turtleSetBuzzerTo", 1000],
+			[" ", "音を止める", "turtleClearSound"],
+			[" ", "%m.note %m.octave 音を鳴らす", "turtlePlayNote", "ド", "4"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "turtlePlayNoteForBeats", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "turtleRestForBeats", 0.25],
+			[" ", "テンポを %n ずつ変える", "turtleChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "turtleSetTempoTo", 60],
+			["-"],
+			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
+			["h", "色パターンが %m.pattern_color %m.pattern_color であるとき", "turtleWhenColorPattern", "赤色", "黄色"],
+			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
+			["h", "%m.when_tilt とき", "turtleWhenTilt", "前に傾けた"],
+			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
+			["b", "色パターンが %m.pattern_color %m.pattern_color ですか?", "turtleIsColorPattern", "赤色", "黄色"],
+			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"],
+			["b", "%m.tilt ?", "turtleTilt", "前に傾けたか"],
+			["b", "電池が %m.battery ?", "turtleBattery", "正常か"],
+			["r", "色番号", "turtleColorNumber"],
+			["r", "色パターン", "turtleColorPattern"],
+			["r", "フロアセンサー", "turtleFloor"],
+			["r", "ボタン", "turtleButton"],
+			["r", "x軸加速度", "turtleAccelerationX"],
+			["r", "y軸加速度", "turtleAccelerationY"],
+			["r", "z軸加速度", "turtleAccelerationZ"]
 		],
 		uz1: [
 			["w", "oldinga yurish", "turtleMoveForward"],
@@ -256,6 +329,8 @@
 			[" ", "%m.sound tovushni ijro etish", "turtlePlaySound", "qisqa"],
 			[" ", "tovushni o'chirish", "turtleClearSound"],
 			["-"],
+			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
+			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
 			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
 			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"]
 		],
@@ -277,9 +352,14 @@
 			[" ", "temni %n ga o'zgartirish", "turtleChangeTempoBy", 20],
 			[" ", "temni %n bpm ga sozlash", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
+			["h", "rang naqshi %m.pattern_color %m.pattern_color bo'lganida", "turtleWhenColorPattern", "qizil", "sariq"],
+			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
+			["h", "%m.when_tilt bo'lganda", "turtleWhenTilt", "oldinga eğin"],
 			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
 			["b", "rang naqshi %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "qizil", "sariq"],
-			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"]
+			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"],
+			["b", "%m.tilt ?", "turtleTilt", "oldinga eğin"]
 		],
 		uz3: [
 			["w", "oldinga %n %m.move_unit yurish", "turtleMoveForwardUnit", 6, "cm"],
@@ -315,9 +395,15 @@
 			[" ", "temni %n ga o'zgartirish", "turtleChangeTempoBy", 20],
 			[" ", "temni %n bpm ga sozlash", "turtleSetTempoTo", 60],
 			["-"],
+			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
+			["h", "rang naqshi %m.pattern_color %m.pattern_color bo'lganida", "turtleWhenColorPattern", "qizil", "sariq"],
+			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
+			["h", "%m.when_tilt bo'lganda", "turtleWhenTilt", "oldinga eğin"],
 			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
 			["b", "rang naqshi %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "qizil", "sariq"],
 			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"],
+			["b", "%m.tilt ?", "turtleTilt", "oldinga eğin"],
+			["b", "batareya %m.battery ?", "turtleBattery", "normal"],
 			["r", "rang raqami", "turtleColorNumber"],
 			["r", "rang naqshi", "turtleColorPattern"],
 			["r", "taglik sensori", "turtleFloor"],
@@ -329,10 +415,10 @@
 	};
 	const MENUS = {
 		en: {
-			"cm_sec": ["cm", "seconds"],
-			"deg_sec": ["degrees", "seconds"],
 			"move_unit": ["cm", "seconds", "pulses"],
 			"turn_unit": ["degrees", "seconds", "pulses"],
+			"cm_sec": ["cm", "seconds"],
+			"deg_sec": ["degrees", "seconds"],
 			"head_tail": ["head", "tail"],
 			"left_right": ["left", "right"],
 			"left_right_both": ["left", "right", "both"],
@@ -348,13 +434,17 @@
 			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"button_state": ["clicked", "double-clicked", "long-pressed"]
+			"when_button_state": ["clicked", "double-clicked", "long-pressed"],
+			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
+			"button_state": ["clicked", "double-clicked", "long-pressed"],
+			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
+			"battery": ["normal", "low", "empty"]
 		},
 		ko: {
-			"cm_sec": ["cm", "초"],
-			"deg_sec": ["도", "초"],
 			"move_unit": ["cm", "초", "펄스"],
 			"turn_unit": ["도", "초", "펄스"],
+			"cm_sec": ["cm", "초"],
+			"deg_sec": ["도", "초"],
 			"head_tail": ["머리", "꼬리"],
 			"left_right": ["왼쪽", "오른쪽"],
 			"left_right_both": ["왼쪽", "오른쪽", "양쪽"],
@@ -370,13 +460,43 @@
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"button_state": ["클릭했는가", "더블클릭했는가", "길게~눌렀는가"]
+			"when_button_state": ["클릭했을", "더블클릭했을", "길게~눌렀을"],
+			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을"],
+			"button_state": ["클릭했는가", "더블클릭했는가", "길게~눌렀는가"],
+			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음"],
+			"battery": ["정상", "부족", "없음"]
+		},
+		ja: {
+			"move_unit": ["cm", "秒", "パルス"],
+			"turn_unit": ["度", "秒", "パルス"],
+			"cm_sec": ["cm", "秒"],
+			"deg_sec": ["度", "秒"],
+			"head_tail": ["頭", "尾"],
+			"left_right": ["左", "右"],
+			"left_right_both": ["左", "右", "両"],
+			"left_right_back": ["左", "右", "後ろ"],
+			"line_color": ["黒色", "赤色", "緑色", "青色", "何色"],
+			"target_color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "何色"],
+			"color_line": ["赤色", "緑色", "青色", "何色"],
+			"touching_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "紫色", "黒色", "白色"],
+			"pattern_color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色"],
+			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
+			"sound": ["ビープ", "ランダムビープ", "サイレン", "エンジン", "ロボット", "行進", "誕生", "ディバディバディップ", "よくやった"],
+			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
+			"octave": ["1", "2", "3", "4", "5", "6", "7"],
+			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"when_button_state": ["クリックした", "ダブルクリックした", "長く押した"],
+			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった"],
+			"button_state": ["クリックしたか", "ダブルクリックしたか", "長く押したか"],
+			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか"],
+			"battery": ["正常か", "足りないか", "ないか"]
 		},
 		uz: {
-			"cm_sec": ["cm", "soniya"],
-			"deg_sec": ["daraja", "soniya"],
 			"move_unit": ["cm", "soniya", "puls"],
 			"turn_unit": ["daraja", "soniya", "puls"],
+			"cm_sec": ["cm", "soniya"],
+			"deg_sec": ["daraja", "soniya"],
 			"head_tail": ["bosh", "dum"],
 			"left_right": ["chap", "o'ng"],
 			"left_right_both": ["chap", "o'ng", "har ikki"],
@@ -392,7 +512,11 @@
 			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"]
+			"when_button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
+			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
+			"button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
+			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
+			"battery": ["normal", "past", "bo'sh"]
 		}
 	};
 	
@@ -410,61 +534,75 @@
 		}
 	}
 
+	var PARTS = {};
+	var DIRECTIONS = {};
+	var TOWARDS = {};
+	var UNITS = {};
+	var COLORS = {};
+	var NOTES = {};
+	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
+	var SOUNDS = {};
+	var TILTS = {};
+	var BATTERY_STATES = {};
 	var LINE_COLORS = {};
 	var COLOR_NUMBERS = {};
 	var COLOR_PATTERNS = {};
 	var RGB_COLORS = {};
-	var NOTES = {};
-	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
 	var BUTTON_STATES = {};
 	var VALUES = {};
-	const SECONDS = 1;
-	const PULSES = 2;
-	const DEGREES = 3;
-	const LEFT = 4;
-	const RIGHT = 5;
-	const BACK = 6;
-	const HEAD = 7;
-	const LEVEL1_MOVE_CM = 6;
-	const LEVEL1_TURN_DEG = 90;
+	
+	const LEFT = 1;
+	const RIGHT = 2;
+	const BOTH = 3;
+	const FRONT = 4;
+	const REAR = 5;
+	const BACK = 5;
+	const HEAD = 1;
+	const SECONDS = 2;
+	const OPEN = 1;
+	const CLOSE = 2;
+	const TILT_FORWARD = 1;
+	const TILT_BACKWARD = 2;
+	const TILT_LEFT = 3;
+	const TILT_RIGHT = 4;
+	const TILT_FLIP = 5;
+	const TILT_NONE = 6;
+	const CLICKED = 1;
+	const DOUBLE_CLICKED = 2;
+	const LONG_PRESSED = 3;
+	const WHITE = 1;
+	
 	var tmp;
 	for(var i in MENUS) {
-		tmp = MENUS[i]['line_color'];
-		LINE_COLORS[tmp[0]] = 0;
-		LINE_COLORS[tmp[4]] = 7;
-		tmp = MENUS[i]['touching_color'];
-		LINE_COLORS[tmp[0]] = 1;
-		LINE_COLORS[tmp[2]] = 2;
-		LINE_COLORS[tmp[3]] = 3;
-		LINE_COLORS[tmp[4]] = 4;
-		LINE_COLORS[tmp[5]] = 5;
-		LINE_COLORS[tmp[6]] = 6;
-		COLOR_NUMBERS[tmp[7]] = 0;
-		COLOR_NUMBERS[tmp[0]] = 1;
-		COLOR_NUMBERS[tmp[1]] = 2;
-		COLOR_NUMBERS[tmp[2]] = 3;
-		COLOR_NUMBERS[tmp[3]] = 4;
-		COLOR_NUMBERS[tmp[4]] = 5;
-		COLOR_NUMBERS[tmp[5]] = 6;
-		COLOR_NUMBERS[tmp[6]] = 7;
-		COLOR_NUMBERS[tmp[8]] = 8;
-		COLOR_PATTERNS[tmp[0]] = 1;
-		COLOR_PATTERNS[tmp[2]] = 3;
-		COLOR_PATTERNS[tmp[3]] = 4;
-		COLOR_PATTERNS[tmp[4]] = 5;
-		COLOR_PATTERNS[tmp[5]] = 6;
-		COLOR_PATTERNS[tmp[6]] = 7;
+		tmp = MENUS[i]['left_right_both'];
+		PARTS[tmp[0]] = LEFT;
+		PARTS[tmp[1]] = RIGHT;
+		PARTS[tmp[2]] = BOTH;
+		tmp = MENUS[i]['left_right_front_rear'];
+		DIRECTIONS[tmp[0]] = LEFT;
+		DIRECTIONS[tmp[1]] = RIGHT;
+		DIRECTIONS[tmp[2]] = FRONT;
+		DIRECTIONS[tmp[3]] = REAR;
+		tmp = MENUS[i]['left_right_back'];
+		DIRECTIONS[tmp[2]] = BACK;
+		tmp = MENUS[i]['head_tail'];
+		TOWARDS[tmp[0]] = HEAD;
+		tmp = MENUS[i]['move_unit'];
+		UNITS[tmp[0]] = 1; // cm
+		UNITS[tmp[1]] = 2; // sec
+		UNITS[tmp[2]] = 3; // pulse
+		tmp = MENUS[i]['turn_unit'];
+		UNITS[tmp[0]] = 1; // deg
 		tmp = MENUS[i]['led_color'];
-		RGB_COLORS[tmp[0]] = [255, 0, 0];
-		RGB_COLORS[tmp[1]] = [255, 63, 0];
-		RGB_COLORS[tmp[2]] = [255, 255, 0];
-		RGB_COLORS[tmp[3]] = [0, 255, 0];
-		RGB_COLORS[tmp[4]] = [0, 255, 255];
-		RGB_COLORS[tmp[5]] = [0, 0, 255];
-		RGB_COLORS[tmp[6]] = [63, 0, 255];
-		RGB_COLORS[tmp[7]] = [255, 0, 255];
-		RGB_COLORS[tmp[8]] = [255, 255, 255];
+		COLORS[tmp[0]] = 4; // red
+		COLORS[tmp[1]] = 4; // orange
+		COLORS[tmp[2]] = 6; // yellow
+		COLORS[tmp[3]] = 2; // green
+		COLORS[tmp[4]] = 3; // sky blue
+		COLORS[tmp[5]] = 1; // blue
+		COLORS[tmp[6]] = 5; // violet
+		COLORS[tmp[7]] = 5; // purple
+		COLORS[tmp[8]] = 7; // white
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -479,130 +617,146 @@
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
 		tmp = MENUS[i]['sound'];
-		SOUNDS[tmp[0]] = 1;
-		SOUNDS[tmp[1]] = 2;
-		SOUNDS[tmp[2]] = 3;
-		SOUNDS[tmp[3]] = 4;
-		SOUNDS[tmp[4]] = 5;
-		SOUNDS[tmp[5]] = 6;
-		SOUNDS[tmp[6]] = 7;
-		SOUNDS[tmp[7]] = 8;
-		SOUNDS[tmp[8]] = 9;
+		SOUNDS[tmp[0]] = 1; // beep
+		SOUNDS[tmp[1]] = 2; // random beep
+		SOUNDS[tmp[2]] = 3; // siren
+		SOUNDS[tmp[3]] = 4; // engine
+		SOUNDS[tmp[4]] = 5; // robot
+		SOUNDS[tmp[5]] = 6; // march
+		SOUNDS[tmp[6]] = 7; // birthday
+		SOUNDS[tmp[7]] = 8; // dibidibidip
+		SOUNDS[tmp[8]] = 9; // good job
+		tmp = MENUS[i]['tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
+		tmp = MENUS[i]['when_tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
+		tmp = MENUS[i]['battery'];
+		BATTERY_STATES[tmp[0]] = 2;
+		BATTERY_STATES[tmp[1]] = 1;
+		BATTERY_STATES[tmp[2]] = 0;
+		tmp = MENUS[i]['line_color'];
+		LINE_COLORS[tmp[0]] = 0; // black
+		LINE_COLORS[tmp[4]] = 7; // any color
+		tmp = MENUS[i]['touching_color'];
+		LINE_COLORS[tmp[0]] = 1; // red
+		LINE_COLORS[tmp[2]] = 2; // yellow
+		LINE_COLORS[tmp[3]] = 3; // green
+		LINE_COLORS[tmp[4]] = 4; // sky blue
+		LINE_COLORS[tmp[5]] = 5; // blue
+		LINE_COLORS[tmp[6]] = 6; // purple
+		COLOR_NUMBERS[tmp[7]] = 0; // black
+		COLOR_NUMBERS[tmp[0]] = 1; // red
+		COLOR_NUMBERS[tmp[1]] = 2; // orange
+		COLOR_NUMBERS[tmp[2]] = 3; // yellow
+		COLOR_NUMBERS[tmp[3]] = 4; // green
+		COLOR_NUMBERS[tmp[4]] = 5; // sky blue
+		COLOR_NUMBERS[tmp[5]] = 6; // blue
+		COLOR_NUMBERS[tmp[6]] = 7; // purple
+		COLOR_NUMBERS[tmp[8]] = 8; // white
+		COLOR_PATTERNS[tmp[0]] = 1; // red
+		COLOR_PATTERNS[tmp[2]] = 3; // yellow
+		COLOR_PATTERNS[tmp[3]] = 4; // green
+		COLOR_PATTERNS[tmp[4]] = 5; // sky blue
+		COLOR_PATTERNS[tmp[5]] = 6; // blue
+		COLOR_PATTERNS[tmp[6]] = 7; // purple
+		tmp = MENUS[i]['led_color'];
+		RGB_COLORS[tmp[0]] = [255, 0, 0];
+		RGB_COLORS[tmp[1]] = [255, 63, 0];
+		RGB_COLORS[tmp[2]] = [255, 255, 0];
+		RGB_COLORS[tmp[3]] = [0, 255, 0];
+		RGB_COLORS[tmp[4]] = [0, 255, 255];
+		RGB_COLORS[tmp[5]] = [0, 0, 255];
+		RGB_COLORS[tmp[6]] = [63, 0, 255];
+		RGB_COLORS[tmp[7]] = [255, 0, 255];
+		RGB_COLORS[tmp[8]] = [255, 255, 255];
 		tmp = MENUS[i]['button_state'];
-		BUTTON_STATES[tmp[0]] = 1;
-		BUTTON_STATES[tmp[1]] = 2;
-		BUTTON_STATES[tmp[2]] = 3;
-		tmp = MENUS[i]['move_unit'];
-		VALUES[tmp[1]] = SECONDS;
-		VALUES[tmp[2]] = PULSES;
-		tmp = MENUS[i]['turn_unit'];
-		VALUES[tmp[0]] = DEGREES;
-		tmp = MENUS[i]['left_right_back'];
-		VALUES[tmp[0]] = LEFT;
-		VALUES[tmp[1]] = RIGHT;
-		VALUES[tmp[2]] = BACK;
-		tmp = MENUS[i]['head_tail'];
-		VALUES[tmp[0]] = HEAD;
+		BUTTON_STATES[tmp[0]] = CLICKED;
+		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
+		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
+		tmp = MENUS[i]['when_button_state'];
+		BUTTON_STATES[tmp[0]] = CLICKED;
+		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
+		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
+		tmp = MENUS[i]['black_white'];
+		VALUES[tmp[1]] = WHITE;
+	}
+	
+	function Turtle(index) {
+		this.sensory = {
+			map: 0,
+			signalStrength: 0,
+			colorRed: 0,
+			colorGreen: 0,
+			colorBlue: 0,
+			colorClear: 0,
+			floor: 0,
+			accelerationX: 0,
+			accelerationY: 0,
+			accelerationZ: 0,
+			temperature: 0,
+			button: 0,
+			colorNumber: -1,
+			colorPattern: -1,
+			pulseCount: 0,
+			tilt: 0,
+			wheelState: 0,
+			soundState: 0,
+			lineTracerState: 0,
+			batteryState: 2
+		};
+		this.motoring = {
+			module: TURTLE,
+			index: index,
+			map: 0xf8000000,
+			leftWheel: 0,
+			rightWheel: 0,
+			ledRed: 0,
+			ledGreen: 0,
+			ledBlue: 0,
+			buzzer: 0,
+			pulse: 0,
+			note: 0,
+			sound: 0,
+			lineTracerMode: 0,
+			lineTracerGain: 5,
+			lineTracerSpeed: 5,
+			lamp: 1,
+			lock: 0,
+			motionType: 0,
+			motionUnit: 0,
+			motionSpeed: 0,
+			motionValue: 0,
+			motionRadius: 0
+		};
+		this.blockId = 0;
+		this.motionCallback = undefined;
+		this.lineTracerCallback = undefined;
+		this.currentSound = 0;
+		this.soundRepeat = 1;
+		this.soundCallback = undefined;
+		this.noteId = 0;
+		this.noteTimer1 = undefined;
+		this.noteTimer2 = undefined;
+		this.clicked = false;
+		this.doubleClicked = false;
+		this.longPressed = false;
+		this.colorPattern = -1;
+		this.tempo = 60;
+		this.timeouts = [];
 	}
 
-	function removeTimeout(id) {
-		clearTimeout(id);
-		var index = timeouts.indexOf(id);
-		if(index >= 0) {
-			timeouts.splice(index, 1);
-		}
-	}
-
-	function removeAllTimeouts() {
-		for(var i in timeouts) {
-			clearTimeout(timeouts[i]);
-		}
-		timeouts = [];
-	}
-	
-	function clearMotoring() {
-		motoring.map = 0xf8000000;
-	}
-	
-	function setPulse(pulse) {
-		motoring.pulse = pulse;
-		motoring.map |= 0x04000000;
-	}
-	
-	function setLineTracerMode(mode) {
-		motoring.lineTracerMode = mode;
-		motoring.map |= 0x00800000;
-	}
-	
-	function setLineTracerGain(gain) {
-		motoring.lineTracerGain = gain;
-		motoring.map |= 0x00400000;
-	}
-	
-	function setLineTracerSpeed(speed) {
-		motoring.lineTracerSpeed = speed;
-		motoring.map |= 0x00200000;
-	}
-	
-	function cancelLineTracer() {
-		lineTracerCallback = undefined;
-	}
-	
-	function setMotion(type, unit, speed, value, radius) {
-		motoring.motionType = type;
-		motoring.motionUnit = unit;
-		motoring.motionSpeed = speed;
-		motoring.motionValue = value;
-		motoring.motionRadius = radius;
-		motoring.map |= 0x00040000;
-	}
-	
-	function cancelMotion() {
-		motionCallback = undefined;
-	};
-	
-	function setNote(note) {
-		motoring.note = note;
-		motoring.map |= 0x02000000;
-	}
-	
-	function issueNoteId() {
-		noteId = blockId = (blockId % 65535) + 1;
-		return noteId;
-	};
-
-	function cancelNote() {
-		noteId = 0;
-		if(noteTimer1 !== undefined) {
-			removeTimeout(noteTimer1);
-		}
-		if(noteTimer2 !== undefined) {
-			removeTimeout(noteTimer2);
-		}
-		noteTimer1 = undefined;
-		noteTimer2 = undefined;
-	};
-	
-	function setSound(sound) {
-		motoring.sound = sound;
-		motoring.map |= 0x01000000;
-	}
-	
-	function runSound(sound, count) {
-		if(typeof count != 'number') count = 1;
-		if(count < 0) count = -1;
-		if(count) {
-			currentSound = sound;
-			soundRepeat = count;
-			setSound(sound);
-		}
-	}
-	
-	function cancelSound() {
-		soundCallback = undefined;
-	};
-	
-	function reset() {
+	Turtle.prototype.reset = function() {
+		var motoring = this.motoring;
 		motoring.map = 0xffe40000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -624,69 +778,781 @@
 		motoring.motionValue = 0;
 		motoring.motionRadius = 0;
 
-		blockId = 0;
-		motionCallback = undefined;
-		lineTracerCallback = undefined;
-		currentSound = 0;
-		soundRepeat = 1;
-		soundCallback = undefined;
-		noteId = 0;
-		noteTimer1 = undefined;
-		noteTimer2 = undefined;
-		clicked = false;
-		doubleClicked = false;
-		longPressed = false;
-		colorPattern = -1;
-		tempo = 60;
-		removeAllTimeouts();
-	}
-	
-	function handleSensory() {
-		if(sensory.map & 0x00000800) clicked = true;
-		if(sensory.map & 0x00000400) doubleClicked = true;
-		if(sensory.map & 0x00000200) longPressed = true;
-		if(sensory.map & 0x00000080) colorPattern = sensory.colorPattern;
-		
-		if(lineTracerCallback && (sensory.map & 0x00000008) != 0) {
+		this.blockId = 0;
+		this.motionCallback = undefined;
+		this.lineTracerCallback = undefined;
+		this.currentSound = 0;
+		this.soundRepeat = 1;
+		this.soundCallback = undefined;
+		this.noteId = 0;
+		this.noteTimer1 = undefined;
+		this.noteTimer2 = undefined;
+		this.clicked = false;
+		this.doubleClicked = false;
+		this.longPressed = false;
+		this.colorPattern = -1;
+		this.tempo = 60;
+
+		this.__removeAllTimeouts();
+	};
+
+	Turtle.prototype.__removeTimeout = function(id) {
+		clearTimeout(id);
+		var idx = this.timeouts.indexOf(id);
+		if(idx >= 0) {
+			this.timeouts.splice(idx, 1);
+		}
+	};
+
+	Turtle.prototype.__removeAllTimeouts = function() {
+		var timeouts = this.timeouts;
+		for(var i in timeouts) {
+			clearTimeout(timeouts[i]);
+		}
+		this.timeouts = [];
+	};
+
+	Turtle.prototype.clearMotoring = function() {
+		this.motoring.map = 0xf8000000;
+	};
+
+	Turtle.prototype.clearEvent = function() {
+		this.clicked = false;
+		this.doubleClicked = false;
+		this.longPressed = false;
+		this.colorPattern = -1;
+	};
+
+	Turtle.prototype.__setPulse = function(pulse) {
+		this.motoring.pulse = pulse;
+		this.motoring.map |= 0x04000000;
+	};
+
+	Turtle.prototype.__setLineTracerMode = function(mode) {
+		this.motoring.lineTracerMode = mode;
+		this.motoring.map |= 0x00800000;
+	};
+
+	Turtle.prototype.__setLineTracerGain = function(gain) {
+		this.motoring.lineTracerGain = gain;
+		this.motoring.map |= 0x00400000;
+	};
+
+	Turtle.prototype.__setLineTracerSpeed = function(speed) {
+		this.motoring.lineTracerSpeed = speed;
+		this.motoring.map |= 0x00200000;
+	};
+
+	Turtle.prototype.__cancelLineTracer = function() {
+		this.lineTracerCallback = undefined;
+	};
+
+	Turtle.prototype.__setMotion = function(type, unit, speed, value, radius) {
+		var motoring = this.motoring;
+		motoring.motionType = type;
+		motoring.motionUnit = unit;
+		motoring.motionSpeed = speed;
+		motoring.motionValue = value;
+		motoring.motionRadius = radius;
+		motoring.map |= 0x00040000;
+	};
+
+	Turtle.prototype.__cancelMotion = function() {
+		this.motionCallback = undefined;
+	};
+
+	Turtle.prototype.__setNote = function(note) {
+		this.motoring.note = note;
+		this.motoring.map |= 0x02000000;
+	};
+
+	Turtle.prototype.__issueNoteId = function() {
+		this.noteId = this.blockId = (this.blockId % 65535) + 1;
+		return this.noteId;
+	};
+
+	Turtle.prototype.__cancelNote = function() {
+		this.noteId = 0;
+		if(this.noteTimer1 !== undefined) {
+			this.__removeTimeout(this.noteTimer1);
+		}
+		if(this.noteTimer2 !== undefined) {
+			this.__removeTimeout(this.noteTimer2);
+		}
+		this.noteTimer1 = undefined;
+		this.noteTimer2 = undefined;
+	};
+
+	Turtle.prototype.__setSound = function(sound) {
+		this.motoring.sound = sound;
+		this.motoring.map |= 0x01000000;
+	};
+
+	Turtle.prototype.__runSound = function(sound, count) {
+		if(typeof count != 'number') count = 1;
+		if(count < 0) count = -1;
+		if(count) {
+			this.currentSound = sound;
+			this.soundRepeat = count;
+			this.__setSound(sound);
+		}
+	};
+
+	Turtle.prototype.__cancelSound = function() {
+		this.soundCallback = undefined;
+	};
+
+	Turtle.prototype.handleSensory = function() {
+		var self = this;
+		var sensory = self.sensory;
+		if(sensory.map & 0x00000800) self.clicked = true;
+		if(sensory.map & 0x00000400) self.doubleClicked = true;
+		if(sensory.map & 0x00000200) self.longPressed = true;
+		if(sensory.map & 0x00000080) self.colorPattern = sensory.colorPattern;
+
+		if(self.lineTracerCallback && (sensory.map & 0x00000008) != 0) {
 			if(sensory.lineTracerState == 0x02) {
-				setLineTracerMode(0);
-				var callback = lineTracerCallback;
-				cancelLineTracer();
+				self.__setLineTracerMode(0);
+				var callback = self.lineTracerCallback;
+				self.__cancelLineTracer();
 				if(callback) callback();
 			}
 		}
-		if(motionCallback && (sensory.map & 0x00000020) != 0) {
+		if(self.motionCallback && (sensory.map & 0x00000020) != 0) {
 			if(sensory.wheelState == 0) {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				var callback = motionCallback;
-				cancelMotion();
+				self.motoring.leftWheel = 0;
+				self.motoring.rightWheel = 0;
+				var callback = self.motionCallback;
+				self.__cancelMotion();
 				if(callback) callback();
 			}
 		}
 		if((sensory.map & 0x00000010) != 0) {
 			if(sensory.soundState == 0) {
-				if(currentSound > 0) {
-					if(soundRepeat < 0) {
-						runSound(currentSound, -1);
-					} else if(soundRepeat > 1) {
-						soundRepeat --;
-						runSound(currentSound, soundRepeat);
+				if(self.currentSound > 0) {
+					if(self.soundRepeat < 0) {
+						self.__runSound(self.currentSound, -1);
+					} else if(self.soundRepeat > 1) {
+						self.soundRepeat --;
+						self.__runSound(self.currentSound, self.soundRepeat);
 					} else {
-						currentSound = 0;
-						soundRepeat = 1;
-						var callback = soundCallback;
-						cancelSound();
+						self.currentSound = 0;
+						self.soundRepeat = 1;
+						var callback = self.soundCallback;
+						self.__cancelSound();
 						if(callback) callback();
 					}
 				} else {
-					currentSound = 0;
-					soundRepeat = 1;
-					var callback = soundCallback;
-					cancelSound();
+					self.currentSound = 0;
+					self.soundRepeat = 1;
+					var callback = self.soundCallback;
+					self.__cancelSound();
 					if(callback) callback();
 				}
 			}
+		}
+	};
+
+	Turtle.prototype.__motion = function(type, callback) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(type, 1, 0, 0, 0); // type, unit, speed, value, radius
+		this.motionCallback = callback;
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.__motionUnit = function(type, unit, value, callback) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		value = parseFloat(value);
+		if(value && value > 0) {
+			this.__setMotion(type, unit, 0, value, 0); // type, unit, speed, value, radius
+			this.motionCallback = callback;
+			this.__setLineTracerMode(0);
+		} else {
+			this.__setMotion(0, 0, 0, 0, 0);
+			this.__setLineTracerMode(0);
+			callback();
+		}
+	};
+
+	Turtle.prototype.__motionUnitRadius = function(type, unit, value, radius, callback) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		value = parseFloat(value);
+		radius = parseFloat(radius);
+		if(value && value > 0 && (typeof radius == 'number') && radius >= 0) {
+			this.__setMotion(type, unit, 0, value, radius); // type, unit, speed, value, radius
+			this.motionCallback = callback;
+			this.__setLineTracerMode(0);
+		} else {
+			this.__setMotion(0, 0, 0, 0, 0);
+			this.__setLineTracerMode(0);
+			callback();
+		}
+	};
+
+	Turtle.prototype.moveForward = function(callback) {
+		this.__motion(101, callback);
+	};
+
+	Turtle.prototype.moveBackward = function(callback) {
+		this.__motion(102, callback);
+	};
+
+	Turtle.prototype.turn = function(direction, callback) {
+		if(DIRECTIONS[direction] == LEFT) {
+			this.__motion(103, callback);
+		} else {
+			this.__motion(104, callback);
+		}
+	};
+
+	Turtle.prototype.moveForwardUnit = function(value, unit, callback) {
+		this.__motionUnit(1, UNITS[unit], value, callback);
+	};
+
+	Turtle.prototype.moveBackwardUnit = function(value, unit, callback) {
+		this.__motionUnit(2, UNITS[unit], value, callback);
+	};
+
+	Turtle.prototype.turnUnit = function(direction, value, unit, callback) {
+		if(DIRECTIONS[direction] == LEFT) {
+			this.__motionUnit(3, UNITS[unit], value, callback);
+		} else {
+			this.__motionUnit(4, UNITS[unit], value, callback);
+		}
+	};
+
+	Turtle.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
+		unit = UNITS[unit];
+		if(PARTS[wheel] == LEFT) {
+			if(TOWARDS[toward] == HEAD) this.__motionUnit(5, unit, value, callback);
+			else this.__motionUnit(6, unit, value, callback);
+		} else {
+			if(TOWARDS[toward] == HEAD) this.__motionUnit(7, unit, value, callback);
+			else this.__motionUnit(8, unit, value, callback);
+		}
+	};
+
+	Turtle.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
+		unit = UNITS[unit];
+		if(DIRECTIONS[direction] == LEFT) {
+			if(TOWARDS[toward] == HEAD) this.__motionUnitRadius(9, unit, value, radius, callback);
+			else this.__motionUnitRadius(10, unit, value, radius, callback);
+		} else {
+			if(TOWARDS[toward] == HEAD) this.__motionUnitRadius(11, unit, value, radius, callback);
+			else this.__motionUnitRadius(12, unit, value, radius, callback);
+		}
+	};
+
+	Turtle.prototype.setWheels = function(leftVelocity, rightVelocity) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		leftVelocity = parseFloat(leftVelocity);
+		rightVelocity = parseFloat(rightVelocity);
+		if(typeof leftVelocity == 'number') {
+			motoring.leftWheel = leftVelocity;
+		}
+		if(typeof rightVelocity == 'number') {
+			motoring.rightWheel = rightVelocity;
+		}
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.changeWheels = function(leftVelocity, rightVelocity) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		leftVelocity = parseFloat(leftVelocity);
+		rightVelocity = parseFloat(rightVelocity);
+		if(typeof leftVelocity == 'number') {
+			motoring.leftWheel += leftVelocity;
+		}
+		if(typeof rightVelocity == 'number') {
+			motoring.rightWheel += rightVelocity;
+		}
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.setWheel = function(wheel, velocity) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		velocity = parseFloat(velocity);
+		if(typeof velocity == 'number') {
+			wheel = PARTS[wheel];
+			if(wheel == LEFT) {
+				motoring.leftWheel = velocity;
+			} else if(wheel == RIGHT) {
+				motoring.rightWheel = velocity;
+			} else {
+				motoring.leftWheel = velocity;
+				motoring.rightWheel = velocity;
+			}
+		}
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.changeWheel = function(wheel, velocity) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		velocity = parseFloat(velocity);
+		if(typeof velocity == 'number') {
+			wheel = PARTS[wheel];
+			if(wheel == LEFT) {
+				motoring.leftWheel += velocity;
+			} else if(wheel == RIGHT) {
+				motoring.rightWheel += velocity;
+			} else {
+				motoring.leftWheel += velocity;
+				motoring.rightWheel += velocity;
+			}
+		}
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.followLine = function(color) {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		var mode = 10 + LINE_COLORS[color];
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(mode);
+	};
+
+	Turtle.prototype.followLineUntil = function(color, callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		var mode = 60 + LINE_COLORS[color];
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(mode);
+		this.lineTracerCallback = callback;
+	};
+
+	Turtle.prototype.followLineUntilBlack = function(color, callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		var mode = 70 + LINE_COLORS[color];
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(mode);
+		this.lineTracerCallback = callback;
+	};
+
+	Turtle.prototype.crossIntersection = function(callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(40);
+		this.lineTracerCallback = callback;
+	};
+
+	Turtle.prototype.turnAtIntersection = function(direction, callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		var mode = 20;
+		direction = DIRECTIONS[direction];
+		if(direction == RIGHT) mode = 30;
+		else if(direction === BACK) mode = 50;
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(mode);
+		this.lineTracerCallback = callback;
+	};
+
+	Turtle.prototype.setLineTracerSpeed = function(speed) {
+		speed = parseInt(speed);
+		if(typeof speed == 'number') {
+			this.__setLineTracerSpeed(speed);
+			this.__setLineTracerGain(speed);
+		}
+	};
+
+	Turtle.prototype.stop = function() {
+		var motoring = this.motoring;
+		this.__cancelLineTracer();
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(0);
+	};
+
+	Turtle.prototype.setHeadColor = function(color) {
+		var rgb = RGB_COLORS[color];
+		if(rgb) {
+			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+		}
+	};
+
+	Turtle.prototype.setHeadRgbArray = function(rgb) {
+		if(rgb) {
+			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+		}
+	};
+
+	Turtle.prototype.setHeadRgb = function(red, green, blue) {
+		var motoring = this.motoring;
+		red = parseInt(red);
+		green = parseInt(green);
+		blue = parseInt(blue);
+		if(typeof red == 'number') {
+			motoring.ledRed = red;
+		}
+		if(typeof green == 'number') {
+			motoring.ledGreen = green;
+		}
+		if(typeof blue == 'number') {
+			motoring.ledBlue = blue;
+		}
+	};
+
+	Turtle.prototype.changeHeadRgb = function(red, green, blue) {
+		var motoring = this.motoring;
+		red = parseInt(red);
+		green = parseInt(green);
+		blue = parseInt(blue);
+		if(typeof red == 'number') {
+			motoring.ledRed += red;
+		}
+		if(typeof green == 'number') {
+			motoring.ledGreen += green;
+		}
+		if(typeof blue == 'number') {
+			motoring.ledBlue += blue;
+		}
+	};
+
+	Turtle.prototype.clearHead = function() {
+		this.setHeadRgb(0, 0, 0);
+	};
+
+	Turtle.prototype.playSound = function(sound, count) {
+		var motoring = this.motoring;
+		this.__cancelNote();
+		this.__cancelSound();
+
+		sound = SOUNDS[sound];
+		count = parseInt(count);
+		motoring.buzzer = 0;
+		this.__setNote(0);
+		if(sound && count) {
+			this.__runSound(sound, count);
+		} else {
+			this.__runSound(0);
+		}
+	};
+
+	Turtle.prototype.playSoundUntil = function(sound, count, callback) {
+		var motoring = this.motoring;
+		this.__cancelNote();
+		this.__cancelSound();
+
+		sound = SOUNDS[sound];
+		count = parseInt(count);
+		motoring.buzzer = 0;
+		this.__setNote(0);
+		if(sound && count) {
+			this.__runSound(sound, count);
+			this.soundCallback = callback;
+		} else {
+			this.__runSound(0);
+			callback();
+		}
+	};
+
+	Turtle.prototype.setBuzzer = function(hz) {
+		var motoring = this.motoring;
+		this.__cancelNote();
+		this.__cancelSound();
+
+		hz = parseFloat(hz);
+		if(typeof hz == 'number') {
+			motoring.buzzer = hz;
+		}
+		this.__setNote(0);
+		this.__runSound(0);
+	};
+
+	Turtle.prototype.changeBuzzer = function(hz) {
+		var motoring = this.motoring;
+		this.__cancelNote();
+		this.__cancelSound();
+
+		hz = parseFloat(hz);
+		if(typeof hz == 'number') {
+			motoring.buzzer += hz;
+		}
+		this.__setNote(0);
+		this.__runSound(0);
+	};
+
+	Turtle.prototype.clearSound = function() {
+		this.__cancelNote();
+		this.__cancelSound();
+		this.motoring.buzzer = 0;
+		this.__setNote(0);
+		this.__runSound(0);
+	};
+
+	Turtle.prototype.playNote = function(note, octave) {
+		var motoring = this.motoring;
+		this.__cancelNote();
+		this.__cancelSound();
+
+		note = NOTES[note];
+		octave = parseInt(octave);
+		motoring.buzzer = 0;
+		if(note && octave && octave > 0 && octave < 8) {
+			note += (octave - 1) * 12;
+			this.__setNote(note);
+		} else {
+			this.__setNote(0);
+		}
+		this.__runSound(0);
+	};
+
+	Turtle.prototype.playNoteBeat = function(note, octave, beat, callback) {
+		var self = this;
+		var motoring = self.motoring;
+		self.__cancelNote();
+		self.__cancelSound();
+
+		note = NOTES[note];
+		octave = parseInt(octave);
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
+		motoring.buzzer = 0;
+		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && self.tempo > 0) {
+			var id = self.__issueNoteId();
+			note += (octave - 1) * 12;
+			self.__setNote(note);
+			var timeout = beat * 60 * 1000 / self.tempo;
+			var tail = (timeout > 100) ? 100 : 0;
+			if(tail > 0) {
+				self.noteTimer1 = setTimeout(function() {
+					if(self.noteId == id) {
+						self.__setNote(0);
+						if(self.noteTimer1 !== undefined) self.__removeTimeout(self.noteTimer1);
+						self.noteTimer1 = undefined;
+					}
+				}, timeout - tail);
+				self.timeouts.push(self.noteTimer1);
+			}
+			self.noteTimer2 = setTimeout(function() {
+				if(self.noteId == id) {
+					self.__setNote(0);
+					self.__cancelNote();
+					callback();
+				}
+			}, timeout);
+			self.timeouts.push(self.noteTimer2);
+			self.__runSound(0);
+		} else {
+			self.__setNote(0);
+			self.__runSound(0);
+			callback();
+		}
+	};
+
+	Turtle.prototype.restBeat = function(beat, callback) {
+		var self = this;
+		var motoring = self.motoring;
+		self.__cancelNote();
+		self.__cancelSound();
+
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
+		motoring.buzzer = 0;
+		self.__setNote(0);
+		self.__runSound(0);
+		if(beat && beat > 0 && self.tempo > 0) {
+			var id = self.__issueNoteId();
+			self.noteTimer1 = setTimeout(function() {
+				if(self.noteId == id) {
+					self.__cancelNote();
+					callback();
+				}
+			}, beat * 60 * 1000 / self.tempo);
+			self.timeouts.push(self.noteTimer1);
+		} else {
+			callback();
+		}
+	};
+
+	Turtle.prototype.setTempo = function(bpm) {
+		bpm = parseFloat(bpm);
+		if(typeof bpm == 'number') {
+			this.tempo = bpm;
+			if(this.tempo < 1) this.tempo = 1;
+		}
+	};
+
+	Turtle.prototype.changeTempo = function(bpm) {
+		bpm = parseFloat(bpm);
+		if(typeof bpm == 'number') {
+			this.tempo += bpm;
+			if(this.tempo < 1) this.tempo = 1;
+		}
+	};
+
+	Turtle.prototype.checkTouchingColor = function(color) {
+		color = COLOR_NUMBERS[color];
+		if(typeof color == 'number') {
+			return this.sensory.colorNumber == color;
+		}
+		return false;
+	};
+
+	Turtle.prototype.checkColorPattern = function(color1, color2) {
+		color1 = COLOR_PATTERNS[color1];
+		color2 = COLOR_PATTERNS[color2];
+		if((typeof color1 == 'number') && (typeof color2 == 'number')) {
+			return this.colorPattern == color1 * 10 + color2;
+		}
+		return false;
+	};
+
+	Turtle.prototype.checkButtonEvent = function(event) {
+		switch(BUTTON_STATES[event]) {
+			case CLICKED: return this.clicked;
+			case DOUBLE_CLICKED: return this.doubleClicked;
+			case LONG_PRESSED: return this.longPressed;
+		}
+		return false;
+	};
+
+	Turtle.prototype.checkTilt = function(tilt) {
+		switch(TILTS[tilt]) {
+			case TILT_FORWARD: return this.sensory.tilt == 1;
+			case TILT_BACKWARD: return this.sensory.tilt == -1;
+			case TILT_LEFT: return this.sensory.tilt == 2;
+			case TILT_RIGHT: return this.sensory.tilt == -2;
+			case TILT_FLIP: return this.sensory.tilt == 3;
+			case TILT_NONE: return this.sensory.tilt == -3;
+		}
+		return false;
+	};
+
+	Turtle.prototype.checkBattery = function(battery) {
+		return this.sensory.batteryState == BATTERY_STATES[battery];
+	};
+
+	Turtle.prototype.getColorNumber = function() {
+		return this.sensory.colorNumber;
+	};
+
+	Turtle.prototype.getColorPattern = function() {
+		return this.colorPattern;
+	};
+
+	Turtle.prototype.getFloor = function() {
+		return this.sensory.floor;
+	};
+
+	Turtle.prototype.getButton = function() {
+		return this.sensory.button;
+	};
+
+	Turtle.prototype.getAccelerationX = function() {
+		return this.sensory.accelerationX;
+	};
+
+	Turtle.prototype.getAccelerationY = function() {
+		return this.sensory.accelerationY;
+	};
+
+	Turtle.prototype.getAccelerationZ = function() {
+		return this.sensory.accelerationZ;
+	};
+
+	function getOrCreateRobot(group, module, index) {
+		var key = module + index;
+		var robot = robots[key];
+		if(!robot) {
+			switch(module) {
+				case TURTLE: robot = new Turtle(index); break;
+			}
+			if(robot) {
+				robots[key] = robot;
+				packet[key] = robot.motoring;
+			}
+		}
+		robotsByGroup[group + index] = robot;
+		return robot;
+	}
+	
+	function getRobot(group, index) {
+		return robotsByGroup[group + index];
+	}
+	
+	function clearMotorings() {
+		for(var i in robots) {
+			robots[i].clearMotoring();
+		}
+	}
+	
+	function clearEvents() {
+		for(var i in robots) {
+			robots[i].clearEvent();
+		}
+	}
+	
+	function reset() {
+		for(var i in robots) {
+			robots[i].reset();
 		}
 	}
 	
@@ -694,41 +1560,43 @@
 		if('WebSocket' in window) {
 			try {
 				var sock = new WebSocket(url);
+				var slaveVersion = 1;
+				var decode = function(data) {
+					if(data.index == 0) {
+						var robot = getOrCreateRobot(data.module, data.realModule, 0);
+						if(robot) {
+							robot.sensory = data;
+							robot.handleSensory();
+						}
+					}
+				};
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
-				sock.onopen = function() {
-					var slaveVersion = 1;
-					var decode = function(data) {
-						if(data.module == 'turtle' && data.index == 0) {
-							sensory = data;
-							handleSensory();
-						}
-					};
-					sock.onmessage = function(message) {
-						try {
-							var received = JSON.parse(message.data);
-							slaveVersion = received.version || 0;
-							if(received.type == 0) {
-								if(received.module == 'turtle') {
-									connectionState = received.state;
+				sock.onmessage = function(message) {
+					try {
+						var received = JSON.parse(message.data);
+						slaveVersion = received.version || 0;
+						if(received.type == 0) {
+							if(received.module == TURTLE) {
+								connectionState = received.state;
+							}
+						} else {
+							if(slaveVersion == 1) {
+								for(var i in received) {
+									decode(received[i]);
 								}
 							} else {
-								if(slaveVersion == 1) {
-									for(var i in received) {
-										decode(received[i]);
-									}
-								} else {
-									decode(received);
-								}
+								decode(received);
 							}
-						} catch (e) {
 						}
-					};
-					sock.onclose = function() {
-						canSend = false;
-						connectionState = STATE.CLOSED;
-					};
-					
+					} catch (e) {
+					}
+				};
+				sock.onclose = function() {
+					canSend = false;
+					connectionState = STATE.CLOSED;
+				};
+				sock.onopen = function() {
 					if(!Date.now) {
 						Date.now = function() {
 							return new Date().getTime();
@@ -744,7 +1612,7 @@
 									if(slaveVersion == 1) json = JSON.stringify(packet);
 									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
-									clearMotoring();
+									clearMotorings();
 								} catch (e) {
 								}
 								targetTime += 20;
@@ -770,615 +1638,275 @@
 			socket = undefined;
 		}
 	}
-
-	ext.turtleMoveForward = function(callback) {
-		cancelLineTracer();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(101, 1, 0, LEVEL1_MOVE_CM, 0);
-		motionCallback = callback;
-		setLineTracerMode(0);
+	
+	ext.turtleMoveForward = function(index, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.turtleMoveBackward = function(callback) {
-		cancelLineTracer();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(102, 1, 0, LEVEL1_MOVE_CM, 0);
-		motionCallback = callback;
-		setLineTracerMode(0);
+	ext.turtleMoveBackward = function(index, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.turtleTurn = function(direction, callback) {
-		cancelLineTracer();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(VALUES[direction] === LEFT) {
-			setMotion(103, 1, 0, LEVEL1_TURN_DEG, 0);
-		} else {
-			setMotion(104, 1, 0, LEVEL1_TURN_DEG, 0);
-		}
-		motionCallback = callback;
-		setLineTracerMode(0);
+	ext.turtleTurn = function(index, direction, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.turtleMoveForwardUnit = function(value, unit, callback) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(value && value > 0) {
-			unit = VALUES[unit];
-			if(unit === SECONDS) unit = 2;
-			else if(unit === PULSES) unit = 3;
-			else unit = 1;
-			setMotion(1, unit, 0, value, 0);
-			motionCallback = callback;
-			setLineTracerMode(0);
-		} else {
-			setMotion(0, 0, 0, 0, 0);
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.turtleMoveForwardUnit = function(index, value, unit, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.turtleMoveBackwardUnit = function(value, unit, callback) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(value && value > 0) {
-			unit = VALUES[unit];
-			if(unit === SECONDS) unit = 2;
-			else if(unit === PULSES) unit = 3;
-			else unit = 1;
-			setMotion(2, unit, 0, value, 0);
-			motionCallback = callback;
-			setLineTracerMode(0);
-		} else {
-			setMotion(0, 0, 0, 0, 0);
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.turtleMoveBackwardUnit = function(index, value, unit, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.turtleTurnUnitInPlace = function(direction, value, unit, callback) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(value && value > 0) {
-			unit = VALUES[unit];
-			if(unit === SECONDS) unit = 2;
-			else if(unit === PULSES) unit = 3;
-			else unit = 1;
-			if(VALUES[direction] === LEFT) {
-				setMotion(3, unit, 0, value, 0);
-			} else {
-				setMotion(4, unit, 0, value, 0);
-			}
-			motionCallback = callback;
-			setLineTracerMode(0);
-		} else {
-			setMotion(0, 0, 0, 0, 0);
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.turtleTurnUnitInPlace = function(index, direction, value, unit, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.turtleTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, head, callback) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(value && value > 0 && (typeof radius == 'number') && radius >= 0) {
-			unit = VALUES[unit];
-			if(unit === SECONDS) unit = 2;
-			else if(unit === PULSES) unit = 3;
-			else unit = 1;
-			if(VALUES[direction] === LEFT) {
-				if(VALUES[head] === HEAD) {
-					setMotion(9, unit, 0, value, radius);
-				} else {
-					setMotion(10, unit, 0, value, radius);
-				}
-			} else {
-				if(VALUES[head] === HEAD) {
-					setMotion(11, unit, 0, value, radius);
-				} else {
-					setMotion(12, unit, 0, value, radius);
-				}
-			}
-			motionCallback = callback;
-			setLineTracerMode(0);
-		} else {
-			setMotion(0, 0, 0, 0, 0);
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.turtleTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, head, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.swingUnit(direction, value, unit, radius, head, callback);
 	};
 	
-	ext.turtlePivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		if(value && value > 0) {
-			unit = VALUES[unit];
-			if(unit === SECONDS) unit = 2;
-			else if(unit === PULSES) unit = 3;
-			else unit = 1;
-			if(VALUES[wheel] === LEFT) {
-				if(VALUES[head] === HEAD) {
-					setMotion(5, unit, 0, value, 0);
-				} else {
-					setMotion(6, unit, 0, value, 0);
-				}
-			} else {
-				if(VALUES[head] === HEAD) {
-					setMotion(7, unit, 0, value, 0);
-				} else {
-					setMotion(8, unit, 0, value, 0);
-				}
-			}
-			motionCallback = callback;
-			setLineTracerMode(0);
-		} else {
-			setMotion(0, 0, 0, 0, 0);
-			setLineTracerMode(0);
-			callback();
-		}
+	ext.turtlePivotAroundWheelUnitInDirection = function(index, wheel, value, unit, head, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.pivotUnit(wheel, value, unit, head, callback);
 	};
 	
-	ext.turtleChangeWheelsByLeftRight = function(left, right) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		left = parseFloat(left);
-		right = parseFloat(right);
-		if(typeof left == 'number') {
-			motoring.leftWheel += left;
-		}
-		if(typeof right == 'number') {
-			motoring.rightWheel += right;
-		}
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(0);
+	ext.turtleChangeWheelsByLeftRight = function(index, left, right) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.turtleSetWheelsToLeftRight = function(left, right) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		left = parseFloat(left);
-		right = parseFloat(right);
-		if(typeof left == 'number') {
-			motoring.leftWheel = left;
-		}
-		if(typeof right == 'number') {
-			motoring.rightWheel = right;
-		}
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(0);
+	ext.turtleSetWheelsToLeftRight = function(index, left, right) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.turtleChangeWheelBy = function(wheel, speed) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			wheel = VALUES[wheel];
-			if(wheel === LEFT) {
-				motoring.leftWheel += speed;
-			} else if(wheel === RIGHT) {
-				motoring.rightWheel += speed;
-			} else {
-				motoring.leftWheel += speed;
-				motoring.rightWheel += speed;
-			}
-		}
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(0);
+	ext.turtleChangeWheelBy = function(index, wheel, speed) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.changeWheel(wheel, speed);
 	};
 
-	ext.turtleSetWheelTo = function(wheel, speed) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		speed = parseFloat(speed);
-		if(typeof speed == 'number') {
-			wheel = VALUES[wheel];
-			if(wheel === LEFT) {
-				motoring.leftWheel = speed;
-			} else if(wheel === RIGHT) {
-				motoring.rightWheel = speed;
-			} else {
-				motoring.leftWheel = speed;
-				motoring.rightWheel = speed;
-			}
-		}
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(0);
+	ext.turtleSetWheelTo = function(index, wheel, speed) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setWheel(wheel, speed);
 	};
 
-	ext.turtleFollowLine = function(color) {
-		cancelLineTracer();
-		cancelMotion();
-		
-		var mode = 10 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(mode);
+	ext.turtleFollowLine = function(index, color) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.followLine(color);
 	};
 
-	ext.turtleFollowLineUntil = function(color, callback) {
-		cancelMotion();
-		
-		var mode = 60 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(mode);
-		lineTracerCallback = callback;
+	ext.turtleFollowLineUntil = function(index, color, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.followLineUntil(color, callback);
 	};
 	
-	ext.turtleFollowLineUntilBlack = function(color, callback) {
-		cancelMotion();
-		
-		var mode = 70 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(mode);
-		lineTracerCallback = callback;
+	ext.turtleFollowLineUntilBlack = function(index, color, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.followLineUntilBlack(color, callback);
 	};
 	
-	ext.turtleCrossIntersection = function(callback) {
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(40);
-		lineTracerCallback = callback;
+	ext.turtleCrossIntersection = function(index, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.crossIntersection(callback);
 	};
 	
-	ext.turtleTurnAtIntersection = function(direction, callback) {
-		cancelMotion();
-		
-		var mode = 20;
-		direction = VALUES[direction];
-		if(direction === RIGHT) mode = 30;
-		else if(direction === BACK) mode = 50;
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(mode);
-		lineTracerCallback = callback;
+	ext.turtleTurnAtIntersection = function(index, direction, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.turnAtIntersection(direction, callback);
 	};
 
-	ext.turtleSetFollowingSpeedTo = function(speed) {
-		speed = parseInt(speed);
-		if(typeof speed == 'number') {
-			setLineTracerSpeed(speed);
-			setLineTracerGain(speed);
-		}
+	ext.turtleSetFollowingSpeedTo = function(index, speed) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setLineTracerSpeed(speed);
 	};
 
-	ext.turtleStop = function() {
-		cancelLineTracer();
-		cancelMotion();
-		
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		setPulse(0);
-		setMotion(0, 0, 0, 0, 0);
-		setLineTracerMode(0);
+	ext.turtleStop = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.stop();
 	};
 
-	ext.turtleSetHeadLedTo = function(color) {
-		color = RGB_COLORS[color];
-		if(color) {
-			motoring.ledRed = color[0];
-			motoring.ledGreen = color[1];
-			motoring.ledBlue = color[2];
-		}
+	ext.turtleSetHeadLedTo = function(index, color) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setHeadColor(color);
 	};
 	
-	ext.turtleChangeHeadLedByRGB = function(red, green, blue) {
-		red = parseInt(red);
-		green = parseInt(green);
-		blue = parseInt(blue);
-		if(typeof red == 'number') {
-			motoring.ledRed += red;
-		}
-		if(typeof green == 'number') {
-			motoring.ledGreen += green;
-		}
-		if(typeof blue == 'number') {
-			motoring.ledBlue += blue;
-		}
+	ext.turtleChangeHeadLedByRGB = function(index, red, green, blue) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.changeHeadRgb(red, green, blue);
 	};
 	
-	ext.turtleSetHeadLedToRGB = function(red, green, blue) {
-		red = parseInt(red);
-		green = parseInt(green);
-		blue = parseInt(blue);
-		if(typeof red == 'number') {
-			motoring.ledRed = red;
-		}
-		if(typeof green == 'number') {
-			motoring.ledGreen = green;
-		}
-		if(typeof blue == 'number') {
-			motoring.ledBlue = blue;
-		}
+	ext.turtleSetHeadLedToRGB = function(index, red, green, blue) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setHeadRgb(red, green, blue);
 	};
 
-	ext.turtleClearHeadLed = function() {
-		motoring.ledRed = 0;
-		motoring.ledGreen = 0;
-		motoring.ledBlue = 0;
+	ext.turtleClearHeadLed = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.clearHead();
 	};
 
-	ext.turtlePlaySound = function(sound) {
-		cancelNote();
-		cancelSound();
-		
-		sound = SOUNDS[sound];
-		motoring.buzzer = 0;
-		setNote(0);
-		if(sound) {
-			runSound(sound);
-		} else {
-			runSound(0);
-		}
+	ext.turtlePlaySound = function(index, sound) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.turtlePlaySoundTimes = function(sound, count) {
-		cancelNote();
-		cancelSound();
-		
-		sound = SOUNDS[sound];
-		count = parseInt(count);
-		motoring.buzzer = 0;
-		setNote(0);
-		if(sound && count) {
-			runSound(sound, count);
-		} else {
-			runSound(0);
-		}
+	ext.turtlePlaySoundTimes = function(index, sound, count) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
-		cancelNote();
-		cancelSound();
-		
-		sound = SOUNDS[sound];
-		count = parseInt(count);
-		motoring.buzzer = 0;
-		setNote(0);
-		if(sound && count) {
-			runSound(sound, count);
-			soundCallback = callback;
-		} else {
-			runSound(0);
-			callback();
-		}
+	ext.turtlePlaySoundTimesUntilDone = function(index, sound, count, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.turtleChangeBuzzerBy = function(hz) {
-		cancelNote();
-		cancelSound();
-		
-		hz = parseFloat(hz);
-		if(typeof hz == 'number') {
-			motoring.buzzer += hz;
-		}
-		setNote(0);
-		runSound(0);
+	ext.turtleChangeBuzzerBy = function(index, hz) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.turtleSetBuzzerTo = function(hz) {
-		cancelNote();
-		cancelSound();
-		
-		hz = parseFloat(hz);
-		if(typeof hz == 'number') {
-			motoring.buzzer = hz;
-		}
-		setNote(0);
-		runSound(0);
+	ext.turtleSetBuzzerTo = function(index, hz) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.turtleClearSound = function() {
-		cancelNote();
-		cancelSound();
-		
-		motoring.buzzer = 0;
-		setNote(0);
-		runSound(0);
+	ext.turtleClearSound = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.clearSound();
 	};
 	
-	ext.turtlePlayNote = function(note, octave) {
-		cancelNote();
-		cancelSound();
-		
-		note = NOTES[note];
-		octave = parseInt(octave);
-		motoring.buzzer = 0;
-		if(note && octave && octave > 0 && octave < 8) {
-			note += (octave - 1) * 12;
-			setNote(note);
-		} else {
-			setNote(0);
-		}
-		runSound(0);
+	ext.turtlePlayNote = function(index, note, octave) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.turtlePlayNoteForBeats = function(note, octave, beat, callback) {
-		cancelNote();
-		cancelSound();
-		
-		note = NOTES[note];
-		octave = parseInt(octave);
-		var tmp = BEATS[beat];
-		if(tmp) beat = tmp;
-		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
-		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && tempo > 0) {
-			var id = issueNoteId();
-			note += (octave - 1) * 12;
-			setNote(note);
-			var timeout = beat * 60 * 1000 / tempo;
-			var tail = 0;
-			if(timeout > 100) {
-				tail = 100;
-			}
-			if(tail > 0) {
-				noteTimer1 = setTimeout(function() {
-					if(noteId == id) {
-						setNote(0);
-						if(noteTimer1 !== undefined) removeTimeout(noteTimer1);
-						noteTimer1 = undefined;
-					}
-				}, timeout - tail);
-				timeouts.push(noteTimer1);
-			}
-			noteTimer2 = setTimeout(function() {
-				if(noteId == id) {
-					setNote(0);
-					cancelNote();
-					callback();
-				}
-			}, timeout);
-			timeouts.push(noteTimer2);
-			runSound(0);
-		} else {
-			setNote(0);
-			runSound(0);
-			callback();
-		}
+	ext.turtlePlayNoteForBeats = function(index, note, octave, beat, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.turtleRestForBeats = function(beat, callback) {
-		cancelNote();
-		cancelSound();
-		
-		var tmp = BEATS[beat];
-		if(tmp) beat = tmp;
-		else beat = parseFloat(beat);
-		motoring.buzzer = 0;
-		setNote(0);
-		runSound(0);
-		if(beat && beat > 0 && tempo > 0) {
-			var id = issueNoteId();
-			noteTimer1 = setTimeout(function() {
-				if(noteId == id) {
-					cancelNote();
-					callback();
-				}
-			}, beat * 60 * 1000 / tempo);
-			timeouts.push(noteTimer1);
-		} else {
-			callback();
-		}
+	ext.turtleRestForBeats = function(index, beat, callback) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.turtleChangeTempoBy = function(bpm) {
-		bpm = parseFloat(bpm);
-		if(typeof bpm == 'number') {
-			tempo += bpm;
-			if(tempo < 1) tempo = 1;
-		}
+	ext.turtleChangeTempoBy = function(index, bpm) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.turtleSetTempoTo = function(bpm) {
-		bpm = parseFloat(bpm);
-		if(typeof bpm == 'number') {
-			tempo = bpm;
-			if(tempo < 1) tempo = 1;
-		}
+	ext.turtleSetTempoTo = function(index, bpm) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.setTempo(bpm);
 	};
 
-	ext.turtleTouchingColor = function(color) {
-		return sensory.colorNumber == COLOR_NUMBERS[color];
+	ext.turtleWhenColorTouched = function(index, color) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkTouchingColor(color);
+		return false;
 	};
-
-	ext.turtleIsColorPattern = function(color1, color2) {
-		return colorPattern == COLOR_PATTERNS[color1] * 10 + COLOR_PATTERNS[color2];
+	
+	ext.turtleWhenColorPattern = function(index, color1, color2) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkColorPattern(color1, color2);
+		return false;
 	};
-
-	ext.turtleButtonState = function(state) {
-		state = BUTTON_STATES[state];
-		if(state == 1) return clicked;
-		else if(state == 2) return doubleClicked;
-		else if(state == 3) return longPressed;
+	
+	ext.turtleWhenButtonState = function(index, state) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkButtonEvent(state);
+		return false;
+	};
+	
+	ext.turtleWhenTilt = function(index, tilt) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkTilt(tilt);
+		return false;
+	};
+	
+	ext.turtleTouchingColor = function(index, color) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkTouchingColor(color);
+		return false;
+	};
+	
+	ext.turtleIsColorPattern = function(index, color1, color2) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkColorPattern(color1, color2);
+		return false;
+	};
+	
+	ext.turtleButtonState = function(index, state) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkButtonEvent(state);
+		return false;
+	};
+	
+	ext.turtleTilt = function(index, tilt) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkTilt(tilt);
+		return false;
+	};
+	
+	ext.turtleBattery = function(index, state) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.checkBattery(state);
 		return false;
 	};
 
-	ext.turtleColorNumber = function() {
-		return sensory.colorNumber;
+	ext.turtleColorNumber = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) robot.getColorNumber();
+		return -1;
 	};
 
-	ext.turtleColorPattern = function() {
-		return colorPattern;
+	ext.turtleColorPattern = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getColorPattern();
+		return -1;
 	};
 
-	ext.turtleFloor = function() {
-		return sensory.floor;
+	ext.turtleFloor = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getFloor();
+		return 0;
 	};
 
-	ext.turtleButton = function() {
-		return sensory.button;
+	ext.turtleButton = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getButton();
+		return 0;
 	};
 
-	ext.turtleAccelerationX = function() {
-		return sensory.accelerationX;
+	ext.turtleAccelerationX = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getAccelerationX();
+		return 0;
 	};
 
-	ext.turtleAccelerationY = function() {
-		return sensory.accelerationY;
+	ext.turtleAccelerationY = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getAccelerationY();
+		return 0;
 	};
 
-	ext.turtleAccelerationZ = function() {
-		return sensory.accelerationZ;
+	ext.turtleAccelerationZ = function(index) {
+		var robot = getRobot(TURTLE, index);
+		if(robot) return robot.getAccelerationZ();
+		return 0;
 	};
-	
+
 	ext._getStatus = function() {
-		clicked = false;
-		doubleClicked = false;
-		longPressed = false;
-		colorPattern = -1;
-		
+		clearEvents();
 		switch(connectionState) {
 			case STATE.CONNECTED:
 				return { status: 2, msg: STATE_MSG[lang][2] };
@@ -1400,7 +1928,7 @@
 	var descriptor = {
 		blocks: BLOCKS[lang + level],
 		menus: MENUS[lang],
-		url: "http://turtle.school"
+		url: "http://hamster.school"
 	};
 
 	ScratchExtensions.register(EXTENSION_NAME[lang], descriptor, ext);
