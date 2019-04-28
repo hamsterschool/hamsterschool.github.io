@@ -12,7 +12,7 @@
 		LEFT: 3,
 		RIGHT: 4
 	};
-	const SPEED2GAINS = { 1: 7, 2: 6, 3: 6, 4: 5, 5: 4, 6: 3, 7: 3, 8: 2 };
+	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
 	const TURTLE = 'turtle';
@@ -128,7 +128,6 @@
 			["w", "HamsterS %n : turn %m.left_right %n %m.deg_sec in place", "sTurnUnitInPlace", 0, "left", 90, "degrees"],
 			["w", "HamsterS %n : turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 5, "forward"],
 			["w", "HamsterS %n : pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
-			["w", "HamsterS %n : pivot around %m.left_right pen %n %m.deg_sec in %m.forward_backward direction", "sPivotAroundPenUnitInDirection", 0, "left", 90, "degrees", "forward"],
 			["-"],
 			[" ", "HamsterS %n : set %m.left_right_both led to %m.led_color", "sSetLedTo", 0, "left", "red"],
 			[" ", "HamsterS %n : clear %m.left_right_both led", "sClearLed", 0, "left"],
@@ -241,6 +240,7 @@
 			["w", "HamsterS %n : turn %m.left_right %n %m.turn_unit in place", "sTurnUnitInPlace", 0, "left", 90, "degrees"],
 			["w", "HamsterS %n : turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 5, "forward"],
 			["w", "HamsterS %n : pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
+			["w", "HamsterS %n : %m.left_right pen, turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnPenUnitWithRadiusInDirection", 0, "left", "left", 90, "degrees", 5, "forward"],
 			["w", "HamsterS %n : pivot around %m.left_right pen %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundPenUnitInDirection", 0, "left", 90, "degrees", "forward"],
 			[" ", "HamsterS %n : change wheels by left: %n right: %n", "sChangeBothWheelsBy", 0, 10, 10],
 			[" ", "HamsterS %n : set wheels to left: %n right: %n", "sSetBothWheelsTo", 0, 30, 30],
@@ -249,6 +249,7 @@
 			[" ", "HamsterS %n : follow %m.black_white line with %m.left_right_both floor sensor", "sFollowLineUsingFloorSensor", 0, "black", "left"],
 			["w", "HamsterS %n : follow %m.black_white line until %m.left_right_front_rear intersection", "sFollowLineUntilIntersection", 0, "black", "front"],
 			[" ", "HamsterS %n : set following speed to %m.speed", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "HamsterS %n : set following directional variation to %m.gain", "sSetFollowingGainTo", 0, "default"],
 			[" ", "HamsterS %n : stop", "sStop", 0],
 			["-"],
 			[" ", "HamsterS %n : set %m.left_right_both led to %m.led_color", "sSetLedTo", 0, "left", "red"],
@@ -292,8 +293,7 @@
 			["r", "HamsterS %n : input B", "sInputB", 0],
 			["-"],
 			["w", "HamsterS %n : write %m.serial_output %s to serial", "sWriteSerial", 0, "string", "abc123"],
-			["w", "HamsterS %n : read serial", "sReadSerial", 0],
-			["w", "HamsterS %n : read serial until %m.serial_delimiter", "sReadSerialUntil", 0, "new line"],
+			["w", "HamsterS %n : read serial %m.serial_delimiter", "sReadSerialUntil", 0, "all"],
 			[" ", "HamsterS %n : set serial rate to %m.serial_baud Bd", "sSetSerialRateTo", 0, "9600"],
 			["r", "HamsterS %n : serial input", "sSerial", 0],
 			["-"],
@@ -440,7 +440,6 @@
 			["w", "햄스터S %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기", "sTurnUnitInPlace", 0, "왼쪽", 90, "도"],
 			["w", "햄스터S %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 5, "앞쪽"],
 			["w", "햄스터S %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
-			["w", "햄스터S %n : %m.left_right 펜 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sPivotAroundPenUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
 			["-"],
 			[" ", "햄스터S %n : %m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", 0, "왼쪽", "빨간색"],
 			[" ", "햄스터S %n : %m.left_right_both LED 끄기", "sClearLed", 0, "왼쪽"],
@@ -553,6 +552,7 @@
 			["w", "햄스터S %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기", "sTurnUnitInPlace", 0, "왼쪽", 90, "도"],
 			["w", "햄스터S %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 5, "앞쪽"],
 			["w", "햄스터S %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
+			["w", "햄스터S %n : %m.left_right 펜, %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnPenUnitWithRadiusInDirection", 0, "왼쪽", "왼쪽", 90, "도", 5, "앞쪽"],
 			["w", "햄스터S %n : %m.left_right 펜 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundPenUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
 			[" ", "햄스터S %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "sChangeBothWheelsBy", 0, 10, 10],
 			[" ", "햄스터S %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "sSetBothWheelsTo", 0, 30, 30],
@@ -561,6 +561,7 @@
 			[" ", "햄스터S %n : %m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기", "sFollowLineUsingFloorSensor", 0, "검은색", "왼쪽"],
 			["w", "햄스터S %n : %m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기", "sFollowLineUntilIntersection", 0, "검은색", "앞쪽"],
 			[" ", "햄스터S %n : 선 따라가기 속도를 %m.speed (으)로 정하기", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "햄스터S %n : 선 따라가기 방향 변화량을 %m.gain (으)로 정하기", "sSetFollowingGainTo", 0, "기본 값"],
 			[" ", "햄스터S %n : 정지하기", "sStop", 0],
 			["-"],
 			[" ", "햄스터S %n : %m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", 0, "왼쪽", "빨간색"],
@@ -604,8 +605,7 @@
 			["r", "햄스터S %n : 입력 B", "sInputB", 0],
 			["-"],
 			["w", "햄스터S %n : 시리얼 %m.serial_output %s 쓰기", "sWriteSerial", 0, "글자", "abc123"],
-			["w", "햄스터S %n : 시리얼 읽기", "sReadSerial", 0],
-			["w", "햄스터S %n : 시리얼 %m.serial_delimiter 까지 읽기", "sReadSerialUntil", 0, "줄 바꿈"],
+			["w", "햄스터S %n : 시리얼 %m.serial_delimiter 읽기", "sReadSerialUntil", 0, "모두"],
 			[" ", "햄스터S %n : 시리얼 속도를 %m.serial_baud Bd로 정하기", "sSetSerialRateTo", 0, "9600"],
 			["r", "햄스터S %n : 시리얼 입력", "sSerial", 0],
 			["-"],
@@ -752,7 +752,6 @@
 			["w", "ハムスターS %n : 所定位置で %m.left_right に %n %m.deg_sec 回す", "sTurnUnitInPlace", 0, "左", 90, "度"],
 			["w", "ハムスターS %n : %m.left_right に %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 5, "前"],
 			["w", "ハムスターS %n : %m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
-			["w", "ハムスターS %n : %m.left_right ペンを中心に %n %m.deg_sec %m.forward_backward 方向に回す", "sPivotAroundPenUnitInDirection", 0, "左", 90, "度", "前"],
 			["-"],
 			[" ", "ハムスターS %n : %m.left_right_both LEDを %m.led_color にする", "sSetLedTo", 0, "左", "赤色"],
 			[" ", "ハムスターS %n : %m.left_right_both LEDをオフ", "sClearLed", 0, "左"],
@@ -865,6 +864,7 @@
 			["w", "ハムスターS %n : 所定位置で %m.left_right に %n %m.turn_unit 回す", "sTurnUnitInPlace", 0, "左", 90, "度"],
 			["w", "ハムスターS %n : %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 5, "前"],
 			["w", "ハムスターS %n : %m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
+			["w", "ハムスターS %n : %m.left_right ペン、 %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnPenUnitWithRadiusInDirection", 0, "左", "左", 90, "度", 5, "前"],
 			["w", "ハムスターS %n : %m.left_right ペンを中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundPenUnitInDirection", 0, "左", 90, "度", "前"],
 			[" ", "ハムスターS %n : 左車輪を %n 右車輪を %n ずつ変える", "sChangeBothWheelsBy", 0, 10, 10],
 			[" ", "ハムスターS %n : 左車輪を %n 右車輪を %n にする", "sSetBothWheelsTo", 0, 30, 30],
@@ -873,6 +873,7 @@
 			[" ", "ハムスターS %n : %m.black_white 線を %m.left_right_both フロアセンサーで追従する", "sFollowLineUsingFloorSensor", 0, "黒色", "左"],
 			["w", "ハムスターS %n : %m.black_white 線を追従して %m.left_right_front_rear 交差点まで動かす", "sFollowLineUntilIntersection", 0, "黒色", "前"],
 			[" ", "ハムスターS %n : 線を追従する速度を %m.speed にする", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "ハムスターS %n : 線を追従する方向変化量を %m.gain にする", "sSetFollowingGainTo", 0, "基本値"],
 			[" ", "ハムスターS %n : 停止する", "sStop", 0],
 			["-"],
 			[" ", "ハムスターS %n : %m.left_right_both LEDを %m.led_color にする", "sSetLedTo", 0, "左", "赤色"],
@@ -916,8 +917,7 @@
 			["r", "ハムスターS %n : 入力B", "sInputB", 0],
 			["-"],
 			["w", "ハムスターS %n : シリアルに %m.serial_output %s を書き出す", "sWriteSerial", 0, "文字列", "abc123"],
-			["w", "ハムスターS %n : シリアルを読み取る", "sReadSerial", 0],
-			["w", "ハムスターS %n : シリアルを %m.serial_delimiter まで読み取る", "sReadSerialUntil", 0, "改行"],
+			["w", "ハムスターS %n : シリアルを %m.serial_delimiter 読み取る", "sReadSerialUntil", 0, "全部"],
 			[" ", "ハムスターS %n : シリアル速度を %m.serial_baud Bdにする", "sSetSerialRateTo", 0, "9600"],
 			["r", "ハムスターS %n : シリアル入力", "sSerial", 0],
 			["-"],
@@ -1064,7 +1064,6 @@
 			["w", "HamsterS %n : %m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "sTurnUnitInPlace", 0, "chap", 90, "daraja"],
 			["w", "HamsterS %n : %m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 5, "old"],
 			["w", "HamsterS %n : %m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
-			["w", "HamsterS %n : %m.left_right ruchka markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sPivotAroundPenUnitInDirection", 0, "chap", 90, "daraja", "old"],
 			["-"],
 			[" ", "HamsterS %n : %m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", 0, "chap", "qizil"],
 			[" ", "HamsterS %n : %m.left_right_both LEDni o'chirish", "sClearLed", 0, "chap"],
@@ -1177,6 +1176,7 @@
 			["w", "HamsterS %n : %m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "sTurnUnitInPlace", 0, "chap", 90, "daraja"],
 			["w", "HamsterS %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 5, "old"],
 			["w", "HamsterS %n : %m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
+			["w", "HamsterS %n : %m.left_right ruchka, %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnPenUnitWithRadiusInDirection", 0, "chap", "chap", 90, "daraja", 5, "old"],
 			["w", "HamsterS %n : %m.left_right ruchka markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundPenUnitInDirection", 0, "chap", 90, "daraja", "old"],
 			[" ", "HamsterS %n : chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "sChangeBothWheelsBy", 0, 10, 10],
 			[" ", "HamsterS %n : chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "sSetBothWheelsTo", 0, 30, 30],
@@ -1185,6 +1185,7 @@
 			[" ", "HamsterS %n : %m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish", "sFollowLineUsingFloorSensor", 0, "qora", "chap"],
 			["w", "HamsterS %n : %m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish", "sFollowLineUntilIntersection", 0, "qora", "old"],
 			[" ", "HamsterS %n : liniyada ergashish tezligini %m.speed ga sozlash", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "HamsterS %n : liniyada ergashish yo'nalishli o'zgarishni %m.gain ga sozlash", "sSetFollowingGainTo", 0, "asl qiymati"],
 			[" ", "HamsterS %n : to'xtatish", "sStop", 0],
 			["-"],
 			[" ", "HamsterS %n : %m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", 0, "chap", "qizil"],
@@ -1228,8 +1229,7 @@
 			["r", "HamsterS %n : B kirish", "sInputB", 0],
 			["-"],
 			["w", "HamsterS %n : %m.serial_output %s ni ketma-ketga yozing", "sWriteSerial", 0, "harf", "abc123"],
-			["w", "HamsterS %n : ketma-ketni o'qing", "sReadSerial", 0],
-			["w", "HamsterS %n : %m.serial_delimiter gacha ketma-ketni o'qing", "sReadSerialUntil", 0, "qator uzilishi"],
+			["w", "HamsterS %n : %m.serial_delimiter ketma-ketni o'qing", "sReadSerialUntil", 0, "hammasi"],
 			[" ", "HamsterS %n : ketma-ketni tezligini %m.serial_baud Bdga sozlash", "sSetSerialRateTo", 0, "9600"],
 			["r", "HamsterS %n : ketma-ket kiritish", "sSerial", 0],
 			["-"],
@@ -1295,13 +1295,14 @@
 			"black_white": ["black", "white"],
 			"left_right_front_rear": ["left", "right", "front", "rear"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"gain": ["default", "1", "2", "3", "4", "5", "6", "7", "8"],
 			"color": ["red", "yellow", "green", "sky blue", "blue", "purple", "white"],
 			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture"],
-			"when_s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture", "tap", "free fall"],
-			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture"],
+			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
+			"when_s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt", "tap", "free fall"],
+			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
@@ -1319,14 +1320,14 @@
 			"pattern_color": ["red", "yellow", "green", "sky blue", "blue", "purple"],
 			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
 			"sound": ["beep", "random beep", "siren", "engine", "robot", "march", "birthday", "dibidibidip", "good job"],
-			"when_button_state": ["clicked", "double-clicked", "long-pressed"],
+			"when_button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
 			"button_state": ["clicked", "double-clicked", "long-pressed"],
 			"forward_backward": ["forward", "backward"],
 			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"],
-			"s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "upside down", "normal posture", "tap", "free fall"],
-			"s_mode": ["analog input", "digital input", "digital input (pull up)", "digital input (pull down)", "servo output", "pwm output", "digital output"],
-			"serial_output": ["string", "string line"],
-			"serial_delimiter": ["new line", ",", ":", "$", "#"],
+			"s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt", "tap", "free fall"],
+			"s_mode": ["analog input", "digital input", "digital input (pull up)", "digital input (pull down)", "voltage input", "servo output", "pwm output", "digital output"],
+			"serial_output": ["string", "string + new line"],
+			"serial_delimiter": ["all", "until new line", "until ,(comma)", "until :(colon)", "until $", "until #"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ko: {
@@ -1335,13 +1336,14 @@
 			"black_white": ["검은색", "하얀색"],
 			"left_right_front_rear": ["왼쪽", "오른쪽", "앞쪽", "뒤쪽"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"gain": ["기본 값", "1", "2", "3", "4", "5", "6", "7", "8"],
 			"color": ["빨간색", "노란색", "초록색", "하늘색", "파란색", "자주색", "하얀색"],
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "똑바로 놓았을"],
-			"when_s_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "똑바로 놓았을", "두드렸을", "자유 낙하했을"],
-			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "똑바로 놓음"],
+			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을"],
+			"when_s_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을", "두드렸을", "자유 낙하했을"],
+			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음"],
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
 			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
@@ -1363,10 +1365,10 @@
 			"button_state": ["클릭했는가", "더블클릭했는가", "길게~눌렀는가"],
 			"forward_backward": ["앞쪽", "뒤쪽"],
 			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "쩝", "로봇", "디비디비딥", "잘 했어요", "행복", "화남", "슬픔", "졸림", "행진", "생일"],
-			"s_tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "똑바로 놓음", "두드림", "자유 낙하"],
-			"s_mode": ["아날로그 입력", "디지털 입력", "디지털 입력 (풀업)", "디지털 입력 (풀다운)", "서보 출력", "PWM 출력", "디지털 출력"],
-			"serial_output": ["글자", "글자 한 줄"],
-			"serial_delimiter": ["줄 바꿈", ",", ":", "$", "#"],
+			"s_tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음", "두드림", "자유 낙하"],
+			"s_mode": ["아날로그 입력", "디지털 입력", "디지털 입력 (풀업)", "디지털 입력 (풀다운)", "전압 입력", "서보 출력", "PWM 출력", "디지털 출력"],
+			"serial_output": ["글자", "글자 + 줄 바꿈"],
+			"serial_delimiter": ["모두", "줄 바꿈까지", ",(쉼표)까지", ":(쌍점)까지", "$까지", "#까지"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ja: {
@@ -1375,13 +1377,14 @@
 			"black_white": ["黒色", "白色"],
 			"left_right_front_rear": ["左", "右", "前", "後"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"gain": ["基本値", "1", "2", "3", "4", "5", "6", "7", "8"],
 			"color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "白色"],
 			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "通常置いた"],
-			"when_s_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "通常置いた", "叩いた", "自由落下した"],
-			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "通常置いたか"],
+			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった"],
+			"when_s_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった", "叩いた", "自由落下した"],
+			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか"],
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
 			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
@@ -1403,10 +1406,10 @@
 			"button_state": ["クリックしたか", "ダブルクリックしたか", "長く押したか"],
 			"forward_backward": ["前", "後"],
 			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "チョップ", "ロボット", "ディバディバディップ", "よくやった", "幸福", "怒った", "悲しみ", "睡眠", "行進", "誕生"],
-			"s_tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "通常置いたか", "叩いたか", "自由落下したか"],
-			"s_mode": ["アナログ入力", "デジタル入力", "デジタル入力 (プルアップ)", "デジタル入力 (プルダウン)", "サーボ出力", "PWM出力", "デジタル出力"],
-			"serial_output": ["文字列", "文字列1行"],
-			"serial_delimiter": ["改行", ",", ":", "$", "#"],
+			"s_tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか", "叩いたか", "自由落下したか"],
+			"s_mode": ["アナログ入力", "デジタル入力", "デジタル入力 (プルアップ)", "デジタル入力 (プルダウン)", "電圧入力", "サーボ出力", "PWM出力", "デジタル出力"],
+			"serial_output": ["文字列", "文字列 + 改行"],
+			"serial_delimiter": ["全部", "改行まで", "、(読点)まで", "：(コロン)まで", "$まで", "#まで"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		uz: {
@@ -1415,13 +1418,14 @@
 			"black_white": ["qora", "oq"],
 			"left_right_front_rear": ["chap", "o'ng", "old", "orqa"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"gain": ["asl qiymati", "1", "2", "3", "4", "5", "6", "7", "8"],
 			"color": ["qizil", "sariq", "yashil", "moviy", "ko'k", "siyoh", "oq"],
 			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat"],
-			"when_s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat", "jo'mrak", "erkin tushish"],
-			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat"],
+			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
+			"when_s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q", "jo'mrak", "erkin tushish"],
+			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
 			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
@@ -1443,10 +1447,10 @@
 			"button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
 			"forward_backward": ["old", "orqa"],
 			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "chop", "robot", "dibidibidip", "juda yaxshi", "baxtli", "badjahl", "xafa", "uyqu", "marsh", "tug'ilgan kun"],
-			"s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "normal holat", "jo'mrak", "erkin tushish"],
-			"s_mode": ["analog kiritish", "raqamli kiritish", "raqamli kiritish (pull up)", "raqamli kiritish (pull down)", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
-			"serial_output": ["harf", "harf qator"],
-			"serial_delimiter": ["qator uzilishi", ",", ":", "$", "#"],
+			"s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q", "jo'mrak", "erkin tushish"],
+			"s_mode": ["analog kiritish", "raqamli kiritish", "raqamli kiritish (pull up)", "raqamli kiritish (pull down)", "voltaj kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
+			"serial_output": ["harf", "harf + yangi satrga"],
+			"serial_delimiter": ["hammasi", "yangi satrgacha", ",(vergul)gacha", ":(qo'sh nuqta)gacha", "$gacha", "#gacha"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		}
 	};
@@ -1484,7 +1488,7 @@
 	var RGB_COLORS = {};
 	var BUTTON_STATES = {};
 	var SERIAL_MODES = {};
-	var SERIAL_DELIMITERS = { ',': 0x2C, ':': 0x3A, '$': 0x24, '#': 0x23};
+	var SERIAL_DELIMITERS = {};
 	var SERIAL_BAUDS = { '9600': 176, '14400': 177, '19200': 178, '28800': 179, '38400': 180, '57600': 181, '76800': 182, '115200': 183 };
 	var VALUES = {};
 	
@@ -1503,8 +1507,8 @@
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
 	const TILT_RIGHT = 4;
-	const TILT_UPSIDEDOWN = 5;
-	const TILT_NORMAL = 6;
+	const TILT_FLIP = 5;
+	const TILT_NONE = 6;
 	const TILT_TAP = 7;
 	const TILT_FREE_FALL = 8;
 	const CLICKED = 1;
@@ -1512,7 +1516,12 @@
 	const LONG_PRESSED = 3;
 	const SERIAL_STRING = 1;
 	const SERIAL_STRING_LINE = 2;
+	const SERIAL_ALL = 0;
 	const SERIAL_NEW_LINE = 0x0D;
+	const SERIAL_COMMA = 0x2C;
+	const SERIAL_COLON = 0x3A;
+	const SERIAL_DOLLAR = 0x24;
+	const SERIAL_SHARP = 0x23;
 	const WHITE = 1;
 	
 	var tmp;
@@ -1592,9 +1601,10 @@
 		IO_MODES[tmp[1]] = 1; // digital input
 		IO_MODES[tmp[2]] = 2; // digital input (pull up)
 		IO_MODES[tmp[3]] = 3; // digital input (pull down)
-		IO_MODES[tmp[4]] = 8; // servo output
-		IO_MODES[tmp[5]] = 9; // pwm output
-		IO_MODES[tmp[6]] = 10; // digital output
+		IO_MODES[tmp[4]] = 4; // voltage input
+		IO_MODES[tmp[5]] = 8; // servo output
+		IO_MODES[tmp[6]] = 9; // pwm output
+		IO_MODES[tmp[7]] = 10; // digital output
 		tmp = MENUS[i]['open_close'];
 		GRIPPERS[tmp[0]] = OPEN;
 		GRIPPERS[tmp[1]] = CLOSE;
@@ -1603,8 +1613,8 @@
 		TILTS[tmp[1]] = TILT_BACKWARD;
 		TILTS[tmp[2]] = TILT_LEFT;
 		TILTS[tmp[3]] = TILT_RIGHT;
-		TILTS[tmp[4]] = TILT_UPSIDEDOWN;
-		TILTS[tmp[5]] = TILT_NORMAL;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
 		TILTS[tmp[6]] = TILT_TAP;
 		TILTS[tmp[7]] = TILT_FREE_FALL;
 		tmp = MENUS[i]['battery'];
@@ -1654,7 +1664,12 @@
 		SERIAL_MODES[tmp[0]] = SERIAL_STRING;
 		SERIAL_MODES[tmp[1]] = SERIAL_STRING_LINE;
 		tmp = MENUS[i]['serial_delimiter'];
-		SERIAL_DELIMITERS[tmp[0]] = SERIAL_NEW_LINE;
+		SERIAL_DELIMITERS[tmp[0]] = SERIAL_ALL;
+		SERIAL_DELIMITERS[tmp[1]] = SERIAL_NEW_LINE;
+		SERIAL_DELIMITERS[tmp[2]] = SERIAL_COMMA;
+		SERIAL_DELIMITERS[tmp[3]] = SERIAL_COLON;
+		SERIAL_DELIMITERS[tmp[4]] = SERIAL_DOLLAR;
+		SERIAL_DELIMITERS[tmp[5]] = SERIAL_SHARP;
 		tmp = MENUS[i]['black_white'];
 		VALUES[tmp[1]] = WHITE;
 	}
@@ -2258,15 +2273,23 @@
 			this.__motion(4, 30, -30, secs, callback);
 		}
 	};
+	
+	Hamster.prototype.__stopMotion = function() {
+		var motoring = this.motoring;
+		this.__cancelBoard();
+		this.__cancelWheel();
+		this.__cancelLineTracer();
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		motoring.motion = 0;
+		this.__setLineTracerMode(0);
+	};
 
 	Hamster.prototype.moveForwardUnit = function(value, unit, callback) {
 		if(UNITS[unit] == SECONDS) {
 			this.moveForwardSecs(value, callback);
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
 		}
 	};
 
@@ -2274,10 +2297,7 @@
 		if(UNITS[unit] == SECONDS) {
 			this.moveBackwardSecs(value, callback);
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
 		}
 	};
 
@@ -2285,10 +2305,7 @@
 		if(UNITS[unit] == SECONDS) {
 			this.turnSecs(direction, value, callback);
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
 		}
 	};
 
@@ -2308,10 +2325,7 @@
 				}
 			}
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
 		}
 	};
 
@@ -2334,21 +2348,15 @@
 					}
 				}
 			} else {
-				motoring.leftWheel = 0;
-				motoring.rightWheel = 0;
-				motoring.motion = 0;
-				this.__setLineTracerMode(0);
+				this.__stopMotion();
 				callback();
 			}
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
 		}
 	};
 
-	Hamster.prototype.penUnit = function(pen, value, unit, toward, callback) {
+	Hamster.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
 			if(PARTS[pen] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
@@ -2364,10 +2372,50 @@
 				}
 			}
 		} else {
-			motoring.leftWheel = 0;
-			motoring.rightWheel = 0;
-			motoring.motion = 0;
-			this.__setLineTracerMode(0);
+			this.__stopMotion();
+		}
+	};
+	
+	Hamster.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+		if(UNITS[unit] == SECONDS) {
+			radius = parseFloat(radius);
+			if((typeof radius == 'number') && radius >= 0) {
+				this.motoring.radius = radius;
+				if(PARTS[pen] == LEFT) {
+					if(DIRECTIONS[direction] == LEFT) {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(17, 0, 0, value, callback);
+						} else {
+							this.__motion(18, 0, 0, value, callback);
+						}
+					} else {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(19, 0, 0, value, callback);
+						} else {
+							this.__motion(20, 0, 0, value, callback);
+						}
+					}
+				} else {
+					if(DIRECTIONS[direction] == LEFT) {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(21, 0, 0, value, callback);
+						} else {
+							this.__motion(22, 0, 0, value, callback);
+						}
+					} else {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(23, 0, 0, value, callback);
+						} else {
+							this.__motion(24, 0, 0, value, callback);
+						}
+					}
+				}
+			} else {
+				this.__stopMotion();
+				callback();
+			}
+		} else {
+			this.__stopMotion();
 		}
 	};
 
@@ -2494,6 +2542,9 @@
 			this.__setLineTracerSpeed(speed);
 		}
 	};
+	
+	Hamster.prototype.setLineTracerGain = function(gain) {
+	};
 
 	Hamster.prototype.stop = function() {
 		var motoring = this.motoring;
@@ -2563,12 +2614,12 @@
 					if(self.noteTimer2 !== undefined) self.__removeTimeout(self.noteTimer2);
 					self.noteTimer2 = undefined;
 					if(count < 0) {
-						self.runBeep(-1, id);
+						self.runBeep(-1, id, callback);
 					} else if(count == 1) {
 						self.__cancelNote();
 						if(id && callback) callback();
 					} else {
-						self.runBeep(count - 1, id);
+						self.runBeep(count - 1, id, callback);
 					}
 				}
 			}, 200);
@@ -2782,8 +2833,8 @@
 			case TILT_BACKWARD: return this.sensory.tilt == -1;
 			case TILT_LEFT: return this.sensory.tilt == 2;
 			case TILT_RIGHT: return this.sensory.tilt == -2;
-			case TILT_UPSIDEDOWN: return this.sensory.tilt == 3;
-			case TILT_NORMAL: return this.sensory.tilt == -3;
+			case TILT_FLIP: return this.sensory.tilt == 3;
+			case TILT_NONE: return this.sensory.tilt == -3;
 		}
 		return false;
 	};
@@ -2884,10 +2935,6 @@
 		this.__cancelIo();
 	};
 
-	Hamster.prototype.readSerial = function(callback) {
-		this.__cancelIo();
-	};
-
 	Hamster.prototype.readSerialUltil = function(delimiter, callback) {
 		this.__cancelIo();
 	};
@@ -2979,6 +3026,8 @@
 		this.freeFall = false;
 		this.tap = false;
 		this.tempo = 60;
+		this.speed = 5;
+		this.gain = -1;
 		this.writeQueue = new WriteQueue(64);
 		this.readQueue = new ReadQueue(64);
 		this.timeouts = [];
@@ -3037,6 +3086,8 @@
 		this.freeFall = false;
 		this.tap = false;
 		this.tempo = 60;
+		this.speed = 5;
+		this.gain = -1;
 
 		this.__removeAllTimeouts();
 		this.writeQueue.reset();
@@ -3573,7 +3624,7 @@
 		}
 	};
 
-	HamsterS.prototype.penUnit = function(pen, value, unit, toward, callback) {
+	HamsterS.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[pen] == LEFT) {
 			if(TOWARDS[toward] == FORWARD) this.__motionUnit(13, unit, value, callback);
@@ -3581,6 +3632,27 @@
 		} else {
 			if(TOWARDS[toward] == FORWARD) this.__motionUnit(15, unit, value, callback);
 			else this.__motionUnit(16, unit, value, callback);
+		}
+	};
+	
+	HamsterS.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+		unit = UNITS[unit];
+		if(PARTS[pen] == LEFT) {
+			if(DIRECTIONS[direction] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(17, unit, value, radius, callback);
+				else this.__motionUnitRadius(18, unit, value, radius, callback);
+			} else {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(19, unit, value, radius, callback);
+				else this.__motionUnitRadius(20, unit, value, radius, callback);
+			}
+		} else {
+			if(DIRECTIONS[direction] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(21, unit, value, radius, callback);
+				else this.__motionUnitRadius(22, unit, value, radius, callback);
+			} else {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(23, unit, value, radius, callback);
+				else this.__motionUnitRadius(24, unit, value, radius, callback);
+			}
 		}
 	};
 
@@ -3709,10 +3781,26 @@
 
 	HamsterS.prototype.setLineTracerSpeed = function(speed) {
 		speed = parseInt(speed);
-		var gain = SPEED2GAINS[speed];
-		if((typeof speed == 'number') && (typeof gain == 'number')) {
+		var gain = this.gain;
+		if(gain < 0) gain = SPEED2GAINS[speed];
+		if(speed && gain && speed > 0 && gain > 0) {
+			this.speed = speed;
 			this.__setLineTracerSpeed(speed);
 			this.__setLineTracerGain(gain);
+		}
+	};
+	
+	HamsterS.prototype.setLineTracerGain = function(gain) {
+		gain = parseInt(gain);
+		if(gain && gain > 0) {
+			this.gain = gain;
+			this.__setLineTracerGain(gain);
+		} else {
+			this.gain = -1;
+			gain = SPEED2GAINS[this.speed];
+			if(gain && gain > 0) {
+				this.__setLineTracerGain(gain);
+			}
 		}
 	};
 
@@ -4060,8 +4148,8 @@
 			case TILT_BACKWARD: return this.sensory.tilt == -1;
 			case TILT_LEFT: return this.sensory.tilt == 2;
 			case TILT_RIGHT: return this.sensory.tilt == -2;
-			case TILT_UPSIDEDOWN: return this.sensory.tilt == 3;
-			case TILT_NORMAL: return this.sensory.tilt == -3;
+			case TILT_FLIP: return this.sensory.tilt == 3;
+			case TILT_NONE: return this.sensory.tilt == -3;
 			case TILT_TAP: return this.tap;
 			case TILT_FREE_FALL: return this.freeFall;
 		}
@@ -4172,15 +4260,6 @@
 			this.writeSerialCallbacks.push(callback);
 			this.__setSerial(data);
 		}
-	};
-
-	HamsterS.prototype.readSerial = function(callback) {
-		var motoring = this.motoring;
-		this.__cancelIo();
-		this.__setIoModeA(this.serialRate);
-		this.__setIoModeB(this.serialRate);
-		this.serialDelimiter = 0;
-		this.readSerialCallbacks.push(callback);
 	};
 
 	HamsterS.prototype.readSerialUltil = function(delimiter, callback) {
@@ -4999,8 +5078,8 @@
 			case TILT_BACKWARD: return this.sensory.tilt == -1;
 			case TILT_LEFT: return this.sensory.tilt == 2;
 			case TILT_RIGHT: return this.sensory.tilt == -2;
-			case TILT_UPSIDEDOWN: return this.sensory.tilt == 3;
-			case TILT_NORMAL: return this.sensory.tilt == -3;
+			case TILT_FLIP: return this.sensory.tilt == 3;
+			case TILT_NONE: return this.sensory.tilt == -3;
 		}
 		return false;
 	};
@@ -5469,9 +5548,14 @@
 		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
+	ext.sTurnPenUnitWithRadiusInDirection = function(index, pen, direction, value, unit, radius, toward, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.swingPenUnit(pen, direction, value, unit, radius, toward, callback);
+	};
+	
 	ext.sPivotAroundPenUnitInDirection = function(index, pen, value, unit, toward, callback) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.penUnit(pen, value, unit, toward, callback);
+		if(robot) robot.pivotPenUnit(pen, value, unit, toward, callback);
 	};
 	
 	ext.sChangeBothWheelsBy = function(index, left, right) {
@@ -5507,6 +5591,11 @@
 	ext.sSetFollowingSpeedTo = function(index, speed) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.setLineTracerSpeed(speed);
+	};
+	
+	ext.sSetFollowingGainTo = function(index, gain) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.setLineTracerGain(gain);
 	};
 	
 	ext.sStop = function(index) {
@@ -5719,11 +5808,6 @@
 	ext.sWriteSerial = function(index, mode, text, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.writeSerial(mode, text, callback);
-	};
-	
-	ext.sReadSerial = function(index, callback) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.readSerial(callback);
 	};
 	
 	ext.sReadSerialUntil = function(index, delimiter, callback) {
