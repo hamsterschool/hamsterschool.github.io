@@ -5079,7 +5079,7 @@
 	};
 
 	Turtle.prototype.checkButtonEvent = function(event) {
-		console.log('checkButtonEvent ' + BUTTON_STATES[event]);
+		console.log('checkButtonEvent ' + event + ':' + BUTTON_STATES[event]);
 		switch(BUTTON_STATES[event]) {
 			case CLICKED: return this.clicked;
 			case DOUBLE_CLICKED: return this.doubleClicked;
