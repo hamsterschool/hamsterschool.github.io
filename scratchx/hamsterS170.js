@@ -3499,330 +3499,330 @@
 		}
 	}
 	
-	ext.sBoardMoveForward = function(index, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sBoardMoveForward = function(callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
 	};
 	
-	ext.sBoardTurn = function(index, direction, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sBoardTurn = function(direction, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardTurn(direction, callback);
 	};
 	
-	ext.sMoveForward = function(index, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sMoveForward = function(callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.sMoveBackward = function(index, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sMoveBackward = function(callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.sTurn = function(index, direction, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTurn = function(direction, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.turn(direction, callback);
 	};
 	
-	ext.sMoveForwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sMoveForwardUnit = function(value, unit, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 	
-	ext.sMoveBackwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sMoveBackwardUnit = function(value, unit, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 	
-	ext.sTurnUnitInPlace = function(index, direction, value, unit, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTurnUnitInPlace = function(direction, value, unit, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.sTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, toward, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, toward, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.swingUnit(direction, value, unit, radius, toward, callback);
 	};
 	
-	ext.sPivotAroundWheelUnitInDirection = function(index, wheel, value, unit, toward, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPivotAroundWheelUnitInDirection = function(wheel, value, unit, toward, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
-	ext.sTurnPenUnitWithRadiusInDirection = function(index, pen, direction, value, unit, radius, toward, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTurnPenUnitWithRadiusInDirection = function(pen, direction, value, unit, radius, toward, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.swingPenUnit(pen, direction, value, unit, radius, toward, callback);
 	};
 	
-	ext.sPivotAroundPenUnitInDirection = function(index, pen, value, unit, toward, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPivotAroundPenUnitInDirection = function(pen, value, unit, toward, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.pivotPenUnit(pen, value, unit, toward, callback);
 	};
 	
-	ext.sChangeBothWheelsBy = function(index, left, right) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeBothWheelsBy = function(left, right) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeWheels(left, right);
 	};
 	
-	ext.sSetBothWheelsTo = function(index, left, right) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetBothWheelsTo = function(left, right) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setWheels(left, right);
 	};
 	
-	ext.sChangeWheelBy = function(index, wheel, value) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeWheelBy = function(wheel, value) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeWheel(wheel, value);
 	};
 	
-	ext.sSetWheelTo = function(index, wheel, value) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetWheelTo = function(wheel, value) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setWheel(wheel, value);
 	};
 	
-	ext.sFollowLineUsingFloorSensor = function(index, color, sensor) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sFollowLineUsingFloorSensor = function(color, sensor) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.followLine(color, sensor);
 	};
 	
-	ext.sFollowLineUntilIntersection = function(index, color, direction, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sFollowLineUntilIntersection = function(color, direction, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.followLineUntil(color, direction, callback);
 	};
 	
-	ext.sSetFollowingSpeedTo = function(index, speed) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetFollowingSpeedTo = function(speed) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setLineTracerSpeed(speed);
 	};
 	
-	ext.sSetFollowingGainTo = function(index, gain) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetFollowingGainTo = function(gain) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setLineTracerGain(gain);
 	};
 	
-	ext.sStop = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sStop = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.stop();
 	};
 	
-	ext.sSetLedTo = function(index, led, color) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetLedTo = function(led, color) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setLed(led, color);
 	};
 	
-	ext.sChangeLedByRGB = function(index, led, red, green, blue) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeLedByRGB = function(led, red, green, blue) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeRgb(led, red, green, blue);
 	};
 	
-	ext.sSetLedToRGB = function(index, led, red, green, blue) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetLedToRGB = function(led, red, green, blue) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setRgb(led, red, green, blue);
 	};
 	
-	ext.sClearLed = function(index, led) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sClearLed = function(led) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.clearLed(led);
 	};
 	
-	ext.sPlaySound = function(index, sound) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPlaySound = function(sound) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.sPlaySoundTimes = function(index, sound, repeat) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPlaySoundTimes = function(sound, repeat) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.playSound(sound, repeat);
 	};
 	
-	ext.sPlaySoundTimesUntilDone = function(index, sound, repeat, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPlaySoundTimesUntilDone = function(sound, repeat, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.playSoundUntil(sound, repeat, callback);
 	};
 	
-	ext.sChangeBuzzerBy = function(index, hz) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeBuzzerBy = function(hz) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeBuzzer(hz);
 	};
 	
-	ext.sSetBuzzerTo = function(index, hz) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetBuzzerTo = function(hz) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setBuzzer(hz);
 	};
 	
-	ext.sClearSound = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sClearSound = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.sPlayNote = function(index, note, octave) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPlayNote = function(note, octave) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.sPlayNoteFor = function(index, note, octave, beat, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sPlayNoteFor = function(note, octave, beat, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 	
-	ext.sRestFor = function(index, beat, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sRestFor = function(beat, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.restBeat(beat, callback);
 	};
 	
-	ext.sChangeTempoBy = function(index, bpm) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeTempoBy = function(bpm) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeTempo(bpm);
 	};
 	
-	ext.sSetTempoTo = function(index, bpm) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetTempoTo = function(bpm) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setTempo(bpm);
 	};
 	
-	ext.sLeftProximity = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sLeftProximity = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getLeftProximity();
 		return 0;
 	};
 	
-	ext.sRightProximity = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sRightProximity = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getRightProximity();
 		return 0;
 	};
 	
-	ext.sLeftFloor = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sLeftFloor = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getLeftFloor();
 		return 0;
 	};
 	
-	ext.sRightFloor = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sRightFloor = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getRightFloor();
 		return 0;
 	};
 	
-	ext.sAccelerationX = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sAccelerationX = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getAccelerationX();
 		return 0;
 	};
 	
-	ext.sAccelerationY = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sAccelerationY = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getAccelerationY();
 		return 0;
 	};
 	
-	ext.sAccelerationZ = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sAccelerationZ = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getAccelerationZ();
 		return 0;
 	};
 	
-	ext.sLight = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sLight = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getLight();
 		return 0;
 	};
 	
-	ext.sTemperature = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTemperature = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getTemperature();
 		return 0;
 	};
 	
-	ext.sSignalStrength = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSignalStrength = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getSignalStrength();
 		return 0;
 	};
 	
-	ext.sWhenHandFound = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sWhenHandFound = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.checkHandFound();
 		return false;
 	};
 	
-	ext.sWhenTilt = function(index, tilt) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sWhenTilt = function(tilt) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.sHandFound = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sHandFound = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.checkHandFound();
 		return false;
 	};
 	
-	ext.sTilt = function(index, tilt) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sTilt = function(tilt) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.sBattery = function(index, state) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sBattery = function(state) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.checkBattery(state);
 		return false;
 	};
 	
-	ext.sSetPortTo = function(index, port, mode) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetPortTo = function(port, mode) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setIoMode(port, mode);
 	};
 	
-	ext.sChangeOutputBy = function(index, port, value) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sChangeOutputBy = function(port, value) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.changeOutput(port, value);
 	};
 	
-	ext.sSetOutputTo = function(index, port, value) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetOutputTo = function(port, value) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setOutput(port, value);
 	};
 	
-	ext.sGripper = function(index, action, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sGripper = function(action, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.gripper(action, callback);
 	};
 	
-	ext.sReleaseGripper = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sReleaseGripper = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.releaseGripper();
 	};
 	
-	ext.sInputA = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sInputA = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getInputA();
 		return 0;
 	};
 	
-	ext.sInputB = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sInputB = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getInputB();
 		return 0;
 	};
 	
-	ext.sWriteSerial = function(index, mode, text, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sWriteSerial = function(mode, text, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.writeSerial(mode, text, callback);
 	};
 	
-	ext.sReadSerialUntil = function(index, delimiter, callback) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sReadSerialUntil = function(delimiter, callback) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.readSerialUltil(delimiter, callback);
 	};
 	
-	ext.sSetSerialRateTo = function(index, baud) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSetSerialRateTo = function(baud) {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.setSerialRate(baud);
 	};
 	
-	ext.sSerial = function(index) {
-		var robot = getRobot(HAMSTER, index);
+	ext.sSerial = function() {
+		var robot = getRobot(HAMSTER, 0);
 		if(robot) return robot.getSerialInput();
 		return '';
 	};
