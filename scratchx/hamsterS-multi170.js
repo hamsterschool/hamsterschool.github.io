@@ -39,454 +39,550 @@
 	};
 	const BLOCKS = {
 		en1: [
-			["w", "Hamster %n : move forward once on board", "boardMoveForward", 0],
-			["w", "Hamster %n : turn %m.left_right once on board", "boardTurn", 0, "left"],
+			["w", "HamsterS %n : move forward once on board", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : turn %m.left_right once on board", "sBoardTurn", 0, "left"],
 			["-"],
-			["w", "Hamster %n : move forward", "moveForward", 0],
-			["w", "Hamster %n : move backward", "moveBackward", 0],
-			["w", "Hamster %n : turn %m.left_right", "turn", 0, "left"],
+			["w", "HamsterS %n : move forward", "sMoveForward", 0],
+			["w", "HamsterS %n : move backward", "sMoveBackward", 0],
+			["w", "HamsterS %n : turn %m.left_right", "sTurn", 0, "left"],
 			["-"],
-			[" ", "Hamster %n : set %m.left_right_both led to %m.color", "setLedTo", 0, "left", "red"],
-			[" ", "Hamster %n : clear %m.left_right_both led", "clearLed", 0, "left"],
+			[" ", "HamsterS %n : set %m.left_right_both led to %m.led_color", "sSetLedTo", 0, "left", "red"],
+			[" ", "HamsterS %n : clear %m.left_right_both led", "sClearLed", 0, "left"],
 			["-"],
-			["w", "Hamster %n : beep", "beep", 0],
+			[" ", "HamsterS %n : play sound %m.sound_effect", "sPlaySound", 0, "beep"],
+			[" ", "HamsterS %n : clear sound", "sClearSound", 0],
 			["-"],
-			["h", "Hamster %n : when hand found", "whenHandFound", 0],
-			["b", "Hamster %n : hand found?", "handFound", 0]
+			["h", "HamsterS %n : when hand found", "sWhenHandFound", 0],
+			["b", "HamsterS %n : hand found?", "sHandFound", 0]
 		],
 		en2: [
-			["w", "Hamster %n : move forward once on board", "boardMoveForward", 0],
-			["w", "Hamster %n : turn %m.left_right once on board", "boardTurn", 0, "left"],
+			["w", "HamsterS %n : move forward once on board", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : turn %m.left_right once on board", "sBoardTurn", 0, "left"],
 			["-"],
-			["w", "Hamster %n : move forward %n secs", "moveForwardForSecs", 0, 1],
-			["w", "Hamster %n : move backward %n secs", "moveBackwardForSecs", 0, 1],
-			["w", "Hamster %n : turn %m.left_right %n secs", "turnForSecs", 0, "left", 1],
+			["w", "HamsterS %n : move forward %n %m.cm_sec", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : move backward %n %m.cm_sec", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : turn %m.left_right %n %m.deg_sec in place", "sTurnUnitInPlace", 0, "left", 90, "degrees"],
+			["w", "HamsterS %n : turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 5, "forward"],
+			["w", "HamsterS %n : pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
 			["-"],
-			[" ", "Hamster %n : set %m.left_right_both led to %m.color", "setLedTo", 0, "left", "red"],
-			[" ", "Hamster %n : clear %m.left_right_both led", "clearLed", 0, "left"],
+			[" ", "HamsterS %n : set %m.left_right_both led to %m.led_color", "sSetLedTo", 0, "left", "red"],
+			[" ", "HamsterS %n : clear %m.left_right_both led", "sClearLed", 0, "left"],
 			["-"],
-			["w", "Hamster %n : beep", "beep", 0],
-			["w", "Hamster %n : play note %m.note %m.octave for %d.beats beats", "playNoteFor", 0, "C", "4", 0.5],
-			["w", "Hamster %n : rest for %d.beats beats", "restFor", 0, 0.25],
-			[" ", "Hamster %n : change tempo by %n", "changeTempoBy", 0, 20],
-			[" ", "Hamster %n : set tempo to %n bpm", "setTempoTo", 0, 60],
+			[" ", "HamsterS %n : play sound %m.sound_effect %n times", "sPlaySoundTimes", 0, "beep", 1],
+			["w", "HamsterS %n : play sound %m.sound_effect %n times until done", "sPlaySoundTimesUntilDone", 0, "beep", 1],
+			[" ", "HamsterS %n : clear sound", "sClearSound", 0],
+			["w", "HamsterS %n : play note %m.note %m.octave for %d.beats beats", "sPlayNoteFor", 0, "C", "4", 0.5],
+			["w", "HamsterS %n : rest for %d.beats beats", "sRestFor", 0, 0.25],
+			[" ", "HamsterS %n : change tempo by %n", "sChangeTempoBy", 0, 20],
+			[" ", "HamsterS %n : set tempo to %n bpm", "sSetTempoTo", 0, 60],
 			["-"],
-			["h", "Hamster %n : when hand found", "whenHandFound", 0],
-			["h", "Hamster %n : when %m.when_tilt", "whenTilt", 0, "tilt forward"],
-			["b", "Hamster %n : hand found?", "handFound", 0],
-			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "tilt forward"]
+			["h", "HamsterS %n : when hand found", "sWhenHandFound", 0],
+			["h", "HamsterS %n : when %m.when_s_tilt", "sWhenTilt", 0, "tilt forward"],
+			["b", "HamsterS %n : hand found?", "sHandFound", 0],
+			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "tilt forward"]
 		],
 		en3: [
-			["w", "Hamster %n : move forward once on board", "boardMoveForward", 0],
-			["w", "Hamster %n : turn %m.left_right once on board", "boardTurn", 0, "left"],
+			["w", "HamsterS %n : move forward once on board", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : turn %m.left_right once on board", "sBoardTurn", 0, "left"],
 			["-"],
-			["w", "Hamster %n : move forward %n secs", "moveForwardForSecs", 0, 1],
-			["w", "Hamster %n : move backward %n secs", "moveBackwardForSecs", 0, 1],
-			["w", "Hamster %n : turn %m.left_right %n secs", "turnForSecs", 0, "left", 1],
-			[" ", "Hamster %n : change wheels by left: %n right: %n", "changeBothWheelsBy", 0, 10, 10],
-			[" ", "Hamster %n : set wheels to left: %n right: %n", "setBothWheelsTo", 0, 30, 30],
-			[" ", "Hamster %n : change %m.left_right_both wheel by %n", "changeWheelBy", 0, "left", 10],
-			[" ", "Hamster %n : set %m.left_right_both wheel to %n", "setWheelTo", 0, "left", 30],
-			[" ", "Hamster %n : follow %m.black_white line with %m.left_right_both floor sensor", "followLineUsingFloorSensor", 0, "black", "left"],
-			["w", "Hamster %n : follow %m.black_white line until %m.left_right_front_rear intersection", "followLineUntilIntersection", 0, "black", "front"],
-			[" ", "Hamster %n : set following speed to %m.speed", "setFollowingSpeedTo", 0, "5"],
-			[" ", "Hamster %n : stop", "stop", 0],
+			["w", "HamsterS %n : move forward %n %m.move_unit", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : move backward %n %m.move_unit", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : turn %m.left_right %n %m.turn_unit in place", "sTurnUnitInPlace", 0, "left", 90, "degrees"],
+			["w", "HamsterS %n : turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 5, "forward"],
+			["w", "HamsterS %n : pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
+			["w", "HamsterS %n : %m.left_right pen, turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnPenUnitWithRadiusInDirection", 0, "left", "left", 90, "degrees", 5, "forward"],
+			["w", "HamsterS %n : pivot around %m.left_right pen %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundPenUnitInDirection", 0, "left", 90, "degrees", "forward"],
+			[" ", "HamsterS %n : change wheels by left: %n right: %n", "sChangeBothWheelsBy", 0, 10, 10],
+			[" ", "HamsterS %n : set wheels to left: %n right: %n", "sSetBothWheelsTo", 0, 30, 30],
+			[" ", "HamsterS %n : change %m.left_right_both wheel by %n", "sChangeWheelBy", 0, "left", 10],
+			[" ", "HamsterS %n : set %m.left_right_both wheel to %n", "sSetWheelTo", 0, "left", 30],
+			[" ", "HamsterS %n : follow %m.black_white line with %m.left_right_both floor sensor", "sFollowLineUsingFloorSensor", 0, "black", "left"],
+			["w", "HamsterS %n : follow %m.black_white line until %m.left_right_front_rear intersection", "sFollowLineUntilIntersection", 0, "black", "front"],
+			[" ", "HamsterS %n : set following speed to %m.speed", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "HamsterS %n : set following directional variation to %m.gain", "sSetFollowingGainTo", 0, "default"],
+			[" ", "HamsterS %n : stop", "sStop", 0],
 			["-"],
-			[" ", "Hamster %n : set %m.left_right_both led to %m.color", "setLedTo", 0, "left", "red"],
-			[" ", "Hamster %n : clear %m.left_right_both led", "clearLed", 0, "left"],
+			[" ", "HamsterS %n : set %m.left_right_both led to %m.led_color", "sSetLedTo", 0, "left", "red"],
+			[" ", "HamsterS %n : change %m.left_right_both led by r: %n g: %n b: %n", "sChangeLedByRGB", 0, "left", 10, 0, 0],
+			[" ", "HamsterS %n : set %m.left_right_both led to r: %n g: %n b: %n", "sSetLedToRGB", 0, "left", 255, 0, 0],
+			[" ", "HamsterS %n : clear %m.left_right_both led", "sClearLed", 0, "left"],
 			["-"],
-			["w", "Hamster %n : beep", "beep", 0],
-			[" ", "Hamster %n : change buzzer by %n", "changeBuzzerBy", 0, 10],
-			[" ", "Hamster %n : set buzzer to %n", "setBuzzerTo", 0, 1000],
-			[" ", "Hamster %n : clear buzzer", "clearBuzzer", 0],
-			[" ", "Hamster %n : play note %m.note %m.octave", "playNote", 0, "C", "4"],
-			["w", "Hamster %n : play note %m.note %m.octave for %d.beats beats", "playNoteFor", 0, "C", "4", 0.5],
-			["w", "Hamster %n : rest for %d.beats beats", "restFor", 0, 0.25],
-			[" ", "Hamster %n : change tempo by %n", "changeTempoBy", 0, 20],
-			[" ", "Hamster %n : set tempo to %n bpm", "setTempoTo", 0, 60],
+			[" ", "HamsterS %n : play sound %m.sound_effect %n times", "sPlaySoundTimes", 0, "beep", 1],
+			["w", "HamsterS %n : play sound %m.sound_effect %n times until done", "sPlaySoundTimesUntilDone", 0, "beep", 1],
+			[" ", "HamsterS %n : change buzzer by %n", "sChangeBuzzerBy", 0, 10],
+			[" ", "HamsterS %n : set buzzer to %n", "sSetBuzzerTo", 0, 1000],
+			[" ", "HamsterS %n : clear sound", "sClearSound", 0],
+			[" ", "HamsterS %n : play note %m.note %m.octave", "sPlayNote", 0, "C", "4"],
+			["w", "HamsterS %n : play note %m.note %m.octave for %d.beats beats", "sPlayNoteFor", 0, "C", "4", 0.5],
+			["w", "HamsterS %n : rest for %d.beats beats", "sRestFor", 0, 0.25],
+			[" ", "HamsterS %n : change tempo by %n", "sChangeTempoBy", 0, 20],
+			[" ", "HamsterS %n : set tempo to %n bpm", "sSetTempoTo", 0, 60],
 			["-"],
-			["r", "Hamster %n : left proximity", "leftProximity", 0],
-			["r", "Hamster %n : right proximity", "rightProximity", 0],
-			["r", "Hamster %n : left floor", "leftFloor", 0],
-			["r", "Hamster %n : right floor", "rightFloor", 0],
-			["r", "Hamster %n : x acceleration", "accelerationX", 0],
-			["r", "Hamster %n : y acceleration", "accelerationY", 0],
-			["r", "Hamster %n : z acceleration", "accelerationZ", 0],
-			["r", "Hamster %n : light", "light", 0],
-			["r", "Hamster %n : temperature", "temperature", 0],
-			["r", "Hamster %n : signal strength", "signalStrength", 0],
-			["h", "Hamster %n : when hand found", "whenHandFound", 0],
-			["h", "Hamster %n : when %m.when_tilt", "whenTilt", 0, "tilt forward"],
-			["b", "Hamster %n : hand found?", "handFound", 0],
-			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "tilt forward"],
-			["b", "Hamster %n : battery %m.battery ?", "battery", 0, "normal"],
+			["r", "HamsterS %n : left proximity", "sLeftProximity", 0],
+			["r", "HamsterS %n : right proximity", "sRightProximity", 0],
+			["r", "HamsterS %n : left floor", "sLeftFloor", 0],
+			["r", "HamsterS %n : right floor", "sRightFloor", 0],
+			["r", "HamsterS %n : x acceleration", "sAccelerationX", 0],
+			["r", "HamsterS %n : y acceleration", "sAccelerationY", 0],
+			["r", "HamsterS %n : z acceleration", "sAccelerationZ", 0],
+			["r", "HamsterS %n : light", "sLight", 0],
+			["r", "HamsterS %n : temperature", "sTemperature", 0],
+			["r", "HamsterS %n : signal strength", "sSignalStrength", 0],
+			["h", "HamsterS %n : when hand found", "sWhenHandFound", 0],
+			["h", "HamsterS %n : when %m.when_s_tilt", "sWhenTilt", 0, "tilt forward"],
+			["b", "HamsterS %n : hand found?", "sHandFound", 0],
+			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "tilt forward"],
+			["b", "HamsterS %n : battery %m.battery ?", "sBattery", 0, "normal"],
 			["-"],
-			[" ", "Hamster %n : set port %m.port to %m.mode", "setPortTo", 0, "A", "analog input"],
-			[" ", "Hamster %n : change output %m.port by %n", "changeOutputBy", 0, "A", 10],
-			[" ", "Hamster %n : set output %m.port to %n", "setOutputTo", 0, "A", 100],
-			["w", "Hamster %n : %m.open_close gripper", "gripper", 0, "open"],
-			[" ", "Hamster %n : release gripper", "releaseGripper", 0],
-			["r", "Hamster %n : input A", "inputA", 0],
-			["r", "Hamster %n : input B", "inputB", 0]
+			[" ", "HamsterS %n : set port %m.port to %m.s_mode", "sSetPortTo", 0, "A", "analog input"],
+			[" ", "HamsterS %n : change output %m.port by %n", "sChangeOutputBy", 0, "A", 10],
+			[" ", "HamsterS %n : set output %m.port to %n", "sSetOutputTo", 0, "A", 100],
+			["w", "HamsterS %n : %m.open_close gripper", "sGripper", 0, "open"],
+			[" ", "HamsterS %n : release gripper", "sReleaseGripper", 0],
+			["r", "HamsterS %n : input A", "sInputA", 0],
+			["r", "HamsterS %n : input B", "sInputB", 0],
+			["-"],
+			["w", "HamsterS %n : write %m.serial_output %s to serial", "sWriteSerial", 0, "string", "abc123"],
+			["w", "HamsterS %n : read serial %m.serial_delimiter", "sReadSerialUntil", 0, "all"],
+			[" ", "HamsterS %n : set serial rate to %m.serial_baud Bd", "sSetSerialRateTo", 0, "9600"],
+			["r", "HamsterS %n : serial input", "sSerial", 0]
 		],
 		ko1: [
-			["w", "햄스터 %n : 말판 앞으로 한 칸 이동하기", "boardMoveForward", 0],
-			["w", "햄스터 %n : 말판 %m.left_right 으로 한 번 돌기", "boardTurn", 0, "왼쪽"],
+			["w", "햄스터S %n : 말판 앞으로 한 칸 이동하기", "sBoardMoveForward", 0],
+			["w", "햄스터S %n : 말판 %m.left_right 으로 한 번 돌기", "sBoardTurn", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 앞으로 이동하기", "moveForward", 0],
-			["w", "햄스터 %n : 뒤로 이동하기", "moveBackward", 0],
-			["w", "햄스터 %n : %m.left_right 으로 돌기", "turn", 0, "왼쪽"],
+			["w", "햄스터S %n : 앞으로 이동하기", "sMoveForward", 0],
+			["w", "햄스터S %n : 뒤로 이동하기", "sMoveBackward", 0],
+			["w", "햄스터S %n : %m.left_right 으로 돌기", "sTurn", 0, "왼쪽"],
 			["-"],
-			[" ", "햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기", "setLedTo", 0, "왼쪽", "빨간색"],
-			[" ", "햄스터 %n : %m.left_right_both LED 끄기", "clearLed", 0, "왼쪽"],
+			[" ", "햄스터S %n : %m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", 0, "왼쪽", "빨간색"],
+			[" ", "햄스터S %n : %m.left_right_both LED 끄기", "sClearLed", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 삐 소리내기", "beep", 0],
+			[" ", "햄스터S %n : %m.sound_effect 소리 재생하기", "sPlaySound", 0, "삐"],
+			[" ", "햄스터S %n : 소리 끄기", "sClearSound", 0],
 			["-"],
-			["h", "햄스터 %n : 손 찾았을 때", "whenHandFound", 0],
-			["b", "햄스터 %n : 손 찾음?", "handFound", 0]
+			["h", "햄스터S %n : 손 찾았을 때", "sWhenHandFound", 0],
+			["b", "햄스터S %n : 손 찾음?", "sHandFound", 0]
 		],
 		ko2: [
-			["w", "햄스터 %n : 말판 앞으로 한 칸 이동하기", "boardMoveForward", 0],
-			["w", "햄스터 %n : 말판 %m.left_right 으로 한 번 돌기", "boardTurn", 0, "왼쪽"],
+			["w", "햄스터S %n : 말판 앞으로 한 칸 이동하기", "sBoardMoveForward", 0],
+			["w", "햄스터S %n : 말판 %m.left_right 으로 한 번 돌기", "sBoardTurn", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 앞으로 %n 초 이동하기", "moveForwardForSecs", 0, 1],
-			["w", "햄스터 %n : 뒤로 %n 초 이동하기", "moveBackwardForSecs", 0, 1],
-			["w", "햄스터 %n : %m.left_right 으로 %n 초 돌기", "turnForSecs", 0, "왼쪽", 1],
+			["w", "햄스터S %n : 앞으로 %n %m.cm_sec 이동하기", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "햄스터S %n : 뒤로 %n %m.cm_sec 이동하기", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "햄스터S %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기", "sTurnUnitInPlace", 0, "왼쪽", 90, "도"],
+			["w", "햄스터S %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 5, "앞쪽"],
+			["w", "햄스터S %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
 			["-"],
-			[" ", "햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기", "setLedTo", 0, "왼쪽", "빨간색"],
-			[" ", "햄스터 %n : %m.left_right_both LED 끄기", "clearLed", 0, "왼쪽"],
+			[" ", "햄스터S %n : %m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", 0, "왼쪽", "빨간색"],
+			[" ", "햄스터S %n : %m.left_right_both LED 끄기", "sClearLed", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 삐 소리내기", "beep", 0],
-			["w", "햄스터 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "playNoteFor", 0, "도", "4", 0.5],
-			["w", "햄스터 %n : %d.beats 박자 쉬기", "restFor", 0, 0.25],
-			[" ", "햄스터 %n : 연주 속도를 %n 만큼 바꾸기", "changeTempoBy", 0, 20],
-			[" ", "햄스터 %n : 연주 속도를 %n BPM으로 정하기", "setTempoTo", 0, 60],
+			[" ", "햄스터S %n : %m.sound_effect 소리 %n 번 재생하기", "sPlaySoundTimes", 0, "삐", 1],
+			["w", "햄스터S %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "sPlaySoundTimesUntilDone", 0, "삐", 1],
+			[" ", "햄스터S %n : 소리 끄기", "sClearSound", 0],
+			["w", "햄스터S %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "sPlayNoteFor", 0, "도", "4", 0.5],
+			["w", "햄스터S %n : %d.beats 박자 쉬기", "sRestFor", 0, 0.25],
+			[" ", "햄스터S %n : 연주 속도를 %n 만큼 바꾸기", "sChangeTempoBy", 0, 20],
+			[" ", "햄스터S %n : 연주 속도를 %n BPM으로 정하기", "sSetTempoTo", 0, 60],
 			["-"],
-			["h", "햄스터 %n : 손 찾았을 때", "whenHandFound", 0],
-			["h", "햄스터 %n : %m.when_tilt 때", "whenTilt", 0, "앞으로 기울였을"],
-			["b", "햄스터 %n : 손 찾음?", "handFound", 0],
-			["b", "햄스터 %n : %m.tilt ?", "tilt", 0, "앞으로 기울임"]
+			["h", "햄스터S %n : 손 찾았을 때", "sWhenHandFound", 0],
+			["h", "햄스터S %n : %m.when_s_tilt 때", "sWhenTilt", 0, "앞으로 기울였을"],
+			["b", "햄스터S %n : 손 찾음?", "sHandFound", 0],
+			["b", "햄스터S %n : %m.s_tilt ?", "sTilt", 0, "앞으로 기울임"]
 		],
 		ko3: [
-			["w", "햄스터 %n : 말판 앞으로 한 칸 이동하기", "boardMoveForward", 0],
-			["w", "햄스터 %n : 말판 %m.left_right 으로 한 번 돌기", "boardTurn", 0, "왼쪽"],
+			["w", "햄스터S %n : 말판 앞으로 한 칸 이동하기", "sBoardMoveForward", 0],
+			["w", "햄스터S %n : 말판 %m.left_right 으로 한 번 돌기", "sBoardTurn", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 앞으로 %n 초 이동하기", "moveForwardForSecs", 0, 1],
-			["w", "햄스터 %n : 뒤로 %n 초 이동하기", "moveBackwardForSecs", 0, 1],
-			["w", "햄스터 %n : %m.left_right 으로 %n 초 돌기", "turnForSecs", 0, "왼쪽", 1],
-			[" ", "햄스터 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "changeBothWheelsBy", 0, 10, 10],
-			[" ", "햄스터 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "setBothWheelsTo", 0, 30, 30],
-			[" ", "햄스터 %n : %m.left_right_both 바퀴 %n 만큼 바꾸기", "changeWheelBy", 0, "왼쪽", 10],
-			[" ", "햄스터 %n : %m.left_right_both 바퀴 %n (으)로 정하기", "setWheelTo", 0, "왼쪽", 30],
-			[" ", "햄스터 %n : %m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기", "followLineUsingFloorSensor", 0, "검은색", "왼쪽"],
-			["w", "햄스터 %n : %m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기", "followLineUntilIntersection", 0, "검은색", "앞쪽"],
-			[" ", "햄스터 %n : 선 따라가기 속도를 %m.speed (으)로 정하기", "setFollowingSpeedTo", 0, "5"],
-			[" ", "햄스터 %n : 정지하기", "stop", 0],
+			["w", "햄스터S %n : 앞으로 %n %m.move_unit 이동하기", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "햄스터S %n : 뒤로 %n %m.move_unit 이동하기", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "햄스터S %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기", "sTurnUnitInPlace", 0, "왼쪽", 90, "도"],
+			["w", "햄스터S %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 5, "앞쪽"],
+			["w", "햄스터S %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
+			["w", "햄스터S %n : %m.left_right 펜, %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnPenUnitWithRadiusInDirection", 0, "왼쪽", "왼쪽", 90, "도", 5, "앞쪽"],
+			["w", "햄스터S %n : %m.left_right 펜 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundPenUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
+			[" ", "햄스터S %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "sChangeBothWheelsBy", 0, 10, 10],
+			[" ", "햄스터S %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "sSetBothWheelsTo", 0, 30, 30],
+			[" ", "햄스터S %n : %m.left_right_both 바퀴 %n 만큼 바꾸기", "sChangeWheelBy", 0, "왼쪽", 10],
+			[" ", "햄스터S %n : %m.left_right_both 바퀴 %n (으)로 정하기", "sSetWheelTo", 0, "왼쪽", 30],
+			[" ", "햄스터S %n : %m.black_white 선을 %m.left_right_both 바닥 센서로 따라가기", "sFollowLineUsingFloorSensor", 0, "검은색", "왼쪽"],
+			["w", "햄스터S %n : %m.black_white 선을 따라 %m.left_right_front_rear 교차로까지 이동하기", "sFollowLineUntilIntersection", 0, "검은색", "앞쪽"],
+			[" ", "햄스터S %n : 선 따라가기 속도를 %m.speed (으)로 정하기", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "햄스터S %n : 선 따라가기 방향 변화량을 %m.gain (으)로 정하기", "sSetFollowingGainTo", 0, "기본 값"],
+			[" ", "햄스터S %n : 정지하기", "sStop", 0],
 			["-"],
-			[" ", "햄스터 %n : %m.left_right_both LED를 %m.color 으로 정하기", "setLedTo", 0, "왼쪽", "빨간색"],
-			[" ", "햄스터 %n : %m.left_right_both LED 끄기", "clearLed", 0, "왼쪽"],
+			[" ", "햄스터S %n : %m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", 0, "왼쪽", "빨간색"],
+			[" ", "햄스터S %n : %m.left_right_both LED를 R: %n G: %n B: %n 만큼 바꾸기", "sChangeLedByRGB", 0, "왼쪽", 10, 0, 0],
+			[" ", "햄스터S %n : %m.left_right_both LED를 R: %n G: %n B: %n (으)로 정하기", "sSetLedToRGB", 0, "왼쪽", 255, 0, 0],
+			[" ", "햄스터S %n : %m.left_right_both LED 끄기", "sClearLed", 0, "왼쪽"],
 			["-"],
-			["w", "햄스터 %n : 삐 소리내기", "beep", 0],
-			[" ", "햄스터 %n : 버저 음을 %n 만큼 바꾸기", "changeBuzzerBy", 0, 10],
-			[" ", "햄스터 %n : 버저 음을 %n (으)로 정하기", "setBuzzerTo", 0, 1000],
-			[" ", "햄스터 %n : 버저 끄기", "clearBuzzer", 0],
-			[" ", "햄스터 %n : %m.note %m.octave 음을 연주하기", "playNote", 0, "도", "4"],
-			["w", "햄스터 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "playNoteFor", 0, "도", "4", 0.5],
-			["w", "햄스터 %n : %d.beats 박자 쉬기", "restFor", 0, 0.25],
-			[" ", "햄스터 %n : 연주 속도를 %n 만큼 바꾸기", "changeTempoBy", 0, 20],
-			[" ", "햄스터 %n : 연주 속도를 %n BPM으로 정하기", "setTempoTo", 0, 60],
+			[" ", "햄스터S %n : %m.sound_effect 소리 %n 번 재생하기", "sPlaySoundTimes", 0, "삐", 1],
+			["w", "햄스터S %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "sPlaySoundTimesUntilDone", 0, "삐", 1],
+			[" ", "햄스터S %n : 버저 음을 %n 만큼 바꾸기", "sChangeBuzzerBy", 0, 10],
+			[" ", "햄스터S %n : 버저 음을 %n (으)로 정하기", "sSetBuzzerTo", 0, 1000],
+			[" ", "햄스터S %n : 소리 끄기", "sClearSound", 0],
+			[" ", "햄스터S %n : %m.note %m.octave 음을 연주하기", "sPlayNote", 0, "도", "4"],
+			["w", "햄스터S %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "sPlayNoteFor", 0, "도", "4", 0.5],
+			["w", "햄스터S %n : %d.beats 박자 쉬기", "sRestFor", 0, 0.25],
+			[" ", "햄스터S %n : 연주 속도를 %n 만큼 바꾸기", "sChangeTempoBy", 0, 20],
+			[" ", "햄스터S %n : 연주 속도를 %n BPM으로 정하기", "sSetTempoTo", 0, 60],
 			["-"],
-			["r", "햄스터 %n : 왼쪽 근접 센서", "leftProximity", 0],
-			["r", "햄스터 %n : 오른쪽 근접 센서", "rightProximity", 0],
-			["r", "햄스터 %n : 왼쪽 바닥 센서", "leftFloor", 0],
-			["r", "햄스터 %n : 오른쪽 바닥 센서", "rightFloor", 0],
-			["r", "햄스터 %n : x축 가속도", "accelerationX", 0],
-			["r", "햄스터 %n : y축 가속도", "accelerationY", 0],
-			["r", "햄스터 %n : z축 가속도", "accelerationZ", 0],
-			["r", "햄스터 %n : 밝기", "light", 0],
-			["r", "햄스터 %n : 온도", "temperature", 0],
-			["r", "햄스터 %n : 신호 세기", "signalStrength", 0],
-			["h", "햄스터 %n : 손 찾았을 때", "whenHandFound", 0],
-			["h", "햄스터 %n : %m.when_tilt 때", "whenTilt", 0, "앞으로 기울였을"],
-			["b", "햄스터 %n : 손 찾음?", "handFound", 0],
-			["b", "햄스터 %n : %m.tilt ?", "tilt", 0, "앞으로 기울임"],
-			["b", "햄스터 %n : 배터리 %m.battery ?", "battery", 0, "정상"],
+			["r", "햄스터S %n : 왼쪽 근접 센서", "sLeftProximity", 0],
+			["r", "햄스터S %n : 오른쪽 근접 센서", "sRightProximity", 0],
+			["r", "햄스터S %n : 왼쪽 바닥 센서", "sLeftFloor", 0],
+			["r", "햄스터S %n : 오른쪽 바닥 센서", "sRightFloor", 0],
+			["r", "햄스터S %n : x축 가속도", "sAccelerationX", 0],
+			["r", "햄스터S %n : y축 가속도", "sAccelerationY", 0],
+			["r", "햄스터S %n : z축 가속도", "sAccelerationZ", 0],
+			["r", "햄스터S %n : 밝기", "sLight", 0],
+			["r", "햄스터S %n : 온도", "sTemperature", 0],
+			["r", "햄스터S %n : 신호 세기", "sSignalStrength", 0],
+			["h", "햄스터S %n : 손 찾았을 때", "sWhenHandFound", 0],
+			["h", "햄스터S %n : %m.when_s_tilt 때", "sWhenTilt", 0, "앞으로 기울였을"],
+			["b", "햄스터S %n : 손 찾음?", "sHandFound", 0],
+			["b", "햄스터S %n : %m.s_tilt ?", "sTilt", 0, "앞으로 기울임"],
+			["b", "햄스터S %n : 배터리 %m.battery ?", "sBattery", 0, "정상"],
 			["-"],
-			[" ", "햄스터 %n : 포트 %m.port 를 %m.mode 으로 정하기", "setPortTo", 0, "A", "아날로그 입력"],
-			[" ", "햄스터 %n : 출력 %m.port 를 %n 만큼 바꾸기", "changeOutputBy", 0, "A", 10],
-			[" ", "햄스터 %n : 출력 %m.port 를 %n (으)로 정하기", "setOutputTo", 0, "A", 100],
-			["w", "햄스터 %n : 집게 %m.open_close", "gripper", 0, "열기"],
-			[" ", "햄스터 %n : 집게 끄기", "releaseGripper", 0],
-			["r", "햄스터 %n : 입력 A", "inputA", 0],
-			["r", "햄스터 %n : 입력 B", "inputB", 0]
+			[" ", "햄스터S %n : 포트 %m.port 를 %m.s_mode 으로 정하기", "sSetPortTo", 0, "A", "아날로그 입력"],
+			[" ", "햄스터S %n : 출력 %m.port 를 %n 만큼 바꾸기", "sChangeOutputBy", 0, "A", 10],
+			[" ", "햄스터S %n : 출력 %m.port 를 %n (으)로 정하기", "sSetOutputTo", 0, "A", 100],
+			["w", "햄스터S %n : 집게 %m.open_close", "sGripper", 0, "열기"],
+			[" ", "햄스터S %n : 집게 끄기", "sReleaseGripper", 0],
+			["r", "햄스터S %n : 입력 A", "sInputA", 0],
+			["r", "햄스터S %n : 입력 B", "sInputB", 0],
+			["-"],
+			["w", "햄스터S %n : 시리얼 %m.serial_output %s 쓰기", "sWriteSerial", 0, "글자", "abc123"],
+			["w", "햄스터S %n : 시리얼 %m.serial_delimiter 읽기", "sReadSerialUntil", 0, "모두"],
+			[" ", "햄스터S %n : 시리얼 속도를 %m.serial_baud Bd로 정하기", "sSetSerialRateTo", 0, "9600"],
+			["r", "햄스터S %n : 시리얼 입력", "sSerial", 0]
 		],
 		ja1: [
-			["w", "ハムスター %n : ボード板上で前へ動かす", "boardMoveForward", 0],
-			["w", "ハムスター %n : ボード板上で %m.left_right に回す", "boardTurn", 0, "左"],
+			["w", "ハムスターS %n : ボード板上で前へ動かす", "sBoardMoveForward", 0],
+			["w", "ハムスターS %n : ボード板上で %m.left_right に回す", "sBoardTurn", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : 前へ動かす", "moveForward", 0],
-			["w", "ハムスター %n : 後ろへ動かす", "moveBackward", 0],
-			["w", "ハムスター %n : %m.left_right に回す", "turn", 0, "左"],
+			["w", "ハムスターS %n : 前へ動かす", "sMoveForward", 0],
+			["w", "ハムスターS %n : 後ろへ動かす", "sMoveBackward", 0],
+			["w", "ハムスターS %n : %m.left_right に回す", "sTurn", 0, "左"],
 			["-"],
-			[" ", "ハムスター %n : %m.left_right_both LEDを %m.color にする", "setLedTo", 0, "左", "赤色"],
-			[" ", "ハムスター %n : %m.left_right_both LEDをオフ", "clearLed", 0, "左"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDを %m.led_color にする", "sSetLedTo", 0, "左", "赤色"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDをオフ", "sClearLed", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : ビープ", "beep", 0],
+			[" ", "ハムスターS %n : %m.sound_effect 音を鳴らす", "sPlaySound", 0, "ビープ"],
+			[" ", "ハムスターS %n : 音を止める", "sClearSound", 0],
 			["-"],
-			["h", "ハムスター %n : 手を見つけたとき", "whenHandFound", 0],
-			["b", "ハムスター %n : 手を見つけたか?", "handFound", 0]
+			["h", "ハムスターS %n : 手を見つけたとき", "sWhenHandFound", 0],
+			["b", "ハムスターS %n : 手を見つけたか?", "sHandFound", 0]
 		],
 		ja2: [
-			["w", "ハムスター %n : ボード板上で前へ動かす", "boardMoveForward", 0],
-			["w", "ハムスター %n : ボード板上で %m.left_right に回す", "boardTurn", 0, "左"],
+			["w", "ハムスターS %n : ボード板上で前へ動かす", "sBoardMoveForward", 0],
+			["w", "ハムスターS %n : ボード板上で %m.left_right に回す", "sBoardTurn", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : 前へ %n 秒動かす", "moveForwardForSecs", 0, 1],
-			["w", "ハムスター %n : 後ろへ %n 秒動かす", "moveBackwardForSecs", 0, 1],
-			["w", "ハムスター %n : %m.left_right に %n 秒回す", "turnForSecs", 0, "左", 1],
+			["w", "ハムスターS %n : 前へ %n %m.cm_sec 動かす", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "ハムスターS %n : 後ろへ %n %m.cm_sec 動かす", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "ハムスターS %n : 所定位置で %m.left_right に %n %m.deg_sec 回す", "sTurnUnitInPlace", 0, "左", 90, "度"],
+			["w", "ハムスターS %n : %m.left_right に %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 5, "前"],
+			["w", "ハムスターS %n : %m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
 			["-"],
-			[" ", "ハムスター %n : %m.left_right_both LEDを %m.color にする", "setLedTo", 0, "左", "赤色"],
-			[" ", "ハムスター %n : %m.left_right_both LEDをオフ", "clearLed", 0, "左"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDを %m.led_color にする", "sSetLedTo", 0, "左", "赤色"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDをオフ", "sClearLed", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : ビープ", "beep", 0],
-			["w", "ハムスター %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "playNoteFor", 0, "ド", "4", 0.5],
-			["w", "ハムスター %n : %d.beats 拍休む", "restFor", 0, 0.25],
-			[" ", "ハムスター %n : テンポを %n ずつ変える", "changeTempoBy", 0, 20],
-			[" ", "ハムスター %n : テンポを %n BPMにする", "setTempoTo", 0, 60],
+			[" ", "ハムスターS %n : %m.sound_effect 音を %n 回鳴らす", "sPlaySoundTimes", 0, "ビープ", 1],
+			["w", "ハムスターS %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "sPlaySoundTimesUntilDone", 0, "ビープ", 1],
+			[" ", "ハムスターS %n : 音を止める", "sClearSound", 0],
+			["w", "ハムスターS %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "sPlayNoteFor", 0, "ド", "4", 0.5],
+			["w", "ハムスターS %n : %d.beats 拍休む", "sRestFor", 0, 0.25],
+			[" ", "ハムスターS %n : テンポを %n ずつ変える", "sChangeTempoBy", 0, 20],
+			[" ", "ハムスターS %n : テンポを %n BPMにする", "sSetTempoTo", 0, 60],
 			["-"],
-			["h", "ハムスター %n : 手を見つけたとき", "whenHandFound", 0],
-			["h", "ハムスター %n : %m.when_tilt とき", "whenTilt", 0, "前に傾けた"],
-			["b", "ハムスター %n : 手を見つけたか?", "handFound", 0],
-			["b", "ハムスター %n : %m.tilt ?", "tilt", 0, "前に傾けたか"]
+			["h", "ハムスターS %n : 手を見つけたとき", "sWhenHandFound", 0],
+			["h", "ハムスターS %n : %m.when_s_tilt とき", "sWhenTilt", 0, "前に傾けた"],
+			["b", "ハムスターS %n : 手を見つけたか?", "sHandFound", 0],
+			["b", "ハムスターS %n : %m.s_tilt ?", "sTilt", 0, "前に傾けたか"]
 		],
 		ja3: [
-			["w", "ハムスター %n : ボード板上で前へ動かす", "boardMoveForward", 0],
-			["w", "ハムスター %n : ボード板上で %m.left_right に回す", "boardTurn", 0, "左"],
+			["w", "ハムスターS %n : ボード板上で前へ動かす", "sBoardMoveForward", 0],
+			["w", "ハムスターS %n : ボード板上で %m.left_right に回す", "sBoardTurn", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : 前へ %n 秒動かす", "moveForwardForSecs", 0, 1],
-			["w", "ハムスター %n : 後ろへ %n 秒動かす", "moveBackwardForSecs", 0, 1],
-			["w", "ハムスター %n : %m.left_right に %n 秒回す", "turnForSecs", 0, "左", 1],
-			[" ", "ハムスター %n : 左車輪を %n 右車輪を %n ずつ変える", "changeBothWheelsBy", 0, 10, 10],
-			[" ", "ハムスター %n : 左車輪を %n 右車輪を %n にする", "setBothWheelsTo", 0, 30, 30],
-			[" ", "ハムスター %n : %m.left_right_both 車輪を %n ずつ変える", "changeWheelBy", 0, "左", 10],
-			[" ", "ハムスター %n : %m.left_right_both 車輪を %n にする", "setWheelTo", 0, "左", 30],
-			[" ", "ハムスター %n : %m.black_white 線を %m.left_right_both フロアセンサーで追従する", "followLineUsingFloorSensor", 0, "黒色", "左"],
-			["w", "ハムスター %n : %m.black_white 線を追従して %m.left_right_front_rear 交差点まで動かす", "followLineUntilIntersection", 0, "黒色", "前"],
-			[" ", "ハムスター %n : 線を追従する速度を %m.speed にする", "setFollowingSpeedTo", 0, "5"],
-			[" ", "ハムスター %n : 停止する", "stop", 0],
+			["w", "ハムスターS %n : 前へ %n %m.move_unit 動かす", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "ハムスターS %n : 後ろへ %n %m.move_unit 動かす", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "ハムスターS %n : 所定位置で %m.left_right に %n %m.turn_unit 回す", "sTurnUnitInPlace", 0, "左", 90, "度"],
+			["w", "ハムスターS %n : %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 5, "前"],
+			["w", "ハムスターS %n : %m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
+			["w", "ハムスターS %n : %m.left_right ペン、 %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnPenUnitWithRadiusInDirection", 0, "左", "左", 90, "度", 5, "前"],
+			["w", "ハムスターS %n : %m.left_right ペンを中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundPenUnitInDirection", 0, "左", 90, "度", "前"],
+			[" ", "ハムスターS %n : 左車輪を %n 右車輪を %n ずつ変える", "sChangeBothWheelsBy", 0, 10, 10],
+			[" ", "ハムスターS %n : 左車輪を %n 右車輪を %n にする", "sSetBothWheelsTo", 0, 30, 30],
+			[" ", "ハムスターS %n : %m.left_right_both 車輪を %n ずつ変える", "sChangeWheelBy", 0, "左", 10],
+			[" ", "ハムスターS %n : %m.left_right_both 車輪を %n にする", "sSetWheelTo", 0, "左", 30],
+			[" ", "ハムスターS %n : %m.black_white 線を %m.left_right_both フロアセンサーで追従する", "sFollowLineUsingFloorSensor", 0, "黒色", "左"],
+			["w", "ハムスターS %n : %m.black_white 線を追従して %m.left_right_front_rear 交差点まで動かす", "sFollowLineUntilIntersection", 0, "黒色", "前"],
+			[" ", "ハムスターS %n : 線を追従する速度を %m.speed にする", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "ハムスターS %n : 線を追従する方向変化量を %m.gain にする", "sSetFollowingGainTo", 0, "基本値"],
+			[" ", "ハムスターS %n : 停止する", "sStop", 0],
 			["-"],
-			[" ", "ハムスター %n : %m.left_right_both LEDを %m.color にする", "setLedTo", 0, "左", "赤色"],
-			[" ", "ハムスター %n : %m.left_right_both LEDをオフ", "clearLed", 0, "左"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDを %m.led_color にする", "sSetLedTo", 0, "左", "赤色"],
+			[" ", "ハムスターS %n : %m.left_right_both LEDをR: %n G: %n B: %n ずつ変える", "sChangeLedByRGB", 0, "左", 10, 0, 0],
+			[" ", "ハムスターS %n : %m.left_right_both LEDをR: %n G: %n B: %n にする", "sSetLedToRGB", 0, "左", 255, 0, 0],
+			[" ", "ハムスターS %n : %m.left_right_both LEDをオフ", "sClearLed", 0, "左"],
 			["-"],
-			["w", "ハムスター %n : ビープ", "beep", 0],
-			[" ", "ハムスター %n : ブザー音を %n ずつ変える", "changeBuzzerBy", 0, 10],
-			[" ", "ハムスター %n : ブザー音を %n にする", "setBuzzerTo", 0, 1000],
-			[" ", "ハムスター %n : ブザー音を止める", "clearBuzzer", 0],
-			[" ", "ハムスター %n : %m.note %m.octave 音を鳴らす", "playNote", 0, "ド", "4"],
-			["w", "ハムスター %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "playNoteFor", 0, "ド", "4", 0.5],
-			["w", "ハムスター %n : %d.beats 拍休む", "restFor", 0, 0.25],
-			[" ", "ハムスター %n : テンポを %n ずつ変える", "changeTempoBy", 0, 20],
-			[" ", "ハムスター %n : テンポを %n BPMにする", "setTempoTo", 0, 60],
+			[" ", "ハムスターS %n : %m.sound_effect 音を %n 回鳴らす", "sPlaySoundTimes", 0, "ビープ", 1],
+			["w", "ハムスターS %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "sPlaySoundTimesUntilDone", 0, "ビープ", 1],
+			[" ", "ハムスターS %n : ブザー音を %n ずつ変える", "sChangeBuzzerBy", 0, 10],
+			[" ", "ハムスターS %n : ブザー音を %n にする", "sSetBuzzerTo", 0, 1000],
+			[" ", "ハムスターS %n : 音を止める", "sClearSound", 0],
+			[" ", "ハムスターS %n : %m.note %m.octave 音を鳴らす", "sPlayNote", 0, "ド", "4"],
+			["w", "ハムスターS %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "sPlayNoteFor", 0, "ド", "4", 0.5],
+			["w", "ハムスターS %n : %d.beats 拍休む", "sRestFor", 0, 0.25],
+			[" ", "ハムスターS %n : テンポを %n ずつ変える", "sChangeTempoBy", 0, 20],
+			[" ", "ハムスターS %n : テンポを %n BPMにする", "sSetTempoTo", 0, 60],
 			["-"],
-			["r", "ハムスター %n : 左近接センサー", "leftProximity", 0],
-			["r", "ハムスター %n : 右近接センサー", "rightProximity", 0],
-			["r", "ハムスター %n : 左フロアセンサー", "leftFloor", 0],
-			["r", "ハムスター %n : 右フロアセンサー", "rightFloor", 0],
-			["r", "ハムスター %n : x軸加速度", "accelerationX", 0],
-			["r", "ハムスター %n : y軸加速度", "accelerationY", 0],
-			["r", "ハムスター %n : z軸加速度", "accelerationZ", 0],
-			["r", "ハムスター %n : 照度", "light", 0],
-			["r", "ハムスター %n : 温度", "temperature", 0],
-			["r", "ハムスター %n : 信号強度", "signalStrength", 0],
-			["h", "ハムスター %n : 手を見つけたとき", "whenHandFound", 0],
-			["h", "ハムスター %n : %m.when_tilt とき", "whenTilt", 0, "前に傾けた"],
-			["b", "ハムスター %n : 手を見つけたか?", "handFound", 0],
-			["b", "ハムスター %n : %m.tilt ?", "tilt", 0, "前に傾けたか"],
-			["b", "ハムスター %n : 電池が %m.battery ?", "battery", 0, "正常か"],
+			["r", "ハムスターS %n : 左近接センサー", "sLeftProximity", 0],
+			["r", "ハムスターS %n : 右近接センサー", "sRightProximity", 0],
+			["r", "ハムスターS %n : 左フロアセンサー", "sLeftFloor", 0],
+			["r", "ハムスターS %n : 右フロアセンサー", "sRightFloor", 0],
+			["r", "ハムスターS %n : x軸加速度", "sAccelerationX", 0],
+			["r", "ハムスターS %n : y軸加速度", "sAccelerationY", 0],
+			["r", "ハムスターS %n : z軸加速度", "sAccelerationZ", 0],
+			["r", "ハムスターS %n : 照度", "sLight", 0],
+			["r", "ハムスターS %n : 温度", "sTemperature", 0],
+			["r", "ハムスターS %n : 信号強度", "sSignalStrength", 0],
+			["h", "ハムスターS %n : 手を見つけたとき", "sWhenHandFound", 0],
+			["h", "ハムスターS %n : %m.when_s_tilt とき", "sWhenTilt", 0, "前に傾けた"],
+			["b", "ハムスターS %n : 手を見つけたか?", "sHandFound", 0],
+			["b", "ハムスターS %n : %m.s_tilt ?", "sTilt", 0, "前に傾けたか"],
+			["b", "ハムスターS %n : 電池が %m.battery ?", "sBattery", 0, "正常か"],
 			["-"],
-			[" ", "ハムスター %n : ポート %m.port を %m.mode にする", "setPortTo", 0, "A", "アナログ入力"],
-			[" ", "ハムスター %n : 出力 %m.port を %n ずつ変える", "changeOutputBy", 0, "A", 10],
-			[" ", "ハムスター %n : 出力 %m.port を %n にする", "setOutputTo", 0, "A", 100],
-			["w", "ハムスター %n : グリッパを %m.open_close", "gripper", 0, "開く"],
-			[" ", "ハムスター %n : グリッパをオフ", "releaseGripper", 0],
-			["r", "ハムスター %n : 入力A", "inputA", 0],
-			["r", "ハムスター %n : 入力B", "inputB", 0]
+			[" ", "ハムスターS %n : ポート %m.port を %m.s_mode にする", "sSetPortTo", 0, "A", "アナログ入力"],
+			[" ", "ハムスターS %n : 出力 %m.port を %n ずつ変える", "sChangeOutputBy", 0, "A", 10],
+			[" ", "ハムスターS %n : 出力 %m.port を %n にする", "sSetOutputTo", 0, "A", 100],
+			["w", "ハムスターS %n : グリッパを %m.open_close", "sGripper", 0, "開く"],
+			[" ", "ハムスターS %n : グリッパをオフ", "sReleaseGripper", 0],
+			["r", "ハムスターS %n : 入力A", "sInputA", 0],
+			["r", "ハムスターS %n : 入力B", "sInputB", 0],
+			["-"],
+			["w", "ハムスターS %n : シリアルに %m.serial_output %s を書き出す", "sWriteSerial", 0, "文字列", "abc123"],
+			["w", "ハムスターS %n : シリアルを %m.serial_delimiter 読み取る", "sReadSerialUntil", 0, "全部"],
+			[" ", "ハムスターS %n : シリアル速度を %m.serial_baud Bdにする", "sSetSerialRateTo", 0, "9600"],
+			["r", "ハムスターS %n : シリアル入力", "sSerial", 0]
 		],
 		uz1: [
-			["w", "Hamster %n : doskada bir marta oldinga yurish", "boardMoveForward", 0],
-			["w", "Hamster %n : doskada bir marta %m.left_right ga o'girish", "boardTurn", 0, "chap"],
+			["w", "HamsterS %n : doskada bir marta oldinga yurish", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : doskada bir marta %m.left_right ga o'girish", "sBoardTurn", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : oldinga yurish", "moveForward", 0],
-			["w", "Hamster %n : orqaga yurish", "moveBackward", 0],
-			["w", "Hamster %n : %m.left_right ga o'girilish", "turn", 0, "chap"],
+			["w", "HamsterS %n : oldinga yurish", "sMoveForward", 0],
+			["w", "HamsterS %n : orqaga yurish", "sMoveBackward", 0],
+			["w", "HamsterS %n : %m.left_right ga o'girilish", "sTurn", 0, "chap"],
 			["-"],
-			[" ", "Hamster %n : %m.left_right_both LEDni %m.color ga sozlash", "setLedTo", 0, "chap", "qizil"],
-			[" ", "Hamster %n : %m.left_right_both LEDni o'chirish", "clearLed", 0, "chap"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", 0, "chap", "qizil"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni o'chirish", "sClearLed", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : ovoz chiqarish", "beep", 0],
+			[" ", "HamsterS %n : %m.sound_effect tovushni ijro etish", "sPlaySound", 0, "qisqa"],
+			[" ", "HamsterS %n : tovushni o'chirish", "sClearSound", 0],
 			["-"],
-			["h", "Hamster %n : qo'l topilganda", "whenHandFound", 0],
-			["b", "Hamster %n : qo'l topildimi?", "handFound", 0]
+			["h", "HamsterS %n : qo'l topilganda", "sWhenHandFound", 0],
+			["b", "HamsterS %n : qo'l topildimi?", "sHandFound", 0]
 		],
 		uz2: [
-			["w", "Hamster %n : doskada bir marta oldinga yurish", "boardMoveForward", 0],
-			["w", "Hamster %n : doskada bir marta %m.left_right ga o'girish", "boardTurn", 0, "chap"],
+			["w", "HamsterS %n : doskada bir marta oldinga yurish", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : doskada bir marta %m.left_right ga o'girish", "sBoardTurn", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : oldinga %n soniya yurish", "moveForwardForSecs", 0, 1],
-			["w", "Hamster %n : orqaga %n soniya yurish", "moveBackwardForSecs", 0, 1],
-			["w", "Hamster %n : %m.left_right ga %n soniya o'girilish", "turnForSecs", 0, "chap", 1],
+			["w", "HamsterS %n : oldinga %n %m.cm_sec yurish", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : orqaga %n %m.cm_sec yurish", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : %m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "sTurnUnitInPlace", 0, "chap", 90, "daraja"],
+			["w", "HamsterS %n : %m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 5, "old"],
+			["w", "HamsterS %n : %m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
 			["-"],
-			[" ", "Hamster %n : %m.left_right_both LEDni %m.color ga sozlash", "setLedTo", 0, "chap", "qizil"],
-			[" ", "Hamster %n : %m.left_right_both LEDni o'chirish", "clearLed", 0, "chap"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", 0, "chap", "qizil"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni o'chirish", "sClearLed", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : ovoz chiqarish", "beep", 0],
-			["w", "Hamster %n : %m.note %m.octave notani %d.beats zarb ijro etish", "playNoteFor", 0, "do", "4", 0.5],
-			["w", "Hamster %n : %d.beats zarb tanaffus", "restFor", 0, 0.25],
-			[" ", "Hamster %n : temni %n ga o'zgartirish", "changeTempoBy", 0, 20],
-			[" ", "Hamster %n : temni %n bpm ga sozlash", "setTempoTo", 0, 60],
+			[" ", "HamsterS %n : %m.sound_effect tovushni %n marta ijro etish", "sPlaySoundTimes", 0, "qisqa", 1],
+			["w", "HamsterS %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sPlaySoundTimesUntilDone", 0, "qisqa", 1],
+			[" ", "HamsterS %n : tovushni o'chirish", "sClearSound", 0],
+			["w", "HamsterS %n : %m.note %m.octave notani %d.beats zarb ijro etish", "sPlayNoteFor", 0, "do", "4", 0.5],
+			["w", "HamsterS %n : %d.beats zarb tanaffus", "sRestFor", 0, 0.25],
+			[" ", "HamsterS %n : temni %n ga o'zgartirish", "sChangeTempoBy", 0, 20],
+			[" ", "HamsterS %n : temni %n bpm ga sozlash", "sSetTempoTo", 0, 60],
 			["-"],
-			["h", "Hamster %n : qo'l topilganda", "whenHandFound", 0],
-			["h", "Hamster %n : %m.when_tilt bo'lganda", "whenTilt", 0, "oldinga eğin"],
-			["b", "Hamster %n : qo'l topildimi?", "handFound", 0],
-			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "oldinga eğin"]
+			["h", "HamsterS %n : qo'l topilganda", "sWhenHandFound", 0],
+			["h", "HamsterS %n : %m.when_s_tilt bo'lganda", "sWhenTilt", 0, "oldinga eğin"],
+			["b", "HamsterS %n : qo'l topildimi?", "sHandFound", 0],
+			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "oldinga eğin"]
 		],
 		uz3: [
-			["w", "Hamster %n : doskada bir marta oldinga yurish", "boardMoveForward", 0],
-			["w", "Hamster %n : doskada bir marta %m.left_right ga o'girish", "boardTurn", 0, "chap"],
+			["w", "HamsterS %n : doskada bir marta oldinga yurish", "sBoardMoveForward", 0],
+			["w", "HamsterS %n : doskada bir marta %m.left_right ga o'girish", "sBoardTurn", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : oldinga %n soniya yurish", "moveForwardForSecs", 0, 1],
-			["w", "Hamster %n : orqaga %n soniya yurish", "moveBackwardForSecs", 0, 1],
-			["w", "Hamster %n : %m.left_right ga %n soniya o'girilish", "turnForSecs", 0, "chap", 1],
-			[" ", "Hamster %n : chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "changeBothWheelsBy", 0, 10, 10],
-			[" ", "Hamster %n : chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "setBothWheelsTo", 0, 30, 30],
-			[" ", "Hamster %n : %m.left_right_both g'ildirakni %n ga o'zgartirish", "changeWheelBy", 0, "chap", 10],
-			[" ", "Hamster %n : %m.left_right_both g'ildirakni %n ga sozlash", "setWheelTo", 0, "chap", 30],
-			[" ", "Hamster %n : %m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish", "followLineUsingFloorSensor", 0, "qora", "chap"],
-			["w", "Hamster %n : %m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish", "followLineUntilIntersection", 0, "qora", "old"],
-			[" ", "Hamster %n : liniyada ergashish tezligini %m.speed ga sozlash", "setFollowingSpeedTo", 0, "5"],
-			[" ", "Hamster %n : to'xtatish", "stop", 0],
+			["w", "HamsterS %n : oldinga %n %m.move_unit yurish", "sMoveForwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : orqaga %n %m.move_unit yurish", "sMoveBackwardUnit", 0, 5, "cm"],
+			["w", "HamsterS %n : %m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "sTurnUnitInPlace", 0, "chap", 90, "daraja"],
+			["w", "HamsterS %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 5, "old"],
+			["w", "HamsterS %n : %m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
+			["w", "HamsterS %n : %m.left_right ruchka, %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnPenUnitWithRadiusInDirection", 0, "chap", "chap", 90, "daraja", 5, "old"],
+			["w", "HamsterS %n : %m.left_right ruchka markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundPenUnitInDirection", 0, "chap", 90, "daraja", "old"],
+			[" ", "HamsterS %n : chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "sChangeBothWheelsBy", 0, 10, 10],
+			[" ", "HamsterS %n : chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "sSetBothWheelsTo", 0, 30, 30],
+			[" ", "HamsterS %n : %m.left_right_both g'ildirakni %n ga o'zgartirish", "sChangeWheelBy", 0, "chap", 10],
+			[" ", "HamsterS %n : %m.left_right_both g'ildirakni %n ga sozlash", "sSetWheelTo", 0, "chap", 30],
+			[" ", "HamsterS %n : %m.black_white liniyasini %m.left_right_both tomon taglik sensori orqali ergashish", "sFollowLineUsingFloorSensor", 0, "qora", "chap"],
+			["w", "HamsterS %n : %m.black_white liniya ustida %m.left_right_front_rear kesishmagacha yurish", "sFollowLineUntilIntersection", 0, "qora", "old"],
+			[" ", "HamsterS %n : liniyada ergashish tezligini %m.speed ga sozlash", "sSetFollowingSpeedTo", 0, "5"],
+			[" ", "HamsterS %n : liniyada ergashish yo'nalishli o'zgarishni %m.gain ga sozlash", "sSetFollowingGainTo", 0, "asl qiymati"],
+			[" ", "HamsterS %n : to'xtatish", "sStop", 0],
 			["-"],
-			[" ", "Hamster %n : %m.left_right_both LEDni %m.color ga sozlash", "setLedTo", 0, "chap", "qizil"],
-			[" ", "Hamster %n : %m.left_right_both LEDni o'chirish", "clearLed", 0, "chap"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", 0, "chap", "qizil"],
+			[" ", "HamsterS %n : %m.left_right_both LEDni r: %n g: %n b: %n ga o'zgartirish", "sChangeLedByRGB", 0, "chap", 10, 0, 0],
+			[" ", "HamsterS %n : %m.left_right_both LEDni r: %n g: %n b: %n ga sozlash", "sSetLedToRGB", 0, "chap", 255, 0, 0],
+			[" ", "HamsterS %n : %m.left_right_both LEDni o'chirish", "sClearLed", 0, "chap"],
 			["-"],
-			["w", "Hamster %n : ovoz chiqarish", "beep", 0],
-			[" ", "Hamster %n : buzerning ovozini %n ga o'zgartirish", "changeBuzzerBy", 0, 10],
-			[" ", "Hamster %n : buzerning ovozini %n ga sozlash", "setBuzzerTo", 0, 1000],
-			[" ", "Hamster %n : buzerni o'chirish", "clearBuzzer", 0],
-			[" ", "Hamster %n : %m.note %m.octave notani ijro etish", "playNote", 0, "do", "4"],
-			["w", "Hamster %n : %m.note %m.octave notani %d.beats zarb ijro etish", "playNoteFor", 0, "do", "4", 0.5],
-			["w", "Hamster %n : %d.beats zarb tanaffus", "restFor", 0, 0.25],
-			[" ", "Hamster %n : temni %n ga o'zgartirish", "changeTempoBy", 0, 20],
-			[" ", "Hamster %n : temni %n bpm ga sozlash", "setTempoTo", 0, 60],
+			[" ", "HamsterS %n : %m.sound_effect tovushni %n marta ijro etish", "sPlaySoundTimes", 0, "qisqa", 1],
+			["w", "HamsterS %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sPlaySoundTimesUntilDone", 0, "qisqa", 1],
+			[" ", "HamsterS %n : buzerning ovozini %n ga o'zgartirish", "sChangeBuzzerBy", 0, 10],
+			[" ", "HamsterS %n : buzerning ovozini %n ga sozlash", "sSetBuzzerTo", 0, 1000],
+			[" ", "HamsterS %n : tovushni o'chirish", "sClearSound", 0],
+			[" ", "HamsterS %n : %m.note %m.octave notani ijro etish", "sPlayNote", 0, "do", "4"],
+			["w", "HamsterS %n : %m.note %m.octave notani %d.beats zarb ijro etish", "sPlayNoteFor", 0, "do", "4", 0.5],
+			["w", "HamsterS %n : %d.beats zarb tanaffus", "sRestFor", 0, 0.25],
+			[" ", "HamsterS %n : temni %n ga o'zgartirish", "sChangeTempoBy", 0, 20],
+			[" ", "HamsterS %n : temni %n bpm ga sozlash", "sSetTempoTo", 0, 60],
 			["-"],
-			["r", "Hamster %n : chap yaqinlik", "leftProximity", 0],
-			["r", "Hamster %n : o'ng yaqinlik", "rightProximity", 0],
-			["r", "Hamster %n : chap taglik", "leftFloor", 0],
-			["r", "Hamster %n : o'ng taglik", "rightFloor", 0],
-			["r", "Hamster %n : x tezlanish", "accelerationX", 0],
-			["r", "Hamster %n : y tezlanish", "accelerationY", 0],
-			["r", "Hamster %n : z tezlanish", "accelerationZ", 0],
-			["r", "Hamster %n : yorug'lik", "light", 0],
-			["r", "Hamster %n : harorat", "temperature", 0],
-			["r", "Hamster %n : signal kuchi", "signalStrength", 0],
-			["h", "Hamster %n : qo'l topilganda", "whenHandFound", 0],
-			["h", "Hamster %n : %m.when_tilt bo'lganda", "whenTilt", 0, "oldinga eğin"],
-			["b", "Hamster %n : qo'l topildimi?", "handFound", 0],
-			["b", "Hamster %n : %m.tilt ?", "tilt", 0, "oldinga eğin"],
-			["b", "Hamster %n : batareya %m.battery ?", "battery", 0, "normal"],
+			["r", "HamsterS %n : chap yaqinlik", "sLeftProximity", 0],
+			["r", "HamsterS %n : o'ng yaqinlik", "sRightProximity", 0],
+			["r", "HamsterS %n : chap taglik", "sLeftFloor", 0],
+			["r", "HamsterS %n : o'ng taglik", "sRightFloor", 0],
+			["r", "HamsterS %n : x tezlanish", "sAccelerationX", 0],
+			["r", "HamsterS %n : y tezlanish", "sAccelerationY", 0],
+			["r", "HamsterS %n : z tezlanish", "sAccelerationZ", 0],
+			["r", "HamsterS %n : yorug'lik", "sLight", 0],
+			["r", "HamsterS %n : harorat", "sTemperature", 0],
+			["r", "HamsterS %n : signal kuchi", "sSignalStrength", 0],
+			["h", "HamsterS %n : qo'l topilganda", "sWhenHandFound", 0],
+			["h", "HamsterS %n : %m.when_s_tilt bo'lganda", "sWhenTilt", 0, "oldinga eğin"],
+			["b", "HamsterS %n : qo'l topildimi?", "sHandFound", 0],
+			["b", "HamsterS %n : %m.s_tilt ?", "sTilt", 0, "oldinga eğin"],
+			["b", "HamsterS %n : batareya %m.battery ?", "sBattery", 0, "normal"],
 			["-"],
-			[" ", "Hamster %n : %m.port portni %m.mode ga sozlash", "setPortTo", 0, "A", "analog kiritish"],
-			[" ", "Hamster %n : %m.port portni %n ga o'zgartirish", "changeOutputBy", 0, "A", 10],
-			[" ", "Hamster %n : %m.port portni %n ga sozlash", "setOutputTo", 0, "A", 100],
-			["w", "Hamster %n : gripperni %m.open_close", "gripper", 0, "oching"],
-			[" ", "Hamster %n : gripperni ozod qilish", "releaseGripper", 0],
-			["r", "Hamster %n : A kirish", "inputA", 0],
-			["r", "Hamster %n : B kirish", "inputB", 0]
+			[" ", "HamsterS %n : %m.port portni %m.s_mode ga sozlash", "sSetPortTo", 0, "A", "analog kiritish"],
+			[" ", "HamsterS %n : %m.port portni %n ga o'zgartirish", "sChangeOutputBy", 0, "A", 10],
+			[" ", "HamsterS %n : %m.port portni %n ga sozlash", "sSetOutputTo", 0, "A", 100],
+			["w", "HamsterS %n : gripperni %m.open_close", "sGripper", 0, "oching"],
+			[" ", "HamsterS %n : gripperni ozod qilish", "sReleaseGripper", 0],
+			["r", "HamsterS %n : A kirish", "sInputA", 0],
+			["r", "HamsterS %n : B kirish", "sInputB", 0],
+			["-"],
+			["w", "HamsterS %n : %m.serial_output %s ni ketma-ketga yozing", "sWriteSerial", 0, "harf", "abc123"],
+			["w", "HamsterS %n : %m.serial_delimiter ketma-ketni o'qing", "sReadSerialUntil", 0, "hammasi"],
+			[" ", "HamsterS %n : ketma-ketni tezligini %m.serial_baud Bdga sozlash", "sSetSerialRateTo", 0, "9600"],
+			["r", "HamsterS %n : ketma-ket kiritish", "sSerial", 0]
 		]
 	};
 	const MENUS = {
 		en: {
+			"move_unit": ["cm", "seconds", "pulses"],
+			"turn_unit": ["degrees", "seconds", "pulses"],
+			"cm_sec": ["cm", "seconds"],
+			"deg_sec": ["degrees", "seconds"],
 			"left_right": ["left", "right"],
 			"left_right_both": ["left", "right", "both"],
+			"forward_backward": ["forward", "backward"],
 			"black_white": ["black", "white"],
 			"left_right_front_rear": ["left", "right", "front", "rear"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
-			"color": ["red", "yellow", "green", "sky blue", "blue", "purple", "white"],
+			"gain": ["default", "1", "2", "3", "4", "5", "6", "7", "8"],
+			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
+			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"],
 			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
-			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
+			"when_s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt", "tap", "free fall"],
+			"s_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt", "tap", "free fall"],
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
-			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
+			"s_mode": ["analog input", "digital input", "digital input (pull up)", "digital input (pull down)", "voltage input", "servo output", "pwm output", "digital output"],
 			"open_close": ["open", "close"],
-			"forward_backward": ["forward", "backward"],
-			"move_unit": ["cm", "seconds", "pulses"],
-			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
-			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"]
+			"serial_output": ["string", "string + new line"],
+			"serial_delimiter": ["all", "until new line", "until ,(comma)", "until :(colon)", "until $", "until #"],
+			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ko: {
+			"move_unit": ["cm", "초", "펄스"],
+			"turn_unit": ["도", "초", "펄스"],
+			"cm_sec": ["cm", "초"],
+			"deg_sec": ["도", "초"],
 			"left_right": ["왼쪽", "오른쪽"],
 			"left_right_both": ["왼쪽", "오른쪽", "양쪽"],
+			"forward_backward": ["앞쪽", "뒤쪽"],
 			"black_white": ["검은색", "하얀색"],
 			"left_right_front_rear": ["왼쪽", "오른쪽", "앞쪽", "뒤쪽"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
-			"color": ["빨간색", "노란색", "초록색", "하늘색", "파란색", "자주색", "하얀색"],
+			"gain": ["기본 값", "1", "2", "3", "4", "5", "6", "7", "8"],
+			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
+			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "쩝", "로봇", "디비디비딥", "잘 했어요", "행복", "화남", "슬픔", "졸림", "행진", "생일"],
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을"],
-			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음"],
+			"when_s_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을", "두드렸을", "자유 낙하했을"],
+			"s_tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음", "두드림", "자유 낙하"],
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
-			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
+			"s_mode": ["아날로그 입력", "디지털 입력", "디지털 입력 (풀업)", "디지털 입력 (풀다운)", "전압 입력", "서보 출력", "PWM 출력", "디지털 출력"],
 			"open_close": ["열기", "닫기"],
-			"forward_backward": ["앞쪽", "뒤쪽"],
-			"move_unit": ["cm", "초", "펄스"],
-			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
-			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "쩝", "로봇", "디비디비딥", "잘 했어요", "행복", "화남", "슬픔", "졸림", "행진", "생일"]
+			"serial_output": ["글자", "글자 + 줄 바꿈"],
+			"serial_delimiter": ["모두", "줄 바꿈까지", ",(쉼표)까지", ":(쌍점)까지", "$까지", "#까지"],
+			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ja: {
+			"move_unit": ["cm", "秒", "パルス"],
+			"turn_unit": ["度", "秒", "パルス"],
+			"cm_sec": ["cm", "秒"],
+			"deg_sec": ["度", "秒"],
 			"left_right": ["左", "右"],
 			"left_right_both": ["左", "右", "両"],
+			"forward_backward": ["前", "後"],
 			"black_white": ["黒色", "白色"],
 			"left_right_front_rear": ["左", "右", "前", "後"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
-			"color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "白色"],
+			"gain": ["基本値", "1", "2", "3", "4", "5", "6", "7", "8"],
+			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
+			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "チョップ", "ロボット", "ディバディバディップ", "よくやった", "幸福", "怒った", "悲しみ", "睡眠", "行進", "誕生"],
 			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった"],
-			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか"],
+			"when_s_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった", "叩いた", "自由落下した"],
+			"s_tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか", "叩いたか", "自由落下したか"],
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
-			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
+			"s_mode": ["アナログ入力", "デジタル入力", "デジタル入力 (プルアップ)", "デジタル入力 (プルダウン)", "電圧入力", "サーボ出力", "PWM出力", "デジタル出力"],
 			"open_close": ["開く", "閉める"],
-			"forward_backward": ["前", "後"],
-			"move_unit": ["cm", "秒", "パルス"],
-			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
-			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "チョップ", "ロボット", "ディバディバディップ", "よくやった", "幸福", "怒った", "悲しみ", "睡眠", "行進", "誕生"]
+			"serial_output": ["文字列", "文字列 + 改行"],
+			"serial_delimiter": ["全部", "改行まで", "、(読点)まで", "：(コロン)まで", "$まで", "#まで"],
+			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		uz: {
+			"move_unit": ["cm", "soniya", "puls"],
+			"turn_unit": ["daraja", "soniya", "puls"],
+			"cm_sec": ["cm", "soniya"],
+			"deg_sec": ["daraja", "soniya"],
 			"left_right": ["chap", "o'ng"],
 			"left_right_both": ["chap", "o'ng", "har ikki"],
+			"forward_backward": ["old", "orqa"],
 			"black_white": ["qora", "oq"],
 			"left_right_front_rear": ["chap", "o'ng", "old", "orqa"],
 			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
-			"color": ["qizil", "sariq", "yashil", "moviy", "ko'k", "siyoh", "oq"],
+			"gain": ["asl qiymati", "1", "2", "3", "4", "5", "6", "7", "8"],
+			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
+			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "chop", "robot", "dibidibidip", "juda yaxshi", "baxtli", "badjahl", "xafa", "uyqu", "marsh", "tug'ilgan kun"],
 			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
-			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
+			"when_s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q", "jo'mrak", "erkin tushish"],
+			"s_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q", "jo'mrak", "erkin tushish"],
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
-			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
+			"s_mode": ["analog kiritish", "raqamli kiritish", "raqamli kiritish (pull up)", "raqamli kiritish (pull down)", "voltaj kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
 			"open_close": ["oching", "yoping"],
-			"forward_backward": ["old", "orqa"],
-			"move_unit": ["cm", "soniya", "puls"],
-			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
-			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "chop", "robot", "dibidibidip", "juda yaxshi", "baxtli", "badjahl", "xafa", "uyqu", "marsh", "tug'ilgan kun"]
+			"serial_output": ["harf", "harf + yangi satrga"],
+			"serial_delimiter": ["hammasi", "yangi satrgacha", ",(vergul)gacha", ":(qo'sh nuqta)gacha", "$gacha", "#gacha"],
+			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		}
 	};
 	
@@ -511,11 +607,15 @@
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
+	var SOUND_EFFECTS = {};
 	var IO_MODES = {};
 	var GRIPPERS = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
+	var RGB_COLORS = {};
+	var SERIAL_MODES = {};
+	var SERIAL_DELIMITERS = {};
+	var SERIAL_BAUDS = { '9600': 176, '14400': 177, '19200': 178, '28800': 179, '38400': 180, '57600': 181, '76800': 182, '115200': 183 };
 	var VALUES = {};
 	
 	const LEFT = 1;
@@ -534,6 +634,16 @@
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
+	const TILT_TAP = 7;
+	const TILT_FREE_FALL = 8;
+	const SERIAL_STRING = 1;
+	const SERIAL_STRING_LINE = 2;
+	const SERIAL_ALL = 0;
+	const SERIAL_NEW_LINE = 0x0D;
+	const SERIAL_COMMA = 0x2C;
+	const SERIAL_COLON = 0x3A;
+	const SERIAL_DOLLAR = 0x24;
+	const SERIAL_SHARP = 0x23;
 	const WHITE = 1;
 	
 	var tmp;
@@ -550,7 +660,11 @@
 		tmp = MENUS[i]['forward_backward'];
 		TOWARDS[tmp[0]] = FORWARD;
 		tmp = MENUS[i]['move_unit'];
-		UNITS[tmp[1]] = SECONDS;
+		UNITS[tmp[0]] = 1; // cm
+		UNITS[tmp[1]] = 2; // sec
+		UNITS[tmp[2]] = 3; // pulse
+		tmp = MENUS[i]['turn_unit'];
+		UNITS[tmp[0]] = 1; // deg
 		tmp = MENUS[i]['led_color'];
 		COLORS[tmp[0]] = 4; // red
 		COLORS[tmp[1]] = 4; // orange
@@ -575,37 +689,220 @@
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
 		tmp = MENUS[i]['sound_effect'];
-		SOUNDS[tmp[0]] = BEEP;
-		tmp = MENUS[i]['mode'];
-		IO_MODES[tmp[0]] = 0;
-		IO_MODES[tmp[1]] = 1;
-		IO_MODES[tmp[2]] = 8;
-		IO_MODES[tmp[3]] = 9;
-		IO_MODES[tmp[4]] = 10;
+		SOUND_EFFECTS[tmp[0]] = 1; // beep
+		SOUND_EFFECTS[tmp[1]] = 2; // random beep
+		SOUND_EFFECTS[tmp[2]] = 10; // noise
+		SOUND_EFFECTS[tmp[3]] = 3; // siren
+		SOUND_EFFECTS[tmp[4]] = 4; // engine
+		SOUND_EFFECTS[tmp[5]] = 11; // chop
+		SOUND_EFFECTS[tmp[6]] = 5; // robot
+		SOUND_EFFECTS[tmp[7]] = 8; // dibidibidip
+		SOUND_EFFECTS[tmp[8]] = 9; // good job
+		SOUND_EFFECTS[tmp[9]] = 12; // happy
+		SOUND_EFFECTS[tmp[10]] = 13; // angry
+		SOUND_EFFECTS[tmp[11]] = 14; // sad
+		SOUND_EFFECTS[tmp[12]] = 15; // sleep
+		SOUND_EFFECTS[tmp[13]] = 6; // march
+		SOUND_EFFECTS[tmp[14]] = 7; // birthday
+		tmp = MENUS[i]['s_mode'];
+		IO_MODES[tmp[0]] = 0; // analog input
+		IO_MODES[tmp[1]] = 1; // digital input
+		IO_MODES[tmp[2]] = 2; // digital input (pull up)
+		IO_MODES[tmp[3]] = 3; // digital input (pull down)
+		IO_MODES[tmp[4]] = 4; // voltage input
+		IO_MODES[tmp[5]] = 8; // servo output
+		IO_MODES[tmp[6]] = 9; // pwm output
+		IO_MODES[tmp[7]] = 10; // digital output
 		tmp = MENUS[i]['open_close'];
 		GRIPPERS[tmp[0]] = OPEN;
 		GRIPPERS[tmp[1]] = CLOSE;
-		tmp = MENUS[i]['tilt'];
+		tmp = MENUS[i]['s_tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
 		TILTS[tmp[2]] = TILT_LEFT;
 		TILTS[tmp[3]] = TILT_RIGHT;
 		TILTS[tmp[4]] = TILT_FLIP;
 		TILTS[tmp[5]] = TILT_NONE;
-		tmp = MENUS[i]['when_tilt'];
+		TILTS[tmp[6]] = TILT_TAP;
+		TILTS[tmp[7]] = TILT_FREE_FALL;
+		tmp = MENUS[i]['when_s_tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
 		TILTS[tmp[2]] = TILT_LEFT;
 		TILTS[tmp[3]] = TILT_RIGHT;
 		TILTS[tmp[4]] = TILT_FLIP;
 		TILTS[tmp[5]] = TILT_NONE;
+		TILTS[tmp[6]] = TILT_TAP;
+		TILTS[tmp[7]] = TILT_FREE_FALL;
 		tmp = MENUS[i]['battery'];
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
 		BATTERY_STATES[tmp[2]] = 0;
+		tmp = MENUS[i]['led_color'];
+		RGB_COLORS[tmp[0]] = [255, 0, 0];
+		RGB_COLORS[tmp[1]] = [255, 63, 0];
+		RGB_COLORS[tmp[2]] = [255, 255, 0];
+		RGB_COLORS[tmp[3]] = [0, 255, 0];
+		RGB_COLORS[tmp[4]] = [0, 255, 255];
+		RGB_COLORS[tmp[5]] = [0, 0, 255];
+		RGB_COLORS[tmp[6]] = [63, 0, 255];
+		RGB_COLORS[tmp[7]] = [255, 0, 255];
+		RGB_COLORS[tmp[8]] = [255, 255, 255];
+		tmp = MENUS[i]['serial_output'];
+		SERIAL_MODES[tmp[0]] = SERIAL_STRING;
+		SERIAL_MODES[tmp[1]] = SERIAL_STRING_LINE;
+		tmp = MENUS[i]['serial_delimiter'];
+		SERIAL_DELIMITERS[tmp[0]] = SERIAL_ALL;
+		SERIAL_DELIMITERS[tmp[1]] = SERIAL_NEW_LINE;
+		SERIAL_DELIMITERS[tmp[2]] = SERIAL_COMMA;
+		SERIAL_DELIMITERS[tmp[3]] = SERIAL_COLON;
+		SERIAL_DELIMITERS[tmp[4]] = SERIAL_DOLLAR;
+		SERIAL_DELIMITERS[tmp[5]] = SERIAL_SHARP;
 		tmp = MENUS[i]['black_white'];
 		VALUES[tmp[1]] = WHITE;
 	}
+	
+	function WriteQueue(size) {
+		this.setSize(size);
+		this.output = new Array(19);
+	}
+
+	WriteQueue.prototype.setSize = function(size) {
+		this.buffer = new Array(size);
+		this.mask = size - 1;
+		this.provider = 0;
+		this.consumer = 0;
+	};
+
+	WriteQueue.prototype.reset = function() {
+		this.provider = 0;
+		this.consumer = 0;
+	};
+
+	WriteQueue.prototype.push = function(str, line) {
+		var buffer = this.buffer;
+		var mask = this.mask;
+		var provider = this.provider;
+		var consumer = this.consumer;
+
+		var len = str.length;
+		if(len > 0) {
+			for(var i = 0; i < len; ++i) {
+				if(((provider - consumer) & mask) == mask) { // full
+					consumer = (consumer + 1) & mask;
+				}
+				buffer[provider] = str.charCodeAt(i);
+				provider = (provider + 1) & mask;
+			}
+		}
+		if(line) {
+			if(((provider - consumer) & mask) == mask) { // full
+				consumer = (consumer + 1) & mask;
+			}
+			buffer[provider] = 0x0D;
+			provider = (provider + 1) & mask;
+		}
+		this.provider = provider;
+		this.consumer = consumer;
+	};
+
+	WriteQueue.prototype.pop = function() {
+		var provider = this.provider;
+		var consumer = this.consumer;
+		if(provider == consumer) return undefined; // empty
+
+		var buffer = this.buffer;
+		var mask = this.mask;
+		var output = this.output;
+		var len = (provider - consumer) & mask;
+		if(len > 18) len = 18;
+
+		output[0] = len;
+		var i = 1;
+		for(; i <= len && consumer != provider; ++i) {
+			output[i] = buffer[consumer];
+			consumer = (consumer + 1) & mask;
+		}
+		for(; i <= 18; ++i) {
+			output[i] = 0;
+		}
+		this.consumer = consumer;
+		return output;
+	};
+
+	function ReadQueue(size) {
+		this.setSize(size);
+	}
+
+	ReadQueue.prototype.setSize = function(size) {
+		this.buffer = new Array(size);
+		this.mask = size - 1;
+		this.provider = 0;
+		this.consumer = 0;
+	};
+
+	ReadQueue.prototype.reset = function() {
+		this.provider = 0;
+		this.consumer = 0;
+	};
+
+	ReadQueue.prototype.push = function(packet) {
+		var len = packet[0];
+		if(len > 0) {
+			if(len > 18) len = 18;
+
+			var buffer = this.buffer;
+			var mask = this.mask;
+			var provider = this.provider;
+			var consumer = this.consumer;
+			for(var i = 1; i <= len; ++i) {
+				if(((provider - consumer) & mask) == mask) { // full
+					consumer = (consumer + 1) & mask;
+				}
+				buffer[provider] = packet[i];
+				provider = (provider + 1) & mask;
+			}
+			this.provider = provider;
+			this.consumer = consumer;
+		}
+	};
+
+	ReadQueue.prototype.pop = function(delimiter) {
+		var provider = this.provider;
+		var consumer = this.consumer;
+		if(provider == consumer) return undefined; // empty
+
+		var buffer = this.buffer;
+		var mask = this.mask;
+		if(delimiter == 0) {
+			var str = '';
+			while(consumer != provider) {
+				str += String.fromCharCode(buffer[consumer]);
+				consumer = (consumer + 1) & mask;
+			}
+			this.consumer = consumer;
+			return str;
+		} else {
+			var found = -1;
+			while(consumer != provider) {
+				if(buffer[consumer] == delimiter) {
+					found = consumer;
+					break;
+				}
+				consumer = (consumer + 1) & mask;
+			}
+			if(found >= 0) {
+				consumer = this.consumer;
+				var str = '';
+				while(consumer != found) {
+					str += String.fromCharCode(buffer[consumer]);
+					consumer = (consumer + 1) & mask;
+				}
+				this.consumer = (consumer + 1) & mask;
+				return str;
+			}
+		}
+	};
 
 	function Hamster(index) {
 		this.sensory = {
@@ -1722,6 +2019,22 @@
 		return this.sensory.inputB;
 	};
 
+	Hamster.prototype.writeSerial = function(mode, text, callback) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.readSerialUltil = function(delimiter, callback) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.setSerialRate = function(baud) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.getSerialInput = function() {
+		return '';
+	};
+	
 	function HamsterS(index) {
 		this.sensory = {
 			map: 0,
@@ -1793,9 +2106,18 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
+		this.serialDelimiter = 0;
+		this.serialRate = 176;
+		this.writeSerialCallbacks = [];
+		this.readSerialCallbacks = [];
+		this.serialInput = '';
+		this.freeFall = false;
+		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
+		this.writeQueue = new WriteQueue(64);
+		this.readQueue = new ReadQueue(64);
 		this.timeouts = [];
 	}
 	
@@ -1844,11 +2166,20 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
+		this.serialDelimiter = 0;
+		this.serialRate = 176;
+		this.writeSerialCallbacks = [];
+		this.readSerialCallbacks = [];
+		this.serialInput = '';
+		this.freeFall = false;
+		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
 
 		this.__removeAllTimeouts();
+		this.writeQueue.reset();
+		this.readQueue.reset();
 	};
 	
 	HamsterS.prototype.__removeTimeout = function(id) {
@@ -1867,12 +2198,30 @@
 		this.timeouts = [];
 	};
 
+	HamsterS.prototype.__fireWriteSerialCallbacks = function() {
+		var callbacks = this.writeSerialCallbacks;
+		for(var i in callbacks) {
+			callbacks[i]();
+		}
+		this.writeSerialCallbacks = [];
+	};
+
+	HamsterS.prototype.__fireReadSerialCallbacks = function() {
+		var callbacks = this.readSerialCallbacks;
+		for(var i in callbacks) {
+			callbacks[i]();
+		}
+		this.readSerialCallbacks = [];
+	};
+
 	HamsterS.prototype.clearMotoring = function() {
 		this.motoring.map = 0xfc000000;
 		this.motoring.map2 = 0xc0000000;
 	};
 
 	HamsterS.prototype.clearEvent = function() {
+		this.freeFall = false;
+		this.tap = false;
 	};
 
 	HamsterS.prototype.__setPulse = function(pulse) {
@@ -1984,9 +2333,20 @@
 		this.ioTimer = undefined;
 	};
 
+	HamsterS.prototype.__setSerial = function(arr) {
+		var motoring = this.motoring;
+		if(motoring.serial == undefined) motoring.serial = new Array(19);
+		for(var i = 0; i < 19; ++i) {
+			motoring.serial[i] = arr[i];
+		}
+		motoring.map2 |= 0x04000000;
+	};
+
 	HamsterS.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
+		if(sensory.map2 & 0x00008000) self.freeFall = true;
+		if(sensory.map2 & 0x00004000) self.tap = true;
 
 		if(self.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
@@ -2143,6 +2503,57 @@
 						break;
 					}
 				}
+			}
+		}
+		if(self.motionCallback && (sensory.map2 & 0x00000800) != 0) {
+			if(sensory.wheelState == 2) {
+				self.motoring.leftWheel = 0;
+				self.motoring.rightWheel = 0;
+				var callback = self.motionCallback;
+				self.__cancelMotion();
+				if(callback) callback();
+			}
+		}
+		if((sensory.map2 & 0x00000400) != 0) {
+			if(sensory.soundState == 0) {
+				if(self.currentSound > 0) {
+					if(self.soundRepeat < 0) {
+						self.__runSound(self.currentSound, -1);
+					} else if(self.soundRepeat > 1) {
+						self.soundRepeat --;
+						self.__runSound(self.currentSound, self.soundRepeat);
+					} else {
+						self.currentSound = 0;
+						self.soundRepeat = 1;
+						var callback = self.soundCallback;
+						self.__cancelSound();
+						if(callback) callback();
+					}
+				} else {
+					self.currentSound = 0;
+					self.soundRepeat = 1;
+					var callback = self.soundCallback;
+					self.__cancelSound();
+					if(callback) callback();
+				}
+			}
+		}
+		if(sensory.map2 & 0x00002000) {
+			if(sensory.serial) self.readQueue.push(sensory.serial);
+		}
+		if(sensory.map2 & 0x00000200) {
+			var tmp = self.writeQueue.pop();
+			if(tmp) {
+				self.__setSerial(tmp);
+			} else {
+				self.__fireWriteSerialCallbacks();
+			}
+		}
+		if(self.readSerialCallbacks.length > 0) {
+			var tmp = self.readQueue.pop(self.serialDelimiter);
+			if(tmp) {
+				self.serialInput = tmp;
+				self.__fireReadSerialCallbacks();
 			}
 		}
 	};
@@ -2827,6 +3238,8 @@
 			case TILT_RIGHT: return this.sensory.tilt == -2;
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
+			case TILT_TAP: return this.tap;
+			case TILT_FREE_FALL: return this.freeFall;
 		}
 		return false;
 	};
@@ -2921,6 +3334,47 @@
 
 	HamsterS.prototype.getInputB = function() {
 		return this.sensory.inputB;
+	};
+
+	HamsterS.prototype.writeSerial = function(mode, text, callback) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		this.__setIoModeA(this.serialRate);
+		this.__setIoModeB(this.serialRate);
+		var queue = this.writeQueue;
+		queue.push(text, SERIAL_MODES[mode] != SERIAL_STRING);
+		var data = queue.pop();
+		if(data) {
+			this.writeSerialCallbacks.push(callback);
+			this.__setSerial(data);
+		}
+	};
+
+	HamsterS.prototype.readSerialUltil = function(delimiter, callback) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		this.__setIoModeA(this.serialRate);
+		this.__setIoModeB(this.serialRate);
+		delimiter = SERIAL_DELIMITERS[delimiter];
+		if(typeof delimiter == 'number') {
+			this.serialDelimiter = delimiter;
+			this.readSerialCallbacks.push(callback);
+		}
+	};
+
+	HamsterS.prototype.setSerialRate = function(baud) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		baud = SERIAL_BAUDS[baud];
+		if(baud && baud > 0) {
+			this.serialRate = baud;
+			this.__setIoModeA(baud);
+			this.__setIoModeB(baud);
+		}
+	};
+
+	HamsterS.prototype.getSerialInput = function() {
+		return this.serialInput;
 	};
 
 	function getOrCreateRobot(group, module, index) {
@@ -3041,266 +3495,332 @@
 		}
 	}
 
-	ext.boardMoveForward = function(index, callback) {
+	ext.sBoardMoveForward = function(index, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.boardForward(callback);
 	};
-
-	ext.boardTurn = function(index, direction, callback) {
+	
+	ext.sBoardTurn = function(index, direction, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.boardTurn(direction, callback);
 	};
 	
-	ext.moveForward = function(index, callback) {
+	ext.sMoveForward = function(index, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.moveBackward = function(index, callback) {
+	ext.sMoveBackward = function(index, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.turn = function(index, direction, callback) {
+	ext.sTurn = function(index, direction, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.turn(direction, callback);
 	};
-
-	ext.moveForwardForSecs = function(index, sec, callback) {
+	
+	ext.sMoveForwardUnit = function(index, value, unit, callback) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.moveForwardSecs(sec, callback);
-	};
-
-	ext.moveBackwardForSecs = function(index, sec, callback) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.moveBackwardSecs(sec, callback);
-	};
-
-	ext.turnForSecs = function(index, direction, sec, callback) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.turnSecs(direction, sec, callback);
+		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 	
-	ext.changeBothWheelsBy = function(index, left, right) {
+	ext.sMoveBackwardUnit = function(index, value, unit, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.moveBackwardUnit(value, unit, callback);
+	};
+	
+	ext.sTurnUnitInPlace = function(index, direction, value, unit, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.turnUnit(direction, value, unit, callback);
+	};
+	
+	ext.sTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, toward, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.swingUnit(direction, value, unit, radius, toward, callback);
+	};
+	
+	ext.sPivotAroundWheelUnitInDirection = function(index, wheel, value, unit, toward, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
+	};
+	
+	ext.sTurnPenUnitWithRadiusInDirection = function(index, pen, direction, value, unit, radius, toward, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.swingPenUnit(pen, direction, value, unit, radius, toward, callback);
+	};
+	
+	ext.sPivotAroundPenUnitInDirection = function(index, pen, value, unit, toward, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.pivotPenUnit(pen, value, unit, toward, callback);
+	};
+	
+	ext.sChangeBothWheelsBy = function(index, left, right) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.changeWheels(left, right);
 	};
-
-	ext.setBothWheelsTo = function(index, left, right) {
+	
+	ext.sSetBothWheelsTo = function(index, left, right) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.setWheels(left, right);
 	};
-
-	ext.changeWheelBy = function(index, which, speed) {
+	
+	ext.sChangeWheelBy = function(index, wheel, value) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.changeWheel(which, speed);
+		if(robot) robot.changeWheel(wheel, value);
 	};
-
-	ext.setWheelTo = function(index, which, speed) {
+	
+	ext.sSetWheelTo = function(index, wheel, value) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.setWheel(which, speed);
+		if(robot) robot.setWheel(wheel, value);
 	};
-
-	ext.followLineUsingFloorSensor = function(index, color, which) {
+	
+	ext.sFollowLineUsingFloorSensor = function(index, color, sensor) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.followLine(color, which);
+		if(robot) robot.followLine(color, sensor);
 	};
-
-	ext.followLineUntilIntersection = function(index, color, which, callback) {
+	
+	ext.sFollowLineUntilIntersection = function(index, color, direction, callback) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.followLineUntil(color, which, callback);
+		if(robot) robot.followLineUntil(color, direction, callback);
 	};
-
-	ext.setFollowingSpeedTo = function(index, speed) {
+	
+	ext.sSetFollowingSpeedTo = function(index, speed) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.setLineTracerSpeed(speed);
 	};
-
-	ext.stop = function(index) {
+	
+	ext.sSetFollowingGainTo = function(index, gain) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.setLineTracerGain(gain);
+	};
+	
+	ext.sStop = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.stop();
 	};
-
-	ext.setLedTo = function(index, which, color) {
+	
+	ext.sSetLedTo = function(index, led, color) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.setLed(which, color);
-	};
-
-	ext.clearLed = function(index, which) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.clearLed(which);
-	};
-
-	ext.beep = function(index, callback) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.beep(callback);
-	};
-
-	ext.changeBuzzerBy = function(index, value) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.changeBuzzer(value);
-	};
-
-	ext.setBuzzerTo = function(index, value) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.setBuzzer(value);
-	};
-
-	ext.clearBuzzer = function(index) {
-		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.clearBuzzer();
+		if(robot) robot.setLed(led, color);
 	};
 	
-	ext.playNote = function(index, note, octave) {
+	ext.sChangeLedByRGB = function(index, led, red, green, blue) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.changeRgb(led, red, green, blue);
+	};
+	
+	ext.sSetLedToRGB = function(index, led, red, green, blue) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.setRgb(led, red, green, blue);
+	};
+	
+	ext.sClearLed = function(index, led) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.clearLed(led);
+	};
+	
+	ext.sPlaySound = function(index, sound) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.playSound(sound, 1);
+	};
+	
+	ext.sPlaySoundTimes = function(index, sound, repeat) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.playSound(sound, repeat);
+	};
+	
+	ext.sPlaySoundTimesUntilDone = function(index, sound, repeat, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.playSoundUntil(sound, repeat, callback);
+	};
+	
+	ext.sChangeBuzzerBy = function(index, hz) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.changeBuzzer(hz);
+	};
+	
+	ext.sSetBuzzerTo = function(index, hz) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.setBuzzer(hz);
+	};
+	
+	ext.sClearSound = function(index) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.clearSound();
+	};
+	
+	ext.sPlayNote = function(index, note, octave) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.playNoteFor = function(index, note, octave, beat, callback) {
+	ext.sPlayNoteFor = function(index, note, octave, beat, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
-
-	ext.restFor = function(index, beat, callback) {
+	
+	ext.sRestFor = function(index, beat, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.restBeat(beat, callback);
 	};
-
-	ext.changeTempoBy = function(index, value) {
+	
+	ext.sChangeTempoBy = function(index, bpm) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.changeTempo(value);
+		if(robot) robot.changeTempo(bpm);
 	};
-
-	ext.setTempoTo = function(index, value) {
+	
+	ext.sSetTempoTo = function(index, bpm) {
 		var robot = getRobot(HAMSTER, index);
-		if(robot) robot.setTempo(value);
+		if(robot) robot.setTempo(bpm);
 	};
-
-	ext.leftProximity = function(index) {
+	
+	ext.sLeftProximity = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getLeftProximity();
-		else return 0;
+		return 0;
 	};
-
-	ext.rightProximity = function(index) {
+	
+	ext.sRightProximity = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getRightProximity();
-		else return 0;
+		return 0;
 	};
-
-	ext.leftFloor = function(index) {
+	
+	ext.sLeftFloor = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getLeftFloor();
-		else return 0;
+		return 0;
 	};
-
-	ext.rightFloor = function(index) {
+	
+	ext.sRightFloor = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getRightFloor();
-		else return 0;
+		return 0;
 	};
-
-	ext.accelerationX = function(index) {
+	
+	ext.sAccelerationX = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getAccelerationX();
-		else return 0;
+		return 0;
 	};
-
-	ext.accelerationY = function(index) {
+	
+	ext.sAccelerationY = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getAccelerationY();
-		else return 0;
+		return 0;
 	};
-
-	ext.accelerationZ = function(index) {
+	
+	ext.sAccelerationZ = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getAccelerationZ();
-		else return 0;
+		return 0;
 	};
-
-	ext.light = function(index) {
+	
+	ext.sLight = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getLight();
-		else return 0;
+		return 0;
 	};
-
-	ext.temperature = function(index) {
+	
+	ext.sTemperature = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getTemperature();
-		else return 0;
+		return 0;
 	};
-
-	ext.signalStrength = function(index) {
+	
+	ext.sSignalStrength = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getSignalStrength();
-		else return 0;
+		return 0;
 	};
-
-	ext.whenHandFound = function(index) {
+	
+	ext.sWhenHandFound = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkHandFound();
 		return false;
 	};
 	
-	ext.whenTilt = function(index, tilt) {
+	ext.sWhenTilt = function(index, tilt) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.handFound = function(index) {
+	ext.sHandFound = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkHandFound();
 		return false;
 	};
 	
-	ext.tilt = function(index, tilt) {
+	ext.sTilt = function(index, tilt) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.battery = function(index, state) {
+	ext.sBattery = function(index, state) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.checkBattery(state);
 		return false;
 	};
-
-	ext.setPortTo = function(index, port, mode) {
+	
+	ext.sSetPortTo = function(index, port, mode) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.setIoMode(port, mode);
 	};
-
-	ext.changeOutputBy = function(index, port, value) {
+	
+	ext.sChangeOutputBy = function(index, port, value) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.changeOutput(port, value);
 	};
-
-	ext.setOutputTo = function(index, port, value) {
+	
+	ext.sSetOutputTo = function(index, port, value) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.setOutput(port, value);
 	};
 	
-	ext.gripper = function(index, action, callback) {
+	ext.sGripper = function(index, action, callback) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.gripper(action, callback);
 	};
 	
-	ext.releaseGripper = function(index) {
+	ext.sReleaseGripper = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) robot.releaseGripper();
 	};
-
-	ext.inputA = function(index) {
+	
+	ext.sInputA = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getInputA();
-		else return 0;
+		return 0;
 	};
-
-	ext.inputB = function(index) {
+	
+	ext.sInputB = function(index) {
 		var robot = getRobot(HAMSTER, index);
 		if(robot) return robot.getInputB();
-		else return 0;
+		return 0;
+	};
+	
+	ext.sWriteSerial = function(index, mode, text, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.writeSerial(mode, text, callback);
+	};
+	
+	ext.sReadSerialUntil = function(index, delimiter, callback) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.readSerialUltil(delimiter, callback);
+	};
+	
+	ext.sSetSerialRateTo = function(index, baud) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) robot.setSerialRate(baud);
+	};
+	
+	ext.sSerial = function(index) {
+		var robot = getRobot(HAMSTER, index);
+		if(robot) return robot.getSerialInput();
+		return '';
 	};
 
 	ext._getStatus = function() {
