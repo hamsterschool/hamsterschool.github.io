@@ -5,13 +5,6 @@
 	var packet = {
 		version: 2
 	};
-	const MOTION = {
-		NONE: 0,
-		FORWARD: 1,
-		BACKWARD: 2,
-		LEFT: 3,
-		RIGHT: 4
-	};
 	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
@@ -604,15 +597,14 @@
 	var DIRECTIONS = {};
 	var TOWARDS = {};
 	var UNITS = {};
-	var COLORS = {};
+	var RGB_COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUND_EFFECTS = {};
+	var SOUNDS = {};
 	var IO_MODES = {};
 	var GRIPPERS = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
-	var RGB_COLORS = {};
 	var SERIAL_MODES = {};
 	var SERIAL_DELIMITERS = {};
 	var SERIAL_BAUDS = { '9600': 176, '14400': 177, '19200': 178, '28800': 179, '38400': 180, '57600': 181, '76800': 182, '115200': 183 };
@@ -624,8 +616,7 @@
 	const FRONT = 4;
 	const REAR = 5;
 	const FORWARD = 1;
-	const SECONDS = 2;
-	const BEEP = 1;
+	const BACKWARD = 2;
 	const OPEN = 1;
 	const CLOSE = 2;
 	const TILT_FORWARD = 1;
@@ -659,6 +650,7 @@
 		DIRECTIONS[tmp[3]] = REAR;
 		tmp = MENUS[i]['forward_backward'];
 		TOWARDS[tmp[0]] = FORWARD;
+		TOWARDS[tmp[1]] = BACKWARD;
 		tmp = MENUS[i]['move_unit'];
 		UNITS[tmp[0]] = 1; // cm
 		UNITS[tmp[1]] = 2; // sec
@@ -666,15 +658,15 @@
 		tmp = MENUS[i]['turn_unit'];
 		UNITS[tmp[0]] = 1; // deg
 		tmp = MENUS[i]['led_color'];
-		COLORS[tmp[0]] = 4; // red
-		COLORS[tmp[1]] = 4; // orange
-		COLORS[tmp[2]] = 6; // yellow
-		COLORS[tmp[3]] = 2; // green
-		COLORS[tmp[4]] = 3; // sky blue
-		COLORS[tmp[5]] = 1; // blue
-		COLORS[tmp[6]] = 5; // violet
-		COLORS[tmp[7]] = 5; // purple
-		COLORS[tmp[8]] = 7; // white
+		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
+		RGB_COLORS[tmp[1]] = [255, 63, 0]; // orange
+		RGB_COLORS[tmp[2]] = [255, 255, 0]; // yellow
+		RGB_COLORS[tmp[3]] = [0, 255, 0]; // green
+		RGB_COLORS[tmp[4]] = [0, 255, 255]; // sky blue
+		RGB_COLORS[tmp[5]] = [0, 0, 255]; // blue
+		RGB_COLORS[tmp[6]] = [63, 0, 255]; // violet
+		RGB_COLORS[tmp[7]] = [255, 0, 255]; // purple
+		RGB_COLORS[tmp[8]] = [255, 255, 255]; // white
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -689,21 +681,21 @@
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
 		tmp = MENUS[i]['sound_effect'];
-		SOUND_EFFECTS[tmp[0]] = 1; // beep
-		SOUND_EFFECTS[tmp[1]] = 2; // random beep
-		SOUND_EFFECTS[tmp[2]] = 10; // noise
-		SOUND_EFFECTS[tmp[3]] = 3; // siren
-		SOUND_EFFECTS[tmp[4]] = 4; // engine
-		SOUND_EFFECTS[tmp[5]] = 11; // chop
-		SOUND_EFFECTS[tmp[6]] = 5; // robot
-		SOUND_EFFECTS[tmp[7]] = 8; // dibidibidip
-		SOUND_EFFECTS[tmp[8]] = 9; // good job
-		SOUND_EFFECTS[tmp[9]] = 12; // happy
-		SOUND_EFFECTS[tmp[10]] = 13; // angry
-		SOUND_EFFECTS[tmp[11]] = 14; // sad
-		SOUND_EFFECTS[tmp[12]] = 15; // sleep
-		SOUND_EFFECTS[tmp[13]] = 6; // march
-		SOUND_EFFECTS[tmp[14]] = 7; // birthday
+		SOUNDS[tmp[0]] = 1; // beep
+		SOUNDS[tmp[1]] = 2; // random beep
+		SOUNDS[tmp[2]] = 10; // noise
+		SOUNDS[tmp[3]] = 3; // siren
+		SOUNDS[tmp[4]] = 4; // engine
+		SOUNDS[tmp[5]] = 11; // chop
+		SOUNDS[tmp[6]] = 5; // robot
+		SOUNDS[tmp[7]] = 8; // dibidibidip
+		SOUNDS[tmp[8]] = 9; // good job
+		SOUNDS[tmp[9]] = 12; // happy
+		SOUNDS[tmp[10]] = 13; // angry
+		SOUNDS[tmp[11]] = 14; // sad
+		SOUNDS[tmp[12]] = 15; // sleep
+		SOUNDS[tmp[13]] = 6; // march
+		SOUNDS[tmp[14]] = 7; // birthday
 		tmp = MENUS[i]['s_mode'];
 		IO_MODES[tmp[0]] = 0; // analog input
 		IO_MODES[tmp[1]] = 1; // digital input
@@ -738,16 +730,6 @@
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
 		BATTERY_STATES[tmp[2]] = 0;
-		tmp = MENUS[i]['led_color'];
-		RGB_COLORS[tmp[0]] = [255, 0, 0];
-		RGB_COLORS[tmp[1]] = [255, 63, 0];
-		RGB_COLORS[tmp[2]] = [255, 255, 0];
-		RGB_COLORS[tmp[3]] = [0, 255, 0];
-		RGB_COLORS[tmp[4]] = [0, 255, 255];
-		RGB_COLORS[tmp[5]] = [0, 0, 255];
-		RGB_COLORS[tmp[6]] = [63, 0, 255];
-		RGB_COLORS[tmp[7]] = [255, 0, 255];
-		RGB_COLORS[tmp[8]] = [255, 255, 255];
 		tmp = MENUS[i]['serial_output'];
 		SERIAL_MODES[tmp[0]] = SERIAL_STRING;
 		SERIAL_MODES[tmp[1]] = SERIAL_STRING_LINE;
