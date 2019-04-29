@@ -1759,8 +1759,6 @@
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
-		this.writeQueue = new WriteQueue(64);
-		this.readQueue = new ReadQueue(64);
 		this.timeouts = [];
 	}
 	
@@ -1814,8 +1812,6 @@
 		this.gain = -1;
 
 		this.__removeAllTimeouts();
-		this.writeQueue.reset();
-		this.readQueue.reset();
 	};
 	
 	HamsterS.prototype.__removeTimeout = function(id) {
