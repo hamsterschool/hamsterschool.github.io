@@ -5,13 +5,6 @@
 	var packet = {
 		version: 2
 	};
-	const MOTION = {
-		NONE: 0,
-		FORWARD: 1,
-		BACKWARD: 2,
-		LEFT: 3,
-		RIGHT: 4
-	};
 	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
@@ -419,11 +412,7 @@
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
-			"open_close": ["open", "close"],
-			"forward_backward": ["forward", "backward"],
-			"move_unit": ["cm", "seconds", "pulses"],
-			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
-			"sound_effect": ["beep", "random beep", "noise", "siren", "engine", "chop", "robot", "dibidibidip", "good job", "happy", "angry", "sad", "sleep", "march", "birthday"]
+			"open_close": ["open", "close"]
 		},
 		ko: {
 			"left_right": ["왼쪽", "오른쪽"],
@@ -440,11 +429,7 @@
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
 			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
-			"open_close": ["열기", "닫기"],
-			"forward_backward": ["앞쪽", "뒤쪽"],
-			"move_unit": ["cm", "초", "펄스"],
-			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
-			"sound_effect": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "쩝", "로봇", "디비디비딥", "잘 했어요", "행복", "화남", "슬픔", "졸림", "행진", "생일"]
+			"open_close": ["열기", "닫기"]
 		},
 		ja: {
 			"left_right": ["左", "右"],
@@ -461,11 +446,7 @@
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
 			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
-			"open_close": ["開く", "閉める"],
-			"forward_backward": ["前", "後"],
-			"move_unit": ["cm", "秒", "パルス"],
-			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
-			"sound_effect": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "チョップ", "ロボット", "ディバディバディップ", "よくやった", "幸福", "怒った", "悲しみ", "睡眠", "行進", "誕生"]
+			"open_close": ["開く", "閉める"]
 		},
 		uz: {
 			"left_right": ["chap", "o'ng"],
@@ -482,11 +463,7 @@
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
 			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
-			"open_close": ["oching", "yoping"],
-			"forward_backward": ["old", "orqa"],
-			"move_unit": ["cm", "soniya", "puls"],
-			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
-			"sound_effect": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "chop", "robot", "dibidibidip", "juda yaxshi", "baxtli", "badjahl", "xafa", "uyqu", "marsh", "tug'ilgan kun"]
+			"open_close": ["oching", "yoping"]
 		}
 	};
 	
@@ -506,12 +483,9 @@
 
 	var PARTS = {};
 	var DIRECTIONS = {};
-	var TOWARDS = {};
-	var UNITS = {};
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
 	var IO_MODES = {};
 	var GRIPPERS = {};
 	var TILTS = {};
@@ -523,9 +497,6 @@
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
-	const FORWARD = 1;
-	const SECONDS = 2;
-	const BEEP = 1;
 	const OPEN = 1;
 	const CLOSE = 2;
 	const TILT_FORWARD = 1;
@@ -547,20 +518,14 @@
 		DIRECTIONS[tmp[1]] = RIGHT;
 		DIRECTIONS[tmp[2]] = FRONT;
 		DIRECTIONS[tmp[3]] = REAR;
-		tmp = MENUS[i]['forward_backward'];
-		TOWARDS[tmp[0]] = FORWARD;
-		tmp = MENUS[i]['move_unit'];
-		UNITS[tmp[1]] = SECONDS;
-		tmp = MENUS[i]['led_color'];
+		tmp = MENUS[i]['color'];
 		COLORS[tmp[0]] = 4; // red
-		COLORS[tmp[1]] = 4; // orange
-		COLORS[tmp[2]] = 6; // yellow
-		COLORS[tmp[3]] = 2; // green
-		COLORS[tmp[4]] = 3; // sky blue
-		COLORS[tmp[5]] = 1; // blue
-		COLORS[tmp[6]] = 5; // violet
-		COLORS[tmp[7]] = 5; // purple
-		COLORS[tmp[8]] = 7; // white
+		COLORS[tmp[1]] = 6; // yellow
+		COLORS[tmp[2]] = 2; // green
+		COLORS[tmp[3]] = 3; // sky blue
+		COLORS[tmp[4]] = 1; // blue
+		COLORS[tmp[5]] = 5; // purple
+		COLORS[tmp[6]] = 7; // white
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -574,14 +539,12 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound_effect'];
-		SOUNDS[tmp[0]] = BEEP;
 		tmp = MENUS[i]['mode'];
-		IO_MODES[tmp[0]] = 0;
-		IO_MODES[tmp[1]] = 1;
-		IO_MODES[tmp[2]] = 8;
-		IO_MODES[tmp[3]] = 9;
-		IO_MODES[tmp[4]] = 10;
+		IO_MODES[tmp[0]] = 0; // analog input
+		IO_MODES[tmp[1]] = 1; // digital input
+		IO_MODES[tmp[2]] = 8; // servo output
+		IO_MODES[tmp[3]] = 9; // pwm output
+		IO_MODES[tmp[4]] = 10; // digital output
 		tmp = MENUS[i]['open_close'];
 		GRIPPERS[tmp[0]] = OPEN;
 		GRIPPERS[tmp[1]] = CLOSE;
@@ -1796,6 +1759,8 @@
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
+		this.writeQueue = new WriteQueue(64);
+		this.readQueue = new ReadQueue(64);
 		this.timeouts = [];
 	}
 	
@@ -1849,6 +1814,8 @@
 		this.gain = -1;
 
 		this.__removeAllTimeouts();
+		this.writeQueue.reset();
+		this.readQueue.reset();
 	};
 	
 	HamsterS.prototype.__removeTimeout = function(id) {
@@ -1873,6 +1840,8 @@
 	};
 
 	HamsterS.prototype.clearEvent = function() {
+		this.freeFall = false;
+		this.tap = false;
 	};
 
 	HamsterS.prototype.__setPulse = function(pulse) {
@@ -2495,7 +2464,7 @@
 	};
 
 	HamsterS.prototype.setLed = function(led, color) {
-		var rgb = COLORS[color];
+		var rgb = RGB_COLORS[color];
 		if(rgb) {
 			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
 		}
@@ -2827,6 +2796,8 @@
 			case TILT_RIGHT: return this.sensory.tilt == -2;
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
+			case TILT_TAP: return this.tap;
+			case TILT_FREE_FALL: return this.freeFall;
 		}
 		return false;
 	};
