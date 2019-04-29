@@ -5,13 +5,6 @@
 	var packet = {
 		version: 2
 	};
-	const MOTION = {
-		NONE: 0,
-		FORWARD: 1,
-		BACKWARD: 2,
-		LEFT: 3,
-		RIGHT: 4
-	};
 	const TURTLE = 'turtle';
 	var connectionState = 1;
 	var socket = undefined;
@@ -31,9 +24,9 @@
 	};
 	const EXTENSION_NAME = {
 		en: 'Turtle',
-		ko: '햄스터',
-		ja: 'ハムスター',
-		uz: 'Hamster'
+		ko: '거북이',
+		ja: 'カメ',
+		uz: 'Turtle'
 	};
 	const BLOCKS = {
 		en1: [
@@ -73,7 +66,7 @@
 			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
 			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
 			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
-			["h", "when %m.when_tilt", "turtleWhenTilt", 0, "tilt forward"],
+			["h", "when %m.when_tilt", "turtleWhenTilt", "tilt forward"],
 			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
 			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
 			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
@@ -116,7 +109,7 @@
 			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
 			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
 			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
-			["h", "when %m.when_tilt", "turtleWhenTilt", 0, "tilt forward"],
+			["h", "when %m.when_tilt", "turtleWhenTilt", "tilt forward"],
 			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
 			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
 			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
@@ -538,52 +531,40 @@
 	var DIRECTIONS = {};
 	var TOWARDS = {};
 	var UNITS = {};
-	var COLORS = {};
+	var LINE_COLORS = {};
+	var RGB_COLORS = {};
+	var COLOR_NUMBERS = {};
+	var COLOR_PATTERNS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var SOUNDS = {};
+	var BUTTON_STATES = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
-	var LINE_COLORS = {};
-	var COLOR_NUMBERS = {};
-	var COLOR_PATTERNS = {};
-	var RGB_COLORS = {};
-	var BUTTON_STATES = {};
-	var VALUES = {};
 	
 	const LEFT = 1;
 	const RIGHT = 2;
-	const BOTH = 3;
-	const FRONT = 4;
-	const REAR = 5;
 	const BACK = 5;
 	const HEAD = 1;
 	const SECONDS = 2;
-	const OPEN = 1;
-	const CLOSE = 2;
+	const CLICKED = 1;
+	const DOUBLE_CLICKED = 2;
+	const LONG_PRESSED = 3;
 	const TILT_FORWARD = 1;
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
-	const CLICKED = 1;
-	const DOUBLE_CLICKED = 2;
-	const LONG_PRESSED = 3;
-	const WHITE = 1;
 	
 	var tmp;
 	for(var i in MENUS) {
 		tmp = MENUS[i]['left_right_both'];
 		PARTS[tmp[0]] = LEFT;
 		PARTS[tmp[1]] = RIGHT;
-		PARTS[tmp[2]] = BOTH;
-		tmp = MENUS[i]['left_right_front_rear'];
+		tmp = MENUS[i]['left_right_back'];
 		DIRECTIONS[tmp[0]] = LEFT;
 		DIRECTIONS[tmp[1]] = RIGHT;
-		DIRECTIONS[tmp[2]] = FRONT;
-		DIRECTIONS[tmp[3]] = REAR;
-		tmp = MENUS[i]['left_right_back'];
 		DIRECTIONS[tmp[2]] = BACK;
 		tmp = MENUS[i]['head_tail'];
 		TOWARDS[tmp[0]] = HEAD;
@@ -593,57 +574,6 @@
 		UNITS[tmp[2]] = 3; // pulse
 		tmp = MENUS[i]['turn_unit'];
 		UNITS[tmp[0]] = 1; // deg
-		tmp = MENUS[i]['led_color'];
-		COLORS[tmp[0]] = 4; // red
-		COLORS[tmp[1]] = 4; // orange
-		COLORS[tmp[2]] = 6; // yellow
-		COLORS[tmp[3]] = 2; // green
-		COLORS[tmp[4]] = 3; // sky blue
-		COLORS[tmp[5]] = 1; // blue
-		COLORS[tmp[6]] = 5; // violet
-		COLORS[tmp[7]] = 5; // purple
-		COLORS[tmp[8]] = 7; // white
-		tmp = MENUS[i]['note'];
-		NOTES[tmp[0]] = 4;
-		NOTES[tmp[1]] = 5;
-		NOTES[tmp[2]] = 6;
-		NOTES[tmp[3]] = 7;
-		NOTES[tmp[4]] = 8;
-		NOTES[tmp[5]] = 9;
-		NOTES[tmp[6]] = 10;
-		NOTES[tmp[7]] = 11;
-		NOTES[tmp[8]] = 12;
-		NOTES[tmp[9]] = 13;
-		NOTES[tmp[10]] = 14;
-		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound'];
-		SOUNDS[tmp[0]] = 1; // beep
-		SOUNDS[tmp[1]] = 2; // random beep
-		SOUNDS[tmp[2]] = 3; // siren
-		SOUNDS[tmp[3]] = 4; // engine
-		SOUNDS[tmp[4]] = 5; // robot
-		SOUNDS[tmp[5]] = 6; // march
-		SOUNDS[tmp[6]] = 7; // birthday
-		SOUNDS[tmp[7]] = 8; // dibidibidip
-		SOUNDS[tmp[8]] = 9; // good job
-		tmp = MENUS[i]['tilt'];
-		TILTS[tmp[0]] = TILT_FORWARD;
-		TILTS[tmp[1]] = TILT_BACKWARD;
-		TILTS[tmp[2]] = TILT_LEFT;
-		TILTS[tmp[3]] = TILT_RIGHT;
-		TILTS[tmp[4]] = TILT_FLIP;
-		TILTS[tmp[5]] = TILT_NONE;
-		tmp = MENUS[i]['when_tilt'];
-		TILTS[tmp[0]] = TILT_FORWARD;
-		TILTS[tmp[1]] = TILT_BACKWARD;
-		TILTS[tmp[2]] = TILT_LEFT;
-		TILTS[tmp[3]] = TILT_RIGHT;
-		TILTS[tmp[4]] = TILT_FLIP;
-		TILTS[tmp[5]] = TILT_NONE;
-		tmp = MENUS[i]['battery'];
-		BATTERY_STATES[tmp[0]] = 2;
-		BATTERY_STATES[tmp[1]] = 1;
-		BATTERY_STATES[tmp[2]] = 0;
 		tmp = MENUS[i]['line_color'];
 		LINE_COLORS[tmp[0]] = 0; // black
 		LINE_COLORS[tmp[4]] = 7; // any color
@@ -670,15 +600,38 @@
 		COLOR_PATTERNS[tmp[5]] = 6; // blue
 		COLOR_PATTERNS[tmp[6]] = 7; // purple
 		tmp = MENUS[i]['led_color'];
-		RGB_COLORS[tmp[0]] = [255, 0, 0];
-		RGB_COLORS[tmp[1]] = [255, 63, 0];
-		RGB_COLORS[tmp[2]] = [255, 255, 0];
-		RGB_COLORS[tmp[3]] = [0, 255, 0];
-		RGB_COLORS[tmp[4]] = [0, 255, 255];
-		RGB_COLORS[tmp[5]] = [0, 0, 255];
-		RGB_COLORS[tmp[6]] = [63, 0, 255];
-		RGB_COLORS[tmp[7]] = [255, 0, 255];
-		RGB_COLORS[tmp[8]] = [255, 255, 255];
+		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
+		RGB_COLORS[tmp[1]] = [255, 63, 0]; // orange
+		RGB_COLORS[tmp[2]] = [255, 255, 0]; // yellow
+		RGB_COLORS[tmp[3]] = [0, 255, 0]; // green
+		RGB_COLORS[tmp[4]] = [0, 255, 255]; // sky blue
+		RGB_COLORS[tmp[5]] = [0, 0, 255]; // blue
+		RGB_COLORS[tmp[6]] = [63, 0, 255]; // violet
+		RGB_COLORS[tmp[7]] = [255, 0, 255]; // purple
+		RGB_COLORS[tmp[8]] = [255, 255, 255]; // white
+		tmp = MENUS[i]['note'];
+		NOTES[tmp[0]] = 4;
+		NOTES[tmp[1]] = 5;
+		NOTES[tmp[2]] = 6;
+		NOTES[tmp[3]] = 7;
+		NOTES[tmp[4]] = 8;
+		NOTES[tmp[5]] = 9;
+		NOTES[tmp[6]] = 10;
+		NOTES[tmp[7]] = 11;
+		NOTES[tmp[8]] = 12;
+		NOTES[tmp[9]] = 13;
+		NOTES[tmp[10]] = 14;
+		NOTES[tmp[11]] = 15;
+		tmp = MENUS[i]['sound'];
+		SOUNDS[tmp[0]] = 1; // beep
+		SOUNDS[tmp[1]] = 2; // random beep
+		SOUNDS[tmp[2]] = 3; // siren
+		SOUNDS[tmp[3]] = 4; // engine
+		SOUNDS[tmp[4]] = 5; // robot
+		SOUNDS[tmp[5]] = 6; // march
+		SOUNDS[tmp[6]] = 7; // birthday
+		SOUNDS[tmp[7]] = 8; // dibidibidip
+		SOUNDS[tmp[8]] = 9; // good job
 		tmp = MENUS[i]['button_state'];
 		BUTTON_STATES[tmp[0]] = CLICKED;
 		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
@@ -687,8 +640,24 @@
 		BUTTON_STATES[tmp[0]] = CLICKED;
 		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
 		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
-		tmp = MENUS[i]['black_white'];
-		VALUES[tmp[1]] = WHITE;
+		tmp = MENUS[i]['tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
+		tmp = MENUS[i]['when_tilt'];
+		TILTS[tmp[0]] = TILT_FORWARD;
+		TILTS[tmp[1]] = TILT_BACKWARD;
+		TILTS[tmp[2]] = TILT_LEFT;
+		TILTS[tmp[3]] = TILT_RIGHT;
+		TILTS[tmp[4]] = TILT_FLIP;
+		TILTS[tmp[5]] = TILT_NONE;
+		tmp = MENUS[i]['battery'];
+		BATTERY_STATES[tmp[0]] = 2;
+		BATTERY_STATES[tmp[1]] = 1;
+		BATTERY_STATES[tmp[2]] = 0;
 	}
 	
 	function Turtle(index) {
@@ -1639,268 +1608,268 @@
 		}
 	}
 	
-	ext.turtleMoveForward = function(index, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleMoveForward = function(callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.turtleMoveBackward = function(index, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleMoveBackward = function(callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.turtleTurn = function(index, direction, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTurn = function(direction, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.turtleMoveForwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleMoveForwardUnit = function(value, unit, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.turtleMoveBackwardUnit = function(index, value, unit, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleMoveBackwardUnit = function(value, unit, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.turtleTurnUnitInPlace = function(index, direction, value, unit, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTurnUnitInPlace = function(direction, value, unit, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.turtleTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, head, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, head, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.swingUnit(direction, value, unit, radius, head, callback);
 	};
 	
-	ext.turtlePivotAroundWheelUnitInDirection = function(index, wheel, value, unit, head, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.pivotUnit(wheel, value, unit, head, callback);
 	};
 	
-	ext.turtleChangeWheelsByLeftRight = function(index, left, right) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleChangeWheelsByLeftRight = function(left, right) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.turtleSetWheelsToLeftRight = function(index, left, right) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetWheelsToLeftRight = function(left, right) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.turtleChangeWheelBy = function(index, wheel, speed) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleChangeWheelBy = function(wheel, speed) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.changeWheel(wheel, speed);
 	};
 
-	ext.turtleSetWheelTo = function(index, wheel, speed) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetWheelTo = function(wheel, speed) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setWheel(wheel, speed);
 	};
 
-	ext.turtleFollowLine = function(index, color) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleFollowLine = function(color) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.followLine(color);
 	};
 
-	ext.turtleFollowLineUntil = function(index, color, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleFollowLineUntil = function(color, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.followLineUntil(color, callback);
 	};
 	
-	ext.turtleFollowLineUntilBlack = function(index, color, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleFollowLineUntilBlack = function(color, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.followLineUntilBlack(color, callback);
 	};
 	
-	ext.turtleCrossIntersection = function(index, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleCrossIntersection = function(callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.crossIntersection(callback);
 	};
 	
-	ext.turtleTurnAtIntersection = function(index, direction, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTurnAtIntersection = function(direction, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.turnAtIntersection(direction, callback);
 	};
 
-	ext.turtleSetFollowingSpeedTo = function(index, speed) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetFollowingSpeedTo = function(speed) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setLineTracerSpeed(speed);
 	};
 
-	ext.turtleStop = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleStop = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.stop();
 	};
 
-	ext.turtleSetHeadLedTo = function(index, color) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetHeadLedTo = function(color) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setHeadColor(color);
 	};
 	
-	ext.turtleChangeHeadLedByRGB = function(index, red, green, blue) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleChangeHeadLedByRGB = function(red, green, blue) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.changeHeadRgb(red, green, blue);
 	};
 	
-	ext.turtleSetHeadLedToRGB = function(index, red, green, blue) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetHeadLedToRGB = function(red, green, blue) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setHeadRgb(red, green, blue);
 	};
 
-	ext.turtleClearHeadLed = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleClearHeadLed = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.clearHead();
 	};
 
-	ext.turtlePlaySound = function(index, sound) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePlaySound = function(sound) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.turtlePlaySoundTimes = function(index, sound, count) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePlaySoundTimes = function(sound, count) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.turtlePlaySoundTimesUntilDone = function(index, sound, count, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.turtleChangeBuzzerBy = function(index, hz) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleChangeBuzzerBy = function(hz) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.turtleSetBuzzerTo = function(index, hz) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetBuzzerTo = function(hz) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.turtleClearSound = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleClearSound = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.turtlePlayNote = function(index, note, octave) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePlayNote = function(note, octave) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.turtlePlayNoteForBeats = function(index, note, octave, beat, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtlePlayNoteForBeats = function(note, octave, beat, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.turtleRestForBeats = function(index, beat, callback) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleRestForBeats = function(beat, callback) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.turtleChangeTempoBy = function(index, bpm) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleChangeTempoBy = function(bpm) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.turtleSetTempoTo = function(index, bpm) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleSetTempoTo = function(bpm) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.setTempo(bpm);
 	};
 
-	ext.turtleWhenColorTouched = function(index, color) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleWhenColorTouched = function(color) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkTouchingColor(color);
 		return false;
 	};
 	
-	ext.turtleWhenColorPattern = function(index, color1, color2) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleWhenColorPattern = function(color1, color2) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkColorPattern(color1, color2);
 		return false;
 	};
 	
-	ext.turtleWhenButtonState = function(index, state) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleWhenButtonState = function(state) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkButtonEvent(state);
 		return false;
 	};
 	
-	ext.turtleWhenTilt = function(index, tilt) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleWhenTilt = function(tilt) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.turtleTouchingColor = function(index, color) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTouchingColor = function(color) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkTouchingColor(color);
 		return false;
 	};
 	
-	ext.turtleIsColorPattern = function(index, color1, color2) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleIsColorPattern = function(color1, color2) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkColorPattern(color1, color2);
 		return false;
 	};
 	
-	ext.turtleButtonState = function(index, state) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleButtonState = function(state) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkButtonEvent(state);
 		return false;
 	};
 	
-	ext.turtleTilt = function(index, tilt) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleTilt = function(tilt) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkTilt(tilt);
 		return false;
 	};
 	
-	ext.turtleBattery = function(index, state) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleBattery = function(state) {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.checkBattery(state);
 		return false;
 	};
 
-	ext.turtleColorNumber = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleColorNumber = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) robot.getColorNumber();
 		return -1;
 	};
 
-	ext.turtleColorPattern = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleColorPattern = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getColorPattern();
 		return -1;
 	};
 
-	ext.turtleFloor = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleFloor = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getFloor();
 		return 0;
 	};
 
-	ext.turtleButton = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleButton = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getButton();
 		return 0;
 	};
 
-	ext.turtleAccelerationX = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleAccelerationX = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getAccelerationX();
 		return 0;
 	};
 
-	ext.turtleAccelerationY = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleAccelerationY = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getAccelerationY();
 		return 0;
 	};
 
-	ext.turtleAccelerationZ = function(index) {
-		var robot = getRobot(TURTLE, index);
+	ext.turtleAccelerationZ = function() {
+		var robot = getRobot(TURTLE, 0);
 		if(robot) return robot.getAccelerationZ();
 		return 0;
 	};
