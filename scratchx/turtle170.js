@@ -1577,10 +1577,16 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json;
-									if(slaveVersion == 1) json = JSON.stringify(packet);
-									else json = JSON.stringify(packet.robot);
-									if(canSend && socket) socket.send(json);
+									if(slaveVersion == 1) {
+										var json = JSON.stringify(packet);
+										if(canSend && socket) socket.send(json);
+									} else {
+										var robot = getRobot(TURTLE, 0);
+										if(robot) {
+											var json = JSON.stringify(robot.motoring);
+											if(canSend && socket) socket.send(json);
+										}
+									}
 									clearMotorings();
 								} catch (e) {
 								}
