@@ -495,12 +495,9 @@
 
 	var PARTS = {};
 	var DIRECTIONS = {};
-	var TOWARDS = {};
-	var UNITS = {};
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
 	var IO_MODES = {};
 	var GRIPPERS = {};
 	var TILTS = {};
@@ -512,9 +509,6 @@
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
-	const FORWARD = 1;
-	const SECONDS = 2;
-	const BEEP = 1;
 	const OPEN = 1;
 	const CLOSE = 2;
 	const TILT_FORWARD = 1;
@@ -537,9 +531,6 @@
 		DIRECTIONS[tmp[2]] = FRONT;
 		DIRECTIONS[tmp[3]] = REAR;
 		tmp = MENUS[i]['forward_backward'];
-		TOWARDS[tmp[0]] = FORWARD;
-		tmp = MENUS[i]['move_unit'];
-		UNITS[tmp[1]] = SECONDS;
 		tmp = MENUS[i]['color'];
 		COLORS[tmp[0]] = 4; // red
 		COLORS[tmp[1]] = 6; // yellow
@@ -562,7 +553,6 @@
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
 		tmp = MENUS[i]['sound'];
-		SOUNDS[tmp[0]] = BEEP;
 		tmp = MENUS[i]['mode'];
 		IO_MODES[tmp[0]] = 0; // analog input
 		IO_MODES[tmp[1]] = 1; // digital input
@@ -2308,7 +2298,7 @@
 
 		motoring.buzzer = 0;
 		this.__setNote(0);
-		this.__runSound(BEEP, 1);
+		this.__runSound(1, 1);
 		this.soundCallback = callback;
 	};
 
