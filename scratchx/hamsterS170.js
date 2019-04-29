@@ -3482,6 +3482,7 @@
 	}
 	
 	ext.boardMoveForward = function(callback) {
+		console.log('boardMoveForward');
 		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
 	};
@@ -3492,6 +3493,7 @@
 	};
 	
 	ext.sBoardMoveForward = function(callback) {
+		console.log('sBoardMoveForward');
 		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
 	};
