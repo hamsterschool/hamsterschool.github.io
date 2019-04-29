@@ -1416,7 +1416,7 @@
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
 		count = parseInt(count);
-		if(SOUNDS[sound] == 1 && count) {
+		if(SOUNDS[sound] == BEEP && count) {
 			this.runBeep(count);
 		}
 	};
@@ -1426,7 +1426,7 @@
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
 		count = parseInt(count);
-		if(SOUNDS[sound] == 1 && count) {
+		if(SOUNDS[sound] == BEEP && count) {
 			var id = this.__issueNoteId();
 			this.runBeep(count, id, callback);
 		}
