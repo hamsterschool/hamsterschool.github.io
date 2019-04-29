@@ -2894,14 +2894,10 @@
 		var key = module + index;
 		var robot = robots[key];
 		if(!robot) {
-			console.log(module);
-			if(module == HAMSTER) robot = new Hamster(index);
-			else if(module == HAMSTER_S) robot = new HamsterS(index);
-			//switch(module) {
-			//	case HAMSTER: robot = new Hamster(index); break;
-			//	case HAMSTER_S: robot = new HamsterS(index); break;
-			//}
-			console.log(robot);
+			switch(module) {
+				case HAMSTER: robot = new Hamster(index); break;
+				case HAMSTER_S: robot = new HamsterS(index); break;
+			}
 			if(robot) {
 				robots[key] = robot;
 				packet[key] = robot.motoring;
@@ -2952,8 +2948,6 @@
 				sock.onmessage = function(message) {
 					try {
 						var received = JSON.parse(message.data);
-						console.log('receive');
-						console.log(received);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
 							if(received.module == HAMSTER) {
@@ -2988,11 +2982,16 @@
 							if(Date.now() > targetTime) {
 								try {
 									var json;
-									console.log('send');
-									console.log(packet);
-									if(slaveVersion == 1) json = JSON.stringify(packet);
-									else json = JSON.stringify(packet.robot);
-									if(canSend && socket) socket.send(json);
+									if(slaveVersion == 1) {
+										json = JSON.stringify(packet);
+										if(canSend && socket) socket.send(json);
+									} else {
+										var robot = getRobot(HAMSTER, 0);
+										if(robot) {
+											json = JSON.stringify(robot.motoring);
+											if(canSend && socket) socket.send(json);
+										}
+									}
 									clearMotorings();
 								} catch (e) {
 								}
