@@ -2899,10 +2899,12 @@
 		var robot = robots[key];
 		if(!robot) {
 			console.log(module);
-			switch(module) {
-				case HAMSTER: robot = new Hamster(index); break;
-				case HAMSTER_S: robot = new HamsterS(index); break;
-			}
+			if(module == HAMSTER) robot = new Hamster(index);
+			else if(module == HAMSTER_S) robot = new HamsterS(index);
+			//switch(module) {
+			//	case HAMSTER: robot = new Hamster(index); break;
+			//	case HAMSTER_S: robot = new HamsterS(index); break;
+			//}
 			console.log(robot);
 			if(robot) {
 				robots[key] = robot;
