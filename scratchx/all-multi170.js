@@ -5,13 +5,6 @@
 	var packet = {
 		version: 2
 	};
-	const MOTION = {
-		NONE: 0,
-		FORWARD: 1,
-		BACKWARD: 2,
-		LEFT: 3,
-		RIGHT: 4
-	};
 	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
