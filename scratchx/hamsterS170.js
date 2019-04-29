@@ -3450,10 +3450,16 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json;
-									if(slaveVersion == 1) json = JSON.stringify(packet);
-									else json = JSON.stringify(packet.robot);
-									if(canSend && socket) socket.send(json);
+									if(slaveVersion == 1) {
+										var json = JSON.stringify(packet);
+										if(canSend && socket) socket.send(json);
+									} else {
+										var robot = getRobot(HAMSTER, 0);
+										if(robot) {
+											var json = JSON.stringify(robot.motoring);
+											if(canSend && socket) socket.send(json);
+										}
+									}
 									clearMotorings();
 								} catch (e) {
 								}
@@ -3481,19 +3487,7 @@
 		}
 	}
 	
-	ext.boardMoveForward = function(callback) {
-		console.log('boardMoveForward');
-		var robot = getRobot(HAMSTER, 0);
-		if(robot) robot.boardForward(callback);
-	};
-
-	ext.boardTurn = function(direction, callback) {
-		var robot = getRobot(HAMSTER, 0);
-		if(robot) robot.boardTurn(direction, callback);
-	};
-	
 	ext.sBoardMoveForward = function(callback) {
-		console.log('sBoardMoveForward');
 		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
 	};
