@@ -2952,6 +2952,8 @@
 				sock.onmessage = function(message) {
 					try {
 						var received = JSON.parse(message.data);
+						console.log('receive');
+						console.log(received);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
 							if(received.module == HAMSTER) {
@@ -2986,6 +2988,8 @@
 							if(Date.now() > targetTime) {
 								try {
 									var json;
+									console.log('send');
+									console.log(packet);
 									if(slaveVersion == 1) json = JSON.stringify(packet);
 									else json = JSON.stringify(packet.robot);
 									if(canSend && socket) socket.send(json);
