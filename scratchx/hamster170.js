@@ -2110,6 +2110,39 @@
 				}
 			}
 		}
+		if(self.motionCallback && (sensory.map2 & 0x00000800) != 0) {
+			if(sensory.wheelState == 2) {
+				self.motoring.leftWheel = 0;
+				self.motoring.rightWheel = 0;
+				var callback = self.motionCallback;
+				self.__cancelMotion();
+				if(callback) callback();
+			}
+		}
+		if((sensory.map2 & 0x00000400) != 0) {
+			if(sensory.soundState == 0) {
+				if(self.currentSound > 0) {
+					if(self.soundRepeat < 0) {
+						self.__runSound(self.currentSound, -1);
+					} else if(self.soundRepeat > 1) {
+						self.soundRepeat --;
+						self.__runSound(self.currentSound, self.soundRepeat);
+					} else {
+						self.currentSound = 0;
+						self.soundRepeat = 1;
+						var callback = self.soundCallback;
+						self.__cancelSound();
+						if(callback) callback();
+					}
+				} else {
+					self.currentSound = 0;
+					self.soundRepeat = 1;
+					var callback = self.soundCallback;
+					self.__cancelSound();
+					if(callback) callback();
+				}
+			}
+		}
 	};
 
 	HamsterS.prototype.__board = function(leftVelocity, rightVelocity, command, callback) {
