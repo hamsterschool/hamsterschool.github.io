@@ -2981,14 +2981,13 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									var json;
 									if(slaveVersion == 1) {
-										json = JSON.stringify(packet);
+										var json = JSON.stringify(packet);
 										if(canSend && socket) socket.send(json);
 									} else {
 										var robot = getRobot(HAMSTER, 0);
 										if(robot) {
-											json = JSON.stringify(robot.motoring);
+											var json = JSON.stringify(robot.motoring);
 											if(canSend && socket) socket.send(json);
 										}
 									}
