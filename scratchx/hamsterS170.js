@@ -3481,6 +3481,16 @@
 		}
 	}
 	
+	ext.boardMoveForward = function(callback) {
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.boardForward(callback);
+	};
+
+	ext.boardTurn = function(direction, callback) {
+		var robot = getRobot(HAMSTER, 0);
+		if(robot) robot.boardTurn(direction, callback);
+	};
+	
 	ext.sBoardMoveForward = function(callback) {
 		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
