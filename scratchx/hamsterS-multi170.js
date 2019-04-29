@@ -5,13 +5,6 @@
 	var packet = {
 		version: 2
 	};
-	const MOTION = {
-		NONE: 0,
-		FORWARD: 1,
-		BACKWARD: 2,
-		LEFT: 3,
-		RIGHT: 4
-	};
 	const SPEED2GAINS = { 1: 6, 2: 6, 3: 5, 4: 5, 5: 4, 6: 4, 7: 3, 8: 3 };
 	const HAMSTER = 'hamster';
 	const HAMSTER_S = 'hamsterS';
@@ -604,15 +597,14 @@
 	var DIRECTIONS = {};
 	var TOWARDS = {};
 	var UNITS = {};
-	var COLORS = {};
+	var RGB_COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUND_EFFECTS = {};
+	var SOUNDS = {};
 	var IO_MODES = {};
 	var GRIPPERS = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
-	var RGB_COLORS = {};
 	var SERIAL_MODES = {};
 	var SERIAL_DELIMITERS = {};
 	var SERIAL_BAUDS = { '9600': 176, '14400': 177, '19200': 178, '28800': 179, '38400': 180, '57600': 181, '76800': 182, '115200': 183 };
@@ -624,8 +616,7 @@
 	const FRONT = 4;
 	const REAR = 5;
 	const FORWARD = 1;
-	const SECONDS = 2;
-	const BEEP = 1;
+	const BACKWARD = 2;
 	const OPEN = 1;
 	const CLOSE = 2;
 	const TILT_FORWARD = 1;
