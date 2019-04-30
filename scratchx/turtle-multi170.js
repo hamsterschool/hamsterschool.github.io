@@ -632,14 +632,6 @@
 		SOUNDS[tmp[6]] = 7; // birthday
 		SOUNDS[tmp[7]] = 8; // dibidibidip
 		SOUNDS[tmp[8]] = 9; // good job
-		tmp = MENUS[i]['button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
-		tmp = MENUS[i]['when_button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
 		tmp = MENUS[i]['tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
@@ -658,6 +650,14 @@
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
 		BATTERY_STATES[tmp[2]] = 0;
+		tmp = MENUS[i]['button_state'];
+		BUTTON_STATES[tmp[0]] = CLICKED;
+		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
+		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
+		tmp = MENUS[i]['when_button_state'];
+		BUTTON_STATES[tmp[0]] = CLICKED;
+		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
+		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
 	}
 
 	function Turtle(index) {
@@ -1486,7 +1486,7 @@
 	Turtle.prototype.getAccelerationZ = function() {
 		return this.sensory.accelerationZ;
 	};
-
+	
 	function getOrCreateRobot(group, module, index) {
 		var key = module + index;
 		var robot = robots[key];
@@ -1869,7 +1869,7 @@
 		if(robot) return robot.getAccelerationZ();
 		return 0;
 	};
-
+	
 	ext._getStatus = function() {
 		clearEvents();
 		switch(connectionState) {
