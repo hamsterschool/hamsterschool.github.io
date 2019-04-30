@@ -484,6 +484,7 @@
 	var PARTS = {};
 	var DIRECTIONS = {};
 	var COLORS = {};
+	var RGB_COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var IO_MODES = {};
@@ -526,6 +527,13 @@
 		COLORS[tmp[4]] = 1; // blue
 		COLORS[tmp[5]] = 5; // purple
 		COLORS[tmp[6]] = 7; // white
+		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
+		RGB_COLORS[tmp[1]] = [255, 255, 0]; // yellow
+		RGB_COLORS[tmp[2]] = [0, 255, 0]; // green
+		RGB_COLORS[tmp[3]] = [0, 255, 255]; // sky blue
+		RGB_COLORS[tmp[4]] = [0, 0, 255]; // blue
+		RGB_COLORS[tmp[5]] = [255, 0, 255]; // purple
+		RGB_COLORS[tmp[6]] = [255, 255, 255]; // white
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
