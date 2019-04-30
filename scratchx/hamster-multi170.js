@@ -1347,15 +1347,6 @@
 		}
 	};
 
-	Hamster.prototype.setRgbArray = function(led, rgb) {
-	};
-
-	Hamster.prototype.setRgb = function(led, red, green, blue) {
-	};
-
-	Hamster.prototype.changeRgb = function(led, red, green, blue) {
-	};
-
 	Hamster.prototype.runBeep = function(count, id, callback) {
 		if(count) {
 			var self = this;
@@ -1395,27 +1386,6 @@
 		this.runBeep(1, id, callback);
 	};
 
-	Hamster.prototype.playSound = function(sound, count) {
-		this.__cancelNote();
-		this.motoring.buzzer = 0;
-		this.__setNote(0);
-		count = parseInt(count);
-		if(SOUNDS[sound] == 1 && count) {
-			this.runBeep(count);
-		}
-	};
-
-	Hamster.prototype.playSoundUntil = function(sound, count, callback) {
-		this.__cancelNote();
-		this.motoring.buzzer = 0;
-		this.__setNote(0);
-		count = parseInt(count);
-		if(SOUNDS[sound] == 1 && count) {
-			var id = this.__issueNoteId();
-			this.runBeep(count, id, callback);
-		}
-	};
-
 	Hamster.prototype.setBuzzer = function(hz) {
 		var motoring = this.motoring;
 		this.__cancelNote();
@@ -1442,10 +1412,6 @@
 		this.__cancelNote();
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
-	};
-
-	Hamster.prototype.clearSound = function() {
-		this.clearBuzzer();
 	};
 
 	Hamster.prototype.playNote = function(note, octave) {
@@ -2497,140 +2463,55 @@
 	HamsterS.prototype.setLed = function(led, color) {
 		var rgb = RGB_COLORS[color];
 		if(rgb) {
-			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
+			var motoring = this.motoring;
+			led = PARTS[led];
+			if(led == LEFT) {
+				motoring.leftRed = rgb[0];
+				motoring.leftGreen = rgb[1];
+				motoring.leftBlue = rgb[2];
+			} else if(led == RIGHT) {
+				motoring.rightRed = rgb[0];
+				motoring.rightGreen = rgb[1];
+				motoring.rightBlue = rgb[2];
+			} else {
+				motoring.leftRed = rgb[0];
+				motoring.leftGreen = rgb[1];
+				motoring.leftBlue = rgb[2];
+				motoring.rightRed = rgb[0];
+				motoring.rightGreen = rgb[1];
+				motoring.rightBlue = rgb[2];
+			}
 		}
 	};
 
 	HamsterS.prototype.clearLed = function(led) {
-		this.setRgb(led, 0, 0, 0);
-	};
-
-	HamsterS.prototype.setRgbArray = function(led, rgb) {
-		if(rgb) {
-			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
-		}
-	};
-
-	HamsterS.prototype.setRgb = function(led, red, green, blue) {
 		var motoring = this.motoring;
-		red = parseInt(red);
-		green = parseInt(green);
-		blue = parseInt(blue);
 		led = PARTS[led];
 		if(led == LEFT) {
-			if(typeof red == 'number') {
-				motoring.leftRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue = blue;
-			}
+			motoring.leftRed = 0;
+			motoring.leftGreen = 0;
+			motoring.leftBlue = 0;
 		} else if(led == RIGHT) {
-			if(typeof red == 'number') {
-				motoring.rightRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.rightGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.rightBlue = blue;
-			}
+			motoring.rightRed = 0;
+			motoring.rightGreen = 0;
+			motoring.rightBlue = 0;
 		} else {
-			if(typeof red == 'number') {
-				motoring.leftRed = red;
-				motoring.rightRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen = green;
-				motoring.rightGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue = blue;
-				motoring.rightBlue = blue;
-			}
-		}
-	};
-
-	HamsterS.prototype.changeRgb = function(led, red, green, blue) {
-		var motoring = this.motoring;
-		red = parseInt(red);
-		green = parseInt(green);
-		blue = parseInt(blue);
-		led = PARTS[led];
-		if(led == LEFT) {
-			if(typeof red == 'number') {
-				motoring.leftRed += red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen += green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue += blue;
-			}
-		} else if(led == RIGHT) {
-			if(typeof red == 'number') {
-				motoring.rightRed += red;
-			}
-			if(typeof green == 'number') {
-				motoring.rightGreen += green;
-			}
-			if(typeof blue == 'number') {
-				motoring.rightBlue += blue;
-			}
-		} else {
-			if(typeof red == 'number') {
-				motoring.leftRed += red;
-				motoring.rightRed += red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen += green;
-				motoring.rightGreen += green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue += blue;
-				motoring.rightBlue += blue;
-			}
+			motoring.leftRed = 0;
+			motoring.leftGreen = 0;
+			motoring.leftBlue = 0;
+			motoring.rightRed = 0;
+			motoring.rightGreen = 0;
+			motoring.rightBlue = 0;
 		}
 	};
 
 	HamsterS.prototype.beep = function(callback) {
-		this.playSoundUntil('beep', 1, callback);
-	};
-
-	HamsterS.prototype.playSound = function(sound, count) {
-		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
-
-		sound = SOUND_EFFECTS[sound];
-		count = parseInt(count);
-		motoring.buzzer = 0;
+		this.motoring.buzzer = 0;
 		this.__setNote(0);
-		if(sound && count) {
-			this.__runSound(sound, count);
-		} else {
-			this.__runSound(0);
-		}
-	};
-
-	HamsterS.prototype.playSoundUntil = function(sound, count, callback) {
-		var motoring = this.motoring;
-		this.__cancelNote();
-		this.__cancelSound();
-
-		sound = SOUND_EFFECTS[sound];
-		count = parseInt(count);
-		motoring.buzzer = 0;
-		this.__setNote(0);
-		if(sound && count) {
-			this.__runSound(sound, count);
-			this.soundCallback = callback;
-		} else {
-			this.__runSound(0);
-			callback();
-		}
+		this.__runSound(1, 1);
+		this.soundCallback = callback;
 	};
 
 	HamsterS.prototype.setBuzzer = function(hz) {
@@ -2660,10 +2541,6 @@
 	};
 
 	HamsterS.prototype.clearBuzzer = function() {
-		this.clearSound();
-	};
-
-	HamsterS.prototype.clearSound = function() {
 		this.__cancelNote();
 		this.__cancelSound();
 		this.motoring.buzzer = 0;
