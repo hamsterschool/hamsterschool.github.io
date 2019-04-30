@@ -1685,6 +1685,22 @@
 		return this.sensory.inputB;
 	};
 
+	Hamster.prototype.writeSerial = function(mode, text, callback) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.readSerialUltil = function(delimiter, callback) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.setSerialRate = function(baud) {
+		this.__cancelIo();
+	};
+
+	Hamster.prototype.getSerialInput = function() {
+		return '';
+	};
+	
 	function HamsterS(index) {
 		this.sensory = {
 			map: 0,
@@ -1756,9 +1772,18 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
+		this.serialDelimiter = 0;
+		this.serialRate = 176;
+		this.writeSerialCallbacks = [];
+		this.readSerialCallbacks = [];
+		this.serialInput = '';
+		this.freeFall = false;
+		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
+		this.writeQueue = new WriteQueue(64);
+		this.readQueue = new ReadQueue(64);
 		this.timeouts = [];
 	}
 	
@@ -1807,11 +1832,20 @@
 		this.noteTimer2 = undefined;
 		this.ioId = 0;
 		this.ioTimer = undefined;
+		this.serialDelimiter = 0;
+		this.serialRate = 176;
+		this.writeSerialCallbacks = [];
+		this.readSerialCallbacks = [];
+		this.serialInput = '';
+		this.freeFall = false;
+		this.tap = false;
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
 
 		this.__removeAllTimeouts();
+		this.writeQueue.reset();
+		this.readQueue.reset();
 	};
 	
 	HamsterS.prototype.__removeTimeout = function(id) {
@@ -1828,6 +1862,22 @@
 			clearTimeout(timeouts[i]);
 		}
 		this.timeouts = [];
+	};
+
+	HamsterS.prototype.__fireWriteSerialCallbacks = function() {
+		var callbacks = this.writeSerialCallbacks;
+		for(var i in callbacks) {
+			callbacks[i]();
+		}
+		this.writeSerialCallbacks = [];
+	};
+
+	HamsterS.prototype.__fireReadSerialCallbacks = function() {
+		var callbacks = this.readSerialCallbacks;
+		for(var i in callbacks) {
+			callbacks[i]();
+		}
+		this.readSerialCallbacks = [];
 	};
 
 	HamsterS.prototype.clearMotoring = function() {
@@ -1949,9 +1999,20 @@
 		this.ioTimer = undefined;
 	};
 
+	HamsterS.prototype.__setSerial = function(arr) {
+		var motoring = this.motoring;
+		if(motoring.serial == undefined) motoring.serial = new Array(19);
+		for(var i = 0; i < 19; ++i) {
+			motoring.serial[i] = arr[i];
+		}
+		motoring.map2 |= 0x04000000;
+	};
+
 	HamsterS.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
+		if(sensory.map2 & 0x00008000) self.freeFall = true;
+		if(sensory.map2 & 0x00004000) self.tap = true;
 
 		if(self.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
@@ -2108,6 +2169,57 @@
 						break;
 					}
 				}
+			}
+		}
+		if(self.motionCallback && (sensory.map2 & 0x00000800) != 0) {
+			if(sensory.wheelState == 2) {
+				self.motoring.leftWheel = 0;
+				self.motoring.rightWheel = 0;
+				var callback = self.motionCallback;
+				self.__cancelMotion();
+				if(callback) callback();
+			}
+		}
+		if((sensory.map2 & 0x00000400) != 0) {
+			if(sensory.soundState == 0) {
+				if(self.currentSound > 0) {
+					if(self.soundRepeat < 0) {
+						self.__runSound(self.currentSound, -1);
+					} else if(self.soundRepeat > 1) {
+						self.soundRepeat --;
+						self.__runSound(self.currentSound, self.soundRepeat);
+					} else {
+						self.currentSound = 0;
+						self.soundRepeat = 1;
+						var callback = self.soundCallback;
+						self.__cancelSound();
+						if(callback) callback();
+					}
+				} else {
+					self.currentSound = 0;
+					self.soundRepeat = 1;
+					var callback = self.soundCallback;
+					self.__cancelSound();
+					if(callback) callback();
+				}
+			}
+		}
+		if(sensory.map2 & 0x00002000) {
+			if(sensory.serial) self.readQueue.push(sensory.serial);
+		}
+		if(sensory.map2 & 0x00000200) {
+			var tmp = self.writeQueue.pop();
+			if(tmp) {
+				self.__setSerial(tmp);
+			} else {
+				self.__fireWriteSerialCallbacks();
+			}
+		}
+		if(self.readSerialCallbacks.length > 0) {
+			var tmp = self.readQueue.pop(self.serialDelimiter);
+			if(tmp) {
+				self.serialInput = tmp;
+				self.__fireReadSerialCallbacks();
 			}
 		}
 	};
@@ -2888,6 +3000,47 @@
 
 	HamsterS.prototype.getInputB = function() {
 		return this.sensory.inputB;
+	};
+
+	HamsterS.prototype.writeSerial = function(mode, text, callback) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		this.__setIoModeA(this.serialRate);
+		this.__setIoModeB(this.serialRate);
+		var queue = this.writeQueue;
+		queue.push(text, SERIAL_MODES[mode] != SERIAL_STRING);
+		var data = queue.pop();
+		if(data) {
+			this.writeSerialCallbacks.push(callback);
+			this.__setSerial(data);
+		}
+	};
+
+	HamsterS.prototype.readSerialUltil = function(delimiter, callback) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		this.__setIoModeA(this.serialRate);
+		this.__setIoModeB(this.serialRate);
+		delimiter = SERIAL_DELIMITERS[delimiter];
+		if(typeof delimiter == 'number') {
+			this.serialDelimiter = delimiter;
+			this.readSerialCallbacks.push(callback);
+		}
+	};
+
+	HamsterS.prototype.setSerialRate = function(baud) {
+		var motoring = this.motoring;
+		this.__cancelIo();
+		baud = SERIAL_BAUDS[baud];
+		if(baud && baud > 0) {
+			this.serialRate = baud;
+			this.__setIoModeA(baud);
+			this.__setIoModeB(baud);
+		}
+	};
+
+	HamsterS.prototype.getSerialInput = function() {
+		return this.serialInput;
 	};
 
 	function getOrCreateRobot(group, module, index) {
