@@ -1305,9 +1305,6 @@
 		}
 	};
 	
-	Hamster.prototype.setLineTracerGain = function(gain) {
-	};
-
 	Hamster.prototype.stop = function() {
 		var motoring = this.motoring;
 		this.__cancelBoard();
@@ -2424,29 +2421,13 @@
 
 	HamsterS.prototype.setLineTracerSpeed = function(speed) {
 		speed = parseInt(speed);
-		var gain = this.gain;
-		if(gain < 0) gain = SPEED2GAINS[speed];
+		var gain = SPEED2GAINS[speed];
 		if(speed && gain && speed > 0 && gain > 0) {
-			this.speed = speed;
 			this.__setLineTracerSpeed(speed);
 			this.__setLineTracerGain(gain);
 		}
 	};
 	
-	HamsterS.prototype.setLineTracerGain = function(gain) {
-		gain = parseInt(gain);
-		if(gain && gain > 0) {
-			this.gain = gain;
-			this.__setLineTracerGain(gain);
-		} else {
-			this.gain = -1;
-			gain = SPEED2GAINS[this.speed];
-			if(gain && gain > 0) {
-				this.__setLineTracerGain(gain);
-			}
-		}
-	};
-
 	HamsterS.prototype.stop = function() {
 		var motoring = this.motoring;
 		this.__cancelBoard();
