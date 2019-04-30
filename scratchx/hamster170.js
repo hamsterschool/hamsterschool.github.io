@@ -412,10 +412,7 @@
 			"battery": ["normal", "low", "empty"],
 			"port": ["A", "B", "A and B"],
 			"mode": ["analog input", "digital input", "servo output", "pwm output", "digital output"],
-			"open_close": ["open", "close"],
-			"forward_backward": ["forward", "backward"],
-			"move_unit": ["cm", "seconds", "pulses"],
-			"sound": ["beep", "random beep", "siren", "engine", "robot", "march", "birthday", "dibidibidip", "good job"]
+			"open_close": ["open", "close"]
 		},
 		ko: {
 			"left_right": ["왼쪽", "오른쪽"],
@@ -432,10 +429,7 @@
 			"battery": ["정상", "부족", "없음"],
 			"port": ["A", "B", "A와 B"],
 			"mode": ["아날로그 입력", "디지털 입력", "서보 출력", "PWM 출력", "디지털 출력"],
-			"open_close": ["열기", "닫기"],
-			"forward_backward": ["앞쪽", "뒤쪽"],
-			"move_unit": ["cm", "초", "펄스"],
-			"sound": ["삐", "무작위 삐", "사이렌", "엔진", "로봇", "행진", "생일", "디비디비딥", "잘 했어요"]
+			"open_close": ["열기", "닫기"]
 		},
 		ja: {
 			"left_right": ["左", "右"],
@@ -452,10 +446,7 @@
 			"battery": ["正常か", "足りないか", "ないか"],
 			"port": ["A", "B", "AとB"],
 			"mode": ["アナログ入力", "デジタル入力", "サーボ出力", "PWM出力", "デジタル出力"],
-			"open_close": ["開く", "閉める"],
-			"forward_backward": ["前", "後"],
-			"move_unit": ["cm", "秒", "パルス"],
-			"sound": ["ビープ", "ランダムビープ", "サイレン", "エンジン", "ロボット", "行進", "誕生", "ディバディバディップ", "よくやった"]
+			"open_close": ["開く", "閉める"]
 		},
 		uz: {
 			"left_right": ["chap", "o'ng"],
@@ -472,10 +463,7 @@
 			"battery": ["normal", "past", "bo'sh"],
 			"port": ["A", "B", "A va B"],
 			"mode": ["analog kiritish", "raqamli kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
-			"open_close": ["oching", "yoping"],
-			"forward_backward": ["old", "orqa"],
-			"move_unit": ["cm", "soniya", "puls"],
-			"sound": ["qisqa", "tasodifiy qisqa", "sirena", "motor", "robot", "marsh", "tug'ilgan kun", "dibidibidip", "juda yaxshi"]
+			"open_close": ["oching", "yoping"]
 		}
 	};
 	
@@ -496,6 +484,7 @@
 	var PARTS = {};
 	var DIRECTIONS = {};
 	var COLORS = {};
+	var RGB_COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var IO_MODES = {};
@@ -530,7 +519,6 @@
 		DIRECTIONS[tmp[1]] = RIGHT;
 		DIRECTIONS[tmp[2]] = FRONT;
 		DIRECTIONS[tmp[3]] = REAR;
-		tmp = MENUS[i]['forward_backward'];
 		tmp = MENUS[i]['color'];
 		COLORS[tmp[0]] = 4; // red
 		COLORS[tmp[1]] = 6; // yellow
@@ -539,6 +527,13 @@
 		COLORS[tmp[4]] = 1; // blue
 		COLORS[tmp[5]] = 5; // purple
 		COLORS[tmp[6]] = 7; // white
+		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
+		RGB_COLORS[tmp[1]] = [255, 255, 0]; // yellow
+		RGB_COLORS[tmp[2]] = [0, 255, 0]; // green
+		RGB_COLORS[tmp[3]] = [0, 255, 255]; // sky blue
+		RGB_COLORS[tmp[4]] = [0, 0, 255]; // blue
+		RGB_COLORS[tmp[5]] = [255, 0, 255]; // purple
+		RGB_COLORS[tmp[6]] = [255, 255, 255]; // white
 		tmp = MENUS[i]['note'];
 		NOTES[tmp[0]] = 4;
 		NOTES[tmp[1]] = 5;
@@ -552,7 +547,6 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound'];
 		tmp = MENUS[i]['mode'];
 		IO_MODES[tmp[0]] = 0; // analog input
 		IO_MODES[tmp[1]] = 1; // digital input
@@ -1042,6 +1036,151 @@
 		}
 	};
 	
+	Hamster.prototype.__stopMotion = function() {
+		var motoring = this.motoring;
+		this.__cancelBoard();
+		this.__cancelWheel();
+		this.__cancelLineTracer();
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		motoring.motion = 0;
+		this.__setLineTracerMode(0);
+	};
+
+	Hamster.prototype.moveForwardUnit = function(value, unit, callback) {
+		if(UNITS[unit] == SECONDS) {
+			this.moveForwardSecs(value, callback);
+		} else {
+			this.__stopMotion();
+		}
+	};
+
+	Hamster.prototype.moveBackwardUnit = function(value, unit, callback) {
+		if(UNITS[unit] == SECONDS) {
+			this.moveBackwardSecs(value, callback);
+		} else {
+			this.__stopMotion();
+		}
+	};
+
+	Hamster.prototype.turnUnit = function(direction, value, unit, callback) {
+		if(UNITS[unit] == SECONDS) {
+			this.turnSecs(direction, value, callback);
+		} else {
+			this.__stopMotion();
+		}
+	};
+
+	Hamster.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
+		if(UNITS[unit] == SECONDS) {
+			if(PARTS[wheel] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) {
+					this.__motion(5, 0, 30, value, callback);
+				} else {
+					this.__motion(6, 0, -30, value, callback);
+				}
+			} else {
+				if(TOWARDS[toward] == FORWARD) {
+					this.__motion(7, 30, 0, value, callback);
+				} else {
+					this.__motion(8, -30, 0, value, callback);
+				}
+			}
+		} else {
+			this.__stopMotion();
+		}
+	};
+
+	Hamster.prototype.swingUnit = function(wheel, value, unit, radius, toward, callback) {
+		if(UNITS[unit] == SECONDS) {
+			radius = parseFloat(radius);
+			if((typeof radius == 'number') && radius >= 0) {
+				this.motoring.radius = radius;
+				if(DIRECTIONS[wheel] == LEFT) {
+					if(TOWARDS[toward] == FORWARD) {
+						this.__motion(9, 0, 0, value, callback);
+					} else {
+						this.__motion(10, 0, 0, value, callback);
+					}
+				} else {
+					if(TOWARDS[toward] == FORWARD) {
+						this.__motion(11, 0, 0, value, callback);
+					} else {
+						this.__motion(12, 0, 0, value, callback);
+					}
+				}
+			} else {
+				this.__stopMotion();
+				callback();
+			}
+		} else {
+			this.__stopMotion();
+		}
+	};
+
+	Hamster.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
+		if(UNITS[unit] == SECONDS) {
+			if(PARTS[pen] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) {
+					this.__motion(13, 0, 0, value, callback);
+				} else {
+					this.__motion(14, 0, 0, value, callback);
+				}
+			} else {
+				if(TOWARDS[toward] == FORWARD) {
+					this.__motion(15, 0, 0, value, callback);
+				} else {
+					this.__motion(16, 0, 0, value, callback);
+				}
+			}
+		} else {
+			this.__stopMotion();
+		}
+	};
+	
+	Hamster.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+		if(UNITS[unit] == SECONDS) {
+			radius = parseFloat(radius);
+			if((typeof radius == 'number') && radius >= 0) {
+				this.motoring.radius = radius;
+				if(PARTS[pen] == LEFT) {
+					if(DIRECTIONS[direction] == LEFT) {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(17, 0, 0, value, callback);
+						} else {
+							this.__motion(18, 0, 0, value, callback);
+						}
+					} else {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(19, 0, 0, value, callback);
+						} else {
+							this.__motion(20, 0, 0, value, callback);
+						}
+					}
+				} else {
+					if(DIRECTIONS[direction] == LEFT) {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(21, 0, 0, value, callback);
+						} else {
+							this.__motion(22, 0, 0, value, callback);
+						}
+					} else {
+						if(TOWARDS[toward] == FORWARD) {
+							this.__motion(23, 0, 0, value, callback);
+						} else {
+							this.__motion(24, 0, 0, value, callback);
+						}
+					}
+				}
+			} else {
+				this.__stopMotion();
+				callback();
+			}
+		} else {
+			this.__stopMotion();
+		}
+	};
+
 	Hamster.prototype.setWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
 		this.__cancelBoard();
@@ -1166,6 +1305,9 @@
 		}
 	};
 	
+	Hamster.prototype.setLineTracerGain = function(gain) {
+	};
+
 	Hamster.prototype.stop = function() {
 		var motoring = this.motoring;
 		this.__cancelBoard();
@@ -1589,8 +1731,6 @@
 		this.ioId = 0;
 		this.ioTimer = undefined;
 		this.tempo = 60;
-		this.speed = 5;
-		this.gain = -1;
 		this.timeouts = [];
 	}
 	
@@ -1640,8 +1780,6 @@
 		this.ioId = 0;
 		this.ioTimer = undefined;
 		this.tempo = 60;
-		this.speed = 5;
-		this.gain = -1;
 
 		this.__removeAllTimeouts();
 	};
@@ -1668,8 +1806,6 @@
 	};
 
 	HamsterS.prototype.clearEvent = function() {
-		this.freeFall = false;
-		this.tap = false;
 	};
 
 	HamsterS.prototype.__setPulse = function(pulse) {
@@ -2093,6 +2229,76 @@
 		}
 	};
 
+	HamsterS.prototype.moveForwardUnit = function(value, unit, callback) {
+		this.__motionUnit(1, UNITS[unit], value, callback);
+	};
+
+	HamsterS.prototype.moveBackwardUnit = function(value, unit, callback) {
+		this.__motionUnit(2, UNITS[unit], value, callback);
+	};
+
+	HamsterS.prototype.turnUnit = function(direction, value, unit, callback) {
+		if(DIRECTIONS[direction] == LEFT) {
+			this.__motionUnit(3, UNITS[unit], value, callback);
+		} else {
+			this.__motionUnit(4, UNITS[unit], value, callback);
+		}
+	};
+
+	HamsterS.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
+		unit = UNITS[unit];
+		if(PARTS[wheel] == LEFT) {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnit(5, unit, value, callback);
+			else this.__motionUnit(6, unit, value, callback);
+		} else {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnit(7, unit, value, callback);
+			else this.__motionUnit(8, unit, value, callback);
+		}
+	};
+
+	HamsterS.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
+		unit = UNITS[unit];
+		if(DIRECTIONS[direction] == LEFT) {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(9, unit, value, radius, callback);
+			else this.__motionUnitRadius(10, unit, value, radius, callback);
+		} else {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(11, unit, value, radius, callback);
+			else this.__motionUnitRadius(12, unit, value, radius, callback);
+		}
+	};
+
+	HamsterS.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
+		unit = UNITS[unit];
+		if(PARTS[pen] == LEFT) {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnit(13, unit, value, callback);
+			else this.__motionUnit(14, unit, value, callback);
+		} else {
+			if(TOWARDS[toward] == FORWARD) this.__motionUnit(15, unit, value, callback);
+			else this.__motionUnit(16, unit, value, callback);
+		}
+	};
+	
+	HamsterS.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+		unit = UNITS[unit];
+		if(PARTS[pen] == LEFT) {
+			if(DIRECTIONS[direction] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(17, unit, value, radius, callback);
+				else this.__motionUnitRadius(18, unit, value, radius, callback);
+			} else {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(19, unit, value, radius, callback);
+				else this.__motionUnitRadius(20, unit, value, radius, callback);
+			}
+		} else {
+			if(DIRECTIONS[direction] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(21, unit, value, radius, callback);
+				else this.__motionUnitRadius(22, unit, value, radius, callback);
+			} else {
+				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(23, unit, value, radius, callback);
+				else this.__motionUnitRadius(24, unit, value, radius, callback);
+			}
+		}
+	};
+
 	HamsterS.prototype.setWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
 		this.__cancelBoard();
@@ -2218,13 +2424,29 @@
 
 	HamsterS.prototype.setLineTracerSpeed = function(speed) {
 		speed = parseInt(speed);
-		var gain = SPEED2GAINS[speed];
+		var gain = this.gain;
+		if(gain < 0) gain = SPEED2GAINS[speed];
 		if(speed && gain && speed > 0 && gain > 0) {
+			this.speed = speed;
 			this.__setLineTracerSpeed(speed);
 			this.__setLineTracerGain(gain);
 		}
 	};
 	
+	HamsterS.prototype.setLineTracerGain = function(gain) {
+		gain = parseInt(gain);
+		if(gain && gain > 0) {
+			this.gain = gain;
+			this.__setLineTracerGain(gain);
+		} else {
+			this.gain = -1;
+			gain = SPEED2GAINS[this.speed];
+			if(gain && gain > 0) {
+				this.__setLineTracerGain(gain);
+			}
+		}
+	};
+
 	HamsterS.prototype.stop = function() {
 		var motoring = this.motoring;
 		this.__cancelBoard();
@@ -2241,62 +2463,52 @@
 	HamsterS.prototype.setLed = function(led, color) {
 		var rgb = RGB_COLORS[color];
 		if(rgb) {
-			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
+			var motoring = this.motoring;
+			led = PARTS[led];
+			if(led == LEFT) {
+				motoring.leftRed = rgb[0];
+				motoring.leftGreen = rgb[1];
+				motoring.leftBlue = rgb[2];
+			} else if(led == RIGHT) {
+				motoring.rightRed = rgb[0];
+				motoring.rightGreen = rgb[1];
+				motoring.rightBlue = rgb[2];
+			} else {
+				motoring.leftRed = rgb[0];
+				motoring.leftGreen = rgb[1];
+				motoring.leftBlue = rgb[2];
+				motoring.rightRed = rgb[0];
+				motoring.rightGreen = rgb[1];
+				motoring.rightBlue = rgb[2];
+			}
 		}
 	};
 
 	HamsterS.prototype.clearLed = function(led) {
-		this.setRgb(led, 0, 0, 0);
-	};
-
-	HamsterS.prototype.setRgb = function(led, red, green, blue) {
 		var motoring = this.motoring;
-		red = parseInt(red);
-		green = parseInt(green);
-		blue = parseInt(blue);
 		led = PARTS[led];
 		if(led == LEFT) {
-			if(typeof red == 'number') {
-				motoring.leftRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue = blue;
-			}
+			motoring.leftRed = 0;
+			motoring.leftGreen = 0;
+			motoring.leftBlue = 0;
 		} else if(led == RIGHT) {
-			if(typeof red == 'number') {
-				motoring.rightRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.rightGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.rightBlue = blue;
-			}
+			motoring.rightRed = 0;
+			motoring.rightGreen = 0;
+			motoring.rightBlue = 0;
 		} else {
-			if(typeof red == 'number') {
-				motoring.leftRed = red;
-				motoring.rightRed = red;
-			}
-			if(typeof green == 'number') {
-				motoring.leftGreen = green;
-				motoring.rightGreen = green;
-			}
-			if(typeof blue == 'number') {
-				motoring.leftBlue = blue;
-				motoring.rightBlue = blue;
-			}
+			motoring.leftRed = 0;
+			motoring.leftGreen = 0;
+			motoring.leftBlue = 0;
+			motoring.rightRed = 0;
+			motoring.rightGreen = 0;
+			motoring.rightBlue = 0;
 		}
 	};
 
 	HamsterS.prototype.beep = function(callback) {
-		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
-
-		motoring.buzzer = 0;
+		this.motoring.buzzer = 0;
 		this.__setNote(0);
 		this.__runSound(1, 1);
 		this.soundCallback = callback;
@@ -2715,7 +2927,7 @@
 			socket = undefined;
 		}
 	}
-	
+
 	ext.boardMoveForward = function(callback) {
 		var robot = getRobot(HAMSTER, 0);
 		if(robot) robot.boardForward(callback);
