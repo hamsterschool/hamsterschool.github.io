@@ -992,40 +992,64 @@
 	};
 
 	Turtle.prototype.moveForwardUnit = function(value, unit, callback) {
-		this.__motionUnit(1, UNITS[unit], value, callback);
+		if(value < 0) this.__motionUnit(2, UNITS[unit], -value, callback);
+		else this.__motionUnit(1, UNITS[unit], value, callback);
 	};
 
 	Turtle.prototype.moveBackwardUnit = function(value, unit, callback) {
-		this.__motionUnit(2, UNITS[unit], value, callback);
+		if(value < 0) this.__motionUnit(1, UNITS[unit], -value, callback);
+		else this.__motionUnit(2, UNITS[unit], value, callback);
 	};
 
 	Turtle.prototype.turnUnit = function(direction, value, unit, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
-			this.__motionUnit(3, UNITS[unit], value, callback);
+			if(value < 0) this.__motionUnit(4, UNITS[unit], -value, callback);
+			else this.__motionUnit(3, UNITS[unit], value, callback);
 		} else {
-			this.__motionUnit(4, UNITS[unit], value, callback);
+			if(value < 0) this.__motionUnit(3, UNITS[unit], -value, callback);
+			else this.__motionUnit(4, UNITS[unit], value, callback);
 		}
 	};
 
 	Turtle.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[wheel] == LEFT) {
-			if(TOWARDS[toward] == HEAD) this.__motionUnit(5, unit, value, callback);
-			else this.__motionUnit(6, unit, value, callback);
+			if(TOWARDS[toward] == HEAD) {
+				if(value < 0) this.__motionUnit(6, unit, -value, callback);
+				else this.__motionUnit(5, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(5, unit, -value, callback);
+				else this.__motionUnit(6, unit, value, callback);
+			}
 		} else {
-			if(TOWARDS[toward] == HEAD) this.__motionUnit(7, unit, value, callback);
-			else this.__motionUnit(8, unit, value, callback);
+			if(TOWARDS[toward] == HEAD) {
+				if(value < 0) this.__motionUnit(8, unit, -value, callback);
+				else this.__motionUnit(7, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(7, unit, -value, callback);
+				else this.__motionUnit(8, unit, value, callback);
+			}
 		}
 	};
 
 	Turtle.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
 		unit = UNITS[unit];
 		if(DIRECTIONS[direction] == LEFT) {
-			if(TOWARDS[toward] == HEAD) this.__motionUnitRadius(9, unit, value, radius, callback);
-			else this.__motionUnitRadius(10, unit, value, radius, callback);
+			if(TOWARDS[toward] == HEAD) {
+				if(value < 0) this.__motionUnitRadius(10, unit, -value, radius, callback);
+				else this.__motionUnitRadius(9, unit, value, radius, callback);
+			} else {
+				if(value < 0) this.__motionUnitRadius(9, unit, -value, radius, callback);
+				else this.__motionUnitRadius(10, unit, value, radius, callback);
+			}
 		} else {
-			if(TOWARDS[toward] == HEAD) this.__motionUnitRadius(11, unit, value, radius, callback);
-			else this.__motionUnitRadius(12, unit, value, radius, callback);
+			if(TOWARDS[toward] == HEAD) {
+				if(value < 0) this.__motionUnitRadius(12, unit, -value, radius, callback);
+				else this.__motionUnitRadius(11, unit, value, radius, callback);
+			} else {
+				if(value < 0) this.__motionUnitRadius(11, unit, -value, radius, callback);
+				else this.__motionUnitRadius(12, unit, value, radius, callback);
+			}
 		}
 	};
 
