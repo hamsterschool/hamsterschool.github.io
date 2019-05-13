@@ -1338,18 +1338,22 @@
 	};
 
 	Hamster.prototype.moveForwardSecs = function(secs, callback) {
-		this.__motion(1, 30, 30, secs, callback);
+		if(secs < 0) this.__motion(2, -30, -30, -secs, callback);
+		else this.__motion(1, 30, 30, secs, callback);
 	};
 
 	Hamster.prototype.moveBackwardSecs = function(secs, callback) {
-		this.__motion(2, -30, -30, secs, callback);
+		if(secs < 0) this.__motion(1, 30, 30, -secs, callback);
+		else this.__motion(2, -30, -30, secs, callback);
 	};
 
 	Hamster.prototype.turnSecs = function(direction, secs, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
-			this.__motion(3, -30, 30, secs, callback);
+			if(secs < 0) this.__motion(4, 30, -30, -secs, callback);
+			else this.__motion(3, -30, 30, secs, callback);
 		} else {
-			this.__motion(4, 30, -30, secs, callback);
+			if(secs < 0) this.__motion(3, -30, 30, -secs, callback);
+			else this.__motion(4, 30, -30, secs, callback);
 		}
 	};
 	
@@ -1392,15 +1396,19 @@
 		if(UNITS[unit] == SECONDS) {
 			if(PARTS[wheel] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(5, 0, 30, value, callback);
+					if(value < 0) this.__motion(6, 0, -30, -value, callback);
+					else this.__motion(5, 0, 30, value, callback);
 				} else {
-					this.__motion(6, 0, -30, value, callback);
+					if(value < 0) this.__motion(5, 0, 30, -value, callback);
+					else this.__motion(6, 0, -30, value, callback);
 				}
 			} else {
 				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(7, 30, 0, value, callback);
+					if(value < 0) this.__motion(8, -30, 0, -value, callback);
+					else this.__motion(7, 30, 0, value, callback);
 				} else {
-					this.__motion(8, -30, 0, value, callback);
+					if(value < 0) this.__motion(7, 30, 0, -value, callback);
+					else this.__motion(8, -30, 0, value, callback);
 				}
 			}
 		} else {
@@ -1415,15 +1423,19 @@
 				this.motoring.radius = radius;
 				if(DIRECTIONS[wheel] == LEFT) {
 					if(TOWARDS[toward] == FORWARD) {
-						this.__motion(9, 0, 0, value, callback);
+						if(value < 0) this.__motion(10, 0, 0, -value, callback);
+						else this.__motion(9, 0, 0, value, callback);
 					} else {
-						this.__motion(10, 0, 0, value, callback);
+						if(value < 0) this.__motion(9, 0, 0, -value, callback);
+						else this.__motion(10, 0, 0, value, callback);
 					}
 				} else {
 					if(TOWARDS[toward] == FORWARD) {
-						this.__motion(11, 0, 0, value, callback);
+						if(value < 0) this.__motion(12, 0, 0, -value, callback);
+						else this.__motion(11, 0, 0, value, callback);
 					} else {
-						this.__motion(12, 0, 0, value, callback);
+						if(value < 0) this.__motion(11, 0, 0, -value, callback);
+						else this.__motion(12, 0, 0, value, callback);
 					}
 				}
 			} else {
@@ -1439,15 +1451,19 @@
 		if(UNITS[unit] == SECONDS) {
 			if(PARTS[pen] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(13, 0, 0, value, callback);
+					if(value < 0) this.__motion(14, 0, 0, -value, callback);
+					else this.__motion(13, 0, 0, value, callback);
 				} else {
-					this.__motion(14, 0, 0, value, callback);
+					if(value < 0) this.__motion(13, 0, 0, -value, callback);
+					else this.__motion(14, 0, 0, value, callback);
 				}
 			} else {
 				if(TOWARDS[toward] == FORWARD) {
-					this.__motion(15, 0, 0, value, callback);
+					if(value < 0) this.__motion(16, 0, 0, -value, callback);
+					else this.__motion(15, 0, 0, value, callback);
 				} else {
-					this.__motion(16, 0, 0, value, callback);
+					if(value < 0) this.__motion(15, 0, 0, -value, callback);
+					else this.__motion(16, 0, 0, value, callback);
 				}
 			}
 		} else {
@@ -1463,29 +1479,37 @@
 				if(PARTS[pen] == LEFT) {
 					if(DIRECTIONS[direction] == LEFT) {
 						if(TOWARDS[toward] == FORWARD) {
-							this.__motion(17, 0, 0, value, callback);
+							if(value < 0) this.__motion(18, 0, 0, -value, callback);
+							else this.__motion(17, 0, 0, value, callback);
 						} else {
-							this.__motion(18, 0, 0, value, callback);
+							if(value < 0) this.__motion(17, 0, 0, -value, callback);
+							else this.__motion(18, 0, 0, value, callback);
 						}
 					} else {
 						if(TOWARDS[toward] == FORWARD) {
-							this.__motion(19, 0, 0, value, callback);
+							if(value < 0) this.__motion(20, 0, 0, -value, callback);
+							else this.__motion(19, 0, 0, value, callback);
 						} else {
-							this.__motion(20, 0, 0, value, callback);
+							if(value < 0) this.__motion(19, 0, 0, -value, callback);
+							else this.__motion(20, 0, 0, value, callback);
 						}
 					}
 				} else {
 					if(DIRECTIONS[direction] == LEFT) {
 						if(TOWARDS[toward] == FORWARD) {
-							this.__motion(21, 0, 0, value, callback);
+							if(value < 0) this.__motion(22, 0, 0, -value, callback);
+							else this.__motion(21, 0, 0, value, callback);
 						} else {
-							this.__motion(22, 0, 0, value, callback);
+							if(value < 0) this.__motion(21, 0, 0, -value, callback);
+							else this.__motion(22, 0, 0, value, callback);
 						}
 					} else {
 						if(TOWARDS[toward] == FORWARD) {
-							this.__motion(23, 0, 0, value, callback);
+							if(value < 0) this.__motion(24, 0, 0, -value, callback);
+							else this.__motion(23, 0, 0, value, callback);
 						} else {
-							this.__motion(24, 0, 0, value, callback);
+							if(value < 0) this.__motion(23, 0, 0, -value, callback);
+							else this.__motion(24, 0, 0, value, callback);
 						}
 					}
 				}
@@ -1727,9 +1751,13 @@
 		this.motoring.buzzer = 0;
 		this.__setNote(0);
 		count = parseInt(count);
-		if(SOUND_EFFECTS[sound] == 1 && count) {
-			var id = this.__issueNoteId();
-			this.runBeep(count, id, callback);
+		if(count) {
+			if(SOUND_EFFECTS[sound] == 1) {
+				var id = this.__issueNoteId();
+				this.runBeep(count, id, callback);
+			}
+		} else {
+			callback();
 		}
 	};
 
@@ -2650,67 +2678,105 @@
 	};
 
 	HamsterS.prototype.moveForwardSecs = function(secs, callback) {
-		this.__motionUnit(1, 2, secs, callback);
+		if(secs < 0) this.__motionUnit(2, 2, -secs, callback);
+		else this.__motionUnit(1, 2, secs, callback);
 	};
 
 	HamsterS.prototype.moveBackwardSecs = function(secs, callback) {
-		this.__motionUnit(2, 2, secs, callback);
+		if(secs < 0) this.__motionUnit(1, 2, -secs, callback);
+		else this.__motionUnit(2, 2, secs, callback);
 	};
 
 	HamsterS.prototype.turnSecs = function(direction, secs, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
-			this.__motionUnit(3, 2, secs, callback);
+			if(secs < 0) this.__motionUnit(4, 2, -secs, callback);
+			else this.__motionUnit(3, 2, secs, callback);
 		} else {
-			this.__motionUnit(4, 2, secs, callback);
+			if(secs < 0) this.__motionUnit(3, 2, -secs, callback);
+			else this.__motionUnit(4, 2, secs, callback);
 		}
 	};
 
 	HamsterS.prototype.moveForwardUnit = function(value, unit, callback) {
-		this.__motionUnit(1, UNITS[unit], value, callback);
+		if(value < 0) this.__motionUnit(2, UNITS[unit], -value, callback);
+		else this.__motionUnit(1, UNITS[unit], value, callback);
 	};
 
 	HamsterS.prototype.moveBackwardUnit = function(value, unit, callback) {
-		this.__motionUnit(2, UNITS[unit], value, callback);
+		if(value < 0) this.__motionUnit(1, UNITS[unit], -value, callback);
+		else this.__motionUnit(2, UNITS[unit], value, callback);
 	};
 
 	HamsterS.prototype.turnUnit = function(direction, value, unit, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
-			this.__motionUnit(3, UNITS[unit], value, callback);
+			if(value < 0) this.__motionUnit(4, UNITS[unit], -value, callback);
+			else this.__motionUnit(3, UNITS[unit], value, callback);
 		} else {
-			this.__motionUnit(4, UNITS[unit], value, callback);
+			if(value < 0) this.__motionUnit(3, UNITS[unit], -value, callback);
+			else this.__motionUnit(4, UNITS[unit], value, callback);
 		}
 	};
 
 	HamsterS.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[wheel] == LEFT) {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnit(5, unit, value, callback);
-			else this.__motionUnit(6, unit, value, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(6, unit, -value, callback);
+				else this.__motionUnit(5, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(5, unit, -value, callback);
+				else this.__motionUnit(6, unit, value, callback);
+			}
 		} else {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnit(7, unit, value, callback);
-			else this.__motionUnit(8, unit, value, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(8, unit, -value, callback);
+				else this.__motionUnit(7, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(7, unit, -value, callback);
+				else this.__motionUnit(8, unit, value, callback);
+			}
 		}
 	};
 
 	HamsterS.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
 		unit = UNITS[unit];
 		if(DIRECTIONS[direction] == LEFT) {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(9, unit, value, radius, callback);
-			else this.__motionUnitRadius(10, unit, value, radius, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnitRadius(10, unit, -value, radius, callback);
+				else this.__motionUnitRadius(9, unit, value, radius, callback);
+			} else {
+				if(value < 0) this.__motionUnitRadius(9, unit, -value, radius, callback);
+				else this.__motionUnitRadius(10, unit, value, radius, callback);
+			}
 		} else {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(11, unit, value, radius, callback);
-			else this.__motionUnitRadius(12, unit, value, radius, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnitRadius(12, unit, -value, radius, callback);
+				else this.__motionUnitRadius(11, unit, value, radius, callback);
+			} else {
+				if(value < 0) this.__motionUnitRadius(11, unit, -value, radius, callback);
+				else this.__motionUnitRadius(12, unit, value, radius, callback);
+			}
 		}
 	};
 
 	HamsterS.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[pen] == LEFT) {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnit(13, unit, value, callback);
-			else this.__motionUnit(14, unit, value, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(14, unit, -value, callback);
+				else this.__motionUnit(13, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(13, unit, -value, callback);
+				else this.__motionUnit(14, unit, value, callback);
+			}
 		} else {
-			if(TOWARDS[toward] == FORWARD) this.__motionUnit(15, unit, value, callback);
-			else this.__motionUnit(16, unit, value, callback);
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(16, unit, -value, callback);
+				else this.__motionUnit(15, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(15, unit, -value, callback);
+				else this.__motionUnit(16, unit, value, callback);
+			}
 		}
 	};
 	
@@ -2718,19 +2784,39 @@
 		unit = UNITS[unit];
 		if(PARTS[pen] == LEFT) {
 			if(DIRECTIONS[direction] == LEFT) {
-				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(17, unit, value, radius, callback);
-				else this.__motionUnitRadius(18, unit, value, radius, callback);
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(18, unit, -value, radius, callback);
+					else this.__motionUnitRadius(17, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(17, unit, -value, radius, callback);
+					else this.__motionUnitRadius(18, unit, value, radius, callback);
+				}
 			} else {
-				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(19, unit, value, radius, callback);
-				else this.__motionUnitRadius(20, unit, value, radius, callback);
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(20, unit, -value, radius, callback);
+					else this.__motionUnitRadius(19, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(19, unit, -value, radius, callback);
+					else this.__motionUnitRadius(20, unit, value, radius, callback);
+				}
 			}
 		} else {
 			if(DIRECTIONS[direction] == LEFT) {
-				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(21, unit, value, radius, callback);
-				else this.__motionUnitRadius(22, unit, value, radius, callback);
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(22, unit, -value, radius, callback);
+					else this.__motionUnitRadius(21, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(21, unit, -value, radius, callback);
+					else this.__motionUnitRadius(22, unit, value, radius, callback);
+				}
 			} else {
-				if(TOWARDS[toward] == FORWARD) this.__motionUnitRadius(23, unit, value, radius, callback);
-				else this.__motionUnitRadius(24, unit, value, radius, callback);
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(24, unit, -value, radius, callback);
+					else this.__motionUnitRadius(23, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(23, unit, -value, radius, callback);
+					else this.__motionUnitRadius(24, unit, value, radius, callback);
+				}
 			}
 		}
 	};
