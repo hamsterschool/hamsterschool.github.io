@@ -55,8 +55,8 @@
 			["w", "move forward %n %m.cm_sec", "sMoveForwardUnit", 5, "cm"],
 			["w", "move backward %n %m.cm_sec", "sMoveBackwardUnit", 5, "cm"],
 			["w", "turn %m.left_right %n %m.deg_sec in place", "sTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", "left", 90, "degrees", 5, "forward"],
 			["w", "pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
+			["w", "turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sTurnBodyUnitWithRadiusInDirection", "left", 90, "degrees", 5, "forward"],
 			["-"],
 			[" ", "set %m.left_right_both led to %m.led_color", "sSetLedTo", "left", "red"],
 			[" ", "clear %m.left_right_both led", "sClearLed", "left"],
@@ -81,10 +81,8 @@
 			["w", "move forward %n %m.move_unit", "sMoveForwardUnit", 5, "cm"],
 			["w", "move backward %n %m.move_unit", "sMoveBackwardUnit", 5, "cm"],
 			["w", "turn %m.left_right %n %m.turn_unit in place", "sTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", "left", 90, "degrees", 5, "forward"],
-			["w", "pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
-			["w", "%m.left_right pen, turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnPenUnitWithRadiusInDirection", "left", "left", 90, "degrees", 5, "forward"],
-			["w", "pivot around %m.left_right pen %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundPenUnitInDirection", "left", 90, "degrees", "forward"],
+			["w", "pivot around %m.pen_wheel %n %m.turn_unit in %m.forward_backward direction", "sPivotAroundUnitInDirection", "left pen", 90, "degrees", "forward"],
+			["w", "%m.pen_body , turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sTurnUnitWithRadiusInDirection", "left pen", "left", 90, "degrees", 5, "forward"],
 			[" ", "change wheels by left: %n right: %n", "sChangeBothWheelsBy", 10, 10],
 			[" ", "set wheels to left: %n right: %n", "sSetBothWheelsTo", 30, 30],
 			[" ", "change %m.left_right_both wheel by %n", "sChangeWheelBy", "left", 10],
@@ -164,8 +162,8 @@
 			["w", "앞으로 %n %m.cm_sec 이동하기", "sMoveForwardUnit", 5, "cm"],
 			["w", "뒤로 %n %m.cm_sec 이동하기", "sMoveBackwardUnit", 5, "cm"],
 			["w", "%m.left_right 으로 %n %m.deg_sec 제자리 돌기", "sTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 5, "앞쪽"],
 			["w", "%m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
+			["w", "%m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnBodyUnitWithRadiusInDirection", "왼쪽", 90, "도", 5, "앞쪽"],
 			["-"],
 			[" ", "%m.left_right_both LED를 %m.led_color 으로 정하기", "sSetLedTo", "왼쪽", "빨간색"],
 			[" ", "%m.left_right_both LED 끄기", "sClearLed", "왼쪽"],
@@ -190,10 +188,8 @@
 			["w", "앞으로 %n %m.move_unit 이동하기", "sMoveForwardUnit", 5, "cm"],
 			["w", "뒤로 %n %m.move_unit 이동하기", "sMoveBackwardUnit", 5, "cm"],
 			["w", "%m.left_right 으로 %n %m.turn_unit 제자리 돌기", "sTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 5, "앞쪽"],
-			["w", "%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
-			["w", "%m.left_right 펜, %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnPenUnitWithRadiusInDirection", "왼쪽", "왼쪽", 90, "도", 5, "앞쪽"],
-			["w", "%m.left_right 펜 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundPenUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
+			["w", "%m.pen_wheel 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sPivotAroundUnitInDirection", "왼쪽 펜", 90, "도", "앞쪽"],
+			["w", "%m.pen_body , %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sTurnUnitWithRadiusInDirection", "왼쪽 펜", "왼쪽", 90, "도", 5, "앞쪽"],
 			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "sChangeBothWheelsBy", 10, 10],
 			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "sSetBothWheelsTo", 30, 30],
 			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "sChangeWheelBy", "왼쪽", 10],
@@ -273,8 +269,8 @@
 			["w", "前へ %n %m.cm_sec 動かす", "sMoveForwardUnit", 5, "cm"],
 			["w", "後ろへ %n %m.cm_sec 動かす", "sMoveBackwardUnit", 5, "cm"],
 			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "sTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right に %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", "左", 90, "度", 5, "前"],
 			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
+			["w", "%m.left_right に %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向に回す", "sTurnBodyUnitWithRadiusInDirection", "左", 90, "度", 5, "前"],
 			["-"],
 			[" ", "%m.left_right_both LEDを %m.led_color にする", "sSetLedTo", "左", "赤色"],
 			[" ", "%m.left_right_both LEDをオフ", "sClearLed", "左"],
@@ -299,10 +295,8 @@
 			["w", "前へ %n %m.move_unit 動かす", "sMoveForwardUnit", 5, "cm"],
 			["w", "後ろへ %n %m.move_unit 動かす", "sMoveBackwardUnit", 5, "cm"],
 			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "sTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", "左", 90, "度", 5, "前"],
-			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
-			["w", "%m.left_right ペン、 %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnPenUnitWithRadiusInDirection", "左", "左", 90, "度", 5, "前"],
-			["w", "%m.left_right ペンを中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundPenUnitInDirection", "左", 90, "度", "前"],
+			["w", "%m.pen_wheel を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "sPivotAroundUnitInDirection", "左ペン", 90, "度", "前"],
+			["w", "%m.pen_body 、 %m.left_right に %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向に回す", "sTurnUnitWithRadiusInDirection", "左ペン", "左", 90, "度", 5, "前"],
 			[" ", "左車輪を %n 右車輪を %n ずつ変える", "sChangeBothWheelsBy", 10, 10],
 			[" ", "左車輪を %n 右車輪を %n にする", "sSetBothWheelsTo", 30, 30],
 			[" ", "%m.left_right_both 車輪を %n ずつ変える", "sChangeWheelBy", "左", 10],
@@ -382,8 +376,8 @@
 			["w", "oldinga %n %m.cm_sec yurish", "sMoveForwardUnit", 5, "cm"],
 			["w", "orqaga %n %m.cm_sec yurish", "sMoveBackwardUnit", 5, "cm"],
 			["w", "%m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "sTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 5, "old"],
 			["w", "%m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
+			["w", "%m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnBodyUnitWithRadiusInDirection", "chap", 90, "daraja", 5, "old"],
 			["-"],
 			[" ", "%m.left_right_both LEDni %m.led_color ga sozlash", "sSetLedTo", "chap", "qizil"],
 			[" ", "%m.left_right_both LEDni o'chirish", "sClearLed", "chap"],
@@ -408,10 +402,8 @@
 			["w", "oldinga %n %m.move_unit yurish", "sMoveForwardUnit", 5, "cm"],
 			["w", "orqaga %n %m.move_unit yurish", "sMoveBackwardUnit", 5, "cm"],
 			["w", "%m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "sTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 5, "old"],
-			["w", "%m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
-			["w", "%m.left_right ruchka, %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnPenUnitWithRadiusInDirection", "chap", "chap", 90, "daraja", 5, "old"],
-			["w", "%m.left_right ruchka markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundPenUnitInDirection", "chap", 90, "daraja", "old"],
+			["w", "%m.pen_wheel markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sPivotAroundUnitInDirection", "chap ruchka", 90, "daraja", "old"],
+			["w", "%m.pen_body , %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sTurnUnitWithRadiusInDirection", "chap ruchka", "chap", 90, "daraja", 5, "old"],
 			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "sChangeBothWheelsBy", 10, 10],
 			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "sSetBothWheelsTo", 30, 30],
 			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "sChangeWheelBy", "chap", 10],
@@ -476,6 +468,8 @@
 			"deg_sec": ["degrees", "seconds"],
 			"left_right": ["left", "right"],
 			"left_right_both": ["left", "right", "both"],
+			"pen_wheel": ["left pen", "right pen", "left wheel", "right wheel"],
+			"pen_body": ["left pen", "right pen", "robot"],
 			"forward_backward": ["forward", "backward"],
 			"black_white": ["black", "white"],
 			"left_right_front_rear": ["left", "right", "front", "rear"],
@@ -492,8 +486,8 @@
 			"port": ["A", "B", "A and B"],
 			"s_mode": ["analog input", "digital input", "digital input (pull up)", "digital input (pull down)", "voltage input", "servo output", "pwm output", "digital output"],
 			"open_close": ["open", "close"],
-			"serial_output": ["string", "string + new line"],
-			"serial_delimiter": ["all", "until new line", "until ,(comma)", "until :(colon)", "until $", "until #"],
+			"serial_output": ["string", "string line"],
+			"serial_delimiter": ["all", "until ,(comma)", "until :(colon)", "until $", "until #", "until new line"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ko: {
@@ -503,6 +497,8 @@
 			"deg_sec": ["도", "초"],
 			"left_right": ["왼쪽", "오른쪽"],
 			"left_right_both": ["왼쪽", "오른쪽", "양쪽"],
+			"pen_wheel": ["왼쪽 펜", "오른쪽 펜", "왼쪽 바퀴", "오른쪽 바퀴"],
+			"pen_body": ["왼쪽 펜", "오른쪽 펜", "로봇"],
 			"forward_backward": ["앞쪽", "뒤쪽"],
 			"black_white": ["검은색", "하얀색"],
 			"left_right_front_rear": ["왼쪽", "오른쪽", "앞쪽", "뒤쪽"],
@@ -519,8 +515,8 @@
 			"port": ["A", "B", "A와 B"],
 			"s_mode": ["아날로그 입력", "디지털 입력", "디지털 입력 (풀업)", "디지털 입력 (풀다운)", "전압 입력", "서보 출력", "PWM 출력", "디지털 출력"],
 			"open_close": ["열기", "닫기"],
-			"serial_output": ["글자", "글자 + 줄 바꿈"],
-			"serial_delimiter": ["모두", "줄 바꿈까지", ",(쉼표)까지", ":(쌍점)까지", "$까지", "#까지"],
+			"serial_output": ["글자", "글자 한 줄"],
+			"serial_delimiter": ["모두", ",(쉼표)까지", ":(쌍점)까지", "$까지", "#까지", "줄 바꿈까지"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		ja: {
@@ -530,6 +526,8 @@
 			"deg_sec": ["度", "秒"],
 			"left_right": ["左", "右"],
 			"left_right_both": ["左", "右", "両"],
+			"pen_wheel": ["左ペン", "右ペン", "左車輪", "右車輪"],
+			"pen_body": ["左ペン", "右ペン", "ロボット"],
 			"forward_backward": ["前", "後"],
 			"black_white": ["黒色", "白色"],
 			"left_right_front_rear": ["左", "右", "前", "後"],
@@ -546,8 +544,8 @@
 			"port": ["A", "B", "AとB"],
 			"s_mode": ["アナログ入力", "デジタル入力", "デジタル入力 (プルアップ)", "デジタル入力 (プルダウン)", "電圧入力", "サーボ出力", "PWM出力", "デジタル出力"],
 			"open_close": ["開く", "閉める"],
-			"serial_output": ["文字列", "文字列 + 改行"],
-			"serial_delimiter": ["全部", "改行まで", "、(読点)まで", "：(コロン)まで", "$まで", "#まで"],
+			"serial_output": ["文字列", "文字列1行"],
+			"serial_delimiter": ["全部", "、(読点)まで", "：(コロン)まで", "$まで", "#まで", "改行まで"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		},
 		uz: {
@@ -557,6 +555,8 @@
 			"deg_sec": ["daraja", "soniya"],
 			"left_right": ["chap", "o'ng"],
 			"left_right_both": ["chap", "o'ng", "har ikki"],
+			"pen_wheel": ["chap ruchka", "o'ng ruchka", "chap g'ildirak", "o'ng g'ildirak"],
+			"pen_body": ["chap ruchka", "o'ng ruchka", "robot"],
 			"forward_backward": ["old", "orqa"],
 			"black_white": ["qora", "oq"],
 			"left_right_front_rear": ["chap", "o'ng", "old", "orqa"],
@@ -573,8 +573,8 @@
 			"port": ["A", "B", "A va B"],
 			"s_mode": ["analog kiritish", "raqamli kiritish", "raqamli kiritish (pull up)", "raqamli kiritish (pull down)", "voltaj kiritish", "servo chiqish", "pwm chiqish", "raqamli chiqish"],
 			"open_close": ["oching", "yoping"],
-			"serial_output": ["harf", "harf + yangi satrga"],
-			"serial_delimiter": ["hammasi", "yangi satrgacha", ",(vergul)gacha", ":(qo'sh nuqta)gacha", "$gacha", "#gacha"],
+			"serial_output": ["harf", "harf qator"],
+			"serial_delimiter": ["hammasi", ",(vergul)gacha", ":(qo'sh nuqta)gacha", "$gacha", "#gacha", "yangi satrgacha"],
 			"serial_baud": ["9600", "14400", "19200", "28800", "38400", "57600", "76800", "115200"]
 		}
 	};
@@ -616,6 +616,10 @@
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
+	const LEFT_PEN = 1;
+	const RIGHT_PEN = 2;
+	const LEFT_WHEEL = 3;
+	const RIGHT_WHEEL = 4;
 	const FORWARD = 1;
 	const SECONDS = 2;
 	const OPEN = 1;
@@ -644,6 +648,11 @@
 		PARTS[tmp[0]] = LEFT;
 		PARTS[tmp[1]] = RIGHT;
 		PARTS[tmp[2]] = BOTH;
+		tmp = MENUS[i]['pen_wheel'];
+		PARTS[tmp[0]] = LEFT_PEN;
+		PARTS[tmp[1]] = RIGHT_PEN;
+		PARTS[tmp[2]] = LEFT_WHEEL;
+		PARTS[tmp[3]] = RIGHT_WHEEL;
 		tmp = MENUS[i]['left_right_front_rear'];
 		DIRECTIONS[tmp[0]] = LEFT;
 		DIRECTIONS[tmp[1]] = RIGHT;
@@ -1392,7 +1401,7 @@
 		}
 	};
 
-	Hamster.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
+	Hamster.prototype.pivotWheelUnit = function(wheel, value, unit, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
 			if(PARTS[wheel] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
@@ -1416,12 +1425,12 @@
 		}
 	};
 
-	Hamster.prototype.swingUnit = function(wheel, value, unit, radius, toward, callback) {
+	Hamster.prototype.swingBodyUnit = function(direction, value, unit, radius, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
 			radius = parseFloat(radius);
 			if((typeof radius == 'number') && radius >= 0) {
 				this.motoring.radius = radius;
-				if(DIRECTIONS[wheel] == LEFT) {
+				if(DIRECTIONS[direction] == LEFT) {
 					if(TOWARDS[toward] == FORWARD) {
 						if(value < 0) this.__motion(10, 0, 0, -value, callback);
 						else this.__motion(9, 0, 0, value, callback);
@@ -1447,9 +1456,10 @@
 		}
 	};
 
-	Hamster.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
+	Hamster.prototype.pivotUnit = function(part, value, unit, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
-			if(PARTS[pen] == LEFT) {
+			part = PARTS[part];
+			if(part == LEFT_PEN) {
 				if(TOWARDS[toward] == FORWARD) {
 					if(value < 0) this.__motion(14, 0, 0, -value, callback);
 					else this.__motion(13, 0, 0, value, callback);
@@ -1457,7 +1467,7 @@
 					if(value < 0) this.__motion(13, 0, 0, -value, callback);
 					else this.__motion(14, 0, 0, value, callback);
 				}
-			} else {
+			} else if(part == RIGHT_PEN) {
 				if(TOWARDS[toward] == FORWARD) {
 					if(value < 0) this.__motion(16, 0, 0, -value, callback);
 					else this.__motion(15, 0, 0, value, callback);
@@ -1465,18 +1475,35 @@
 					if(value < 0) this.__motion(15, 0, 0, -value, callback);
 					else this.__motion(16, 0, 0, value, callback);
 				}
+			} else if(part == LEFT_WHEEL) {
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motion(6, 0, -30, -value, callback);
+					else this.__motion(5, 0, 30, value, callback);
+				} else {
+					if(value < 0) this.__motion(5, 0, 30, -value, callback);
+					else this.__motion(6, 0, -30, value, callback);
+				}
+			} else {
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motion(8, -30, 0, -value, callback);
+					else this.__motion(7, 30, 0, value, callback);
+				} else {
+					if(value < 0) this.__motion(7, 30, 0, -value, callback);
+					else this.__motion(8, -30, 0, value, callback);
+				}
 			}
 		} else {
 			this.__stopMotion();
 		}
 	};
 	
-	Hamster.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+	Hamster.prototype.swingUnit = function(part, direction, value, unit, radius, toward, callback) {
 		if(UNITS[unit] == SECONDS) {
 			radius = parseFloat(radius);
 			if((typeof radius == 'number') && radius >= 0) {
 				this.motoring.radius = radius;
-				if(PARTS[pen] == LEFT) {
+				part = PARTS[part];
+				if(part == LEFT_PEN) {
 					if(DIRECTIONS[direction] == LEFT) {
 						if(TOWARDS[toward] == FORWARD) {
 							if(value < 0) this.__motion(18, 0, 0, -value, callback);
@@ -1494,7 +1521,7 @@
 							else this.__motion(20, 0, 0, value, callback);
 						}
 					}
-				} else {
+				} else if(part == RIGHT_PEN) {
 					if(DIRECTIONS[direction] == LEFT) {
 						if(TOWARDS[toward] == FORWARD) {
 							if(value < 0) this.__motion(22, 0, 0, -value, callback);
@@ -1510,6 +1537,24 @@
 						} else {
 							if(value < 0) this.__motion(23, 0, 0, -value, callback);
 							else this.__motion(24, 0, 0, value, callback);
+						}
+					}
+				} else {
+					if(DIRECTIONS[direction] == LEFT) {
+						if(TOWARDS[toward] == FORWARD) {
+							if(value < 0) this.__motion(10, 0, 0, -value, callback);
+							else this.__motion(9, 0, 0, value, callback);
+						} else {
+							if(value < 0) this.__motion(9, 0, 0, -value, callback);
+							else this.__motion(10, 0, 0, value, callback);
+						}
+					} else {
+						if(TOWARDS[toward] == FORWARD) {
+							if(value < 0) this.__motion(12, 0, 0, -value, callback);
+							else this.__motion(11, 0, 0, value, callback);
+						} else {
+							if(value < 0) this.__motion(11, 0, 0, -value, callback);
+							else this.__motion(12, 0, 0, value, callback);
 						}
 					}
 				}
@@ -2717,7 +2762,7 @@
 		}
 	};
 
-	HamsterS.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
+	HamsterS.prototype.pivotWheelUnit = function(wheel, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[wheel] == LEFT) {
 			if(TOWARDS[toward] == FORWARD) {
@@ -2738,7 +2783,7 @@
 		}
 	};
 
-	HamsterS.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
+	HamsterS.prototype.swingBodyUnit = function(direction, value, unit, radius, toward, callback) {
 		unit = UNITS[unit];
 		if(DIRECTIONS[direction] == LEFT) {
 			if(TOWARDS[toward] == FORWARD) {
@@ -2759,9 +2804,10 @@
 		}
 	};
 
-	HamsterS.prototype.pivotPenUnit = function(pen, value, unit, toward, callback) {
+	HamsterS.prototype.pivotUnit = function(part, value, unit, toward, callback) {
+		part = PARTS[part];
 		unit = UNITS[unit];
-		if(PARTS[pen] == LEFT) {
+		if(part == LEFT_PEN) {
 			if(TOWARDS[toward] == FORWARD) {
 				if(value < 0) this.__motionUnit(14, unit, -value, callback);
 				else this.__motionUnit(13, unit, value, callback);
@@ -2769,7 +2815,7 @@
 				if(value < 0) this.__motionUnit(13, unit, -value, callback);
 				else this.__motionUnit(14, unit, value, callback);
 			}
-		} else {
+		} else if(part == RIGHT_PEN) {
 			if(TOWARDS[toward] == FORWARD) {
 				if(value < 0) this.__motionUnit(16, unit, -value, callback);
 				else this.__motionUnit(15, unit, value, callback);
@@ -2777,12 +2823,29 @@
 				if(value < 0) this.__motionUnit(15, unit, -value, callback);
 				else this.__motionUnit(16, unit, value, callback);
 			}
+		} else if(part == LEFT_WHEEL) {
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(6, unit, -value, callback);
+				else this.__motionUnit(5, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(5, unit, -value, callback);
+				else this.__motionUnit(6, unit, value, callback);
+			}
+		} else {
+			if(TOWARDS[toward] == FORWARD) {
+				if(value < 0) this.__motionUnit(8, unit, -value, callback);
+				else this.__motionUnit(7, unit, value, callback);
+			} else {
+				if(value < 0) this.__motionUnit(7, unit, -value, callback);
+				else this.__motionUnit(8, unit, value, callback);
+			}
 		}
 	};
 	
-	HamsterS.prototype.swingPenUnit = function(pen, direction, value, unit, radius, toward, callback) {
+	HamsterS.prototype.swingUnit = function(part, direction, value, unit, radius, toward, callback) {
+		part = PARTS[part];
 		unit = UNITS[unit];
-		if(PARTS[pen] == LEFT) {
+		if(part == LEFT_PEN) {
 			if(DIRECTIONS[direction] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
 					if(value < 0) this.__motionUnitRadius(18, unit, -value, radius, callback);
@@ -2800,7 +2863,7 @@
 					else this.__motionUnitRadius(20, unit, value, radius, callback);
 				}
 			}
-		} else {
+		} else if(part == RIGHT_PEN) {
 			if(DIRECTIONS[direction] == LEFT) {
 				if(TOWARDS[toward] == FORWARD) {
 					if(value < 0) this.__motionUnitRadius(22, unit, -value, radius, callback);
@@ -2816,6 +2879,24 @@
 				} else {
 					if(value < 0) this.__motionUnitRadius(23, unit, -value, radius, callback);
 					else this.__motionUnitRadius(24, unit, value, radius, callback);
+				}
+			}
+		} else {
+			if(DIRECTIONS[direction] == LEFT) {
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(10, unit, -value, radius, callback);
+					else this.__motionUnitRadius(9, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(9, unit, -value, radius, callback);
+					else this.__motionUnitRadius(10, unit, value, radius, callback);
+				}
+			} else {
+				if(TOWARDS[toward] == FORWARD) {
+					if(value < 0) this.__motionUnitRadius(12, unit, -value, radius, callback);
+					else this.__motionUnitRadius(11, unit, value, radius, callback);
+				} else {
+					if(value < 0) this.__motionUnitRadius(11, unit, -value, radius, callback);
+					else this.__motionUnitRadius(12, unit, value, radius, callback);
 				}
 			}
 		}
