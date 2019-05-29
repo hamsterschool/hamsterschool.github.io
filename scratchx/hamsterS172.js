@@ -719,7 +719,7 @@
 		IO_MODES[tmp[1]] = 1; // digital input
 		IO_MODES[tmp[2]] = 2; // digital input (pull up)
 		IO_MODES[tmp[3]] = 3; // digital input (pull down)
-		IO_MODES[tmp[4]] = 4; // voltage input
+		IO_MODES[tmp[4]] = 5; // voltage input
 		IO_MODES[tmp[5]] = 8; // servo output
 		IO_MODES[tmp[6]] = 9; // pwm output
 		IO_MODES[tmp[7]] = 10; // digital output
