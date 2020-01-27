@@ -856,7 +856,7 @@
 	}
 
 	AlbertSchool.prototype.reset = function() {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		motoring.map = 0x8efc0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -885,14 +885,14 @@
 
 	AlbertSchool.prototype.__removeTimeout = function(id) {
 		clearTimeout(id);
-		const idx = this.timeouts.indexOf(id);
+		var idx = this.timeouts.indexOf(id);
 		if(idx >= 0) {
 			this.timeouts.splice(idx, 1);
 		}
 	};
 
 	AlbertSchool.prototype.__removeAllTimeouts = function() {
-		const timeouts = this.timeouts;
+		var timeouts = this.timeouts;
 		for(let i in timeouts) {
 			clearTimeout(timeouts[i]);
 		}
@@ -988,7 +988,7 @@
 				this.motoring.leftWheel = result.left;
 				this.motoring.rightWheel = result.right;
 				if(result.completed) {
-					const callback = this.navigationCallback;
+					var callback = this.navigationCallback;
 					this.__cancelNavigation();
 					if(callback) callback();
 				}
@@ -997,14 +997,14 @@
 	};
 
 	AlbertSchool.prototype.__motion = function(type, leftVelocity, rightVelocity, secs, callback) {
-		const self = this;
-		const motoring = self.motoring;
+		var self = this;
+		var motoring = self.motoring;
 		self.__cancelNavigation();
 		self.__cancelWheel();
 
 		secs = parseFloat(secs);
 		if(secs && secs > 0) {
-			const id = self.__issueWheelId();
+			var id = self.__issueWheelId();
 			motoring.leftWheel = leftVelocity;
 			motoring.rightWheel = rightVelocity;
 			motoring.motion = type;
@@ -1035,7 +1035,7 @@
 	};
 
 	AlbertSchool.prototype.turn = function(direction, callback) {
-		if(direction == 'left') {
+		if(DIRECTIONS[direction] == LEFT) {
 			this.__motion(3, -30, 30, 1, callback);
 		} else {
 			this.__motion(4, 30, -30, 1, callback);
@@ -1053,7 +1053,7 @@
 	};
 
 	AlbertSchool.prototype.turnSecs = function(direction, secs, callback) {
-		if(direction == 'left') {
+		if(DIRECTIONS[direction] == LEFT) {
 			if(secs < 0) this.__motion(4, 30, -30, -secs, callback);
 			else this.__motion(3, -30, 30, secs, callback);
 		} else {
@@ -1063,7 +1063,7 @@
 	};
 
 	AlbertSchool.prototype.setWheels = function(leftVelocity, rightVelocity) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
@@ -1079,7 +1079,7 @@
 	};
 
 	AlbertSchool.prototype.changeWheels = function(leftVelocity, rightVelocity) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
@@ -1095,15 +1095,16 @@
 	};
 
 	AlbertSchool.prototype.setWheel = function(wheel, velocity) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
 		velocity = parseFloat(velocity);
 		if(typeof velocity == 'number') {
-			if(wheel == 'left') {
+			wheel = PARTS[wheel];
+			if(wheel == LEFT) {
 				motoring.leftWheel = velocity;
-			} else if(wheel == 'right') {
+			} else if(wheel == RIGHT) {
 				motoring.rightWheel = velocity;
 			} else {
 				motoring.leftWheel = velocity;
@@ -1114,15 +1115,16 @@
 	};
 
 	AlbertSchool.prototype.changeWheel = function(wheel, velocity) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
 		velocity = parseFloat(velocity);
 		if(typeof velocity == 'number') {
-			if(wheel == 'left') {
+			wheel = PARTS[wheel];
+			if(wheel == LEFT) {
 				motoring.leftWheel += velocity;
-			} else if(wheel == 'right') {
+			} else if(wheel == RIGHT) {
 				motoring.rightWheel += velocity;
 			} else {
 				motoring.leftWheel += velocity;
@@ -1133,7 +1135,7 @@
 	};
 
 	AlbertSchool.prototype.stop = function() {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
@@ -1146,20 +1148,20 @@
 		width = parseInt(width);
 		height = parseInt(height);
 		if(width && height && width > 0 && height > 0) {
-			const navi = this.__getNavigator();
+			var navi = this.__getNavigator();
 			navi.setBoardSize(width, height);
 			this.__setBoardSize(width, height);
 		}
 	};
 
 	AlbertSchool.prototype.moveToOnBoard = function(x, y, callback) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
 		x = parseInt(x);
 		y = parseInt(y);
-		const navi = this.__getNavigator();
+		var navi = this.__getNavigator();
 		if((typeof x == 'number') && (typeof y == 'number') && x >= 0 && x < navi.getBoardWidth() && y >= 0 && y < navi.getBoardHeight()) {
 			this.navigationCallback = callback;
 			navi.moveTo(x, y);
@@ -1167,34 +1169,25 @@
 	};
 
 	AlbertSchool.prototype.setOrientationToOnBoard = function(degree, callback) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
 
 		degree = parseInt(degree);
 		if(typeof degree == 'number') {
-			const navi = this.__getNavigator();
+			var navi = this.__getNavigator();
 			this.navigationCallback = callback;
 			navi.turnTo(degree);
 		}
 	};
 
-	AlbertSchool.prototype.__COLORS = {
-		'red': 4,
-		'yellow': 6,
-		'green': 2,
-		'sky blue': 3,
-		'blue': 1,
-		'purple': 5,
-		'white': 7
-	};
-
 	AlbertSchool.prototype.setEye = function(eye, color) {
-		color = this.__COLORS[color];
+		color = COLORS[color];
 		if(color && color > 0) {
-			if(eye == 'left') {
+			eye = PARTS[eye];
+			if(eye == LEFT) {
 				this.__setLeftEye(color);
-			} else if(eye == 'right') {
+			} else if(eye == RIGHT) {
 				this.__setRightEye(color);
 			} else {
 				this.__setLeftEye(color);
@@ -1204,9 +1197,10 @@
 	};
 
 	AlbertSchool.prototype.clearEye = function(eye) {
-		if(eye == 'left') {
+		eye = PARTS[eye];
+		if(eye == LEFT) {
 			this.__setLeftEye(0);
-		} else if(eye == 'right') {
+		} else if(eye == RIGHT) {
 			this.__setRightEye(0);
 		} else {
 			this.__setLeftEye(0);
@@ -1215,17 +1209,19 @@
 	};
 
 	AlbertSchool.prototype.turnBodyLed = function(on) {
-		this.__setBodyLed(on == 'on' ? 1 : 0);
+		on = VALUES[on];
+		this.__setBodyLed(on == ON ? 1 : 0);
 	};
 
 	AlbertSchool.prototype.turnFrontLed = function(on) {
-		this.__setFrontLed(on == 'on' ? 1 : 0);
+		on = VALUES[on];
+		this.__setFrontLed(on == ON ? 1 : 0);
 	};
 
 	AlbertSchool.prototype.runBeep = function(count, id, callback) {
 		if(count) {
-			const self = this;
-			const motoring = self.motoring;
+			var self = this;
+			var motoring = self.motoring;
 			motoring.buzzer = 440;
 			self.__setNote(0);
 			self.noteTimer1 = setTimeout(function() {
@@ -1257,12 +1253,12 @@
 
 	AlbertSchool.prototype.beep = function(callback) {
 		this.__cancelNote();
-		const id = this.__issueNoteId();
+		var id = this.__issueNoteId();
 		this.runBeep(1, id, callback);
 	};
 
 	AlbertSchool.prototype.setBuzzer = function(hz) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNote();
 
 		hz = parseFloat(hz);
@@ -1273,7 +1269,7 @@
 	};
 
 	AlbertSchool.prototype.changeBuzzer = function(hz) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNote();
 
 		hz = parseFloat(hz);
@@ -1289,26 +1285,11 @@
 		this.__setNote(0);
 	};
 
-	AlbertSchool.prototype.__NOTES = {
-		'C': 4,
-		'C♯ (D♭)': 5,
-		'D': 6,
-		'D♯ (E♭)': 7,
-		'E': 8,
-		'F': 9,
-		'F♯ (G♭)': 10,
-		'G': 11,
-		'G♯ (A♭)': 12,
-		'A': 13,
-		'A♯ (B♭)': 14,
-		'B': 15
-	};
-
 	AlbertSchool.prototype.playNote = function(note, octave) {
-		const motoring = this.motoring;
+		var motoring = this.motoring;
 		this.__cancelNote();
 
-		note = this.__NOTES[note];
+		note = NOTES[note];
 		octave = parseInt(octave);
 		motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8) {
@@ -1320,20 +1301,22 @@
 	};
 
 	AlbertSchool.prototype.playNoteBeat = function(note, octave, beat, callback) {
-		const self = this;
-		const motoring = self.motoring;
+		var self = this;
+		var motoring = self.motoring;
 		self.__cancelNote();
 
-		note = self.__NOTES[note];
+		note = NOTES[note];
 		octave = parseInt(octave);
-		beat = parseFloat(beat);
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
 		if(note && octave && octave > 0 && octave < 8 && beat && beat > 0 && self.tempo > 0) {
-			const id = self.__issueNoteId();
+			var id = self.__issueNoteId();
 			note += (octave - 1) * 12;
 			self.__setNote(note);
-			const timeout = beat * 60 * 1000 / self.tempo;
-			const tail = (timeout > 100) ? 100 : 0;
+			var timeout = beat * 60 * 1000 / self.tempo;
+			var tail = (timeout > 100) ? 100 : 0;
 			if(tail > 0) {
 				self.noteTimer1 = setTimeout(function() {
 					if(self.noteId == id) {
@@ -1359,15 +1342,17 @@
 	};
 
 	AlbertSchool.prototype.restBeat = function(beat, callback) {
-		const self = this;
-		const motoring = self.motoring;
+		var self = this;
+		var motoring = self.motoring;
 		self.__cancelNote();
 
-		beat = parseFloat(beat);
+		var tmp = BEATS[beat];
+		if(tmp) beat = tmp;
+		else beat = parseFloat(beat);
 		motoring.buzzer = 0;
 		self.__setNote(0);
 		if(beat && beat > 0 && self.tempo > 0) {
-			const id = self.__issueNoteId();
+			var id = self.__issueNoteId();
 			self.noteTimer1 = setTimeout(function() {
 				if(self.noteId == id) {
 					self.__cancelNote();
@@ -1449,41 +1434,35 @@
 	};
 
 	AlbertSchool.prototype.checkHandFound = function() {
-		const sensory = this.sensory;
+		var sensory = this.sensory;
 		return (sensory.handFound === undefined) ? (sensory.leftProximity > 40 || sensory.rightProximity > 40) : sensory.handFound;
 	};
 
 	AlbertSchool.prototype.checkOid = function(oid, value) {
 		value = parseInt(value);
 		if(typeof value == 'number') {
-			switch(oid) {
-				case 'front': return this.sensory.frontOid == value;
-				case 'rear': return this.sensory.rearOid == value;
+			switch(PARTS[oid]) {
+				case FRONT: return this.sensory.frontOid == value;
+				case REAR: return this.sensory.rearOid == value;
 			}
 		}
 		return false;
 	};
 
 	AlbertSchool.prototype.checkTilt = function(tilt) {
-		switch(tilt) {
-			case 'tilt forward': return this.sensory.tilt == 1;
-			case 'tilt backward': return this.sensory.tilt == -1;
-			case 'tilt left': return this.sensory.tilt == 2;
-			case 'tilt right': return this.sensory.tilt == -2;
-			case 'tilt flip': return this.sensory.tilt == 3;
-			case 'not tilt': return this.sensory.tilt == -3;
+		switch(TILTS[tilt]) {
+			case TILT_FORWARD: return this.sensory.tilt == 1;
+			case TILT_BACKWARD: return this.sensory.tilt == -1;
+			case TILT_LEFT: return this.sensory.tilt == 2;
+			case TILT_RIGHT: return this.sensory.tilt == -2;
+			case TILT_FLIP: return this.sensory.tilt == 3;
+			case TILT_NONE: return this.sensory.tilt == -3;
 		}
 		return false;
 	};
 
-	AlbertSchool.prototype.__BATTERY_STATES = {
-		'normal': 2,
-		'low': 1,
-		'empty': 0
-	};
-
 	AlbertSchool.prototype.checkBattery = function(battery) {
-		return this.sensory.batteryState == this.__BATTERY_STATES[battery];
+		return this.sensory.batteryState == BATTERY_STATES[battery];
 	};
 	
 	function getOrCreateRobot(group, module, index) {
