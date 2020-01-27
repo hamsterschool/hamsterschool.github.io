@@ -1682,7 +1682,7 @@
 		if(robot) robot.turnFrontLed(onoff);
 	};
 	
-	ext.albertschoolBeep = function(callback) {
+	ext.beep = function(callback) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
 		if(robot) robot.beep(callback);
 	};
