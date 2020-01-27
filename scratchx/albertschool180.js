@@ -1524,7 +1524,7 @@
 						var received = JSON.parse(message.data);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							if(received.module == HAMSTER) {
+							if(received.module == ALBERTSCHOOL) {
 								connectionState = received.state;
 							}
 						} else {
@@ -1559,7 +1559,7 @@
 										var json = JSON.stringify(packet);
 										if(canSend && socket) socket.send(json);
 									} else {
-										var robot = getRobot(HAMSTER, 0);
+										var robot = getRobot(ALBERTSCHOOL, 0);
 										if(robot) {
 											var json = JSON.stringify(robot.motoring);
 											if(canSend && socket) socket.send(json);
