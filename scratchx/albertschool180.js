@@ -893,7 +893,7 @@
 
 	AlbertSchool.prototype.__removeAllTimeouts = function() {
 		var timeouts = this.timeouts;
-		for(let i in timeouts) {
+		for(var i in timeouts) {
 			clearTimeout(timeouts[i]);
 		}
 		this.timeouts = [];
