@@ -425,76 +425,69 @@
 
 	var PARTS = {};
 	var DIRECTIONS = {};
-	var TOWARDS = {};
 	var UNITS = {};
-	var LINE_COLORS = {};
+	var MODES = {};
 	var RGB_COLORS = {};
 	var COLOR_NUMBERS = {};
-	var COLOR_PATTERNS = {};
+	var GESTURES = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var SOUNDS = {};
-	var BUTTON_STATES = {};
-	var TILTS = {};
 	var BATTERY_STATES = {};
 	
 	const LEFT = 1;
 	const RIGHT = 2;
-	const BACK = 5;
-	const HEAD = 1;
+	const BOTH = 3;
+	const LEFT_HEAD = 4;
+	const RIGHT_HEAD = 5;
+	const LEFT_TAIL = 6;
+	const RIGHT_TAIL = 7;
+	const HEAD = 8;
+	const TAIL = 9;
+	const ALL = 10;
+
+	const CM = 1;
 	const SECONDS = 2;
-	const CLICKED = 1;
-	const DOUBLE_CLICKED = 2;
-	const LONG_PRESSED = 3;
-	const TILT_FORWARD = 1;
-	const TILT_BACKWARD = 2;
-	const TILT_LEFT = 3;
-	const TILT_RIGHT = 4;
-	const TILT_FLIP = 5;
-	const TILT_NONE = 6;
+	const PULSES = 3;
+	const DEGREES = 1;
+
+	const GESTURE = 1;
+	const COLOR = 2;
+	
+	const GESTURE_FORWARD = 0;
+	const GESTURE_BACKWARD = 1;
+	const GESTURE_LEFTWARD = 2;
+	const GESTURE_RIGHTWARD = 3;
+	const GESTURE_NEAR = 4;
+	const GESTURE_FAR = 5;
+	const GESTURE_BLOCK = 6;
 	
 	var tmp;
 	for(var i in MENUS) {
 		tmp = MENUS[i]['left_right_both'];
 		PARTS[tmp[0]] = LEFT;
 		PARTS[tmp[1]] = RIGHT;
-		tmp = MENUS[i]['left_right_back'];
+		PARTS[tmp[2]] = BOTH;
+		tmp = MENUS[i]['left_right_head_tail_all'];
+		PARTS[tmp[0]] = LEFT_HEAD;
+		PARTS[tmp[1]] = RIGHT_HEAD;
+		PARTS[tmp[2]] = LEFT_TAIL;
+		PARTS[tmp[3]] = RIGHT_TAIL;
+		PARTS[tmp[6]] = HEAD;
+		PARTS[tmp[7]] = TAIL;
+		PARTS[tmp[8]] = ALL;
+		tmp = MENUS[i]['left_right'];
 		DIRECTIONS[tmp[0]] = LEFT;
 		DIRECTIONS[tmp[1]] = RIGHT;
-		DIRECTIONS[tmp[2]] = BACK;
-		tmp = MENUS[i]['head_tail'];
-		TOWARDS[tmp[0]] = HEAD;
 		tmp = MENUS[i]['move_unit'];
-		UNITS[tmp[0]] = 1; // cm
-		UNITS[tmp[1]] = 2; // sec
-		UNITS[tmp[2]] = 3; // pulse
+		UNITS[tmp[0]] = CM;
+		UNITS[tmp[1]] = SECONDS;
+		UNITS[tmp[2]] = PULSES;
 		tmp = MENUS[i]['turn_unit'];
-		UNITS[tmp[0]] = 1; // deg
-		tmp = MENUS[i]['line_color'];
-		LINE_COLORS[tmp[0]] = 0; // black
-		LINE_COLORS[tmp[4]] = 7; // any color
-		tmp = MENUS[i]['touching_color'];
-		LINE_COLORS[tmp[0]] = 1; // red
-		LINE_COLORS[tmp[2]] = 2; // yellow
-		LINE_COLORS[tmp[3]] = 3; // green
-		LINE_COLORS[tmp[4]] = 4; // sky blue
-		LINE_COLORS[tmp[5]] = 5; // blue
-		LINE_COLORS[tmp[6]] = 6; // purple
-		COLOR_NUMBERS[tmp[7]] = 0; // black
-		COLOR_NUMBERS[tmp[0]] = 1; // red
-		COLOR_NUMBERS[tmp[1]] = 2; // orange
-		COLOR_NUMBERS[tmp[2]] = 3; // yellow
-		COLOR_NUMBERS[tmp[3]] = 4; // green
-		COLOR_NUMBERS[tmp[4]] = 5; // sky blue
-		COLOR_NUMBERS[tmp[5]] = 6; // blue
-		COLOR_NUMBERS[tmp[6]] = 7; // purple
-		COLOR_NUMBERS[tmp[8]] = 8; // white
-		COLOR_PATTERNS[tmp[0]] = 1; // red
-		COLOR_PATTERNS[tmp[2]] = 3; // yellow
-		COLOR_PATTERNS[tmp[3]] = 4; // green
-		COLOR_PATTERNS[tmp[4]] = 5; // sky blue
-		COLOR_PATTERNS[tmp[5]] = 6; // blue
-		COLOR_PATTERNS[tmp[6]] = 7; // purple
+		UNITS[tmp[0]] = DEGREES;
+		tmp = MENUS[i]['zerone_sensor_mode'];
+		MODES[tmp[0]] = GESTURE;
+		MODES[tmp[1]] = COLOR;
 		tmp = MENUS[i]['led_color'];
 		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
 		RGB_COLORS[tmp[1]] = [255, 63, 0]; // orange
@@ -521,147 +514,140 @@
 		tmp = MENUS[i]['sound'];
 		SOUNDS[tmp[0]] = 1; // beep
 		SOUNDS[tmp[1]] = 2; // random beep
-		SOUNDS[tmp[2]] = 3; // siren
-		SOUNDS[tmp[3]] = 4; // engine
-		SOUNDS[tmp[4]] = 5; // robot
-		SOUNDS[tmp[5]] = 6; // march
-		SOUNDS[tmp[6]] = 7; // birthday
+		SOUNDS[tmp[2]] = 10; // noise
+		SOUNDS[tmp[3]] = 3; // siren
+		SOUNDS[tmp[4]] = 4; // engine
+		SOUNDS[tmp[5]] = 11; // chop
+		SOUNDS[tmp[6]] = 5; // robot
 		SOUNDS[tmp[7]] = 8; // dibidibidip
 		SOUNDS[tmp[8]] = 9; // good job
-		tmp = MENUS[i]['button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
-		tmp = MENUS[i]['when_button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
-		tmp = MENUS[i]['tilt'];
-		TILTS[tmp[0]] = TILT_FORWARD;
-		TILTS[tmp[1]] = TILT_BACKWARD;
-		TILTS[tmp[2]] = TILT_LEFT;
-		TILTS[tmp[3]] = TILT_RIGHT;
-		TILTS[tmp[4]] = TILT_FLIP;
-		TILTS[tmp[5]] = TILT_NONE;
-		tmp = MENUS[i]['when_tilt'];
-		TILTS[tmp[0]] = TILT_FORWARD;
-		TILTS[tmp[1]] = TILT_BACKWARD;
-		TILTS[tmp[2]] = TILT_LEFT;
-		TILTS[tmp[3]] = TILT_RIGHT;
-		TILTS[tmp[4]] = TILT_FLIP;
-		TILTS[tmp[5]] = TILT_NONE;
+		SOUNDS[tmp[9]] = 12; // happy
+		SOUNDS[tmp[10]] = 13; // angry
+		SOUNDS[tmp[11]] = 14; // sad
+		SOUNDS[tmp[12]] = 15; // sleep
+		SOUNDS[tmp[13]] = 6; // march
+		SOUNDS[tmp[14]] = 7; // birthday
+		COLOR_NUMBERS[tmp[0]] = 1; // red
+		COLOR_NUMBERS[tmp[1]] = 3; // yellow
+		COLOR_NUMBERS[tmp[2]] = 4; // green
+		COLOR_NUMBERS[tmp[3]] = 5; // sky blue
+		COLOR_NUMBERS[tmp[4]] = 6; // blue
+		COLOR_NUMBERS[tmp[5]] = 7; // purple
+		tmp = MENUS[i]['gesture'];
+		GESTURES[tmp[0]] = GESTURE_FORWARD;
+		GESTURES[tmp[1]] = GESTURE_BACKWARD;
+		GESTURES[tmp[2]] = GESTURE_LEFTWARD;
+		GESTURES[tmp[3]] = GESTURE_RIGHTWARD;
+		GESTURES[tmp[4]] = GESTURE_NEAR;
+		GESTURES[tmp[5]] = GESTURE_FAR;
+		GESTURES[tmp[6]] = GESTURE_BLOCK;
 		tmp = MENUS[i]['battery'];
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
 		BATTERY_STATES[tmp[2]] = 0;
 	}
 	
-	function Turtle(index) {
+	function Zerone(index) {
 		this.sensory = {
 			map: 0,
 			signalStrength: 0,
+			leftProximity: 0,
+			rightProximity: 0,
+			frontProximity: 0,
+			rearProximity: 0,
 			colorRed: 0,
 			colorGreen: 0,
 			colorBlue: 0,
-			colorClear: 0,
-			floor: 0,
-			accelerationX: 0,
-			accelerationY: 0,
-			accelerationZ: 0,
-			temperature: 0,
-			button: 0,
+			gesture: -1,
 			colorNumber: -1,
-			colorPattern: -1,
 			pulseCount: 0,
-			tilt: 0,
-			wheelState: 0,
-			soundState: 0,
-			lineTracerState: 0,
 			batteryState: 2
 		};
 		this.motoring = {
-			module: TURTLE,
+			module: ZERONE,
 			index: index,
-			map: 0xf8000000,
+			map: 0xff000000,
 			leftWheel: 0,
 			rightWheel: 0,
-			ledRed: 0,
-			ledGreen: 0,
-			ledBlue: 0,
+			leftHeadRed: 0,
+			leftHeadGreen: 0,
+			leftHeadBlue: 0,
+			rightHeadRed: 0,
+			rightHeadGreen: 0,
+			rightHeadBlue: 0,
+			leftTailRed: 0,
+			leftTailGreen: 0,
+			leftTailBlue: 0,
+			rightTailRed: 0,
+			rightTailGreen: 0,
+			rightTailBlue: 0,
 			buzzer: 0,
 			pulse: 0,
 			note: 0,
 			sound: 0,
-			lineTracerMode: 0,
-			lineTracerGain: 5,
-			lineTracerSpeed: 5,
-			lamp: 1,
-			lock: 0,
 			motionType: 0,
 			motionUnit: 0,
 			motionSpeed: 0,
 			motionValue: 0,
-			motionRadius: 0
+			motionRadius: 0,
+			sensorMode: 0
 		};
 		this.blockId = 0;
 		this.motionCallback = undefined;
-		this.lineTracerCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
 		this.soundCallback = undefined;
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
-		this.clicked = false;
-		this.doubleClicked = false;
-		this.longPressed = false;
-		this.colorPattern = -1;
+		this.gesture = -1;
 		this.tempo = 60;
 		this.timeouts = [];
 	}
 
-	Turtle.prototype.reset = function() {
+	Zerone.prototype.reset = function() {
 		var motoring = this.motoring;
-		motoring.map = 0xffe40000;
+		motoring.map = 0xfff80000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
-		motoring.ledRed = 0;
-		motoring.ledGreen = 0;
-		motoring.ledBlue = 0;
+		motoring.leftHeadRed = 0;
+		motoring.leftHeadGreen = 0;
+		motoring.leftHeadBlue = 0;
+		motoring.rightHeadRed = 0;
+		motoring.rightHeadGreen = 0;
+		motoring.rightHeadBlue = 0;
+		motoring.leftTailRed = 0;
+		motoring.leftTailGreen = 0;
+		motoring.leftTailBlue = 0;
+		motoring.rightTailRed = 0;
+		motoring.rightTailGreen = 0;
+		motoring.rightTailBlue = 0;
 		motoring.buzzer = 0;
 		motoring.pulse = 0;
 		motoring.note = 0;
 		motoring.sound = 0;
-		motoring.lineTracerMode = 0;
-		motoring.lineTracerGain = 5;
-		motoring.lineTracerSpeed = 5;
-		motoring.lamp = 1;
-		motoring.lock = 0;
 		motoring.motionType = 0;
 		motoring.motionUnit = 0;
 		motoring.motionSpeed = 0;
 		motoring.motionValue = 0;
 		motoring.motionRadius = 0;
+		motoring.sensorMode = 0;
 
 		this.blockId = 0;
 		this.motionCallback = undefined;
-		this.lineTracerCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
 		this.soundCallback = undefined;
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
-		this.clicked = false;
-		this.doubleClicked = false;
-		this.longPressed = false;
-		this.colorPattern = -1;
+		this.gesture = -1;
 		this.tempo = 60;
 
 		this.__removeAllTimeouts();
 	};
 
-	Turtle.prototype.__removeTimeout = function(id) {
+	Zerone.prototype.__removeTimeout = function(id) {
 		clearTimeout(id);
 		var idx = this.timeouts.indexOf(id);
 		if(idx >= 0) {
@@ -669,7 +655,7 @@
 		}
 	};
 
-	Turtle.prototype.__removeAllTimeouts = function() {
+	Zerone.prototype.__removeAllTimeouts = function() {
 		var timeouts = this.timeouts;
 		for(var i in timeouts) {
 			clearTimeout(timeouts[i]);
@@ -677,66 +663,44 @@
 		this.timeouts = [];
 	};
 
-	Turtle.prototype.clearMotoring = function() {
-		this.motoring.map = 0xf8000000;
+	Zerone.prototype.clearMotoring = function() {
+		this.motoring.map = 0xff000000;
 	};
 
-	Turtle.prototype.clearEvent = function() {
-		this.clicked = false;
-		this.doubleClicked = false;
-		this.longPressed = false;
-		this.colorPattern = -1;
+	Zerone.prototype.clearEvent = function() {
+		this.gesture = -1;
 	};
 
-	Turtle.prototype.__setPulse = function(pulse) {
+	Zerone.prototype.__setPulse = function(pulse) {
 		this.motoring.pulse = pulse;
-		this.motoring.map |= 0x04000000;
-	};
-
-	Turtle.prototype.__setLineTracerMode = function(mode) {
-		this.motoring.lineTracerMode = mode;
 		this.motoring.map |= 0x00800000;
 	};
 
-	Turtle.prototype.__setLineTracerGain = function(gain) {
-		this.motoring.lineTracerGain = gain;
-		this.motoring.map |= 0x00400000;
-	};
-
-	Turtle.prototype.__setLineTracerSpeed = function(speed) {
-		this.motoring.lineTracerSpeed = speed;
-		this.motoring.map |= 0x00200000;
-	};
-
-	Turtle.prototype.__cancelLineTracer = function() {
-		this.lineTracerCallback = undefined;
-	};
-
-	Turtle.prototype.__setMotion = function(type, unit, speed, value, radius) {
+	Zerone.prototype.__setMotion = function(type, unit, speed, value, radius) {
 		var motoring = this.motoring;
 		motoring.motionType = type;
 		motoring.motionUnit = unit;
 		motoring.motionSpeed = speed;
 		motoring.motionValue = value;
 		motoring.motionRadius = radius;
-		motoring.map |= 0x00040000;
+		motoring.map |= 0x00100000;
 	};
 
-	Turtle.prototype.__cancelMotion = function() {
+	Zerone.prototype.__cancelMotion = function() {
 		this.motionCallback = undefined;
 	};
 
-	Turtle.prototype.__setNote = function(note) {
+	Zerone.prototype.__setNote = function(note) {
 		this.motoring.note = note;
-		this.motoring.map |= 0x02000000;
+		this.motoring.map |= 0x00400000;
 	};
 
-	Turtle.prototype.__issueNoteId = function() {
+	Zerone.prototype.__issueNoteId = function() {
 		this.noteId = this.blockId = (this.blockId % 65535) + 1;
 		return this.noteId;
 	};
 
-	Turtle.prototype.__cancelNote = function() {
+	Zerone.prototype.__cancelNote = function() {
 		this.noteId = 0;
 		if(this.noteTimer1 !== undefined) {
 			this.__removeTimeout(this.noteTimer1);
@@ -748,12 +712,12 @@
 		this.noteTimer2 = undefined;
 	};
 
-	Turtle.prototype.__setSound = function(sound) {
+	Zerone.prototype.__setSound = function(sound) {
 		this.motoring.sound = sound;
-		this.motoring.map |= 0x01000000;
+		this.motoring.map |= 0x00200000;
 	};
 
-	Turtle.prototype.__runSound = function(sound, count) {
+	Zerone.prototype.__runSound = function(sound, count) {
 		if(typeof count != 'number') count = 1;
 		if(count < 0) count = -1;
 		if(count) {
@@ -763,50 +727,34 @@
 		}
 	};
 
-	Turtle.prototype.__cancelSound = function() {
+	Zerone.prototype.__cancelSound = function() {
 		this.soundCallback = undefined;
 	};
+	
+	Zerone.prototype.__setSensorMode = function(mode) {
+		this.motoring.sensorMode = mode;
+		this.motoring.map |= 0x00080000;
+	};
 
-	Turtle.prototype.handleSensory = function() {
+	Zerone.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
-		if(sensory.map & 0x00000800) self.clicked = true;
-		if(sensory.map & 0x00000400) self.doubleClicked = true;
-		if(sensory.map & 0x00000200) self.longPressed = true;
-		if(sensory.map & 0x00000080) self.colorPattern = sensory.colorPattern;
+		if(sensory.map & 0x00001000) self.gesture = sensory.gesture;
 
-		if(self.lineTracerCallback && (sensory.map & 0x00000008) != 0) {
-			if(sensory.lineTracerState == 0x02) {
-				self.__setLineTracerMode(0);
-				var callback = self.lineTracerCallback;
-				self.__cancelLineTracer();
-				if(callback) callback();
-			}
+		if(self.motionCallback && (sensory.map & 0x00000200) != 0) {
+			self.motoring.leftWheel = 0;
+			self.motoring.rightWheel = 0;
+			var callback = self.motionCallback;
+			self.__cancelMotion();
+			if(callback) callback();
 		}
-		if(self.motionCallback && (sensory.map & 0x00000020) != 0) {
-			if(sensory.wheelState == 0) {
-				self.motoring.leftWheel = 0;
-				self.motoring.rightWheel = 0;
-				var callback = self.motionCallback;
-				self.__cancelMotion();
-				if(callback) callback();
-			}
-		}
-		if((sensory.map & 0x00000010) != 0) {
-			if(sensory.soundState == 0) {
-				if(self.currentSound > 0) {
-					if(self.soundRepeat < 0) {
-						self.__runSound(self.currentSound, -1);
-					} else if(self.soundRepeat > 1) {
-						self.soundRepeat --;
-						self.__runSound(self.currentSound, self.soundRepeat);
-					} else {
-						self.currentSound = 0;
-						self.soundRepeat = 1;
-						var callback = self.soundCallback;
-						self.__cancelSound();
-						if(callback) callback();
-					}
+		if(self.soundCallback && (sensory.map & 0x00000100) != 0) {
+			if(self.currentSound > 0) {
+				if(self.soundRepeat < 0) {
+					self.__runSound(self.currentSound, -1);
+				} else if(self.soundRepeat > 1) {
+					self.soundRepeat --;
+					self.__runSound(self.currentSound, self.soundRepeat);
 				} else {
 					self.currentSound = 0;
 					self.soundRepeat = 1;
@@ -814,25 +762,28 @@
 					self.__cancelSound();
 					if(callback) callback();
 				}
+			} else {
+				self.currentSound = 0;
+				self.soundRepeat = 1;
+				var callback = self.soundCallback;
+				self.__cancelSound();
+				if(callback) callback();
 			}
 		}
 	};
 
-	Turtle.prototype.__motion = function(type, callback) {
+	Zerone.prototype.__motion = function(type, callback) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		this.__setPulse(0);
 		this.__setMotion(type, 1, 0, 0, 0); // type, unit, speed, value, radius
 		this.motionCallback = callback;
-		this.__setLineTracerMode(0);
 	};
 
-	Turtle.prototype.__motionUnit = function(type, unit, value, callback) {
+	Zerone.prototype.__motionUnit = function(type, unit, value, callback) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 		this.__cancelMotion();
 
 		motoring.leftWheel = 0;
@@ -842,44 +793,21 @@
 		if(value && value > 0) {
 			this.__setMotion(type, unit, 0, value, 0); // type, unit, speed, value, radius
 			this.motionCallback = callback;
-			this.__setLineTracerMode(0);
 		} else {
 			this.__setMotion(0, 0, 0, 0, 0);
-			this.__setLineTracerMode(0);
 			callback();
 		}
 	};
 
-	Turtle.prototype.__motionUnitRadius = function(type, unit, value, radius, callback) {
-		var motoring = this.motoring;
-		this.__cancelLineTracer();
-		this.__cancelMotion();
-
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		value = parseFloat(value);
-		radius = parseFloat(radius);
-		if(value && value > 0 && (typeof radius == 'number') && radius >= 0) {
-			this.__setMotion(type, unit, 0, value, radius); // type, unit, speed, value, radius
-			this.motionCallback = callback;
-			this.__setLineTracerMode(0);
-		} else {
-			this.__setMotion(0, 0, 0, 0, 0);
-			this.__setLineTracerMode(0);
-			callback();
-		}
-	};
-
-	Turtle.prototype.moveForward = function(callback) {
+	Zerone.prototype.moveForward = function(callback) {
 		this.__motion(101, callback);
 	};
 
-	Turtle.prototype.moveBackward = function(callback) {
+	Zerone.prototype.moveBackward = function(callback) {
 		this.__motion(102, callback);
 	};
 
-	Turtle.prototype.turn = function(direction, callback) {
+	Zerone.prototype.turn = function(direction, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
 			this.__motion(103, callback);
 		} else {
@@ -887,17 +815,17 @@
 		}
 	};
 
-	Turtle.prototype.moveForwardUnit = function(value, unit, callback) {
+	Zerone.prototype.moveForwardUnit = function(value, unit, callback) {
 		if(value < 0) this.__motionUnit(2, UNITS[unit], -value, callback);
 		else this.__motionUnit(1, UNITS[unit], value, callback);
 	};
 
-	Turtle.prototype.moveBackwardUnit = function(value, unit, callback) {
+	Zerone.prototype.moveBackwardUnit = function(value, unit, callback) {
 		if(value < 0) this.__motionUnit(1, UNITS[unit], -value, callback);
 		else this.__motionUnit(2, UNITS[unit], value, callback);
 	};
 
-	Turtle.prototype.turnUnit = function(direction, value, unit, callback) {
+	Zerone.prototype.turnUnit = function(direction, value, unit, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
 			if(value < 0) this.__motionUnit(4, UNITS[unit], -value, callback);
 			else this.__motionUnit(3, UNITS[unit], value, callback);
@@ -907,51 +835,8 @@
 		}
 	};
 
-	Turtle.prototype.pivotUnit = function(wheel, value, unit, toward, callback) {
-		unit = UNITS[unit];
-		if(PARTS[wheel] == LEFT) {
-			if(TOWARDS[toward] == HEAD) {
-				if(value < 0) this.__motionUnit(6, unit, -value, callback);
-				else this.__motionUnit(5, unit, value, callback);
-			} else {
-				if(value < 0) this.__motionUnit(5, unit, -value, callback);
-				else this.__motionUnit(6, unit, value, callback);
-			}
-		} else {
-			if(TOWARDS[toward] == HEAD) {
-				if(value < 0) this.__motionUnit(8, unit, -value, callback);
-				else this.__motionUnit(7, unit, value, callback);
-			} else {
-				if(value < 0) this.__motionUnit(7, unit, -value, callback);
-				else this.__motionUnit(8, unit, value, callback);
-			}
-		}
-	};
-
-	Turtle.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
-		unit = UNITS[unit];
-		if(DIRECTIONS[direction] == LEFT) {
-			if(TOWARDS[toward] == HEAD) {
-				if(value < 0) this.__motionUnitRadius(10, unit, -value, radius, callback);
-				else this.__motionUnitRadius(9, unit, value, radius, callback);
-			} else {
-				if(value < 0) this.__motionUnitRadius(9, unit, -value, radius, callback);
-				else this.__motionUnitRadius(10, unit, value, radius, callback);
-			}
-		} else {
-			if(TOWARDS[toward] == HEAD) {
-				if(value < 0) this.__motionUnitRadius(12, unit, -value, radius, callback);
-				else this.__motionUnitRadius(11, unit, value, radius, callback);
-			} else {
-				if(value < 0) this.__motionUnitRadius(11, unit, -value, radius, callback);
-				else this.__motionUnitRadius(12, unit, value, radius, callback);
-			}
-		}
-	};
-
-	Turtle.prototype.setWheels = function(leftVelocity, rightVelocity) {
+	Zerone.prototype.setWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 		this.__cancelMotion();
 
 		leftVelocity = parseFloat(leftVelocity);
@@ -964,12 +849,10 @@
 		}
 		this.__setPulse(0);
 		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(0);
 	};
 
-	Turtle.prototype.changeWheels = function(leftVelocity, rightVelocity) {
+	Zerone.prototype.changeWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 		this.__cancelMotion();
 
 		leftVelocity = parseFloat(leftVelocity);
@@ -982,12 +865,10 @@
 		}
 		this.__setPulse(0);
 		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(0);
 	};
 
-	Turtle.prototype.setWheel = function(wheel, velocity) {
+	Zerone.prototype.setWheel = function(wheel, velocity) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 		this.__cancelMotion();
 
 		velocity = parseFloat(velocity);
@@ -1004,12 +885,10 @@
 		}
 		this.__setPulse(0);
 		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(0);
 	};
 
-	Turtle.prototype.changeWheel = function(wheel, velocity) {
+	Zerone.prototype.changeWheel = function(wheel, velocity) {
 		var motoring = this.motoring;
-		this.__cancelLineTracer();
 		this.__cancelMotion();
 
 		velocity = parseFloat(velocity);
@@ -1026,49 +905,9 @@
 		}
 		this.__setPulse(0);
 		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(0);
 	};
 
-	Turtle.prototype.followLine = function(color) {
-		var motoring = this.motoring;
-		this.__cancelLineTracer();
-		this.__cancelMotion();
-
-		var mode = 10 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(mode);
-	};
-
-	Turtle.prototype.followLineUntil = function(color, callback) {
-		var motoring = this.motoring;
-		this.__cancelMotion();
-
-		var mode = 60 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(mode);
-		this.lineTracerCallback = callback;
-	};
-
-	Turtle.prototype.followLineUntilBlack = function(color, callback) {
-		var motoring = this.motoring;
-		this.__cancelMotion();
-
-		var mode = 70 + LINE_COLORS[color];
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(mode);
-		this.lineTracerCallback = callback;
-	};
-
-	Turtle.prototype.crossIntersection = function(callback) {
+	Zerone.prototype.stop = function() {
 		var motoring = this.motoring;
 		this.__cancelMotion();
 
@@ -1076,97 +915,130 @@
 		motoring.rightWheel = 0;
 		this.__setPulse(0);
 		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(40);
-		this.lineTracerCallback = callback;
 	};
 
-	Turtle.prototype.turnAtIntersection = function(direction, callback) {
-		var motoring = this.motoring;
-		this.__cancelMotion();
-
-		var mode = 20;
-		direction = DIRECTIONS[direction];
-		if(direction == RIGHT) mode = 30;
-		else if(direction === BACK) mode = 50;
-
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(mode);
-		this.lineTracerCallback = callback;
-	};
-
-	Turtle.prototype.setLineTracerSpeed = function(speed) {
-		speed = parseInt(speed);
-		if(typeof speed == 'number') {
-			this.__setLineTracerSpeed(speed);
-			this.__setLineTracerGain(speed);
-		}
-	};
-
-	Turtle.prototype.stop = function() {
-		var motoring = this.motoring;
-		this.__cancelLineTracer();
-		this.__cancelMotion();
-
-		motoring.leftWheel = 0;
-		motoring.rightWheel = 0;
-		this.__setPulse(0);
-		this.__setMotion(0, 0, 0, 0, 0);
-		this.__setLineTracerMode(0);
-	};
-
-	Turtle.prototype.setHeadColor = function(color) {
+	Zerone.prototype.setLed = function(led, color) {
 		var rgb = RGB_COLORS[color];
 		if(rgb) {
-			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
-	Turtle.prototype.setHeadRgbArray = function(rgb) {
+	Zerone.prototype.setHeadRgbArray = function(led, rgb) {
 		if(rgb) {
-			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+			this.setRgb(led, rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
-	Turtle.prototype.setHeadRgb = function(red, green, blue) {
+	Zerone.prototype.setRgb = function(led, red, green, blue) {
 		var motoring = this.motoring;
+		led = PARTS[led];
 		red = parseInt(red);
 		green = parseInt(green);
 		blue = parseInt(blue);
-		if(typeof red == 'number') {
-			motoring.ledRed = red;
+		if(led == LEFT_HEAD || led == LEFT || led == HEAD || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.leftHeadRed = red;
+			}
+			if(typeof green == 'number') {
+				motoring.leftHeadGreen = green;
+			}
+			if(typeof blue == 'number') {
+				motoring.leftHeadBlue = blue;
+			}
 		}
-		if(typeof green == 'number') {
-			motoring.ledGreen = green;
+		if(led == RIGHT_HEAD || led == RIGHT || led == HEAD || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.rightHeadRed = red;
+			}
+			if(typeof green == 'number') {
+				motoring.rightHeadGreen = green;
+			}
+			if(typeof blue == 'number') {
+				motoring.rightHeadBlue = blue;
+			}
 		}
-		if(typeof blue == 'number') {
-			motoring.ledBlue = blue;
+		if(led == LEFT_TAIL || led == LEFT || led == TAIL || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.leftTailRed = red;
+			}
+			if(typeof green == 'number') {
+				motoring.leftTailGreen = green;
+			}
+			if(typeof blue == 'number') {
+				motoring.leftTailBlue = blue;
+			}
+		}
+		if(led == RIGHT_TAIL || led == RIGHT || led == TAIL || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.rightTailRed = red;
+			}
+			if(typeof green == 'number') {
+				motoring.rightTailGreen = green;
+			}
+			if(typeof blue == 'number') {
+				motoring.rightTailBlue = blue;
+			}
 		}
 	};
 
-	Turtle.prototype.changeHeadRgb = function(red, green, blue) {
+	Zerone.prototype.changeRgb = function(led, red, green, blue) {
 		var motoring = this.motoring;
+		led = PARTS[led];
 		red = parseInt(red);
 		green = parseInt(green);
 		blue = parseInt(blue);
-		if(typeof red == 'number') {
-			motoring.ledRed += red;
+		if(led == LEFT_HEAD || led == LEFT || led == HEAD || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.leftHeadRed += red;
+			}
+			if(typeof green == 'number') {
+				motoring.leftHeadGreen += green;
+			}
+			if(typeof blue == 'number') {
+				motoring.leftHeadBlue += blue;
+			}
 		}
-		if(typeof green == 'number') {
-			motoring.ledGreen += green;
+		if(led == RIGHT_HEAD || led == RIGHT || led == HEAD || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.rightHeadRed += red;
+			}
+			if(typeof green == 'number') {
+				motoring.rightHeadGreen += green;
+			}
+			if(typeof blue == 'number') {
+				motoring.rightHeadBlue += blue;
+			}
 		}
-		if(typeof blue == 'number') {
-			motoring.ledBlue += blue;
+		if(led == LEFT_TAIL || led == LEFT || led == TAIL || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.leftTailRed += red;
+			}
+			if(typeof green == 'number') {
+				motoring.leftTailGreen += green;
+			}
+			if(typeof blue == 'number') {
+				motoring.leftTailBlue += blue;
+			}
+		}
+		if(led == RIGHT_TAIL || led == RIGHT || led == TAIL || led == ALL) {
+			if(typeof red == 'number') {
+				motoring.rightTailRed += red;
+			}
+			if(typeof green == 'number') {
+				motoring.rightTailGreen += green;
+			}
+			if(typeof blue == 'number') {
+				motoring.rightTailBlue += blue;
+			}
 		}
 	};
 
-	Turtle.prototype.clearHead = function() {
-		this.setHeadRgb(0, 0, 0);
+	Zerone.prototype.clearLed = function(led) {
+		this.setRgb(led, 0, 0, 0);
 	};
 
-	Turtle.prototype.playSound = function(sound, count) {
+	Zerone.prototype.playSound = function(sound, count) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1182,7 +1054,7 @@
 		}
 	};
 
-	Turtle.prototype.playSoundUntil = function(sound, count, callback) {
+	Zerone.prototype.playSoundUntil = function(sound, count, callback) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1200,7 +1072,7 @@
 		}
 	};
 
-	Turtle.prototype.setBuzzer = function(hz) {
+	Zerone.prototype.setBuzzer = function(hz) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1213,7 +1085,7 @@
 		this.__runSound(0);
 	};
 
-	Turtle.prototype.changeBuzzer = function(hz) {
+	Zerone.prototype.changeBuzzer = function(hz) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1226,7 +1098,7 @@
 		this.__runSound(0);
 	};
 
-	Turtle.prototype.clearSound = function() {
+	Zerone.prototype.clearSound = function() {
 		this.__cancelNote();
 		this.__cancelSound();
 		this.motoring.buzzer = 0;
@@ -1234,7 +1106,7 @@
 		this.__runSound(0);
 	};
 
-	Turtle.prototype.playNote = function(note, octave) {
+	Zerone.prototype.playNote = function(note, octave) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1251,7 +1123,7 @@
 		this.__runSound(0);
 	};
 
-	Turtle.prototype.playNoteBeat = function(note, octave, beat, callback) {
+	Zerone.prototype.playNoteBeat = function(note, octave, beat, callback) {
 		var self = this;
 		var motoring = self.motoring;
 		self.__cancelNote();
@@ -1295,7 +1167,7 @@
 		}
 	};
 
-	Turtle.prototype.restBeat = function(beat, callback) {
+	Zerone.prototype.restBeat = function(beat, callback) {
 		var self = this;
 		var motoring = self.motoring;
 		self.__cancelNote();
@@ -1321,7 +1193,7 @@
 		}
 	};
 
-	Turtle.prototype.setTempo = function(bpm) {
+	Zerone.prototype.setTempo = function(bpm) {
 		bpm = parseFloat(bpm);
 		if(typeof bpm == 'number') {
 			this.tempo = bpm;
@@ -1329,15 +1201,25 @@
 		}
 	};
 
-	Turtle.prototype.changeTempo = function(bpm) {
+	Zerone.prototype.changeTempo = function(bpm) {
 		bpm = parseFloat(bpm);
 		if(typeof bpm == 'number') {
 			this.tempo += bpm;
 			if(this.tempo < 1) this.tempo = 1;
 		}
 	};
+	
+	Zerone.prototype.startSensor = function(mode) {
+		mode = MODES[mode];
+		if(mode == GESTURE) this.__setSensorMode(0);
+		else if(mode == COLOR) this.__setSensorMode(1);
+	};
+	
+	Zerone.prototype.checkGesture = function(gesture) {
+		return this.gesture == GESTURES[gesture];
+	};
 
-	Turtle.prototype.checkTouchingColor = function(color) {
+	Zerone.prototype.checkTouchingColor = function(color) {
 		color = COLOR_NUMBERS[color];
 		if(typeof color == 'number') {
 			return this.sensory.colorNumber == color;
@@ -1345,66 +1227,48 @@
 		return false;
 	};
 
-	Turtle.prototype.checkColorPattern = function(color1, color2) {
-		color1 = COLOR_PATTERNS[color1];
-		color2 = COLOR_PATTERNS[color2];
-		if((typeof color1 == 'number') && (typeof color2 == 'number')) {
-			return this.colorPattern == color1 * 10 + color2;
-		}
-		return false;
-	};
-
-	Turtle.prototype.checkButtonEvent = function(event) {
-		switch(BUTTON_STATES[event]) {
-			case CLICKED: return this.clicked;
-			case DOUBLE_CLICKED: return this.doubleClicked;
-			case LONG_PRESSED: return this.longPressed;
-		}
-		return false;
-	};
-
-	Turtle.prototype.checkTilt = function(tilt) {
-		switch(TILTS[tilt]) {
-			case TILT_FORWARD: return this.sensory.tilt == 1;
-			case TILT_BACKWARD: return this.sensory.tilt == -1;
-			case TILT_LEFT: return this.sensory.tilt == 2;
-			case TILT_RIGHT: return this.sensory.tilt == -2;
-			case TILT_FLIP: return this.sensory.tilt == 3;
-			case TILT_NONE: return this.sensory.tilt == -3;
-		}
-		return false;
-	};
-
-	Turtle.prototype.checkBattery = function(battery) {
+	Zerone.prototype.checkBattery = function(battery) {
 		return this.sensory.batteryState == BATTERY_STATES[battery];
 	};
-
-	Turtle.prototype.getColorNumber = function() {
+	
+	Zerone.prototype.getSignalStrength = function() {
+		return this.sensory.signalStrength;
+	};
+	
+	Zerone.prototype.getLeftProximity = function() {
+		return this.sensory.leftProximity;
+	};
+	
+	Zerone.prototype.getRightProximity = function() {
+		return this.sensory.rightProximity;
+	};
+	
+	Zerone.prototype.getFrontProximity = function() {
+		return this.sensory.frontProximity;
+	};
+	
+	Zerone.prototype.getRearProximity = function() {
+		return this.sensory.rearProximity;
+	};
+	
+	Zerone.prototype.getColorRed = function() {
+		return this.sensory.colorRed;
+	};
+	
+	Zerone.prototype.getColorGreen = function() {
+		return this.sensory.colorGreen;
+	};
+	
+	Zerone.prototype.getColorBlue = function() {
+		return this.sensory.colorBlue;
+	};
+	
+	Zerone.prototype.getGesture = function() {
+		return this.gesture;
+	};
+	
+	Zerone.prototype.getColorNumber = function() {
 		return this.sensory.colorNumber;
-	};
-
-	Turtle.prototype.getColorPattern = function() {
-		return this.colorPattern;
-	};
-
-	Turtle.prototype.getFloor = function() {
-		return this.sensory.floor;
-	};
-
-	Turtle.prototype.getButton = function() {
-		return this.sensory.button;
-	};
-
-	Turtle.prototype.getAccelerationX = function() {
-		return this.sensory.accelerationX;
-	};
-
-	Turtle.prototype.getAccelerationY = function() {
-		return this.sensory.accelerationY;
-	};
-
-	Turtle.prototype.getAccelerationZ = function() {
-		return this.sensory.accelerationZ;
 	};
 
 	function getOrCreateRobot(group, module, index) {
@@ -1412,7 +1276,7 @@
 		var robot = robots[key];
 		if(!robot) {
 			switch(module) {
-				case TURTLE: robot = new Turtle(index); break;
+				case ZERONE: robot = new Zerone(index); break;
 			}
 			if(robot) {
 				robots[key] = robot;
@@ -1466,7 +1330,7 @@
 						var received = JSON.parse(message.data);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							if(received.module == TURTLE) {
+							if(received.module == ZERONE) {
 								connectionState = received.state;
 							}
 						} else {
@@ -1501,7 +1365,7 @@
 										var json = JSON.stringify(packet);
 										if(canSend && socket) socket.send(json);
 									} else {
-										var robot = getRobot(TURTLE, 0);
+										var robot = getRobot(ZERONE, 0);
 										if(robot) {
 											var json = JSON.stringify(robot.motoring);
 											if(canSend && socket) socket.send(json);
@@ -1534,272 +1398,216 @@
 		}
 	}
 	
-	ext.turtleMoveForward = function(callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneMoveForward = function(callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.turtleMoveBackward = function(callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneMoveBackward = function(callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.turtleTurn = function(direction, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneTurn = function(direction, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.turtleMoveForwardUnit = function(value, unit, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneMoveForwardUnit = function(value, unit, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.turtleMoveBackwardUnit = function(value, unit, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneMoveBackwardUnit = function(value, unit, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.turtleTurnUnitInPlace = function(direction, value, unit, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneTurnUnitInPlace = function(direction, value, unit, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.turtlePivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.pivotUnit(wheel, value, unit, head, callback);
-	};
-	
-	ext.turtleTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, head, callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.swingUnit(direction, value, unit, radius, head, callback);
-	};
-	
-	ext.turtleChangeWheelsByLeftRight = function(left, right) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneChangeBothWheelsBy = function(left, right) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.turtleSetWheelsToLeftRight = function(left, right) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneSetBothWheelsTo = function(left, right) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.turtleChangeWheelBy = function(wheel, speed) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.changeWheel(wheel, speed);
+	ext.zeroneChangeWheelBy = function(wheel, value) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.changeWheel(wheel, value);
 	};
 
-	ext.turtleSetWheelTo = function(wheel, speed) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.setWheel(wheel, speed);
+	ext.zeroneSetWheelTo = function(wheel, value) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.setWheel(wheel, value);
 	};
 
-	ext.turtleFollowLine = function(color) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.followLine(color);
-	};
-
-	ext.turtleFollowLineUntil = function(color, callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.followLineUntil(color, callback);
-	};
-	
-	ext.turtleFollowLineUntilBlack = function(color, callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.followLineUntilBlack(color, callback);
-	};
-	
-	ext.turtleCrossIntersection = function(callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.crossIntersection(callback);
-	};
-	
-	ext.turtleTurnAtIntersection = function(direction, callback) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.turnAtIntersection(direction, callback);
-	};
-
-	ext.turtleSetFollowingSpeedTo = function(speed) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.setLineTracerSpeed(speed);
-	};
-
-	ext.turtleStop = function() {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneStop = function() {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.stop();
 	};
 
-	ext.turtleSetHeadLedTo = function(color) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.setHeadColor(color);
+	ext.zeroneSetLedTo = function(led, color) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.setLed(led, color);
 	};
 	
-	ext.turtleChangeHeadLedByRGB = function(red, green, blue) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.changeHeadRgb(red, green, blue);
+	ext.zeroneChangeLedByRGB = function(led, red, green, blue) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.changeRgb(led, red, green, blue);
 	};
 	
-	ext.turtleSetHeadLedToRGB = function(red, green, blue) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.setHeadRgb(red, green, blue);
+	ext.zeroneSetLedToRGB = function(led, red, green, blue) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.setRgb(led, red, green, blue);
 	};
 
-	ext.turtleClearHeadLed = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.clearHead();
+	ext.zeroneClearLed = function(led) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.clearLed(led);
 	};
 
-	ext.turtlePlaySound = function(sound) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeronePlaySound = function(sound) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.turtlePlaySoundTimes = function(sound, count) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeronePlaySoundTimes = function(sound, count) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.turtlePlaySoundTimesUntilDone = function(sound, count, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeronePlaySoundTimesUntilDone = function(sound, count, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.turtleChangeBuzzerBy = function(hz) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneChangeBuzzerBy = function(hz) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.turtleSetBuzzerTo = function(hz) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneSetBuzzerTo = function(hz) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.turtleClearSound = function() {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneClearSound = function() {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.turtlePlayNote = function(note, octave) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeronePlayNote = function(note, octave) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.turtlePlayNoteForBeats = function(note, octave, beat, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeronePlayNoteFor = function(note, octave, beat, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.turtleRestForBeats = function(beat, callback) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneRestFor = function(beat, callback) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.turtleChangeTempoBy = function(bpm) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneChangeTempoBy = function(bpm) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.turtleSetTempoTo = function(bpm) {
-		var robot = getRobot(TURTLE, 0);
+	ext.zeroneSetTempoTo = function(bpm) {
+		var robot = getRobot(ZERONE, 0);
 		if(robot) robot.setTempo(bpm);
 	};
-
-	ext.turtleWhenColorTouched = function(color) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkTouchingColor(color);
-		return false;
+	
+	ext.zeroneStartSensor = function(mode) {
+		var robot = getRobot(ZERONE, 0);
+		if(robot) robot.startSensor(mode);
 	};
 	
-	ext.turtleWhenColorPattern = function(color1, color2) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkColorPattern(color1, color2);
-		return false;
+	ext.zeroneLeftProximity = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getLeftProximity() : 0;
 	};
 	
-	ext.turtleWhenButtonState = function(state) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkButtonEvent(state);
-		return false;
+	ext.zeroneRightProximity = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getRightProximity() : 0;
 	};
 	
-	ext.turtleWhenTilt = function(tilt) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkTilt(tilt);
-		return false;
+	ext.zeroneFrontProximity = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getFrontProximity() : 0;
 	};
 	
-	ext.turtleTouchingColor = function(color) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkTouchingColor(color);
-		return false;
+	ext.zeroneRearProximity = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getRearProximity() : 0;
 	};
 	
-	ext.turtleIsColorPattern = function(color1, color2) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkColorPattern(color1, color2);
-		return false;
+	ext.zeroneColorRed = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getColorRed() : 0;
 	};
 	
-	ext.turtleButtonState = function(state) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkButtonEvent(state);
-		return false;
+	ext.zeroneColorGreen = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getColorGreen() : 0;
 	};
 	
-	ext.turtleTilt = function(tilt) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkTilt(tilt);
-		return false;
+	ext.zeroneColorBlue = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getColorBlue() : 0;
 	};
 	
-	ext.turtleBattery = function(state) {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.checkBattery(state);
-		return false;
+	ext.zeroneGesture = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getGesture() : -1;
+	};
+	
+	ext.zeroneColorNumber = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getColorNumber() : -1;
+	};
+	
+	ext.zeroneSignalStrength = function() {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.getSignalStrength() : 0;
+	};
+	
+	ext.zeroneWhenGesture = function(gesture) {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.checkGesture(gesture) : false;
 	};
 
-	ext.turtleColorNumber = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) robot.getColorNumber();
-		return -1;
+	ext.zeroneWhenColorTouched = function(color) {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.checkTouchingColor(color) : false;
 	};
-
-	ext.turtleColorPattern = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getColorPattern();
-		return -1;
+	
+	ext.zeroneIsGesture = function(gesture) {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.checkGesture(gesture) : false;
 	};
-
-	ext.turtleFloor = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getFloor();
-		return 0;
+	
+	ext.zeroneTouchingColor = function(color) {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.checkTouchingColor(color) : false;
 	};
-
-	ext.turtleButton = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getButton();
-		return 0;
+	
+	ext.zeroneBattery = function(state) {
+		var robot = getRobot(ZERONE, 0);
+		return robot ? robot.checkBattery(state) : false;
 	};
-
-	ext.turtleAccelerationX = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getAccelerationX();
-		return 0;
-	};
-
-	ext.turtleAccelerationY = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getAccelerationY();
-		return 0;
-	};
-
-	ext.turtleAccelerationZ = function() {
-		var robot = getRobot(TURTLE, 0);
-		if(robot) return robot.getAccelerationZ();
-		return 0;
-	};
-
+	
 	ext._getStatus = function() {
 		clearEvents();
 		switch(connectionState) {
