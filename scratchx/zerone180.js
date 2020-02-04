@@ -772,7 +772,7 @@
 			self.__cancelMotion();
 			if(callback) callback();
 		}
-		if(self.soundCallback && (sensory.map & 0x00000100) != 0) {
+		if((sensory.map & 0x00000100) != 0) {
 			if(self.currentSound > 0) {
 				if(self.soundRepeat < 0) {
 					self.__runSound(self.currentSound, -1);
