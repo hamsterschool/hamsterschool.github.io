@@ -41,6 +41,8 @@
 			[" ", "clear sound", "zeroneClearSound"],
 			["-"],
 			[" ", "start %m.zerone_sensor_mode sensor", "zeroneStartSensor", "gesture"],
+			["h", "when gesture is %m.gesture", "zeroneWhenGesture", "forward"],
+			["h", "when %m.zerone_color touched", "zeroneWhenColorTouched", "red"],
 			["b", "gesture %m.gesture ?", "zeroneIsGesture", "forward"],
 			["b", "touching %m.zerone_color ?", "zeroneTouchingColor", "red"]
 		],
@@ -61,6 +63,8 @@
 			[" ", "set tempo to %n bpm", "zeroneSetTempoTo", 60],
 			["-"],
 			[" ", "start %m.zerone_sensor_mode sensor", "zeroneStartSensor", "gesture"],
+			["h", "when gesture is %m.gesture", "zeroneWhenGesture", "forward"],
+			["h", "when %m.zerone_color touched", "zeroneWhenColorTouched", "red"],
 			["b", "gesture %m.gesture ?", "zeroneIsGesture", "forward"],
 			["b", "touching %m.zerone_color ?", "zeroneTouchingColor", "red"]
 		],
@@ -101,6 +105,8 @@
 			["r", "color g", "zeroneColorGreen"],
 			["r", "color b", "zeroneColorBlue"],
 			["r", "signal strength", "zeroneSignalStrength"],
+			["h", "when gesture is %m.gesture", "zeroneWhenGesture", "forward"],
+			["h", "when %m.zerone_color touched", "zeroneWhenColorTouched", "red"],
 			["b", "gesture %m.gesture ?", "zeroneIsGesture", "forward"],
 			["b", "touching %m.zerone_color ?", "zeroneTouchingColor", "red"],
 			["b", "battery %m.battery ?", "zeroneBattery", "normal"]
@@ -117,6 +123,8 @@
 			[" ", "소리 끄기", "zeroneClearSound"],
 			["-"],
 			[" ", "%m.zerone_sensor_mode 센서 시작하기", "zeroneStartSensor", "제스처"],
+			["h", "제스처가 %m.gesture 일 때", "zeroneWhenGesture", "앞으로"],
+			["h", "%m.zerone_color 에 닿았을 때", "zeroneWhenColorTouched", "빨간색"],
 			["b", "제스처가 %m.gesture 인가?", "zeroneIsGesture", "앞으로"],
 			["b", "%m.zerone_color 에 닿았는가?", "zeroneTouchingColor", "빨간색"]
 		],
@@ -137,6 +145,8 @@
 			[" ", "연주 속도를 %n BPM으로 정하기", "zeroneSetTempoTo", 60],
 			["-"],
 			[" ", "%m.zerone_sensor_mode 센서 시작하기", "zeroneStartSensor", "제스처"],
+			["h", "제스처가 %m.gesture 일 때", "zeroneWhenGesture", "앞으로"],
+			["h", "%m.zerone_color 에 닿았을 때", "zeroneWhenColorTouched", "빨간색"],
 			["b", "제스처가 %m.gesture 인가?", "zeroneIsGesture", "앞으로"],
 			["b", "%m.zerone_color 에 닿았는가?", "zeroneTouchingColor", "빨간색"]
 		],
@@ -177,6 +187,8 @@
 			["r", "색깔 G", "zeroneColorGreen"],
 			["r", "색깔 B", "zeroneColorBlue"],
 			["r", "신호 세기", "zeroneSignalStrength"],
+			["h", "제스처가 %m.gesture 일 때", "zeroneWhenGesture", "앞으로"],
+			["h", "%m.zerone_color 에 닿았을 때", "zeroneWhenColorTouched", "빨간색"],
 			["b", "제스처가 %m.gesture 인가?", "zeroneIsGesture", "앞으로"],
 			["b", "%m.zerone_color 에 닿았는가?", "zeroneTouchingColor", "빨간색"],
 			["b", "배터리 %m.battery ?", "zeroneBattery", "정상"]
@@ -193,6 +205,8 @@
 			[" ", "音を止める", "zeroneClearSound"],
 			["-"],
 			[" ", "%m.zerone_sensor_mode センサーを開始する", "zeroneStartSensor", "ジェスチャー"],
+			["h", "ジェスチャーが %m.gesture であるとき", "zeroneWhenGesture", "前へ"],
+			["h", "%m.zerone_color に触れたとき", "zeroneWhenColorTouched", "赤色"],
 			["b", "ジェスチャーが %m.gesture ですか?", "zeroneIsGesture", "前へ"],
 			["b", "%m.zerone_color に触れたか?", "zeroneTouchingColor", "赤色"]
 		],
@@ -213,6 +227,8 @@
 			[" ", "テンポを %n BPMにする", "zeroneSetTempoTo", 60],
 			["-"],
 			[" ", "%m.zerone_sensor_mode センサーを開始する", "zeroneStartSensor", "ジェスチャー"],
+			["h", "ジェスチャーが %m.gesture であるとき", "zeroneWhenGesture", "前へ"],
+			["h", "%m.zerone_color に触れたとき", "zeroneWhenColorTouched", "赤色"],
 			["b", "ジェスチャーが %m.gesture ですか?", "zeroneIsGesture", "前へ"],
 			["b", "%m.zerone_color に触れたか?", "zeroneTouchingColor", "赤色"]
 		],
@@ -253,6 +269,8 @@
 			["r", "色G", "zeroneColorGreen"],
 			["r", "色B", "zeroneColorBlue"],
 			["r", "信号強度", "zeroneSignalStrength"],
+			["h", "ジェスチャーが %m.gesture であるとき", "zeroneWhenGesture", "前へ"],
+			["h", "%m.zerone_color に触れたとき", "zeroneWhenColorTouched", "赤色"],
 			["b", "ジェスチャーが %m.gesture ですか?", "zeroneIsGesture", "前へ"],
 			["b", "%m.zerone_color に触れたか?", "zeroneTouchingColor", "赤色"],
 			["b", "電池が %m.battery ?", "zeroneBattery", "正常か"]
@@ -269,6 +287,8 @@
 			[" ", "tovushni o'chirish", "zeroneClearSound"],
 			["-"],
 			[" ", "%m.zerone_sensor_mode sensorini ishga tushiring", "zeroneStartSensor", "jest"],
+			["h", "jest %m.gesture bo'lganida", "zeroneWhenGesture", "oldinga"],
+			["h", "%m.zerone_color ga tegilganda", "zeroneWhenColorTouched", "qizil"],
 			["b", "jest %m.gesture ?", "zeroneIsGesture", "oldinga"],
 			["b", "%m.zerone_color ga tekkan?", "zeroneTouchingColor", "qizil"]
 		],
@@ -289,6 +309,8 @@
 			[" ", "temni %n bpm ga sozlash", "zeroneSetTempoTo", 60],
 			["-"],
 			[" ", "%m.zerone_sensor_mode sensorini ishga tushiring", "zeroneStartSensor", "jest"],
+			["h", "jest %m.gesture bo'lganida", "zeroneWhenGesture", "oldinga"],
+			["h", "%m.zerone_color ga tegilganda", "zeroneWhenColorTouched", "qizil"],
 			["b", "jest %m.gesture ?", "zeroneIsGesture", "oldinga"],
 			["b", "%m.zerone_color ga tekkan?", "zeroneTouchingColor", "qizil"]
 		],
@@ -329,6 +351,8 @@
 			["r", "rang g", "zeroneColorGreen"],
 			["r", "rang b", "zeroneColorBlue"],
 			["r", "signal kuchi", "zeroneSignalStrength"],
+			["h", "jest %m.gesture bo'lganida", "zeroneWhenGesture", "oldinga"],
+			["h", "%m.zerone_color ga tegilganda", "zeroneWhenColorTouched", "qizil"],
 			["b", "jest %m.gesture ?", "zeroneIsGesture", "oldinga"],
 			["b", "%m.zerone_color ga tekkan?", "zeroneTouchingColor", "qizil"],
 			["b", "batareya %m.battery ?", "zeroneBattery", "normal"]
