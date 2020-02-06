@@ -535,7 +535,7 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound'];
+		tmp = MENUS[i]['sound_effect'];
 		SOUNDS[tmp[0]] = 1; // beep
 		SOUNDS[tmp[1]] = 2; // random beep
 		SOUNDS[tmp[2]] = 10; // noise
@@ -551,6 +551,7 @@
 		SOUNDS[tmp[12]] = 15; // sleep
 		SOUNDS[tmp[13]] = 6; // march
 		SOUNDS[tmp[14]] = 7; // birthday
+		tmp = MENUS[i]['zerone_color'];
 		COLOR_NUMBERS[tmp[0]] = 1; // red
 		COLOR_NUMBERS[tmp[1]] = 3; // yellow
 		COLOR_NUMBERS[tmp[2]] = 4; // green
