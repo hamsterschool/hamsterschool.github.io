@@ -1641,6 +1641,7 @@
 	};
 	
 	ext._getStatus = function() {
+		console.log('_getStatus');
 		clearEvents();
 		switch(connectionState) {
 			case STATE.CONNECTED:
