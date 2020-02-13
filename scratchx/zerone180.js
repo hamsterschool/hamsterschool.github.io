@@ -694,7 +694,6 @@
 
 	Zerone.prototype.clearEvent = function() {
 		this.gesture = -1;
-		console.log('clearEvent this.gesture = ' + this.gesture);
 	};
 
 	Zerone.prototype.__setPulse = function(pulse) {
@@ -765,11 +764,7 @@
 	Zerone.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
-		//if(sensory.map & 0x00001000) self.gesture = sensory.gesture;
-		if(sensory.map & 0x00001000) {
-			self.gesture = sensory.gesture;
-			console.log('handleSensory self.gesture = ' + self.gesture);
-		}
+		if(sensory.map & 0x00001000) self.gesture = sensory.gesture;
 
 		if(self.motionCallback && (sensory.map & 0x00000200) != 0) {
 			self.motoring.leftWheel = 0;
@@ -1246,7 +1241,6 @@
 	};
 	
 	Zerone.prototype.checkGesture = function(gesture) {
-		console.log('checkGesture ' + this.gesture);
 		return this.gesture == GESTURES[gesture];
 	};
 
@@ -1295,7 +1289,6 @@
 	};
 	
 	Zerone.prototype.getGesture = function() {
-		console.log('getGesture ' + this.gesture);
 		return this.gesture;
 	};
 	
@@ -1641,7 +1634,6 @@
 	};
 	
 	ext._getStatus = function() {
-		console.log('_getStatus');
 		clearEvents();
 		switch(connectionState) {
 			case STATE.CONNECTED:
