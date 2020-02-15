@@ -1573,7 +1573,7 @@
 
 	Hamster.prototype.checkHandFound = function() {
 		var sensory = this.sensory;
-		return (sensory.handFound === undefined) ? (sensory.leftProximity > 50 || sensory.rightProximity > 50) : sensory.handFound;
+		return (sensory.handFound === undefined) ? (sensory.leftProximity > 40 || sensory.rightProximity > 40) : sensory.handFound;
 	};
 
 	Hamster.prototype.checkTilt = function(tilt) {
