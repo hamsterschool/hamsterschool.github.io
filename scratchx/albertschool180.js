@@ -1697,9 +1697,9 @@
 		if(robot) robot.setBoardSize(width, height);
 	};
 	
-	ext.moveToOnBoard = function(x, y, callback) {
+	ext.moveToOnBoard = function(toward, x, y, callback) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) robot.moveToOnBoard(x, y, callback);
+		if(robot) robot.moveToOnBoard(toward, x, y, callback);
 	};
 	
 	ext.setOrientationToOnBoard = function(degree, callback) {
