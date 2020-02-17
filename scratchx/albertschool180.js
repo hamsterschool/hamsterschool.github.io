@@ -75,7 +75,7 @@
 			[" ", "set %m.left_right_both wheel to %n", "setWheelTo", "left", 30],
 			[" ", "stop", "stop"],
 			[" ", "set board size to width: %d.board_size height: %d.board_size", "setBoardSizeTo", 108, 76],
-			["w", "move to x: %n y: %n on board", "moveToOnBoard", 0, 0],
+			["w", "move %m.move_forward_backward to x: %n y: %n on board", "moveToOnBoard", "forward", 0, 0],
 			["w", "turn towards %n degrees on board", "setOrientationToOnBoard", 0],
 			["-"],
 			[" ", "set %m.left_right_both eye to %m.color", "setEyeTo", "left", "red"],
@@ -160,8 +160,8 @@
 			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "setWheelTo", "왼쪽", 30],
 			[" ", "정지하기", "stop"],
 			[" ", "말판 크기를 폭 %d.board_size 높이 %d.board_size (으)로 정하기", "setBoardSizeTo", 108, 76],
-			["w", "밑판 x: %n y: %n 위치로 이동하기", "moveToOnBoard", 0, 0],
-			["w", "말판 %n 도 방향으로 바라보기", "setOrientationToOnBoard", 0],
+			["w", "밑판 %m.move_forward_backward x: %n y: %n 위치로 이동하기", "moveToOnBoard", "앞으로", 0, 0],
+			["w", "말판 %n 도 방향으로 돌기", "setOrientationToOnBoard", 0],
 			["-"],
 			[" ", "%m.left_right_both 눈을 %m.color 으로 정하기", "setEyeTo", "왼쪽", "빨간색"],
 			[" ", "%m.left_right_both 눈 끄기", "clearEye", "왼쪽"],
@@ -245,7 +245,7 @@
 			[" ", "%m.left_right_both 車輪を %n にする", "setWheelTo", "左", 30],
 			[" ", "停止する", "stop"],
 			[" ", "ボード板幅を %d.board_size 高さを %d.board_size にする", "setBoardSizeTo", 108, 76],
-			["w", "ボード板上でx: %n y: %n 位置に動かす", "moveToOnBoard", 0, 0],
+			["w", "ボード板上で %m.move_forward_backward x: %n y: %n 位置に動かす", "moveToOnBoard", "前へ", 0, 0],
 			["w", "ボード板上で %n 度に向ける", "setOrientationToOnBoard", 0],
 			["-"],
 			[" ", "%m.left_right_both 眼を %m.color にする", "setEyeTo", "左", "赤色"],
@@ -330,7 +330,7 @@
 			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "setWheelTo", "chap", 30],
 			[" ", "to'xtatish", "stop"],
 			[" ", "doska kengligini %d.board_size balandligini %d.board_size ga sozlash", "setBoardSizeTo", 108, 76],
-			["w", "doskada x: %n y: %n tomonga yurish", "moveToOnBoard", 0, 0],
+			["w", "doskada %m.move_forward_backward x: %n y: %n lavozimga yurish", "moveToOnBoard", "oldinga", 0, 0],
 			["w", "doskada %n daraja tomonga o'girilish", "setOrientationToOnBoard", 0],
 			["-"],
 			[" ", "%m.left_right_both ko'zni %m.color ga sozlash", "setEyeTo", "chap", "qizil"],
@@ -375,6 +375,7 @@
 			"left_right": ["left", "right"],
 			"left_right_both": ["left", "right", "both"],
 			"front_rear": ["front", "rear"],
+			"move_forward_backward": ["forward", "backward"],
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"color": ["red", "yellow", "green", "sky blue", "blue", "purple", "white"],
 			"on_off": ["on", "off"],
@@ -389,6 +390,7 @@
 			"left_right": ["왼쪽", "오른쪽"],
 			"left_right_both": ["왼쪽", "오른쪽", "양쪽"],
 			"front_rear": ["앞쪽", "뒤쪽"],
+			"move_forward_backward": ["앞으로", "뒤로"],
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"color": ["빨간색", "노란색", "초록색", "하늘색", "파란색", "자주색", "하얀색"],
 			"on_off": ["켜기", "끄기"],
@@ -403,6 +405,7 @@
 			"left_right": ["左", "右"],
 			"left_right_both": ["左", "右", "両"],
 			"front_rear": ["前", "後"],
+			"move_forward_backward": ["前へ", "後ろへ"],
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "白色"],
 			"on_off": ["点灯", "消す"],
@@ -417,6 +420,7 @@
 			"left_right": ["chap", "o'ng"],
 			"left_right_both": ["chap", "o'ng", "har ikki"],
 			"front_rear": ["old", "orqa"],
+			"move_forward_backward": ["oldinga", "orqaga"],
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"color": ["qizil", "sariq", "yashil", "moviy", "ko'k", "siyoh", "oq"],
 			"on_off": ["yoqing", "o'chirish"],
@@ -445,6 +449,7 @@
 
 	var PARTS = {};
 	var DIRECTIONS = {};
+	var TOWARDS = {};
 	var COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
@@ -457,6 +462,8 @@
 	const BOTH = 3;
 	const FRONT = 4;
 	const REAR = 5;
+	const FORWARD = 1;
+	const BACKWARD = 2;
 	const TILT_FORWARD = 1;
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
@@ -478,6 +485,9 @@
 		tmp = MENUS[i]['left_right'];
 		DIRECTIONS[tmp[0]] = LEFT;
 		DIRECTIONS[tmp[1]] = RIGHT;
+		tmp = MENUS[i]['move_forward_backward'];
+		TOWARDS[tmp[0]] = FORWARD;
+		TOWARDS[tmp[1]] = BACKWARD;
 		tmp = MENUS[i]['color'];
 		COLORS[tmp[0]] = 4; // red
 		COLORS[tmp[1]] = 6; // yellow
@@ -523,34 +533,36 @@
 	}
 
 	function AlbertSchoolController() {
-		this.PI = 3.14159265;
-		this.PI2 = 6.2831853;
 		this.prevDirection = 0;
 		this.prevDirectionFinal = 0;
 		this.directionCount = 0;
 		this.directionCountFinal = 0;
 		this.positionCount = 0;
 		this.positionCountFinal = 0;
-		this.GAIN_ANGLE = 30;
-		this.GAIN_ANGLE_FINE = 30;
-		this.GAIN_POSITION_FINE = 30;
-		this.STRAIGHT_SPEED = 30;
-		this.MAX_BASE_SPEED = 30;
-		this.GAIN_BASE_SPEED = 1.5;
-		this.GAIN_POSITION = 52.5;
-		this.POSITION_TOLERANCE_FINE = 3;
-		this.POSITION_TOLERANCE_FINE_LARGE = 5;
-		this.POSITION_TOLERANCE_ROUGH = 5;
-		this.POSITION_TOLERANCE_ROUGH_LARGE = 10;
-		this.ORIENTATION_TOLERANCE_FINAL = 0.087;
-		this.ORIENTATION_TOLERANCE_FINAL_LARGE = 0.122;
-		this.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE = 0.262;
-		this.ORIENTATION_TOLERANCE_ROUGH = 0.122;
-		this.ORIENTATION_TOLERANCE_ROUGH_LARGE = 0.262;
-		this.ORIENTATION_TOLERANCE_ROUGH_LARGE_LARGE = 0.524;
-		this.MINIMUM_WHEEL_SPEED = 18;
-		this.MINIMUM_WHEEL_SPEED_FINE = 15;
+		this.isBackward = false;
 	}
+
+	AlbertSchoolController.prototype.PI = 3.14159265;
+	AlbertSchoolController.prototype.PI2 = 6.2831853;
+	AlbertSchoolController.prototype.GAIN_ANGLE = 30;
+	AlbertSchoolController.prototype.GAIN_ANGLE_FINE = 30;
+	AlbertSchoolController.prototype.GAIN_POSITION_FINE = 30;
+	AlbertSchoolController.prototype.STRAIGHT_SPEED = 30;
+	AlbertSchoolController.prototype.MAX_BASE_SPEED = 30;
+	AlbertSchoolController.prototype.GAIN_BASE_SPEED = 1.5;
+	AlbertSchoolController.prototype.GAIN_POSITION = 52.5;
+	AlbertSchoolController.prototype.POSITION_TOLERANCE_FINE = 3;
+	AlbertSchoolController.prototype.POSITION_TOLERANCE_FINE_LARGE = 5;
+	AlbertSchoolController.prototype.POSITION_TOLERANCE_ROUGH = 5;
+	AlbertSchoolController.prototype.POSITION_TOLERANCE_ROUGH_LARGE = 10;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_FINAL = 0.087;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_FINAL_LARGE = 0.122;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE = 0.262;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_ROUGH = 0.122;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_ROUGH_LARGE = 0.262;
+	AlbertSchoolController.prototype.ORIENTATION_TOLERANCE_ROUGH_LARGE_LARGE = 0.524;
+	AlbertSchoolController.prototype.MINIMUM_WHEEL_SPEED = 18;
+	AlbertSchoolController.prototype.MINIMUM_WHEEL_SPEED_FINE = 15;
 
 	AlbertSchoolController.prototype.clear = function() {
 		this.prevDirection = 0;
@@ -561,7 +573,14 @@
 		this.positionCountFinal = 0;
 	};
 
+	AlbertSchoolController.prototype.setBackward = function(backward) {
+		this.isBackward = backward;
+	};
+
 	AlbertSchoolController.prototype.controlAngleInitial = function(wheels, currentRadian, targetRadian) {
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
 		var diff = this.validateRadian(targetRadian - currentRadian);
 		var mag = Math.abs(diff);
 		if (mag < this.ORIENTATION_TOLERANCE_ROUGH) return true;
@@ -612,6 +631,9 @@
 
 	AlbertSchoolController.prototype.controlPositionFine = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
 		var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
 		var diff = this.validateRadian(targetRadian - currentRadian);
 		var mag = Math.abs(diff);
 		var ex = targetX - currentX;
@@ -627,14 +649,24 @@
 		var value = 0;
 		if (diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
 		else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+		if(this.isBackward) {
+			value = -value;
+		}
 		value = parseInt(value);
 		wheels.left = this.MINIMUM_WHEEL_SPEED_FINE - value;
 		wheels.right = this.MINIMUM_WHEEL_SPEED_FINE + value;
+		if(this.isBackward) {
+			wheels.left = -wheels.left;
+			wheels.right = -wheels.right;
+		}
 		return false;
 	};
 
 	AlbertSchoolController.prototype.controlPosition = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
 		var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
 		var diff = this.validateRadian(targetRadian - currentRadian);
 		var mag = Math.abs(diff);
 		var ex = targetX - currentX;
@@ -659,10 +691,17 @@
 			var value = 0;
 			if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION;
 			else value = -Math.log(1 + mag) * this.GAIN_POSITION;
+			if(this.isBackward) {
+				value = -value;
+			}
 			base = parseInt(base);
 			value = parseInt(value);
 			wheels.left = base - value;
 			wheels.right = base + value;
+		}
+		if(this.isBackward) {
+			wheels.left = -wheels.left;
+			wheels.right = -wheels.right;
 		}
 		return false;
 	};
@@ -720,6 +759,10 @@
 	AlbertSchoolNavigator.prototype.setBoardSize = function(width, height) {
 		this.boardWidth = width;
 		this.boardHeight = height;
+	};
+
+	AlbertSchoolNavigator.prototype.setBackward = function(backward) {
+		this.controller.setBackward(backward);
 	};
 
 	AlbertSchoolNavigator.prototype.moveTo = function(x, y) {
@@ -1154,7 +1197,7 @@
 		}
 	};
 
-	AlbertSchool.prototype.moveToOnBoard = function(x, y, callback) {
+	AlbertSchool.prototype.moveToOnBoard = function(toward, x, y, callback) {
 		var motoring = this.motoring;
 		this.__cancelNavigation();
 		this.__cancelWheel();
@@ -1163,8 +1206,9 @@
 		y = parseInt(y);
 		var navi = this.__getNavigator();
 		if((typeof x == 'number') && (typeof y == 'number') && x >= 0 && x < navi.getBoardWidth() && y >= 0 && y < navi.getBoardHeight()) {
-			this.navigationCallback = callback;
+			navi.setBackward(TOWARDS[toward] == BACKWARD);
 			navi.moveTo(x, y);
+			this.navigationCallback = callback;
 		}
 	};
 
@@ -1176,8 +1220,9 @@
 		degree = parseInt(degree);
 		if(typeof degree == 'number') {
 			var navi = this.__getNavigator();
-			this.navigationCallback = callback;
+			navi.setBackward(false);
 			navi.turnTo(degree);
+			this.navigationCallback = callback;
 		}
 	};
 
