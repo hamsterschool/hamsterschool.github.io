@@ -5,7 +5,7 @@
 	var packet = {
 		version: 2
 	};
-	const TURTLE = 'turtle';
+	const UOALBERT = 'uoalbert';
 	var connectionState = 1;
 	var socket = undefined;
 	var canSend = false;
@@ -17,393 +17,361 @@
 		CLOSED: 5
 	};
 	const STATE_MSG = {
-		en: [ 'Please run Robot Coding software.', 'Robot is not connected.', 'Ready' ],
-		ko: [ '로봇 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
-		ja: [ 'ロボットコーディングソフトウェアを実行してください。', 'ロボットが接続されていません。', '正常です。' ],
-		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
+		en: [ 'Please run Albert Coding software.', 'Robot is not connected.', 'Ready' ],
+		ko: [ '알버트 코딩 소프트웨어를 실행해 주세요.', '로봇이 연결되어 있지 않습니다.', '정상입니다.' ],
+		ja: [ 'アルバートコーディングソフトウェアを実行してください。', 'ロボットが接続されていません。', '正常です。' ],
+		uz: [ 'Albert Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
-		en: 'Turtle',
-		ko: '거북이',
-		ja: 'カメ',
-		uz: 'Turtle'
+		en: 'UO Albert',
+		ko: 'UO 알버트',
+		ja: 'UOアルバート',
+		uz: 'UO Albert'
 	};
 	const BLOCKS = {
 		en1: [
-			["w", "move forward", "turtleMoveForward"],
-			["w", "move backward", "turtleMoveBackward"],
-			["w", "turn %m.left_right", "turtleTurn", "left"],
+			["w", "move forward", "uoMoveForward"],
+			["w", "move backward", "uoMoveBackward"],
+			["w", "turn %m.left_right", "uoTurn", "left"],
 			["-"],
-			[" ", "set head led to %m.led_color", "turtleSetHeadLedTo", "red"],
-			[" ", "clear head led", "turtleClearHeadLed"],
+			[" ", "set %m.left_right_both eye to %m.led_color", "uoSetEyeTo", "left", "red"],
+			[" ", "clear %m.left_right_both eye", "uoClearEye", "left"],
 			["-"],
-			[" ", "play sound %m.sound", "turtlePlaySound", "beep"],
-			[" ", "clear sound", "turtleClearSound"],
+			[" ", "play sound %m.uo_sound", "uoPlaySound", "beep"],
+			[" ", "clear sound", "uoClearSound"],
 			["-"],
-			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
-			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
-			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
-			["b", "button %m.button_state ?", "turtleButtonState", "clicked"]
+			["h", "when hand found", "uoWhenHandFound"],
+			["b", "hand found?", "uoHandFound"]
 		],
 		en2: [
-			["w", "move forward %n %m.cm_sec", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "move backward %n %m.cm_sec", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "turn %m.left_right %n %m.deg_sec in place", "turtleTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "pivot around %m.left_right wheel %n %m.deg_sec in %m.head_tail direction", "turtlePivotAroundWheelUnitInDirection", "left", 90, "degrees", "head"],
-			["w", "turn %m.left_right %n %m.deg_sec with radius %n cm in %m.head_tail direction", "turtleTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "head"],
+			["w", "move forward %n %m.cm_sec", "uoMoveForwardUnit", 5, "cm"],
+			["w", "move backward %n %m.cm_sec", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "turn %m.left_right %n %m.deg_sec in place", "uoTurnUnitInPlace", "left", 90, "degrees"],
+			["w", "pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "uoPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
 			["-"],
-			[" ", "set head led to %m.led_color", "turtleSetHeadLedTo", "red"],
-			[" ", "clear head led", "turtleClearHeadLed"],
+			[" ", "set %m.left_right_both eye to %m.led_color", "uoSetEyeTo", "left", "red"],
+			[" ", "clear %m.left_right_both eye", "uoClearEye", "left"],
 			["-"],
-			[" ", "play sound %m.sound %n times", "turtlePlaySoundTimes", "beep", 1],
-			["w", "play sound %m.sound %n times until done", "turtlePlaySoundTimesUntilDone", "beep", 1],
-			[" ", "clear sound", "turtleClearSound"],
-			["w", "play note %m.note %m.octave for %d.beats beats", "turtlePlayNoteForBeats", "C", "4", 0.5],
-			["w", "rest for %d.beats beats", "turtleRestForBeats", 0.25],
-			[" ", "change tempo by %n", "turtleChangeTempoBy", 20],
-			[" ", "set tempo to %n bpm", "turtleSetTempoTo", 60],
+			[" ", "play sound %m.uo_sound %n times", "uoPlaySoundTimes", "beep", 1],
+			["w", "play sound %m.uo_sound %n times until done", "uoPlaySoundTimesUntilDone", "beep", 1],
+			[" ", "clear sound", "uoClearSound"],
+			["w", "play note %m.note %m.octave for %d.beats beats", "uoPlayNoteFor", "C", "4", 0.5],
+			["w", "rest for %d.beats beats", "uoRestFor", 0.25],
+			[" ", "change tempo by %n", "uoChangeTempoBy", 20],
+			[" ", "set tempo to %n bpm", "uoSetTempoTo", 60],
 			["-"],
-			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
-			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
-			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
-			["h", "when %m.when_tilt", "turtleWhenTilt", "tilt forward"],
-			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
-			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
-			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
-			["b", "%m.tilt ?", "turtleTilt", "tilt forward"]
+			["h", "when hand found", "uoWhenHandFound"],
+			["h", "when %m.when_tilt[TILT]", "uoWhenTilt", "tilt forward"],
+			["b", "hand found?", "uoHandFound"],
+			["b", "%m.tilt ?", "uoTilt", "tilt forward"]
 		],
 		en3: [
-			["w", "move forward %n %m.move_unit", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "move backward %n %m.move_unit", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "turn %m.left_right %n %m.turn_unit in place", "turtleTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "pivot around %m.left_right wheel %n %m.turn_unit in %m.head_tail direction", "turtlePivotAroundWheelUnitInDirection", "left", 90, "degrees", "head"],
-			["w", "turn %m.left_right %n %m.turn_unit with radius %n cm in %m.head_tail direction", "turtleTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "head"],
-			[" ", "change wheels by left: %n right: %n", "turtleChangeWheelsByLeftRight", 10, 10],
-			[" ", "set wheels to left: %n right: %n", "turtleSetWheelsToLeftRight", 50, 50],
-			[" ", "change %m.left_right_both wheel by %n", "turtleChangeWheelBy", "left", 10],
-			[" ", "set %m.left_right_both wheel to %n", "turtleSetWheelTo", "left", 50],
-			[" ", "follow %m.line_color line", "turtleFollowLine", "black"],
-			["w", "follow black line until %m.target_color", "turtleFollowLineUntil", "red"],
-			["w", "follow %m.color_line line until black", "turtleFollowLineUntilBlack", "red"],
-			["w", "cross black intersection", "turtleCrossIntersection"],
-			["w", "turn %m.left_right_back at black intersection", "turtleTurnAtIntersection", "left"],
-			[" ", "set following speed to %m.speed", "turtleSetFollowingSpeedTo", "5"],
-			[" ", "stop", "turtleStop"],
+			["w", "move forward %n %m.move_unit", "uoMoveForwardUnit", 5, "cm"],
+			["w", "move backward %n %m.move_unit", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "turn %m.left_right %n %m.turn_unit in place", "uoTurnUnitInPlace", "left", 90, "degrees"],
+			["w", "pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "uoPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
+			[" ", "change wheels by left: %n right: %n", "uoChangeBothWheelsBy", 10, 10],
+			[" ", "set wheels to left: %n right: %n", "uoSetBothWheelsTo", 50, 50],
+			[" ", "change %m.left_right_both wheel by %n", "uoChangeWheelBy", "left", 10],
+			[" ", "set %m.left_right_both wheel to %n", "uoSetWheelTo", "left", 50],
+			[" ", "stop", "uoStop"],
+			[" ", "set board size to width: %d.board_size height: %d.board_size", "uoSetBoardSizeTo", 108, 76],
 			["-"],
-			[" ", "set head led to %m.led_color", "turtleSetHeadLedTo", "red"],
-			[" ", "change head led by r: %n g: %n b: %n", "turtleChangeHeadLedByRGB", 10, 0, 0],
-			[" ", "set head led to r: %n g: %n b: %n", "turtleSetHeadLedToRGB", 255, 0, 0],
-			[" ", "clear head led", "turtleClearHeadLed"],
+			[" ", "set %m.left_right_both eye to %m.led_color", "uoSetEyeTo", "left", "red"],
+			[" ", "change %m.left_right_both eye by r: %n g: %n b: %n", "uoChangeEyeByRGB", "left", 10, 0, 0],
+			[" ", "set %m.left_right_both eye to r: %n g: %n b: %n", "uoSetEyeToRGB", "left", 255, 0, 0],
+			[" ", "clear %m.left_right_both eye", "uoClearEye", "left"],
 			["-"],
-			[" ", "play sound %m.sound %n times", "turtlePlaySoundTimes", "beep", 1],
-			["w", "play sound %m.sound %n times until done", "turtlePlaySoundTimesUntilDone", "beep", 1],
-			[" ", "change buzzer by %n", "turtleChangeBuzzerBy", 10],
-			[" ", "set buzzer to %n", "turtleSetBuzzerTo", 1000],
-			[" ", "clear sound", "turtleClearSound"],
-			[" ", "play note %m.note %m.octave", "turtlePlayNote", "C", "4"],
-			["w", "play note %m.note %m.octave for %d.beats beats", "turtlePlayNoteForBeats", "C", "4", 0.5],
-			["w", "rest for %d.beats beats", "turtleRestForBeats", 0.25],
-			[" ", "change tempo by %n", "turtleChangeTempoBy", 20],
-			[" ", "set tempo to %n bpm", "turtleSetTempoTo", 60],
+			[" ", "play sound %m.uo_sound %n times", "uoPlaySoundTimes", "beep", 1],
+			["w", "play sound %m.uo_sound %n times until done", "uoPlaySoundTimesUntilDone", "beep", 1],
+			[" ", "change buzzer by %n", "uoChangeBuzzerBy", 10],
+			[" ", "set buzzer to %n", "uoSetBuzzerTo", 1000],
+			[" ", "clear sound", "uoClearSound"],
+			[" ", "play note %m.note %m.octave", "uoPlayNote", "C", "4"],
+			["w", "play note %m.note %m.octave for %d.beats beats", "uoPlayNoteFor", "C", "4", 0.5],
+			["w", "rest for %d.beats beats", "uoRestFor", 0.25],
+			[" ", "change tempo by %n", "uoChangeTempoBy", 20],
+			[" ", "set tempo to %n bpm", "uoSetTempoTo", 60],
 			["-"],
-			["h", "when %m.touching_color touched", "turtleWhenColorTouched", "red"],
-			["h", "when color pattern is %m.pattern_color %m.pattern_color", "turtleWhenColorPattern", "red", "yellow"],
-			["h", "when button %m.when_button_state", "turtleWhenButtonState", "clicked"],
-			["h", "when %m.when_tilt", "turtleWhenTilt", "tilt forward"],
-			["b", "touching %m.touching_color ?", "turtleTouchingColor", "red"],
-			["b", "color pattern %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "red", "yellow"],
-			["b", "button %m.button_state ?", "turtleButtonState", "clicked"],
-			["b", "%m.tilt ?", "turtleTilt", "tilt forward"],
-			["b", "battery %m.battery ?", "turtleBattery", "normal"],
-			["r", "color number", "turtleColorNumber"],
-			["r", "color pattern", "turtleColorPattern"],
-			["r", "floor", "turtleFloor"],
-			["r", "button", "turtleButton"],
-			["r", "x acceleration", "turtleAccelerationX"],
-			["r", "y acceleration", "turtleAccelerationY"],
-			["r", "z acceleration", "turtleAccelerationZ"]
+			["r", "left proximity", "uoLeftProximity"],
+			["r", "right proximity", "uoRightProximity"],
+			["r", "x acceleration", "uoAccelerationX"],
+			["r", "y acceleration", "uoAccelerationY"],
+			["r", "z acceleration", "uoAccelerationZ"],
+			["r", "touch", "uoTouch"],
+			["r", "oid", "uoOid"],
+			["r", "x position", "uoPositionX"],
+			["r", "y position", "uoPositionY"],
+			["r", "light", "uoLight"],
+			["r", "temperature", "uoTemperature"],
+			["r", "signal strength", "uoSignalStrength"],
+			["h", "when hand found", "uoWhenHandFound"],
+			["h", "when touched", "uoWhenTouched"],
+			["h", "when oid is %n[VALUE]", "uoWhenOid", 0],
+			["h", "when %m.when_tilt[TILT]", "uoWhenTilt", "tilt forward"],
+			["b", "hand found?", "uoHandFound"],
+			["b", "touching?", "uoTouching"],
+			["b", "oid %n[VALUE]?", "uoIsOid", 0],
+			["b", "%m.tilt ?", "uoTilt", "tilt forward"],
+			["b", "battery %m.battery ?", "uoBatteryState", "normal"]
 		],
 		ko1: [
-			["w", "앞으로 이동하기", "turtleMoveForward"],
-			["w", "뒤로 이동하기", "turtleMoveBackward"],
-			["w", "%m.left_right 으로 돌기", "turtleTurn", "왼쪽"],
+			["w", "앞으로 이동하기", "uoMoveForward"],
+			["w", "뒤로 이동하기", "uoMoveBackward"],
+			["w", "%m.left_right 으로 돌기", "uoTurn", "왼쪽"],
 			["-"],
-			[" ", "머리 LED를 %m.led_color 으로 정하기", "turtleSetHeadLedTo", "빨간색"],
-			[" ", "머리 LED 끄기", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 눈을 %m.led_color 으로 정하기", "uoSetEyeTo", "왼쪽", "빨간색"],
+			[" ", "%m.left_right_both 눈 끄기", "uoClearEye", "왼쪽"],
 			["-"],
-			[" ", "%m.sound 소리 재생하기", "turtlePlaySound", "삐"],
-			[" ", "소리 끄기", "turtleClearSound"],
+			[" ", "%m.uo_sound 소리 재생하기", "uoPlaySound", "삐"],
+			[" ", "소리 끄기", "uoClearSound"],
 			["-"],
-			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
-			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
-			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
-			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"]
+			["h", "손 찾았을 때", "uoWhenHandFound"],
+			["b", "손 찾음?", "uoHandFound"]
 		],
 		ko2: [
-			["w", "앞으로 %n %m.cm_sec 이동하기", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "뒤로 %n %m.cm_sec 이동하기", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right 으로 %n %m.deg_sec 제자리 돌기", "turtleTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 바퀴 중심으로 %n %m.deg_sec %m.head_tail 방향으로 돌기", "turtlePivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "머리"],
-			["w", "%m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.head_tail 방향으로 돌기", "turtleTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "머리"],
+			["w", "앞으로 %n %m.cm_sec 이동하기", "uoMoveForwardUnit", 5, "cm"],
+			["w", "뒤로 %n %m.cm_sec 이동하기", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right 으로 %n %m.deg_sec 제자리 돌기", "uoTurnUnitInPlace", "왼쪽", 90, "도"],
+			["w", "%m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "uoPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
 			["-"],
-			[" ", "머리 LED를 %m.led_color 으로 정하기", "turtleSetHeadLedTo", "빨간색"],
-			[" ", "머리 LED 끄기", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 눈을 %m.led_color 으로 정하기", "uoSetEyeTo", "왼쪽", "빨간색"],
+			[" ", "%m.left_right_both 눈 끄기", "uoClearEye", "왼쪽"],
 			["-"],
-			[" ", "%m.sound 소리 %n 번 재생하기", "turtlePlaySoundTimes", "삐", 1],
-			["w", "%m.sound 소리 %n 번 재생하고 기다리기", "turtlePlaySoundTimesUntilDone", "삐", 1],
-			[" ", "소리 끄기", "turtleClearSound"],
-			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "turtlePlayNoteForBeats", "도", "4", 0.5],
-			["w", "%d.beats 박자 쉬기", "turtleRestForBeats", 0.25],
-			[" ", "연주 속도를 %n 만큼 바꾸기", "turtleChangeTempoBy", 20],
-			[" ", "연주 속도를 %n BPM으로 정하기", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound 소리 %n 번 재생하기", "uoPlaySoundTimes", "삐", 1],
+			["w", "%m.uo_sound 소리 %n 번 재생하고 기다리기", "uoPlaySoundTimesUntilDone", "삐", 1],
+			[" ", "소리 끄기", "uoClearSound"],
+			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "uoPlayNoteFor", "도", "4", 0.5],
+			["w", "%d.beats 박자 쉬기", "uoRestFor", 0.25],
+			[" ", "연주 속도를 %n 만큼 바꾸기", "uoChangeTempoBy", 20],
+			[" ", "연주 속도를 %n BPM으로 정하기", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
-			["h", "색깔 패턴이 %m.pattern_color %m.pattern_color 일 때", "turtleWhenColorPattern", "빨간색", "노란색"],
-			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
-			["h", "%m.when_tilt 때", "turtleWhenTilt", "앞으로 기울였을"],
-			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
-			["b", "색깔 패턴이 %m.pattern_color %m.pattern_color 인가?", "turtleIsColorPattern", "빨간색", "노란색"],
-			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"],
-			["b", "%m.tilt ?", "turtleTilt", "앞으로 기울임"]
+			["h", "손 찾았을 때", "uoWhenHandFound"],
+			["h", "%m.when_tilt[TILT] 때", "uoWhenTilt", "앞으로 기울였을"],
+			["b", "손 찾음?", "uoHandFound"],
+			["b", "%m.tilt ?", "uoTilt", "앞으로 기울임"]
 		],
 		ko3: [
-			["w", "앞으로 %n %m.move_unit 이동하기", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "뒤로 %n %m.move_unit 이동하기", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right 으로 %n %m.turn_unit 제자리 돌기", "turtleTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.head_tail 방향으로 돌기", "turtlePivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "머리"],
-			["w", "%m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.head_tail 방향으로 돌기", "turtleTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "머리"],
-			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "turtleChangeWheelsByLeftRight", 10, 10],
-			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "turtleSetWheelsToLeftRight", 50, 50],
-			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "turtleChangeWheelBy", "왼쪽", 10],
-			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "turtleSetWheelTo", "왼쪽", 50],
-			[" ", "%m.line_color 선을 따라가기", "turtleFollowLine", "검은색"],
-			["w", "검은색 선을 따라 %m.target_color 까지 이동하기", "turtleFollowLineUntil", "빨간색"],
-			["w", "%m.color_line 선을 따라 검은색까지 이동하기", "turtleFollowLineUntilBlack", "빨간색"],
-			["w", "검은색 교차로 건너가기", "turtleCrossIntersection"],
-			["w", "검은색 교차로에서 %m.left_right_back 으로 돌기", "turtleTurnAtIntersection", "왼쪽"],
-			[" ", "선 따라가기 속도를 %m.speed (으)로 정하기", "turtleSetFollowingSpeedTo", "5"],
-			[" ", "정지하기", "turtleStop"],
+			["w", "앞으로 %n %m.move_unit 이동하기", "uoMoveForwardUnit", 5, "cm"],
+			["w", "뒤로 %n %m.move_unit 이동하기", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right 으로 %n %m.turn_unit 제자리 돌기", "uoTurnUnitInPlace", "왼쪽", 90, "도"],
+			["w", "%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "uoPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
+			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "uoChangeBothWheelsBy", 10, 10],
+			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "uoSetBothWheelsTo", 50, 50],
+			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "uoChangeWheelBy", "왼쪽", 10],
+			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "uoSetWheelTo", "왼쪽", 50],
+			[" ", "정지하기", "uoStop"],
+			[" ", "말판 크기를 폭 %d.board_size 높이 %d.board_size (으)로 정하기", "uoSetBoardSizeTo", 108, 76],
 			["-"],
-			[" ", "머리 LED를 %m.led_color 으로 정하기", "turtleSetHeadLedTo", "빨간색"],
-			[" ", "머리 LED를 R: %n G: %n B: %n 만큼 바꾸기", "turtleChangeHeadLedByRGB", 10, 0, 0],
-			[" ", "머리 LED를 R: %n G: %n B: %n (으)로 정하기", "turtleSetHeadLedToRGB", 255, 0, 0],
-			[" ", "머리 LED 끄기", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 눈을 %m.led_color 으로 정하기", "uoSetEyeTo", "왼쪽", "빨간색"],
+			[" ", "%m.left_right_both 눈을 R: %n G: %n B: %n 만큼 바꾸기", "uoChangeEyeByRGB", "왼쪽", 10, 0, 0],
+			[" ", "%m.left_right_both 눈을 R: %n G: %n B: %n (으)로 정하기", "uoSetEyeToRGB", "왼쪽", 255, 0, 0],
+			[" ", "%m.left_right_both 눈 끄기", "uoClearEye", "왼쪽"],
 			["-"],
-			[" ", "%m.sound 소리 %n 번 재생하기", "turtlePlaySoundTimes", "삐", 1],
-			["w", "%m.sound 소리 %n 번 재생하고 기다리기", "turtlePlaySoundTimesUntilDone", "삐", 1],
-			[" ", "버저 음을 %n 만큼 바꾸기", "turtleChangeBuzzerBy", 10],
-			[" ", "버저 음을 %n (으)로 정하기", "turtleSetBuzzerTo", 1000],
-			[" ", "소리 끄기", "turtleClearSound"],
-			[" ", "%m.note %m.octave 음을 연주하기", "turtlePlayNote", "도", "4"],
-			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "turtlePlayNoteForBeats", "도", "4", 0.5],
-			["w", "%d.beats 박자 쉬기", "turtleRestForBeats", 0.25],
-			[" ", "연주 속도를 %n 만큼 바꾸기", "turtleChangeTempoBy", 20],
-			[" ", "연주 속도를 %n BPM으로 정하기", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound 소리 %n 번 재생하기", "uoPlaySoundTimes", "삐", 1],
+			["w", "%m.uo_sound 소리 %n 번 재생하고 기다리기", "uoPlaySoundTimesUntilDone", "삐", 1],
+			[" ", "버저 음을 %n 만큼 바꾸기", "uoChangeBuzzerBy", 10],
+			[" ", "버저 음을 %n (으)로 정하기", "uoSetBuzzerTo", 1000],
+			[" ", "소리 끄기", "uoClearSound"],
+			[" ", "%m.note %m.octave 음을 연주하기", "uoPlayNote", "도", "4"],
+			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "uoPlayNoteFor", "도", "4", 0.5],
+			["w", "%d.beats 박자 쉬기", "uoRestFor", 0.25],
+			[" ", "연주 속도를 %n 만큼 바꾸기", "uoChangeTempoBy", 20],
+			[" ", "연주 속도를 %n BPM으로 정하기", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color 에 닿았을 때", "turtleWhenColorTouched", "빨간색"],
-			["h", "색깔 패턴이 %m.pattern_color %m.pattern_color 일 때", "turtleWhenColorPattern", "빨간색", "노란색"],
-			["h", "버튼을 %m.when_button_state 때", "turtleWhenButtonState", "클릭했을"],
-			["h", "%m.when_tilt 때", "turtleWhenTilt", "앞으로 기울였을"],
-			["b", "%m.touching_color 에 닿았는가?", "turtleTouchingColor", "빨간색"],
-			["b", "색깔 패턴이 %m.pattern_color %m.pattern_color 인가?", "turtleIsColorPattern", "빨간색", "노란색"],
-			["b", "버튼을 %m.button_state ?", "turtleButtonState", "클릭했는가"],
-			["b", "%m.tilt ?", "turtleTilt", "앞으로 기울임"],
-			["b", "배터리 %m.battery ?", "turtleBattery", "정상"],
-			["r", "색깔 번호", "turtleColorNumber"],
-			["r", "색깔 패턴", "turtleColorPattern"],
-			["r", "바닥 센서", "turtleFloor"],
-			["r", "버튼", "turtleButton"],
-			["r", "x축 가속도", "turtleAccelerationX"],
-			["r", "y축 가속도", "turtleAccelerationY"],
-			["r", "z축 가속도", "turtleAccelerationZ"]
+			["r", "왼쪽 근접 센서", "uoLeftProximity"],
+			["r", "오른쪽 근접 센서", "uoRightProximity"],
+			["r", "x축 가속도", "uoAccelerationX"],
+			["r", "y축 가속도", "uoAccelerationY"],
+			["r", "z축 가속도", "uoAccelerationZ"],
+			["r", "터치", "uoTouch"],
+			["r", "OID", "uoOid"],
+			["r", "x 위치", "uoPositionX"],
+			["r", "y 위치", "uoPositionY"],
+			["r", "밝기", "uoLight"],
+			["r", "온도", "uoTemperature"],
+			["r", "신호 세기", "uoSignalStrength"],
+			["h", "손 찾았을 때", "uoWhenHandFound"],
+			["h", "터치했을 때", "uoWhenTouched"],
+			["h", "OID가 %n[VALUE]일 때", "uoWhenOid", 0],
+			["h", "%m.when_tilt[TILT] 때", "uoWhenTilt", "앞으로 기울였을"],
+			["b", "손 찾음?", "uoHandFound"],
+			["b", "터치하고 있는가?", "uoTouching"],
+			["b", "OID가 %n[VALUE]인가?", "uoIsOid", 0],
+			["b", "%m.tilt ?", "uoTilt", "앞으로 기울임"],
+			["b", "배터리 %m.battery ?", "uoBatteryState", "정상"]
 		],
 		ja1: [
-			["w", "前へ動かす", "turtleMoveForward"],
-			["w", "後ろへ動かす", "turtleMoveBackward"],
-			["w", "%m.left_right に回す", "turtleTurn", "左"],
+			["w", "前へ動かす", "uoMoveForward"],
+			["w", "後ろへ動かす", "uoMoveBackward"],
+			["w", "%m.left_right に回す", "uoTurn", "左"],
 			["-"],
-			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
-			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 眼を %m.led_color にする", "uoSetEyeTo", "左", "赤色"],
+			[" ", "%m.left_right_both 眼を消す", "uoClearEye", "左"],
 			["-"],
-			[" ", "%m.sound 音を鳴らす", "turtlePlaySound", "ビープ"],
-			[" ", "音を止める", "turtleClearSound"],
+			[" ", "%m.uo_sound 音を鳴らす", "uoPlaySound", "ビープ"],
+			[" ", "音を止める", "uoClearSound"],
 			["-"],
-			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
-			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
-			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
-			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"]
+			["h", "手を見つけたとき", "uoWhenHandFound"],
+			["b", "手を見つけたか?", "uoHandFound"]
 		],
 		ja2: [
-			["w", "前へ %n %m.cm_sec 動かす", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "後ろへ %n %m.cm_sec 動かす", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "turtleTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.head_tail 方向に回す", "turtlePivotAroundWheelUnitInDirection", "左", 90, "度", "頭"],
-			["w", "%m.left_right に %n %m.deg_sec 半径 %n cmを %m.head_tail 方向に回す", "turtleTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "頭"],
+			["w", "前へ %n %m.cm_sec 動かす", "uoMoveForwardUnit", 5, "cm"],
+			["w", "後ろへ %n %m.cm_sec 動かす", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "uoTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向に回す", "uoPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
 			["-"],
-			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
-			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 眼を %m.led_color にする", "uoSetEyeTo", "左", "赤色"],
+			[" ", "%m.left_right_both 眼を消す", "uoClearEye", "左"],
 			["-"],
-			[" ", "%m.sound 音を %n 回鳴らす", "turtlePlaySoundTimes", "ビープ", 1],
-			["w", "終わるまで %m.sound 音を %n 回鳴らす", "turtlePlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "音を止める", "turtleClearSound"],
-			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "turtlePlayNoteForBeats", "ド", "4", 0.5],
-			["w", "%d.beats 拍休む", "turtleRestForBeats", 0.25],
-			[" ", "テンポを %n ずつ変える", "turtleChangeTempoBy", 20],
-			[" ", "テンポを %n BPMにする", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "音を止める", "uoClearSound"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "uoPlayNoteFor", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "uoRestFor", 0.25],
+			[" ", "テンポを %n ずつ変える", "uoChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
-			["h", "色パターンが %m.pattern_color %m.pattern_color であるとき", "turtleWhenColorPattern", "赤色", "黄色"],
-			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
-			["h", "%m.when_tilt とき", "turtleWhenTilt", "前に傾けた"],
-			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
-			["b", "色パターンが %m.pattern_color %m.pattern_color ですか?", "turtleIsColorPattern", "赤色", "黄色"],
-			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"],
-			["b", "%m.tilt ?", "turtleTilt", "前に傾けたか"]
+			["h", "手を見つけたとき", "uoWhenHandFound"],
+			["h", "%m.when_tilt[TILT]とき", "uoWhenTilt", "前に傾けた"],
+			["b", "手を見つけたか?", "uoHandFound"],
+			["b", "%m.tilt ?", "uoTilt", "前に傾けたか"]
 		],
 		ja3: [
-			["w", "前へ %n %m.move_unit 動かす", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "後ろへ %n %m.move_unit 動かす", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "turtleTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.head_tail 方向に回す", "turtlePivotAroundWheelUnitInDirection", "左", 90, "度", "頭"],
-			["w", "%m.left_right に %n %m.turn_unit 半径 %n cmを %m.head_tail 方向に回す", "turtleTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "頭"],
-			[" ", "左車輪を %n 右車輪を %n ずつ変える", "turtleChangeWheelsByLeftRight", 10, 10],
-			[" ", "左車輪を %n 右車輪を %n にする", "turtleSetWheelsToLeftRight", 50, 50],
-			[" ", "%m.left_right_both 車輪を %n ずつ変える", "turtleChangeWheelBy", "左", 10],
-			[" ", "%m.left_right_both 車輪を %n にする", "turtleSetWheelTo", "左", 50],
-			[" ", "%m.line_color 線を追従する", "turtleFollowLine", "黒色"],
-			["w", "黒色線を追従して %m.target_color まで動かす", "turtleFollowLineUntil", "赤色"],
-			["w", "%m.color_line 線を追従して黒色まで動かす", "turtleFollowLineUntilBlack", "赤色"],
-			["w", "黒色交差点を渡る", "turtleCrossIntersection"],
-			["w", "黒色交差点で %m.left_right_back に回す", "turtleTurnAtIntersection", "左"],
-			[" ", "線を追従する速度を %m.speed にする", "turtleSetFollowingSpeedTo", "5"],
-			[" ", "停止する", "turtleStop"],
+			["w", "前へ %n %m.move_unit 動かす", "uoMoveForwardUnit", 5, "cm"],
+			["w", "後ろへ %n %m.move_unit 動かす", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "uoTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "uoPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
+			[" ", "左車輪を %n 右車輪を %n ずつ変える", "uoChangeBothWheelsBy", 10, 10],
+			[" ", "左車輪を %n 右車輪を %n にする", "uoSetBothWheelsTo", 50, 50],
+			[" ", "%m.left_right_both 車輪を %n ずつ変える", "uoChangeWheelBy", "左", 10],
+			[" ", "%m.left_right_both 車輪を %n にする", "uoSetWheelTo", "左", 50],
+			[" ", "停止する", "uoStop"],
+			[" ", "ボード板幅を %d.board_size 高さを %d.board_size にする", "uoSetBoardSizeTo", 108, 76],
 			["-"],
-			[" ", "頭LEDを %m.led_color にする", "turtleSetHeadLedTo", "赤色"],
-			[" ", "頭LEDをR: %n G: %n B: %n ずつ変える", "turtleChangeHeadLedByRGB", 10, 0, 0],
-			[" ", "頭LEDをR: %n G: %n B: %n にする", "turtleSetHeadLedToRGB", 255, 0, 0],
-			[" ", "頭LEDをオフ", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both 眼を %m.led_color にする", "uoSetEyeTo", "左", "赤色"],
+			[" ", "%m.left_right_both 眼をR: %n G: %n B: %n ずつ変える", "uoChangeEyeByRGB", "左", 10, 0, 0],
+			[" ", "%m.left_right_both 眼をR: %n G: %n B: %n にする", "uoSetEyeToRGB", "左", 255, 0, 0],
+			[" ", "%m.left_right_both 眼を消す", "uoClearEye", "左"],
 			["-"],
-			[" ", "%m.sound 音を %n 回鳴らす", "turtlePlaySoundTimes", "ビープ", 1],
-			["w", "終わるまで %m.sound 音を %n 回鳴らす", "turtlePlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "ブザー音を %n ずつ変える", "turtleChangeBuzzerBy", 10],
-			[" ", "ブザー音を %n にする", "turtleSetBuzzerTo", 1000],
-			[" ", "音を止める", "turtleClearSound"],
-			[" ", "%m.note %m.octave 音を鳴らす", "turtlePlayNote", "ド", "4"],
-			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "turtlePlayNoteForBeats", "ド", "4", 0.5],
-			["w", "%d.beats 拍休む", "turtleRestForBeats", 0.25],
-			[" ", "テンポを %n ずつ変える", "turtleChangeTempoBy", 20],
-			[" ", "テンポを %n BPMにする", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "ブザー音を %n ずつ変える", "uoChangeBuzzerBy", 10],
+			[" ", "ブザー音を %n にする", "uoSetBuzzerTo", 1000],
+			[" ", "音を止める", "uoClearSound"],
+			[" ", "%m.note %m.octave 音を鳴らす", "uoPlayNote", "ド", "4"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "uoPlayNoteFor", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "uoRestFor", 0.25],
+			[" ", "テンポを %n ずつ変える", "uoChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color に触れたとき", "turtleWhenColorTouched", "赤色"],
-			["h", "色パターンが %m.pattern_color %m.pattern_color であるとき", "turtleWhenColorPattern", "赤色", "黄色"],
-			["h", "ボタンを %m.when_button_state とき", "turtleWhenButtonState", "クリックした"],
-			["h", "%m.when_tilt とき", "turtleWhenTilt", "前に傾けた"],
-			["b", "%m.touching_color に触れたか?", "turtleTouchingColor", "赤色"],
-			["b", "色パターンが %m.pattern_color %m.pattern_color ですか?", "turtleIsColorPattern", "赤色", "黄色"],
-			["b", "ボタンを %m.button_state ?", "turtleButtonState", "クリックしたか"],
-			["b", "%m.tilt ?", "turtleTilt", "前に傾けたか"],
-			["b", "電池が %m.battery ?", "turtleBattery", "正常か"],
-			["r", "色番号", "turtleColorNumber"],
-			["r", "色パターン", "turtleColorPattern"],
-			["r", "フロアセンサー", "turtleFloor"],
-			["r", "ボタン", "turtleButton"],
-			["r", "x軸加速度", "turtleAccelerationX"],
-			["r", "y軸加速度", "turtleAccelerationY"],
-			["r", "z軸加速度", "turtleAccelerationZ"]
+			["r", "左近接センサー", "uoLeftProximity"],
+			["r", "右近接センサー", "uoRightProximity"],
+			["r", "x軸加速度", "uoAccelerationX"],
+			["r", "y軸加速度", "uoAccelerationY"],
+			["r", "z軸加速度", "uoAccelerationZ"],
+			["r", "タッチ", "uoTouch"],
+			["r", "OID", "uoOid"],
+			["r", "x位置", "uoPositionX"],
+			["r", "y位置", "uoPositionY"],
+			["r", "照度", "uoLight"],
+			["r", "温度", "uoTemperature"],
+			["r", "信号強度", "uoSignalStrength"],
+			["h", "手を見つけたとき", "uoWhenHandFound"],
+			["h", "タッチしたとき", "uoWhenTouched"],
+			["h", "OIDが%n[VALUE]であるとき", "uoWhenOid", 0],
+			["h", "%m.when_tilt[TILT]とき", "uoWhenTilt", "前に傾けた"],
+			["b", "手を見つけたか?", "uoHandFound"],
+			["b", "タッチしているか?", "uoTouching"],
+			["b", "OIDが%n[VALUE]ですか?", "uoIsOid", 0],
+			["b", "%m.tilt ?", "uoTilt", "前に傾けたか"],
+			["b", "電池が %m.battery ?", "uoBatteryState", "正常か"]
 		],
 		uz1: [
-			["w", "oldinga yurish", "turtleMoveForward"],
-			["w", "orqaga yurish", "turtleMoveBackward"],
-			["w", "%m.left_right ga o'girilish", "turtleTurn", "chap"],
+			["w", "oldinga yurish", "uoMoveForward"],
+			["w", "orqaga yurish", "uoMoveBackward"],
+			["w", "%m.left_right ga o'girilish", "uoTurn", "chap"],
 			["-"],
-			[" ", "boshining LEDni %m.led_color ga sozlash", "turtleSetHeadLedTo", "qizil"],
-			[" ", "boshining LEDni o'chirish", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both ko'zni %m.led_color ga sozlash", "uoSetEyeTo", "chap", "qizil"],
+			[" ", "%m.left_right_both ko'zni o'chirish", "uoClearEye", "chap"],
 			["-"],
-			[" ", "%m.sound tovushni ijro etish", "turtlePlaySound", "qisqa"],
-			[" ", "tovushni o'chirish", "turtleClearSound"],
+			[" ", "%m.uo_sound tovushni ijro etish", "uoPlaySound", "qisqa"],
+			[" ", "tovushni o'chirish", "uoClearSound"],
 			["-"],
-			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
-			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
-			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
-			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"]
+			["h", "qo'l topilganda", "uoWhenHandFound"],
+			["b", "qo'l topildimi?", "uoHandFound"]
 		],
 		uz2: [
-			["w", "oldinga %n %m.cm_sec yurish", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "orqaga %n %m.cm_sec yurish", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "turtleTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right g'ildirak markaziga %n %m.deg_sec %m.head_tail yo'nalishga o'girilish", "turtlePivotAroundWheelUnitInDirection", "chap", 90, "daraja", "bosh"],
-			["w", "%m.left_right ga %n %m.deg_sec radius %n cm %m.head_tail yo'nalishga o'girilish", "turtleTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "bosh"],
+			["w", "oldinga %n %m.cm_sec yurish", "uoMoveForwardUnit", 5, "cm"],
+			["w", "orqaga %n %m.cm_sec yurish", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "uoTurnUnitInPlace", "chap", 90, "daraja"],
+			["w", "%m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "uoPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
 			["-"],
-			[" ", "boshining LEDni %m.led_color ga sozlash", "turtleSetHeadLedTo", "qizil"],
-			[" ", "boshining LEDni o'chirish", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both ko'zni %m.led_color ga sozlash", "uoSetEyeTo", "chap", "qizil"],
+			[" ", "%m.left_right_both ko'zni o'chirish", "uoClearEye", "chap"],
 			["-"],
-			[" ", "%m.sound tovushni %n marta ijro etish", "turtlePlaySoundTimes", "qisqa", 1],
-			["w", "%m.sound tovushni %n marta ijro tugaguncha kutish", "turtlePlaySoundTimesUntilDone", "qisqa", 1],
-			[" ", "tovushni o'chirish", "turtleClearSound"],
-			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "turtlePlayNoteForBeats", "do", "4", 0.5],
-			["w", "%d.beats zarb tanaffus", "turtleRestForBeats", 0.25],
-			[" ", "temni %n ga o'zgartirish", "turtleChangeTempoBy", 20],
-			[" ", "temni %n bpm ga sozlash", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound tovushni %n marta ijro etish", "uoPlaySoundTimes", "qisqa", 1],
+			["w", "%m.uo_sound tovushni %n marta ijro tugaguncha kutish", "uoPlaySoundTimesUntilDone", "qisqa", 1],
+			[" ", "tovushni o'chirish", "uoClearSound"],
+			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "uoPlayNoteFor", "do", "4", 0.5],
+			["w", "%d.beats zarb tanaffus", "uoRestFor", 0.25],
+			[" ", "temni %n ga o'zgartirish", "uoChangeTempoBy", 20],
+			[" ", "temni %n bpm ga sozlash", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
-			["h", "rang naqshi %m.pattern_color %m.pattern_color bo'lganida", "turtleWhenColorPattern", "qizil", "sariq"],
-			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
-			["h", "%m.when_tilt bo'lganda", "turtleWhenTilt", "oldinga eğin"],
-			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
-			["b", "rang naqshi %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "qizil", "sariq"],
-			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"],
-			["b", "%m.tilt ?", "turtleTilt", "oldinga eğin"]
+			["h", "qo'l topilganda", "uoWhenHandFound"],
+			["h", "%m.when_tilt[TILT] bo'lganda", "uoWhenTilt", "oldinga eğin"],
+			["b", "qo'l topildimi?", "uoHandFound"],
+			["b", "%m.tilt ?", "uoTilt", "oldinga e?in"]
 		],
 		uz3: [
-			["w", "oldinga %n %m.move_unit yurish", "turtleMoveForwardUnit", 6, "cm"],
-			["w", "orqaga %n %m.move_unit yurish", "turtleMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "turtleTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right g'ildirak markaziga %n %m.turn_unit %m.head_tail yo'nalishga o'girilish", "turtlePivotAroundWheelUnitInDirection", "chap", 90, "daraja", "bosh"],
-			["w", "%m.left_right ga %n %m.turn_unit radius %n cm %m.head_tail yo'nalishga o'girilish", "turtleTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "bosh"],
-			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "turtleChangeWheelsByLeftRight", 10, 10],
-			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "turtleSetWheelsToLeftRight", 50, 50],
-			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "turtleChangeWheelBy", "chap", 10],
-			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "turtleSetWheelTo", "chap", 50],
-			[" ", "%m.line_color chiziqqa ergashish", "turtleFollowLine", "qora"],
-			["w", "qora chiziq ustida %m.target_color gacha yurish", "turtleFollowLineUntil", "qizil"],
-			["w", "%m.color_line chiziq ustida qora gacha yurish", "turtleFollowLineUntilBlack", "qizil"],
-			["w", "qora chorrahadan o'tib yurish", "turtleCrossIntersection"],
-			["w", "qora chorrahada %m.left_right_back ga o'girilish", "turtleTurnAtIntersection", "chap"],
-			[" ", "liniyada ergashish tezligini %m.speed ga sozlash", "turtleSetFollowingSpeedTo", "5"],
-			[" ", "to'xtatish", "turtleStop"],
+			["w", "oldinga %n %m.move_unit yurish", "uoMoveForwardUnit", 5, "cm"],
+			["w", "orqaga %n %m.move_unit yurish", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "uoTurnUnitInPlace", "chap", 90, "daraja"],
+			["w", "%m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "uoPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
+			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "uoChangeBothWheelsBy", 10, 10],
+			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "uoSetBothWheelsTo", 50, 50],
+			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "uoChangeWheelBy", "chap", 10],
+			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "uoSetWheelTo", "chap", 50],
+			[" ", "to'xtatish", "uoStop"],
+			[" ", "doska kengligini %d.board_size balandligini %d.board_size ga sozlash", "uoSetBoardSizeTo", 108, 76],
 			["-"],
-			[" ", "boshining LEDni %m.led_color ga sozlash", "turtleSetHeadLedTo", "qizil"],
-			[" ", "boshining LEDni r: %n g: %n b: %n ga o'zgartirish", "turtleChangeHeadLedByRGB", 10, 0, 0],
-			[" ", "boshining LEDni r: %n g: %n b: %n ga sozlash", "turtleSetHeadLedToRGB", 255, 0, 0],
-			[" ", "boshining LEDni o'chirish", "turtleClearHeadLed"],
+			[" ", "%m.left_right_both ko'zni %m.led_color ga sozlash", "uoSetEyeTo", "chap", "qizil"],
+			[" ", "%m.left_right_both ko'zni r: %n g: %n b: %n ga o'zgartirish", "uoChangeEyeByRGB", "chap", 10, 0, 0],
+			[" ", "%m.left_right_both ko'zni r: %n g: %n b: %n ga sozlash", "uoSetEyeToRGB", "chap", 255, 0, 0],
+			[" ", "%m.left_right_both ko'zni o'chirish", "uoClearEye", "chap"],
 			["-"],
-			[" ", "%m.sound tovushni %n marta ijro etish", "turtlePlaySoundTimes", "qisqa", 1],
-			["w", "%m.sound tovushni %n marta ijro tugaguncha kutish", "turtlePlaySoundTimesUntilDone", "qisqa", 1],
-			[" ", "buzerning ovozini %n ga o'zgartirish", "turtleChangeBuzzerBy", 10],
-			[" ", "buzerning ovozini %n ga sozlash", "turtleSetBuzzerTo", 1000],
-			[" ", "tovushni o'chirish", "turtleClearSound"],
-			[" ", "%m.note %m.octave notani ijro etish", "turtlePlayNote", "do", "4"],
-			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "turtlePlayNoteForBeats", "do", "4", 0.5],
-			["w", "%d.beats zarb tanaffus", "turtleRestForBeats", 0.25],
-			[" ", "temni %n ga o'zgartirish", "turtleChangeTempoBy", 20],
-			[" ", "temni %n bpm ga sozlash", "turtleSetTempoTo", 60],
+			[" ", "%m.uo_sound tovushni %n marta ijro etish", "uoPlaySoundTimes", "qisqa", 1],
+			["w", "%m.uo_sound tovushni %n marta ijro tugaguncha kutish", "uoPlaySoundTimesUntilDone", "qisqa", 1],
+			[" ", "buzerning ovozini %n ga o'zgartirish", "uoChangeBuzzerBy", 10],
+			[" ", "buzerning ovozini %n ga sozlash", "uoSetBuzzerTo", 1000],
+			[" ", "tovushni o'chirish", "uoClearSound"],
+			[" ", "%m.note %m.octave notani ijro etish", "uoPlayNote", "do", "4"],
+			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "uoPlayNoteFor", "do", "4", 0.5],
+			["w", "%d.beats zarb tanaffus", "uoRestFor", 0.25],
+			[" ", "temni %n ga o'zgartirish", "uoChangeTempoBy", 20],
+			[" ", "temni %n bpm ga sozlash", "uoSetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color ga tegilganda", "turtleWhenColorTouched", "qizil"],
-			["h", "rang naqshi %m.pattern_color %m.pattern_color bo'lganida", "turtleWhenColorPattern", "qizil", "sariq"],
-			["h", "tugmani %m.when_button_state da", "turtleWhenButtonState", "bosgan"],
-			["h", "%m.when_tilt bo'lganda", "turtleWhenTilt", "oldinga eğin"],
-			["b", "%m.touching_color ga tekkan?", "turtleTouchingColor", "qizil"],
-			["b", "rang naqshi %m.pattern_color %m.pattern_color ?", "turtleIsColorPattern", "qizil", "sariq"],
-			["b", "tugmani %m.button_state ?", "turtleButtonState", "bosgan"],
-			["b", "%m.tilt ?", "turtleTilt", "oldinga eğin"],
-			["b", "batareya %m.battery ?", "turtleBattery", "normal"],
-			["r", "rang raqami", "turtleColorNumber"],
-			["r", "rang naqshi", "turtleColorPattern"],
-			["r", "taglik sensori", "turtleFloor"],
-			["r", "tugma", "turtleButton"],
-			["r", "x tezlanish", "turtleAccelerationX"],
-			["r", "y tezlanish", "turtleAccelerationY"],
-			["r", "z tezlanish", "turtleAccelerationZ"]
+			["r", "chap yaqinlik", "uoLeftProximity"],
+			["r", "o'ng yaqinlik", "uoRightProximity"],
+			["r", "x tezlanish", "uoAccelerationX"],
+			["r", "y tezlanish", "uoAccelerationY"],
+			["r", "z tezlanish", "uoAccelerationZ"],
+			["r", "teginish", "uoTouch"],
+			["r", "oid", "uoOid"],
+			["r", "x lavozimi", "uoPositionX"],
+			["r", "y lavozimi", "uoPositionY"],
+			["r", "yorug'lik", "uoLight"],
+			["r", "harorat", "uoTemperature"],
+			["r", "signal kuchi", "uoSignalStrength"],
+			["h", "qo'l topilganda", "uoWhenHandFound"],
+			["h", "tegganda", "uoWhenTouched"],
+			["h", "oid %n[VALUE] bo'lganida", "uoWhenOid", 0],
+			["h", "%m.when_tilt[TILT] bo'lganda", "uoWhenTilt", "oldinga eğin"],
+			["b", "qo'l topildimi?", "uoHandFound"],
+			["b", "teginmoqdami?", "uoTouching"],
+			["b", "oid %n[VALUE]?", "uoIsOid", 0],
+			["b", "%m.tilt ?", "uoTilt", "oldinga e?in"],
+			["b", "batareya %m.battery ?", "uoBatteryState", "normal"]
 		]
 	};
 	const MENUS = {
@@ -412,24 +380,16 @@
 			"turn_unit": ["degrees", "seconds", "pulses"],
 			"cm_sec": ["cm", "seconds"],
 			"deg_sec": ["degrees", "seconds"],
-			"head_tail": ["head", "tail"],
 			"left_right": ["left", "right"],
 			"left_right_both": ["left", "right", "both"],
-			"left_right_back": ["left", "right", "back"],
-			"line_color": ["black", "red", "green", "blue", "any color"],
-			"target_color": ["red", "yellow", "green", "sky blue", "blue", "purple", "any color"],
-			"color_line": ["red", "green", "blue", "any color"],
-			"touching_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "purple", "black", "white"],
-			"pattern_color": ["red", "yellow", "green", "sky blue", "blue", "purple"],
-			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"forward_backward": ["forward", "backward"],
+			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
-			"sound": ["beep", "random beep", "siren", "engine", "robot", "march", "birthday", "dibidibidip", "good job"],
-			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
+			"uo_sound": ["beep", "siren", "engine", "robot", "dibidibidip", "march", "birthday"],
+			"note": ["C", "C? (D♭)", "D", "D? (E♭)", "E", "F", "F? (G♭)", "G", "G? (A♭)", "A", "A? (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_button_state": ["clicked", "double-clicked", "long-pressed"],
 			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
-			"button_state": ["clicked", "double-clicked", "long-pressed"],
 			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
 			"battery": ["normal", "low", "empty"]
 		},
@@ -438,24 +398,16 @@
 			"turn_unit": ["도", "초", "펄스"],
 			"cm_sec": ["cm", "초"],
 			"deg_sec": ["도", "초"],
-			"head_tail": ["머리", "꼬리"],
 			"left_right": ["왼쪽", "오른쪽"],
 			"left_right_both": ["왼쪽", "오른쪽", "양쪽"],
-			"left_right_back": ["왼쪽", "오른쪽", "뒤쪽"],
-			"line_color": ["검은색", "빨간색", "초록색", "파란색", "아무 색"],
-			"target_color": ["빨간색", "노란색", "초록색", "하늘색", "파란색", "자주색", "아무 색"],
-			"color_line": ["빨간색", "초록색", "파란색", "아무 색"],
-			"touching_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "자주색", "검은색", "하얀색"],
-			"pattern_color": ["빨간색", "노란색", "초록색", "하늘색", "파란색", "자주색"],
-			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"forward_backward": ["앞쪽", "뒤쪽"],
+			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
-			"sound": ["삐", "무작위 삐", "사이렌", "엔진", "로봇", "행진", "생일", "디비디비딥", "잘 했어요"],
+			"uo_sound": ["삐", "사이렌", "엔진", "로봇", "디비디비딥", "행진", "생일"],
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_button_state": ["클릭했을", "더블클릭했을", "길게~눌렀을"],
 			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을"],
-			"button_state": ["클릭했는가", "더블클릭했는가", "길게~눌렀는가"],
 			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음"],
 			"battery": ["정상", "부족", "없음"]
 		},
@@ -464,24 +416,16 @@
 			"turn_unit": ["度", "秒", "パルス"],
 			"cm_sec": ["cm", "秒"],
 			"deg_sec": ["度", "秒"],
-			"head_tail": ["頭", "尾"],
 			"left_right": ["左", "右"],
 			"left_right_both": ["左", "右", "両"],
-			"left_right_back": ["左", "右", "後ろ"],
-			"line_color": ["黒色", "赤色", "緑色", "青色", "何色"],
-			"target_color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色", "何色"],
-			"color_line": ["赤色", "緑色", "青色", "何色"],
-			"touching_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "紫色", "黒色", "白色"],
-			"pattern_color": ["赤色", "黄色", "緑色", "水色", "青色", "紫色"],
-			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"forward_backward": ["前", "後"],
+			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
-			"sound": ["ビープ", "ランダムビープ", "サイレン", "エンジン", "ロボット", "行進", "誕生", "ディバディバディップ", "よくやった"],
+			"uo_sound": ["ビープ", "サイレン", "エンジン", "ロボット", "ディバディバディップ", "行進", "誕生"],
 			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_button_state": ["クリックした", "ダブルクリックした", "長く押した"],
 			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった"],
-			"button_state": ["クリックしたか", "ダブルクリックしたか", "長く押したか"],
 			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか"],
 			"battery": ["正常か", "足りないか", "ないか"]
 		},
@@ -490,25 +434,17 @@
 			"turn_unit": ["daraja", "soniya", "puls"],
 			"cm_sec": ["cm", "soniya"],
 			"deg_sec": ["daraja", "soniya"],
-			"head_tail": ["bosh", "dum"],
 			"left_right": ["chap", "o'ng"],
 			"left_right_both": ["chap", "o'ng", "har ikki"],
-			"left_right_back": ["chap", "o'ng", "orqa"],
-			"line_color": ["qora", "qizil", "yashil", "ko'k", "har qanday rang"],
-			"target_color": ["qizil", "sariq", "yashil", "moviy", "ko'k", "siyoh", "har qanday rang"],
-			"color_line": ["qizil", "yashil", "ko'k", "har qanday rang"],
-			"touching_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "siyoh", "qora", "oq"],
-			"pattern_color": ["qizil", "sariq", "yashil", "moviy", "ko'k", "siyoh"],
-			"speed": ["1", "2", "3", "4", "5", "6", "7", "8"],
+			"forward_backward": ["old", "orqa"],
+			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
-			"sound": ["qisqa", "tasodifiy qisqa", "sirena", "motor", "robot", "marsh", "tug'ilgan kun", "dibidibidip", "juda yaxshi"],
-			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
+			"uo_sound": ["qisqa", "sirena", "motor", "robot", "dibidibidip", "marsh", "tug'ilgan kun"],
+			"note": ["do", "do? (re♭)", "re", "re? (mi♭)", "mi", "fa", "fa? (sol♭)", "sol", "sol? (lya♭)", "lya", "lya? (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
-			"when_button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
 			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
-			"button_state": ["bosgan", "ikki-marta-bosgan", "uzoq-bosganmi"],
-			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
+			"tilt": ["oldinga e?in", "orqaga e?in", "chapga e?in", "o'ngga e?in", "ostin-ustun", "e?in yo'q"],
 			"battery": ["normal", "past", "bo'sh"]
 		}
 	};
@@ -531,25 +467,17 @@
 	var DIRECTIONS = {};
 	var TOWARDS = {};
 	var UNITS = {};
-	var LINE_COLORS = {};
 	var RGB_COLORS = {};
-	var COLOR_NUMBERS = {};
-	var COLOR_PATTERNS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var SOUNDS = {};
-	var BUTTON_STATES = {};
+	var UO_SOUNDS = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
 	
 	const LEFT = 1;
 	const RIGHT = 2;
-	const BACK = 5;
-	const HEAD = 1;
+	const FORWARD = 1;
 	const SECONDS = 2;
-	const CLICKED = 1;
-	const DOUBLE_CLICKED = 2;
-	const LONG_PRESSED = 3;
 	const TILT_FORWARD = 1;
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
@@ -562,43 +490,17 @@
 		tmp = MENUS[i]['left_right_both'];
 		PARTS[tmp[0]] = LEFT;
 		PARTS[tmp[1]] = RIGHT;
-		tmp = MENUS[i]['left_right_back'];
+		tmp = MENUS[i]['left_right'];
 		DIRECTIONS[tmp[0]] = LEFT;
 		DIRECTIONS[tmp[1]] = RIGHT;
-		DIRECTIONS[tmp[2]] = BACK;
-		tmp = MENUS[i]['head_tail'];
-		TOWARDS[tmp[0]] = HEAD;
+		tmp = MENUS[i]['forward_backward'];
+		TOWARDS[tmp[0]] = FORWARD;
 		tmp = MENUS[i]['move_unit'];
 		UNITS[tmp[0]] = 1; // cm
 		UNITS[tmp[1]] = 2; // sec
 		UNITS[tmp[2]] = 3; // pulse
 		tmp = MENUS[i]['turn_unit'];
 		UNITS[tmp[0]] = 1; // deg
-		tmp = MENUS[i]['line_color'];
-		LINE_COLORS[tmp[0]] = 0; // black
-		LINE_COLORS[tmp[4]] = 7; // any color
-		tmp = MENUS[i]['touching_color'];
-		LINE_COLORS[tmp[0]] = 1; // red
-		LINE_COLORS[tmp[2]] = 2; // yellow
-		LINE_COLORS[tmp[3]] = 3; // green
-		LINE_COLORS[tmp[4]] = 4; // sky blue
-		LINE_COLORS[tmp[5]] = 5; // blue
-		LINE_COLORS[tmp[6]] = 6; // purple
-		COLOR_NUMBERS[tmp[7]] = 0; // black
-		COLOR_NUMBERS[tmp[0]] = 1; // red
-		COLOR_NUMBERS[tmp[1]] = 2; // orange
-		COLOR_NUMBERS[tmp[2]] = 3; // yellow
-		COLOR_NUMBERS[tmp[3]] = 4; // green
-		COLOR_NUMBERS[tmp[4]] = 5; // sky blue
-		COLOR_NUMBERS[tmp[5]] = 6; // blue
-		COLOR_NUMBERS[tmp[6]] = 7; // purple
-		COLOR_NUMBERS[tmp[8]] = 8; // white
-		COLOR_PATTERNS[tmp[0]] = 1; // red
-		COLOR_PATTERNS[tmp[2]] = 3; // yellow
-		COLOR_PATTERNS[tmp[3]] = 4; // green
-		COLOR_PATTERNS[tmp[4]] = 5; // sky blue
-		COLOR_PATTERNS[tmp[5]] = 6; // blue
-		COLOR_PATTERNS[tmp[6]] = 7; // purple
 		tmp = MENUS[i]['led_color'];
 		RGB_COLORS[tmp[0]] = [255, 0, 0]; // red
 		RGB_COLORS[tmp[1]] = [255, 63, 0]; // orange
@@ -622,24 +524,14 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound'];
-		SOUNDS[tmp[0]] = 1; // beep
-		SOUNDS[tmp[1]] = 2; // random beep
-		SOUNDS[tmp[2]] = 3; // siren
-		SOUNDS[tmp[3]] = 4; // engine
-		SOUNDS[tmp[4]] = 5; // robot
-		SOUNDS[tmp[5]] = 6; // march
-		SOUNDS[tmp[6]] = 7; // birthday
-		SOUNDS[tmp[7]] = 8; // dibidibidip
-		SOUNDS[tmp[8]] = 9; // good job
-		tmp = MENUS[i]['button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
-		tmp = MENUS[i]['when_button_state'];
-		BUTTON_STATES[tmp[0]] = CLICKED;
-		BUTTON_STATES[tmp[1]] = DOUBLE_CLICKED;
-		BUTTON_STATES[tmp[2]] = LONG_PRESSED;
+		tmp = MENUS[i]['uo_sound'];
+		UO_SOUNDS[tmp[0]] = 1; // beep
+		UO_SOUNDS[tmp[1]] = 2; // siren
+		UO_SOUNDS[tmp[2]] = 3; // engine
+		UO_SOUNDS[tmp[3]] = 4; // robot
+		UO_SOUNDS[tmp[4]] = 7; // dibidibidip
+		UO_SOUNDS[tmp[5]] = 5; // march
+		UO_SOUNDS[tmp[6]] = 6; // birthday
 		tmp = MENUS[i]['tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
@@ -660,47 +552,47 @@
 		BATTERY_STATES[tmp[2]] = 0;
 	}
 	
-	function Turtle(index) {
+	function UoAlbert(index) {
 		this.sensory = {
 			map: 0,
 			signalStrength: 0,
-			colorRed: 0,
-			colorGreen: 0,
-			colorBlue: 0,
-			colorClear: 0,
-			floor: 0,
+			leftProximity: 0,
+			rightProximity: 0,
 			accelerationX: 0,
 			accelerationY: 0,
 			accelerationZ: 0,
+			positionX: -1,
+			positionY: -1,
+			light: 0,
 			temperature: 0,
-			button: 0,
-			colorNumber: -1,
-			colorPattern: -1,
+			battery: 0,
+			touch: 0,
+			oid: -1,
 			pulseCount: 0,
-			tilt: 0,
 			wheelState: 0,
 			soundState: 0,
-			lineTracerState: 0,
-			batteryState: 2
+			batteryState: 2,
+			tilt: 0,
+			handFound: false
 		};
 		this.motoring = {
-			module: TURTLE,
+			module: UOALBERT,
 			index: index,
-			map: 0xf8000000,
+			map: 0xbf800000,
 			leftWheel: 0,
 			rightWheel: 0,
-			ledRed: 0,
-			ledGreen: 0,
-			ledBlue: 0,
+			leftRed: 0,
+			leftGreen: 0,
+			leftBlue: 0,
+			rightRed: 0,
+			rightGreen: 0,
+			rightBlue: 0,
 			buzzer: 0,
 			pulse: 0,
 			note: 0,
 			sound: 0,
-			lineTracerMode: 0,
-			lineTracerGain: 5,
-			lineTracerSpeed: 5,
-			lamp: 1,
-			lock: 0,
+			boardWidth: 0,
+			boardHeight: 0,
 			motionType: 0,
 			motionUnit: 0,
 			motionSpeed: 0,
@@ -709,38 +601,33 @@
 		};
 		this.blockId = 0;
 		this.motionCallback = undefined;
-		this.lineTracerCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
 		this.soundCallback = undefined;
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
-		this.clicked = false;
-		this.doubleClicked = false;
-		this.longPressed = false;
-		this.colorPattern = -1;
 		this.tempo = 60;
 		this.timeouts = [];
 	}
 
 	Turtle.prototype.reset = function() {
 		var motoring = this.motoring;
-		motoring.map = 0xffe40000;
+		motoring.map = 0xbff80001;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
-		motoring.ledRed = 0;
-		motoring.ledGreen = 0;
-		motoring.ledBlue = 0;
+		motoring.leftRed = 0;
+		motoring.leftGreen = 0;
+		motoring.leftBlue = 0;
+		motoring.rightRed = 0;
+		motoring.rightGreen = 0;
+		motoring.rightBlue = 0;
 		motoring.buzzer = 0;
 		motoring.pulse = 0;
 		motoring.note = 0;
 		motoring.sound = 0;
-		motoring.lineTracerMode = 0;
-		motoring.lineTracerGain = 5;
-		motoring.lineTracerSpeed = 5;
-		motoring.lamp = 1;
-		motoring.lock = 0;
+		motoring.boardWidth = 0;
+		motoring.boardHeight = 0;
 		motoring.motionType = 0;
 		motoring.motionUnit = 0;
 		motoring.motionSpeed = 0;
@@ -749,17 +636,12 @@
 
 		this.blockId = 0;
 		this.motionCallback = undefined;
-		this.lineTracerCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
 		this.soundCallback = undefined;
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
-		this.clicked = false;
-		this.doubleClicked = false;
-		this.longPressed = false;
-		this.colorPattern = -1;
 		this.tempo = 60;
 
 		this.__removeAllTimeouts();
