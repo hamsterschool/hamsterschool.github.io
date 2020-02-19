@@ -524,7 +524,7 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['sound'];
+		tmp = MENUS[i]['uo_sound'];
 		UO_SOUNDS[tmp[0]] = 1; // beep
 		UO_SOUNDS[tmp[2]] = 2; // siren
 		UO_SOUNDS[tmp[3]] = 3; // engine
