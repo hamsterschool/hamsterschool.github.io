@@ -1568,109 +1568,109 @@
 		if(robot) robot.setTempo(bpm);
 	};
 	
-	ext.uoLeftProximity = function(args) {
-		var robot = getRobot(args);
+	ext.uoLeftProximity = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getLeftProximity() : 0;
 	};
 	
-	ext.uoRightProximity = function(args) {
-		var robot = getRobot(args);
+	ext.uoRightProximity = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getRightProximity() : 0;
 	};
 	
-	ext.uoAccelerationX = function(args) {
-		var robot = getRobot(args);
+	ext.uoAccelerationX = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getAccelerationX() : 0;
 	};
 	
-	ext.uoAccelerationY = function(args) {
-		var robot = getRobot(args);
+	ext.uoAccelerationY = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getAccelerationY() : 0;
 	};
 	
-	ext.uoAccelerationZ = function(args) {
-		var robot = getRobot(args);
+	ext.uoAccelerationZ = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getAccelerationZ() : 0;
 	};
 	
-	ext.uoTouch = function(args) {
-		var robot = getRobot(args);
+	ext.uoTouch = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getTouch() : 0;
 	};
 	
-	ext.uoOid = function(args) {
-		var robot = getRobot(args);
+	ext.uoOid = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getOid() : -1;
 	};
 	
-	ext.uoPositionX = function(args) {
-		var robot = getRobot(args);
+	ext.uoPositionX = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getPositionX() : -1;
 	};
 	
-	ext.uoPositionY = function(args) {
-		var robot = getRobot(args);
+	ext.uoPositionY = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getPositionY() : -1;
 	};
 	
-	ext.uoLight = function(args) {
-		var robot = getRobot(args);
+	ext.uoLight = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getLight() : 0;
 	};
 	
-	ext.uoTemperature = function(args) {
-		var robot = getRobot(args);
+	ext.uoTemperature = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getTemperature() : 0;
 	};
 	
-	ext.uoSignalStrength = function(args) {
-		var robot = getRobot(args);
+	ext.uoSignalStrength = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.getSignalStrength() : 0;
 	};
 	
-	ext.uoWhenHandFound = function(args) {
-		var robot = getRobot(args);
+	ext.uoWhenHandFound = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoWhenTouched = function(args) {
-		var robot = getRobot(args);
+	ext.uoWhenTouched = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.checkTouch() : false;
 	};
 	
-	ext.uoWhenOid = function(args) {
-		var robot = getRobot(args);
-		return robot ? robot.checkOid(args.VALUE) : false;
+	ext.uoWhenOid = function(value) {
+		var robot = getRobot(UOALBERT, 0);
+		return robot ? robot.checkOid(value) : false;
 	};
 	
-	ext.uoWhenTilt = function(args) {
-		var robot = getRobot(args);
-		return robot ? robot.checkTilt(args.TILT) : false;
+	ext.uoWhenTilt = function(tilt) {
+		var robot = getRobot(UOALBERT, 0);
+		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.uoHandFound = function(args) {
-		var robot = getRobot(args);
+	ext.uoHandFound = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoTouching = function(args) {
-		var robot = getRobot(args);
+	ext.uoTouching = function() {
+		var robot = getRobot(UOALBERT, 0);
 		return robot ? robot.checkTouch() : false;
 	};
 	
-	ext.uoIsOid = function(args) {
-		var robot = getRobot(args);
-		return robot ? robot.checkOid(args.VALUE) : false;
+	ext.uoIsOid = function(value) {
+		var robot = getRobot(UOALBERT, 0);
+		return robot ? robot.checkOid(value) : false;
 	};
 	
-	ext.uoTilt = function(args) {
-		var robot = getRobot(args);
-		return robot ? robot.checkTilt(args.TILT) : false;
+	ext.uoTilt = function(tilt) {
+		var robot = getRobot(UOALBERT, 0);
+		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.uoBatteryState = function(args) {
-		var robot = getRobot(args);
-		return robot ? robot.checkBattery(args.BATTERY) : false;
+	ext.uoBatteryState = function(battery) {
+		var robot = getRobot(UOALBERT, 0);
+		return robot ? robot.checkBattery(battery) : false;
 	};
 
 	ext._getStatus = function() {
