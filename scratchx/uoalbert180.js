@@ -41,7 +41,9 @@
 			[" ", "clear sound", "uoClearSound"],
 			["-"],
 			["h", "when hand found", "uoWhenHandFound"],
-			["b", "hand found?", "uoHandFound"]
+			["h", "when touch sensor %m.when_touch_state", "uoWhenTouchState", "clicked"],
+			["b", "hand found?", "uoHandFound"],
+			["b", "touch sensor %m.touch_state ?", "uoTouchState", "clicked"]
 		],
 		en2: [
 			["w", "move forward %n %m.cm_sec", "uoMoveForwardUnit", 5, "cm"],
@@ -61,8 +63,10 @@
 			[" ", "set tempo to %n bpm", "uoSetTempoTo", 60],
 			["-"],
 			["h", "when hand found", "uoWhenHandFound"],
+			["h", "when touch sensor %m.when_touch_state", "uoWhenTouchState", "clicked"],
 			["h", "when %m.when_tilt", "uoWhenTilt", "tilt forward"],
 			["b", "hand found?", "uoHandFound"],
+			["b", "touch sensor %m.touch_state ?", "uoTouchState", "clicked"],
 			["b", "%m.tilt ?", "uoTilt", "tilt forward"]
 		],
 		en3: [
@@ -106,11 +110,11 @@
 			["r", "temperature", "uoTemperature"],
 			["r", "signal strength", "uoSignalStrength"],
 			["h", "when hand found", "uoWhenHandFound"],
-			["h", "when touched", "uoWhenTouched"],
+			["h", "when touch sensor %m.when_touch_state", "uoWhenTouchState", "clicked"],
 			["h", "when oid is %n", "uoWhenOid", 0],
 			["h", "when %m.when_tilt", "uoWhenTilt", "tilt forward"],
 			["b", "hand found?", "uoHandFound"],
-			["b", "touching?", "uoTouching"],
+			["b", "touch sensor %m.touch_state ?", "uoTouchState", "clicked"],
 			["b", "oid %n ?", "uoIsOid", 0],
 			["b", "%m.tilt ?", "uoTilt", "tilt forward"],
 			["b", "battery %m.battery ?", "uoBatteryState", "normal"]
@@ -127,7 +131,9 @@
 			[" ", "소리 끄기", "uoClearSound"],
 			["-"],
 			["h", "손 찾았을 때", "uoWhenHandFound"],
-			["b", "손 찾음?", "uoHandFound"]
+			["h", "터치 센서를 %m.when_touch_state 때", "uoWhenTouchState", "클릭했을"],
+			["b", "손 찾음?", "uoHandFound"],
+			["b", "터치 센서를 %m.touch_state ?", "uoTouchState", "클릭했는가"]
 		],
 		ko2: [
 			["w", "앞으로 %n %m.cm_sec 이동하기", "uoMoveForwardUnit", 5, "cm"],
@@ -147,8 +153,10 @@
 			[" ", "연주 속도를 %n BPM으로 정하기", "uoSetTempoTo", 60],
 			["-"],
 			["h", "손 찾았을 때", "uoWhenHandFound"],
+			["h", "터치 센서를 %m.when_touch_state 때", "uoWhenTouchState", "클릭했을"],
 			["h", "%m.when_tilt 때", "uoWhenTilt", "앞으로 기울였을"],
 			["b", "손 찾음?", "uoHandFound"],
+			["b", "터치 센서를 %m.touch_state ?", "uoTouchState", "클릭했는가"],
 			["b", "%m.tilt ?", "uoTilt", "앞으로 기울임"]
 		],
 		ko3: [
@@ -192,33 +200,35 @@
 			["r", "온도", "uoTemperature"],
 			["r", "신호 세기", "uoSignalStrength"],
 			["h", "손 찾았을 때", "uoWhenHandFound"],
-			["h", "터치했을 때", "uoWhenTouched"],
+			["h", "터치 센서를 %m.when_touch_state 때", "uoWhenTouchState", "클릭했을"],
 			["h", "OID가 %n 일 때", "uoWhenOid", 0],
 			["h", "%m.when_tilt 때", "uoWhenTilt", "앞으로 기울였을"],
 			["b", "손 찾음?", "uoHandFound"],
-			["b", "터치하고 있는가?", "uoTouching"],
+			["b", "터치 센서를 %m.touch_state ?", "uoTouchState", "클릭했는가"],
 			["b", "OID가 %n 인가?", "uoIsOid", 0],
 			["b", "%m.tilt ?", "uoTilt", "앞으로 기울임"],
 			["b", "배터리 %m.battery ?", "uoBatteryState", "정상"]
 		],
 		ja1: [
-			["w", "前へ動かす", "uoMoveForward"],
-			["w", "後ろへ動かす", "uoMoveBackward"],
-			["w", "%m.left_right に回す", "uoTurn", "左"],
+			["w", "前へ移動する", "uoMoveForward"],
+			["w", "後ろへ移動する", "uoMoveBackward"],
+			["w", "%m.left_right へ回す", "uoTurn", "左"],
 			["-"],
 			[" ", "%m.left_right_both 眼を %m.led_color にする", "uoSetEyeTo", "左", "赤色"],
 			[" ", "%m.left_right_both 眼を消す", "uoClearEye", "左"],
 			["-"],
 			[" ", "%m.uo_sound 音を鳴らす", "uoPlaySound", "ビープ"],
-			[" ", "音を止める", "uoClearSound"],
+			[" ", "音を消す", "uoClearSound"],
 			["-"],
 			["h", "手を見つけたとき", "uoWhenHandFound"],
-			["b", "手を見つけたか?", "uoHandFound"]
+			["h", "タッチセンサーを %m.when_touch_state とき", "uoWhenTouchState", "クリックした"],
+			["b", "手を見つけたか?", "uoHandFound"],
+			["b", "タッチセンサーを %m.touch_state ?", "uoTouchState", "クリックしたか"]
 		],
 		ja2: [
-			["w", "前へ %n %m.cm_sec 動かす", "uoMoveForwardUnit", 5, "cm"],
-			["w", "後ろへ %n %m.cm_sec 動かす", "uoMoveBackwardUnit", 5, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "uoTurnUnitInPlace", "左", 90, "度"],
+			["w", "前へ %n %m.cm_sec 移動する", "uoMoveForwardUnit", 5, "cm"],
+			["w", "後ろへ %n %m.cm_sec 移動する", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right へ %n %m.deg_sec その場で回す", "uoTurnUnitInPlace", "左", 90, "度"],
 			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向に回す", "uoPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
 			["-"],
 			[" ", "%m.left_right_both 眼を %m.led_color にする", "uoSetEyeTo", "左", "赤色"],
@@ -226,21 +236,23 @@
 			["-"],
 			[" ", "%m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimes", "ビープ", 1],
 			["w", "終わるまで %m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "音を止める", "uoClearSound"],
+			[" ", "音を消す", "uoClearSound"],
 			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "uoPlayNoteFor", "ド", "4", 0.5],
 			["w", "%d.beats 拍休む", "uoRestFor", 0.25],
 			[" ", "テンポを %n ずつ変える", "uoChangeTempoBy", 20],
 			[" ", "テンポを %n BPMにする", "uoSetTempoTo", 60],
 			["-"],
 			["h", "手を見つけたとき", "uoWhenHandFound"],
+			["h", "タッチセンサーを %m.when_touch_state とき", "uoWhenTouchState", "クリックした"],
 			["h", "%m.when_tilt とき", "uoWhenTilt", "前に傾けた"],
 			["b", "手を見つけたか?", "uoHandFound"],
+			["b", "タッチセンサーを %m.touch_state ?", "uoTouchState", "クリックしたか"],
 			["b", "%m.tilt ?", "uoTilt", "前に傾けたか"]
 		],
 		ja3: [
-			["w", "前へ %n %m.move_unit 動かす", "uoMoveForwardUnit", 5, "cm"],
-			["w", "後ろへ %n %m.move_unit 動かす", "uoMoveBackwardUnit", 5, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "uoTurnUnitInPlace", "左", 90, "度"],
+			["w", "前へ %n %m.move_unit 移動する", "uoMoveForwardUnit", 5, "cm"],
+			["w", "後ろへ %n %m.move_unit 移動する", "uoMoveBackwardUnit", 5, "cm"],
+			["w", "%m.left_right へ %n %m.turn_unit その場で回す", "uoTurnUnitInPlace", "左", 90, "度"],
 			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向に回す", "uoPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
 			[" ", "左車輪を %n 右車輪を %n ずつ変える", "uoChangeBothWheelsBy", 10, 10],
 			[" ", "左車輪を %n 右車輪を %n にする", "uoSetBothWheelsTo", 50, 50],
@@ -258,7 +270,7 @@
 			["w", "終わるまで %m.uo_sound 音を %n 回鳴らす", "uoPlaySoundTimesUntilDone", "ビープ", 1],
 			[" ", "ブザー音を %n ずつ変える", "uoChangeBuzzerBy", 10],
 			[" ", "ブザー音を %n にする", "uoSetBuzzerTo", 1000],
-			[" ", "音を止める", "uoClearSound"],
+			[" ", "音を消す", "uoClearSound"],
 			[" ", "%m.note %m.octave 音を鳴らす", "uoPlayNote", "ド", "4"],
 			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "uoPlayNoteFor", "ド", "4", 0.5],
 			["w", "%d.beats 拍休む", "uoRestFor", 0.25],
@@ -278,11 +290,11 @@
 			["r", "温度", "uoTemperature"],
 			["r", "信号強度", "uoSignalStrength"],
 			["h", "手を見つけたとき", "uoWhenHandFound"],
-			["h", "タッチしたとき", "uoWhenTouched"],
+			["h", "タッチセンサーを %m.when_touch_state とき", "uoWhenTouchState", "クリックした"],
 			["h", "OIDが %n であるとき", "uoWhenOid", 0],
 			["h", "%m.when_tilt とき", "uoWhenTilt", "前に傾けた"],
 			["b", "手を見つけたか?", "uoHandFound"],
-			["b", "タッチしているか?", "uoTouching"],
+			["b", "タッチセンサーを %m.touch_state ?", "uoTouchState", "クリックしたか"],
 			["b", "OIDが %n ですか?", "uoIsOid", 0],
 			["b", "%m.tilt ?", "uoTilt", "前に傾けたか"],
 			["b", "電池が %m.battery ?", "uoBatteryState", "正常か"]
@@ -299,7 +311,9 @@
 			[" ", "tovushni o'chirish", "uoClearSound"],
 			["-"],
 			["h", "qo'l topilganda", "uoWhenHandFound"],
-			["b", "qo'l topildimi?", "uoHandFound"]
+			["h", "teginish sensorini %m.when_touch_state da", "uoWhenTouchState", "bosgan"],
+			["b", "qo'l topildimi?", "uoHandFound"],
+			["b", "teginish sensorini %m.touch_state ?", "uoTouchState", "bosgan"]
 		],
 		uz2: [
 			["w", "oldinga %n %m.cm_sec yurish", "uoMoveForwardUnit", 5, "cm"],
@@ -319,9 +333,11 @@
 			[" ", "temni %n bpm ga sozlash", "uoSetTempoTo", 60],
 			["-"],
 			["h", "qo'l topilganda", "uoWhenHandFound"],
+			["h", "teginish sensorini %m.when_touch_state da", "uoWhenTouchState", "bosgan"],
 			["h", "%m.when_tilt bo'lganda", "uoWhenTilt", "oldinga eğin"],
 			["b", "qo'l topildimi?", "uoHandFound"],
-			["b", "%m.tilt ?", "uoTilt", "oldinga e?in"]
+			["b", "teginish sensorini %m.touch_state ?", "uoTouchState", "bosgan"],
+			["b", "%m.tilt ?", "uoTilt", "oldinga eğin"]
 		],
 		uz3: [
 			["w", "oldinga %n %m.move_unit yurish", "uoMoveForwardUnit", 5, "cm"],
@@ -364,13 +380,13 @@
 			["r", "harorat", "uoTemperature"],
 			["r", "signal kuchi", "uoSignalStrength"],
 			["h", "qo'l topilganda", "uoWhenHandFound"],
-			["h", "tegganda", "uoWhenTouched"],
+			["h", "teginish sensorini %m.when_touch_state da", "uoWhenTouchState", "bosgan"],
 			["h", "oid %n bo'lganida", "uoWhenOid", 0],
 			["h", "%m.when_tilt bo'lganda", "uoWhenTilt", "oldinga eğin"],
 			["b", "qo'l topildimi?", "uoHandFound"],
-			["b", "teginmoqdami?", "uoTouching"],
+			["b", "teginish sensorini %m.touch_state ?", "uoTouchState", "bosgan"],
 			["b", "oid %n ?", "uoIsOid", 0],
-			["b", "%m.tilt ?", "uoTilt", "oldinga e?in"],
+			["b", "%m.tilt ?", "uoTilt", "oldinga eğin"],
 			["b", "batareya %m.battery ?", "uoBatteryState", "normal"]
 		]
 	};
