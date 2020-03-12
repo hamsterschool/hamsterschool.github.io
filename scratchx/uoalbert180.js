@@ -402,10 +402,12 @@
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
 			"uo_sound": ["beep", "siren", "engine", "robot", "dibidibidip", "march", "birthday"],
-			"note": ["C", "C? (D♭)", "D", "D? (E♭)", "E", "F", "F? (G♭)", "G", "G? (A♭)", "A", "A? (B♭)", "B"],
+			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"when_touch_state": ["clicked", "long-pressed (1.5 secs)", "long-long-pressed (3 secs)"],
 			"when_tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
+			"touch_state": ["clicked", "long-pressed (1.5 secs)", "long-long-pressed (3 secs)"],
 			"tilt": ["tilt forward", "tilt backward", "tilt left", "tilt right", "tilt flip", "not tilt"],
 			"battery": ["normal", "low", "empty"]
 		},
@@ -423,7 +425,9 @@
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"when_touch_state": ["클릭했을", "오래 눌렀을(1.5초)", "아주 오래 눌렀을(3초)"],
 			"when_tilt": ["앞으로 기울였을", "뒤로 기울였을", "왼쪽으로 기울였을", "오른쪽으로 기울였을", "거꾸로 뒤집었을", "기울이지 않았을"],
+			"touch_state": ["클릭했는가", "오래 눌렀는가(1.5초)", "아주 오래 눌렀는가(3초)"],
 			"tilt": ["앞으로 기울임", "뒤로 기울임", "왼쪽으로 기울임", "오른쪽으로 기울임", "거꾸로 뒤집음", "기울이지 않음"],
 			"battery": ["정상", "부족", "없음"]
 		},
@@ -441,7 +445,9 @@
 			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"when_touch_state": ["クリックした", "長く押した(1.5秒)", "非常に長く押した(3秒)"],
 			"when_tilt": ["前に傾けた", "後に傾けた", "左に傾けた", "右に傾けた", "上下裏返した", "傾けなかった"],
+			"touch_state": ["クリックしたか", "長く押したか(1.5秒)", "非常に長く押したか(3秒)"],
 			"tilt": ["前に傾けたか", "後に傾けたか", "左に傾けたか", "右に傾けたか", "上下裏返したか", "傾けなかったか"],
 			"battery": ["正常か", "足りないか", "ないか"]
 		},
@@ -456,11 +462,13 @@
 			"board_size": ["37", "53", "76", "108", "153", "217"],
 			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
 			"uo_sound": ["qisqa", "sirena", "motor", "robot", "dibidibidip", "marsh", "tug'ilgan kun"],
-			"note": ["do", "do? (re♭)", "re", "re? (mi♭)", "mi", "fa", "fa? (sol♭)", "sol", "sol? (lya♭)", "lya", "lya? (si♭)", "si"],
+			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
+			"when_touch_state": ["bosgan", "uzoq bosganmi (1.5 soniya)", "juda uzoq bosganmi (3 soniya)"],
 			"when_tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
-			"tilt": ["oldinga e?in", "orqaga e?in", "chapga e?in", "o'ngga e?in", "ostin-ustun", "e?in yo'q"],
+			"touch_state": ["bosgan", "uzoq bosganmi (1.5 soniya)", "juda uzoq bosganmi (3 soniya)"],
+			"tilt": ["oldinga eğin", "orqaga eğin", "chapga eğin", "o'ngga eğin", "ostin-ustun", "eğin yo'q"],
 			"battery": ["normal", "past", "bo'sh"]
 		}
 	};
