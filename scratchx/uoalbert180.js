@@ -495,6 +495,7 @@
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
 	var UO_SOUNDS = {};
+	var TOUCH_STATES = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
 	
@@ -502,6 +503,9 @@
 	const RIGHT = 2;
 	const FORWARD = 1;
 	const SECONDS = 2;
+	const CLICKED = 1;
+	const LONG_PRESSED = 2;
+	const LONG_LONG_PRESSED = 3;
 	const TILT_FORWARD = 1;
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
@@ -556,6 +560,14 @@
 		UO_SOUNDS[tmp[4]] = 7; // dibidibidip
 		UO_SOUNDS[tmp[5]] = 5; // march
 		UO_SOUNDS[tmp[6]] = 6; // birthday
+		tmp = MENUS[i]['touch_state'];
+		TOUCH_STATES[tmp[0]] = CLICKED;
+		TOUCH_STATES[tmp[1]] = LONG_PRESSED;
+		TOUCH_STATES[tmp[2]] = LONG_LONG_PRESSED;
+		tmp = MENUS[i]['when_touch_state'];
+		TOUCH_STATES[tmp[0]] = CLICKED;
+		TOUCH_STATES[tmp[1]] = LONG_PRESSED;
+		TOUCH_STATES[tmp[2]] = LONG_LONG_PRESSED;
 		tmp = MENUS[i]['tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
@@ -579,6 +591,7 @@
 	function UoAlbert(index) {
 		this.sensory = {
 			map: 0,
+			map2: 0,
 			signalStrength: 0,
 			leftProximity: 0,
 			rightProximity: 0,
@@ -589,7 +602,6 @@
 			positionY: -1,
 			light: 0,
 			temperature: 0,
-			battery: 0,
 			touch: 0,
 			oid: -1,
 			pulseCount: 0,
@@ -631,6 +643,9 @@
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
+		this.clicked = false;
+		this.longPressed = false;
+		this.longLongPressed = false;
 		this.tempo = 60;
 		this.timeouts = [];
 	}
@@ -666,6 +681,9 @@
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
+		this.clicked = false;
+		this.longPressed = false;
+		this.longLongPressed = false;
 		this.tempo = 60;
 
 		this.__removeAllTimeouts();
@@ -692,6 +710,9 @@
 	};
 
 	UoAlbert.prototype.clearEvent = function() {
+		this.clicked = false;
+		this.longPressed = false;
+		this.longLongPressed = false;
 	};
 
 	UoAlbert.prototype.__setPulse = function(pulse) {
@@ -764,6 +785,10 @@
 		var self = this;
 		var sensory = self.sensory;
 
+		if(sensory.map2 & 0x80000000) self.clicked = true;
+		if(sensory.map2 & 0x40000000) self.longPressed = true;
+		if(sensory.map2 & 0x20000000) self.longLongPressed = true;
+
 		if(self.motionCallback && (sensory.map & 0x00000010) != 0) {
 			if(sensory.wheelState == 0) {
 				self.motoring.leftWheel = 0;
@@ -801,7 +826,7 @@
 
 	UoAlbert.prototype.__motion = function(type, callback) {
 		var motoring = this.motoring;
-
+	
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		this.__setPulse(0);
@@ -969,7 +994,7 @@
 		var motoring = this.motoring;
 		width = parseInt(width);
 		height = parseInt(height);
-		if((typeof width == 'number') && (typeof height == 'number')) {
+		if(width && height && width > 0 && height > 0) {
 			this.__setBoardSize(width, height);
 		}
 	};
@@ -1299,8 +1324,16 @@
 		return (sensory.handFound === undefined) ? (sensory.leftProximity > 40 || sensory.rightProximity > 40) : sensory.handFound;
 	};
 
-	UoAlbert.prototype.checkTouch = function() {
-		return this.sensory.touch == 1;
+	UoAlbert.prototype.checkTouchEvent = function(event) {
+		event = TOUCH_STATES[event];
+		if(event == CLICKED) {
+			return this.clicked;
+		} else if(event == LONG_PRESSED) {
+			return this.longPressed;
+		} else if(event == LONG_LONG_PRESSED) {
+			return this.longLongPressed;
+		}
+		return false;
 	};
 
 	UoAlbert.prototype.checkOid = function(value) {
@@ -1315,8 +1348,6 @@
 			case TILT_RIGHT: return this.sensory.tilt == -2;
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
-			case TILT_TAP: return this.tap;
-			case TILT_FREE_FALL: return this.freeFall;
 		}
 		return false;
 	};
@@ -1482,9 +1513,9 @@
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.uoPivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
+	ext.uoPivotAroundWheelUnitInDirection = function(wheel, value, unit, toward, callback) {
 		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.pivotUnit(wheel, value, unit, head, callback);
+		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
 	ext.uoChangeBothWheelsBy = function(left, right) {
@@ -1497,14 +1528,14 @@
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.uoChangeWheelBy = function(wheel, speed) {
+	ext.uoChangeWheelBy = function(wheel, velocity) {
 		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.changeWheel(wheel, speed);
+		if(robot) robot.changeWheel(wheel, velocity);
 	};
 
-	ext.uoSetWheelTo = function(wheel, speed) {
+	ext.uoSetWheelTo = function(wheel, velocity) {
 		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.setWheel(wheel, speed);
+		if(robot) robot.setWheel(wheel, velocity);
 	};
 
 	ext.uoStop = function() {
@@ -1657,9 +1688,9 @@
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoWhenTouched = function() {
+	ext.uoWhenTouchState = function(event) {
 		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.checkTouch() : false;
+		return robot ? robot.checkTouchEvent(event) : false;
 	};
 	
 	ext.uoWhenOid = function(value) {
@@ -1677,9 +1708,9 @@
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoTouching = function() {
+	ext.uoTouchState = function(event) {
 		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.checkTouch() : false;
+		return robot ? robot.checkTouchEvent(event) : false;
 	};
 	
 	ext.uoIsOid = function(value) {
