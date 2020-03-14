@@ -526,20 +526,33 @@
 	var RGB_COLORS = {};
 	var NOTES = {};
 	var BEATS = { '¼': 0.25, '½': 0.5, '¾': 0.75, '1¼': 1.25, '1½': 1.5, '1¾': 1.75 };
-	var UO_SOUNDS = {};
+	var AI_SOUNDS = {};
+	var TOUCH_SENSORS = {};
+	var TOUCH_STATES = {};
 	var TILTS = {};
 	var BATTERY_STATES = {};
 	
 	const LEFT = 1;
 	const RIGHT = 2;
 	const FORWARD = 1;
+	const BACKWARD = 2;
 	const SECONDS = 2;
+	const TOUCH_MIC = 1;
+	const TOUCH_VOLUME_UP = 2;
+	const TOUCH_VOLUME_DOWN = 3;
+	const TOUCH_PLAY = 4;
+	const TOUCH_BACK = 5;
+	const CLICKED = 1;
+	const LONG_PRESSED = 2;
+	const LONG_LONG_PRESSED = 3;
 	const TILT_FORWARD = 1;
 	const TILT_BACKWARD = 2;
 	const TILT_LEFT = 3;
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
+	const TILT_TAP = 7;
+	const TILT_LIFT = 8;
 	
 	var tmp;
 	for(var i in MENUS) {
@@ -551,6 +564,10 @@
 		DIRECTIONS[tmp[1]] = RIGHT;
 		tmp = MENUS[i]['forward_backward'];
 		TOWARDS[tmp[0]] = FORWARD;
+		TOWARDS[tmp[1]] = BACKWARD;
+		tmp = MENUS[i]['move_forward_backward'];
+		TOWARDS[tmp[0]] = FORWARD;
+		TOWARDS[tmp[1]] = BACKWARD;
 		tmp = MENUS[i]['move_unit'];
 		UNITS[tmp[0]] = 1; // cm
 		UNITS[tmp[1]] = 2; // sec
@@ -580,37 +597,361 @@
 		NOTES[tmp[9]] = 13;
 		NOTES[tmp[10]] = 14;
 		NOTES[tmp[11]] = 15;
-		tmp = MENUS[i]['uo_sound'];
-		UO_SOUNDS[tmp[0]] = 1; // beep
-		UO_SOUNDS[tmp[1]] = 2; // siren
-		UO_SOUNDS[tmp[2]] = 3; // engine
-		UO_SOUNDS[tmp[3]] = 4; // robot
-		UO_SOUNDS[tmp[4]] = 7; // dibidibidip
-		UO_SOUNDS[tmp[5]] = 5; // march
-		UO_SOUNDS[tmp[6]] = 6; // birthday
-		tmp = MENUS[i]['tilt'];
+		tmp = MENUS[i]['albertai_sound'];
+		AI_SOUNDS[tmp[0]] = 1; // beep
+		AI_SOUNDS[tmp[1]] = 2; // random beep
+		AI_SOUNDS[tmp[2]] = 10; // noise
+		AI_SOUNDS[tmp[3]] = 3; // siren
+		AI_SOUNDS[tmp[4]] = 4; // engine
+		AI_SOUNDS[tmp[5]] = 5; // robot
+		AI_SOUNDS[tmp[6]] = 8; // dibidibidip
+		AI_SOUNDS[tmp[7]] = 9; // good job
+		AI_SOUNDS[tmp[8]] = 6; // march
+		AI_SOUNDS[tmp[9]] = 7; // birthday
+		tmp = MENUS[i]['touch_sensor'];
+		TOUCH_SENSORS[tmp[0]] = TOUCH_MIC;
+		TOUCH_SENSORS[tmp[1]] = TOUCH_VOLUME_UP;
+		TOUCH_SENSORS[tmp[2]] = TOUCH_VOLUME_DOWN;
+		TOUCH_SENSORS[tmp[3]] = TOUCH_PLAY;
+		TOUCH_SENSORS[tmp[4]] = TOUCH_BACK;
+		tmp = MENUS[i]['touch_state'];
+		TOUCH_STATES[tmp[0]] = CLICKED;
+		TOUCH_STATES[tmp[1]] = LONG_PRESSED;
+		TOUCH_STATES[tmp[2]] = LONG_LONG_PRESSED;
+		tmp = MENUS[i]['when_touch_state'];
+		TOUCH_STATES[tmp[0]] = CLICKED;
+		TOUCH_STATES[tmp[1]] = LONG_PRESSED;
+		TOUCH_STATES[tmp[2]] = LONG_LONG_PRESSED;
+		tmp = MENUS[i]['albertai_tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
 		TILTS[tmp[2]] = TILT_LEFT;
 		TILTS[tmp[3]] = TILT_RIGHT;
 		TILTS[tmp[4]] = TILT_FLIP;
 		TILTS[tmp[5]] = TILT_NONE;
-		tmp = MENUS[i]['when_tilt'];
+		TILTS[tmp[6]] = TILT_TAP;
+		TILTS[tmp[7]] = TILT_LIFT;
+		tmp = MENUS[i]['when_albertai_tilt'];
 		TILTS[tmp[0]] = TILT_FORWARD;
 		TILTS[tmp[1]] = TILT_BACKWARD;
 		TILTS[tmp[2]] = TILT_LEFT;
 		TILTS[tmp[3]] = TILT_RIGHT;
 		TILTS[tmp[4]] = TILT_FLIP;
 		TILTS[tmp[5]] = TILT_NONE;
+		TILTS[tmp[6]] = TILT_TAP;
+		TILTS[tmp[7]] = TILT_LIFT;
 		tmp = MENUS[i]['battery'];
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
 		BATTERY_STATES[tmp[2]] = 0;
 	}
 	
-	function UoAlbert(index) {
+	function AlbertAiController() {
+		this.prevDirection = 0;
+		this.prevDirectionFinal = 0;
+		this.directionCount = 0;
+		this.directionCountFinal = 0;
+		this.positionCount = 0;
+		this.positionCountFinal = 0;
+		this.isBackward = false;
+	}
+
+	AlbertAiController.prototype.PI = 3.14159265;
+	AlbertAiController.prototype.PI2 = 6.2831853;
+	AlbertAiController.prototype.GAIN_ANGLE = 30;
+	AlbertAiController.prototype.GAIN_ANGLE_FINE = 30;
+	AlbertAiController.prototype.GAIN_POSITION_FINE = 30;
+	AlbertAiController.prototype.STRAIGHT_SPEED = 50;//30;
+	AlbertAiController.prototype.MAX_BASE_SPEED = 50;//30;
+	AlbertAiController.prototype.GAIN_BASE_SPEED = 2;//1.5;
+	AlbertAiController.prototype.GAIN_POSITION = 70;//52.5;
+	AlbertAiController.prototype.POSITION_TOLERANCE_FINE = 3;
+	AlbertAiController.prototype.POSITION_TOLERANCE_FINE_LARGE = 5;
+	AlbertAiController.prototype.POSITION_TOLERANCE_ROUGH = 5;
+	AlbertAiController.prototype.POSITION_TOLERANCE_ROUGH_LARGE = 10;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_FINAL = 0.087;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_FINAL_LARGE = 0.122;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE = 0.262;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_ROUGH = 0.122;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_ROUGH_LARGE = 0.262;
+	AlbertAiController.prototype.ORIENTATION_TOLERANCE_ROUGH_LARGE_LARGE = 0.524;
+	AlbertAiController.prototype.MINIMUM_WHEEL_SPEED = 18;
+	AlbertAiController.prototype.MINIMUM_WHEEL_SPEED_FINE = 15;
+
+	AlbertAiController.prototype.clear = function() {
+		this.prevDirection = 0;
+		this.prevDirectionFinal = 0;
+		this.directionCount = 0;
+		this.directionCountFinal = 0;
+		this.positionCount = 0;
+		this.positionCountFinal = 0;
+	};
+
+	AlbertAiController.prototype.setBackward = function(backward) {
+		this.isBackward = backward;
+	};
+
+	AlbertAiController.prototype.controlAngleInitial = function(wheels, currentRadian, targetRadian) {
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
+		var diff = this.validateRadian(targetRadian - currentRadian);
+		var mag = Math.abs(diff);
+		if (mag < this.ORIENTATION_TOLERANCE_ROUGH) return true;
+
+		var direction = diff > 0 ? 1 : -1;
+		if(mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && direction * this.prevDirection < 0) return true;
+		this.prevDirection = direction;
+
+		var value = 0;
+		if(diff > 0) {
+			value = Math.log(1 + mag) * this.GAIN_ANGLE;
+			if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+		} else {
+			value = -Math.log(1 + mag) * this.GAIN_ANGLE;
+			if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+		}
+		value = parseInt(value);
+		wheels.left = -value;
+		wheels.right = value;
+		return false;
+	};
+
+	AlbertAiController.prototype.controlAngleFinal = function(wheels, currentRadian, targetRadian) {
+		var diff = this.validateRadian(targetRadian - currentRadian);
+		var mag = Math.abs(diff);
+		if(mag < this.ORIENTATION_TOLERANCE_FINAL) return true;
+
+		var direction = diff > 0 ? 1 : -1;
+		if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE && direction * this.prevDirectionFinal < 0) return true;
+		if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE && direction * this.prevDirectionFinal < 0) {
+			if(++this.directionCountFinal > 3) return true;
+		}
+		this.prevDirectionFinal = direction;
+
+		var value = 0;
+		if(diff > 0) {
+			value = Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+			if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+		} else {
+			value = -Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+			if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+		}
+		value = parseInt(value);
+		wheels.left = -value;
+		wheels.right = value;
+		return false;
+	};
+
+	AlbertAiController.prototype.controlPositionFine = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
+		var targetRadian = -Math.atan2(targetY - currentY, targetX - currentX);
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
+		var diff = this.validateRadian(targetRadian - currentRadian);
+		var mag = Math.abs(diff);
+		var ex = targetX - currentX;
+		var ey = targetY - currentY;
+		var dist = Math.sqrt(ex * ex + ey * ey);
+		if(dist < this.POSITION_TOLERANCE_FINE) return true;
+		if(dist < this.POSITION_TOLERANCE_FINE_LARGE) {
+			if (++this.positionCountFinal > 5) {
+				this.positionCountFinal = 0;
+				return true;
+			}
+		}
+		var value = 0;
+		if (diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+		else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+		if(this.isBackward) {
+			value = -value;
+		}
+		value = parseInt(value);
+		wheels.left = this.MINIMUM_WHEEL_SPEED_FINE - value;
+		wheels.right = this.MINIMUM_WHEEL_SPEED_FINE + value;
+		if(this.isBackward) {
+			wheels.left = -wheels.left;
+			wheels.right = -wheels.right;
+		}
+		return false;
+	};
+
+	AlbertAiController.prototype.controlPosition = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
+		var targetRadian = -Math.atan2(targetY - currentY, targetX - currentX);
+		if(this.isBackward) {
+			currentRadian += this.PI;
+		}
+		var diff = this.validateRadian(targetRadian - currentRadian);
+		var mag = Math.abs(diff);
+		var ex = targetX - currentX;
+		var ey = targetY - currentY;
+		var dist = Math.sqrt(ex * ex + ey * ey);
+		if(dist < this.POSITION_TOLERANCE_ROUGH) return true;
+		if(dist < this.POSITION_TOLERANCE_ROUGH_LARGE) {
+			if(++this.positionCount > 10) {
+				this.positionCount = 0;
+				return true;
+			}
+		} else {
+			this.positionCount = 0;
+		}
+		if(mag < 0.01) {
+			wheels.left = this.STRAIGHT_SPEED;
+			wheels.right = this.STRAIGHT_SPEED;
+		} else {
+			var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
+			if(base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
+
+			var value = 0;
+			if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION;
+			else value = -Math.log(1 + mag) * this.GAIN_POSITION;
+			if(this.isBackward) {
+				value = -value;
+			}
+			base = parseInt(base);
+			value = parseInt(value);
+			wheels.left = base - value;
+			wheels.right = base + value;
+		}
+		if(this.isBackward) {
+			wheels.left = -wheels.left;
+			wheels.right = -wheels.right;
+		}
+		return false;
+	};
+
+	AlbertAiController.prototype.validateRadian = function(radian) {
+		if(radian > this.PI) return radian - this.PI2;
+		else if(radian < -this.PI) return radian + this.PI2;
+		return radian;
+	};
+
+	AlbertAiController.prototype.toRadian = function(degree) {
+		return degree * 3.14159265 / 180.0;
+	};
+
+	function AlbertAiNavigator() {
+		this.controller = new AlbertAiController();
+		this.mode = 0;
+		this.state = 0;
+		this.initialized = false;
+		this.currentX = -1;
+		this.currentY = -1;
+		this.currentTheta = -200;
+		this.targetX = -1;
+		this.targetY = -1;
+		this.targetTheta = -200;
+		this.wheels = { completed: false, left: 0, right: 0 };
+	}
+
+	AlbertAiNavigator.prototype.clear = function() {
+		this.mode = 0;
+		this.state = 0;
+		this.initialized = false;
+		this.currentX = -1;
+		this.currentY = -1;
+		this.currentTheta = -200;
+		this.targetX = -1;
+		this.targetY = -1;
+		this.targetTheta = -200;
+		this.wheels.completed = false;
+		this.wheels.left = 0;
+		this.wheels.right = 0;
+		this.controller.clear();
+	};
+
+	AlbertAiNavigator.prototype.setBackward = function(backward) {
+		this.controller.setBackward(backward);
+	};
+
+	AlbertAiNavigator.prototype.moveTo = function(x, y) {
+		this.clear();
+		this.targetX = x;
+		this.targetY = y;
+		this.state = 1;
+		this.mode = 1;
+	};
+
+	AlbertAiNavigator.prototype.turnTo = function(deg) {
+		this.clear();
+		this.targetTheta = deg;
+		this.state = 1;
+		this.mode = 2;
+	};
+
+	AlbertAiNavigator.prototype.handleSensory = function(sensory) {
+		if(this.mode == 1) {
+			var x = sensory.positionX;
+			var y = sensory.positionY;
+			if(x >= 0) this.currentX = x;
+			if(y >= 0) this.currentY = y;
+			this.currentTheta = sensory.orientation;
+			switch(this.state) {
+				case 1: {
+					if(this.initialized == false) {
+						if(this.currentX < 0 || this.currentY < 0) {
+							this.wheels.left = 20;
+							this.wheels.right = -20;
+						} else {
+							this.initialized = true;
+						}
+					}
+					if(this.initialized) {
+						var currentRadian = this.controller.toRadian(this.currentTheta);
+						var dx = this.targetX - this.currentX;
+						var dy = this.targetY - this.currentY;
+						var targetRadian = -Math.atan2(dy, dx);
+						if(this.controller.controlAngleInitial(this.wheels, currentRadian, targetRadian)) {
+							this.state = 2;
+						}
+					}
+					break;
+				}
+				case 2: {
+					var currentRadian = this.controller.toRadian(this.currentTheta);
+					if(this.controller.controlPosition(this.wheels, this.currentX, this.currentY, currentRadian, this.targetX, this.targetY)) {
+						this.state = 3;
+					}
+					break;
+				}
+				case 3: {
+					var currentRadian = this.controller.toRadian(this.currentTheta);
+					if(this.controller.controlPositionFine(this.wheels, this.currentX, this.currentY, currentRadian, this.targetX, this.targetY)) {
+						this.clear();
+						this.wheels.completed = true;
+					}
+					break;
+				}
+			}
+		} else if(this.mode == 2) {
+			this.currentTheta = sensory.orientation;
+			switch(this.state) {
+				case 1: {
+					var currentRadian = this.controller.toRadian(this.currentTheta);
+					var targetRadian = this.controller.toRadian(this.targetTheta);
+					if(this.controller.controlAngleInitial(this.wheels, currentRadian, targetRadian)) {
+						this.state = 2;
+					}
+					break;
+				}
+				case 2: {
+					var currentRadian = this.controller.toRadian(this.currentTheta);
+					var targetRadian = this.controller.toRadian(this.targetTheta);
+					if(this.controller.controlAngleFinal(this.wheels, currentRadian, targetRadian)) {
+						this.clear();
+						this.wheels.completed = true;
+					}
+					break;
+				}
+			}
+		}
+		return this.wheels;
+	};
+	
+	function AlbertAi(index) {
 		this.sensory = {
-			map: 0,
+			map1: 0,
+			map2: 0,
 			signalStrength: 0,
 			leftProximity: 0,
 			rightProximity: 0,
@@ -619,11 +960,16 @@
 			accelerationZ: 0,
 			positionX: -1,
 			positionY: -1,
+			orientation: -200,
 			light: 0,
-			temperature: 0,
-			battery: 0,
-			touch: 0,
+			micTouch: 0,
+			volumeUpTouch: 0,
+			volumeDownTouch: 0,
+			playTouch: 0,
+			backTouch: 0,
+			oidMode: 0,
 			oid: -1,
+			lift: 0,
 			pulseCount: 0,
 			wheelState: 0,
 			soundState: 0,
@@ -632,9 +978,9 @@
 			handFound: false
 		};
 		this.motoring = {
-			module: UOALBERT,
+			module: ALBERTAI,
 			index: index,
-			map: 0xbf800000,
+			map: 0xbfc00000,
 			leftWheel: 0,
 			rightWheel: 0,
 			leftRed: 0,
@@ -643,6 +989,9 @@
 			rightRed: 0,
 			rightGreen: 0,
 			rightBlue: 0,
+			micRed: 0,
+			micGreen: 0,
+			micBlue: 0,
 			buzzer: 0,
 			pulse: 0,
 			note: 0,
@@ -656,6 +1005,8 @@
 			motionRadius: 0
 		};
 		this.blockId = 0;
+		this.navigationCallback = undefined;
+		this.navigator = undefined;
 		this.motionCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
@@ -663,13 +1014,29 @@
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
+		this.micClicked = false;
+		this.volumeUpClicked = false;
+		this.volumeDownClicked = false;
+		this.playClicked = false;
+		this.backClicked = false;
+		this.micLongPressed = false;
+		this.volumeUpLongPressed = false;
+		this.volumeDownLongPressed = false;
+		this.playLongPressed = false;
+		this.backLongPressed = false;
+		this.micLongLongPressed = false;
+		this.volumeUpLongLongPressed = false;
+		this.volumeDownLongLongPressed = false;
+		this.playLongLongPressed = false;
+		this.backLongLongPressed = false;
+		this.tap = false;
 		this.tempo = 60;
 		this.timeouts = [];
 	}
 
-	UoAlbert.prototype.reset = function() {
+	AlbertAi.prototype.reset = function() {
 		var motoring = this.motoring;
-		motoring.map = 0xbff80001;
+		motoring.map = 0xbffe0000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
 		motoring.leftRed = 0;
@@ -678,6 +1045,9 @@
 		motoring.rightRed = 0;
 		motoring.rightGreen = 0;
 		motoring.rightBlue = 0;
+		motoring.micRed = 0;
+		motoring.micGreen = 0;
+		motoring.micBlue = 0;
 		motoring.buzzer = 0;
 		motoring.pulse = 0;
 		motoring.note = 0;
@@ -691,6 +1061,8 @@
 		motoring.motionRadius = 0;
 
 		this.blockId = 0;
+		this.navigationCallback = undefined;
+		this.navigator = undefined;
 		this.motionCallback = undefined;
 		this.currentSound = 0;
 		this.soundRepeat = 1;
@@ -698,12 +1070,28 @@
 		this.noteId = 0;
 		this.noteTimer1 = undefined;
 		this.noteTimer2 = undefined;
+		this.micClicked = false;
+		this.volumeUpClicked = false;
+		this.volumeDownClicked = false;
+		this.playClicked = false;
+		this.backClicked = false;
+		this.micLongPressed = false;
+		this.volumeUpLongPressed = false;
+		this.volumeDownLongPressed = false;
+		this.playLongPressed = false;
+		this.backLongPressed = false;
+		this.micLongLongPressed = false;
+		this.volumeUpLongLongPressed = false;
+		this.volumeDownLongLongPressed = false;
+		this.playLongLongPressed = false;
+		this.backLongLongPressed = false;
+		this.tap = false;
 		this.tempo = 60;
 
 		this.__removeAllTimeouts();
 	};
 
-	UoAlbert.prototype.__removeTimeout = function(id) {
+	AlbertAi.prototype.__removeTimeout = function(id) {
 		clearTimeout(id);
 		var idx = this.timeouts.indexOf(id);
 		if(idx >= 0) {
@@ -711,7 +1099,7 @@
 		}
 	};
 
-	UoAlbert.prototype.__removeAllTimeouts = function() {
+	AlbertAi.prototype.__removeAllTimeouts = function() {
 		var timeouts = this.timeouts;
 		for(var i in timeouts) {
 			clearTimeout(timeouts[i]);
@@ -719,29 +1107,45 @@
 		this.timeouts = [];
 	};
 
-	UoAlbert.prototype.clearMotoring = function() {
-		this.motoring.map = 0xbf800000;
+	AlbertAi.prototype.clearMotoring = function() {
+		this.motoring.map = 0xbfc00000;
 	};
 
-	UoAlbert.prototype.clearEvent = function() {
+	AlbertAi.prototype.clearEvent = function() {
+		this.micClicked = false;
+		this.volumeUpClicked = false;
+		this.volumeDownClicked = false;
+		this.playClicked = false;
+		this.backClicked = false;
+		this.micLongPressed = false;
+		this.volumeUpLongPressed = false;
+		this.volumeDownLongPressed = false;
+		this.playLongPressed = false;
+		this.backLongPressed = false;
+		this.micLongLongPressed = false;
+		this.volumeUpLongLongPressed = false;
+		this.volumeDownLongLongPressed = false;
+		this.playLongLongPressed = false;
+		this.backLongLongPressed = false;
+		this.tap = false;
 	};
 
-	UoAlbert.prototype.__setPulse = function(pulse) {
+	AlbertAi.prototype.__setPulse = function(pulse) {
 		this.motoring.pulse = pulse;
-		this.motoring.map |= 0x00400000;
-	};
-
-	UoAlbert.prototype.__setNote = function(note) {
-		this.motoring.note = note;
 		this.motoring.map |= 0x00200000;
 	};
 
-	UoAlbert.prototype.__issueNoteId = function() {
+	AlbertAi.prototype.__setNote = function(note) {
+		this.motoring.note = note;
+		this.motoring.map |= 0x00100000;
+	};
+
+	AlbertAi.prototype.__issueNoteId = function() {
 		this.noteId = this.blockId = (this.blockId % 65535) + 1;
 		return this.noteId;
 	};
 
-	UoAlbert.prototype.__cancelNote = function() {
+	AlbertAi.prototype.__cancelNote = function() {
 		this.noteId = 0;
 		if(this.noteTimer1 !== undefined) {
 			this.__removeTimeout(this.noteTimer1);
@@ -753,12 +1157,12 @@
 		this.noteTimer2 = undefined;
 	};
 
-	UoAlbert.prototype.__setSound = function(sound) {
+	AlbertAi.prototype.__setSound = function(sound) {
 		this.motoring.sound = sound;
-		this.motoring.map |= 0x00100000;
+		this.motoring.map |= 0x00080000;
 	};
 
-	UoAlbert.prototype.__runSound = function(sound, count) {
+	AlbertAi.prototype.__runSound = function(sound, count) {
 		if(typeof count != 'number') count = 1;
 		if(count < 0) count = -1;
 		if(count) {
@@ -768,36 +1172,67 @@
 		}
 	};
 
-	UoAlbert.prototype.__cancelSound = function() {
+	AlbertAi.prototype.__cancelSound = function() {
 		this.soundCallback = undefined;
 	};
 
-	UoAlbert.prototype.__setBoardSize = function(width, height) {
+	AlbertAi.prototype.__setBoardSize = function(width, height) {
 		this.motoring.boardWidth = width;
 		this.motoring.boardHeight = height;
-		this.motoring.map |= 0x00080000;
+		this.motoring.map |= 0x00040000;
 	};
 
-	UoAlbert.prototype.__setMotion = function(type, unit, speed, value, radius) {
+	AlbertAi.prototype.__setMotion = function(type, unit, speed, value, radius) {
 		var motoring = this.motoring;
 		motoring.motionType = type;
 		motoring.motionUnit = unit;
 		motoring.motionSpeed = speed;
 		motoring.motionValue = value;
 		motoring.motionRadius = radius;
-		motoring.map |= 0x00000001;
+		motoring.map |= 0x00020000;
 	};
 
-	UoAlbert.prototype.__cancelMotion = function() {
+	AlbertAi.prototype.__cancelMotion = function() {
 		this.motionCallback = undefined;
 	};
+	
+	AlbertAi.prototype.__getNavigator = function() {
+		if(this.navigator == undefined) {
+			this.navigator = new AlbertAiNavigator();
+		}
+		return this.navigator;
+	};
 
-	UoAlbert.prototype.handleSensory = function() {
+	AlbertAi.prototype.__cancelNavigation = function() {
+		this.navigationCallback = undefined;
+		if(this.navigator) {
+			this.navigator.clear();
+		}
+	};
+
+	AlbertAi.prototype.handleSensory = function() {
 		var self = this;
 		var sensory = self.sensory;
 
-		if(self.motionCallback && (sensory.map & 0x00000010) != 0) {
-			if(sensory.wheelState == 0) {
+		if(sensory.map1 & 0x00000008) self.micClicked = true;
+		if(sensory.map1 & 0x00000004) self.volumeUpClicked = true;
+		if(sensory.map1 & 0x00000002) self.volumeDownClicked = true;
+		if(sensory.map1 & 0x00000001) self.playClicked = true;
+		if(sensory.map2 & 0x80000000) self.backClicked = true;
+		if(sensory.map2 & 0x40000000) self.micLongPressed = true;
+		if(sensory.map2 & 0x20000000) self.volumeUpLongPressed = true;
+		if(sensory.map2 & 0x10000000) self.volumeDownLongPressed = true;
+		if(sensory.map2 & 0x08000000) self.playLongPressed = true;
+		if(sensory.map2 & 0x04000000) self.backLongPressed = true;
+		if(sensory.map2 & 0x02000000) self.micLongLongPressed = true;
+		if(sensory.map2 & 0x01000000) self.volumeUpLongLongPressed = true;
+		if(sensory.map2 & 0x00800000) self.volumeDownLongLongPressed = true;
+		if(sensory.map2 & 0x00400000) self.playLongLongPressed = true;
+		if(sensory.map2 & 0x00200000) self.backLongLongPressed = true;
+		if(sensory.map2 & 0x00100000) self.tap = true;
+
+		if(self.motionCallback && (sensory.map2 & 0x00008000) != 0) {
+			if(sensory.wheelState == 2) {
 				self.motoring.leftWheel = 0;
 				self.motoring.rightWheel = 0;
 				var callback = self.motionCallback;
@@ -805,7 +1240,19 @@
 				if(callback) callback();
 			}
 		}
-		if((sensory.map & 0x00000008) != 0) {
+		if(self.navigationCallback) {
+			if(self.navigator) {
+				var result = self.navigator.handleSensory(self.sensory);
+				self.motoring.leftWheel = result.left;
+				self.motoring.rightWheel = result.right;
+				if(result.completed) {
+					var callback = self.navigationCallback;
+					self.__cancelNavigation();
+					if(callback) callback();
+				}
+			}
+		}
+		if((sensory.map2 & 0x00004000) != 0) {
 			if(sensory.soundState == 0) {
 				if(self.currentSound > 0) {
 					if(self.soundRepeat < 0) {
@@ -831,8 +1278,9 @@
 		}
 	};
 
-	UoAlbert.prototype.__motion = function(type, callback) {
+	AlbertAi.prototype.__motion = function(type, callback) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -841,8 +1289,9 @@
 		this.motionCallback = callback;
 	};
 
-	UoAlbert.prototype.__motionUnit = function(type, unit, value, callback) {
+	AlbertAi.prototype.__motionUnit = function(type, unit, value, callback) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		motoring.leftWheel = 0;
@@ -858,15 +1307,15 @@
 		}
 	};
 
-	UoAlbert.prototype.moveForward = function(callback) {
+	AlbertAi.prototype.moveForward = function(callback) {
 		this.__motion(101, callback);
 	};
 
-	UoAlbert.prototype.moveBackward = function(callback) {
+	AlbertAi.prototype.moveBackward = function(callback) {
 		this.__motion(102, callback);
 	};
 
-	UoAlbert.prototype.turn = function(direction, callback) {
+	AlbertAi.prototype.turn = function(direction, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
 			this.__motion(103, callback);
 		} else {
@@ -874,17 +1323,17 @@
 		}
 	};
 
-	UoAlbert.prototype.moveForwardUnit = function(value, unit, callback) {
+	AlbertAi.prototype.moveForwardUnit = function(value, unit, callback) {
 		if(value < 0) this.__motionUnit(2, UNITS[unit], -value, callback);
 		else this.__motionUnit(1, UNITS[unit], value, callback);
 	};
 
-	UoAlbert.prototype.moveBackwardUnit = function(value, unit, callback) {
+	AlbertAi.prototype.moveBackwardUnit = function(value, unit, callback) {
 		if(value < 0) this.__motionUnit(1, UNITS[unit], -value, callback);
 		else this.__motionUnit(2, UNITS[unit], value, callback);
 	};
 
-	UoAlbert.prototype.turnUnit = function(direction, value, unit, callback) {
+	AlbertAi.prototype.turnUnit = function(direction, value, unit, callback) {
 		if(DIRECTIONS[direction] == LEFT) {
 			if(value < 0) this.__motionUnit(4, UNITS[unit], -value, callback);
 			else this.__motionUnit(3, UNITS[unit], value, callback);
@@ -894,7 +1343,7 @@
 		}
 	};
 
-	UoAlbert.prototype.pivotUnit = function(part, value, unit, toward, callback) {
+	AlbertAi.prototype.pivotUnit = function(part, value, unit, toward, callback) {
 		unit = UNITS[unit];
 		if(PARTS[part] == LEFT) {
 			if(TOWARDS[toward] == FORWARD) {
@@ -915,8 +1364,9 @@
 		}
 	};
 
-	UoAlbert.prototype.setWheels = function(leftVelocity, rightVelocity) {
+	AlbertAi.prototype.setWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		leftVelocity = parseFloat(leftVelocity);
@@ -931,8 +1381,9 @@
 		this.__setMotion(0, 0, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.changeWheels = function(leftVelocity, rightVelocity) {
+	AlbertAi.prototype.changeWheels = function(leftVelocity, rightVelocity) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		leftVelocity = parseFloat(leftVelocity);
@@ -947,8 +1398,9 @@
 		this.__setMotion(0, 0, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.setWheel = function(wheel, velocity) {
+	AlbertAi.prototype.setWheel = function(wheel, velocity) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		velocity = parseFloat(velocity);
@@ -967,8 +1419,9 @@
 		this.__setMotion(0, 0, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.changeWheel = function(wheel, velocity) {
+	AlbertAi.prototype.changeWheel = function(wheel, velocity) {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		velocity = parseFloat(velocity);
@@ -987,8 +1440,9 @@
 		this.__setMotion(0, 0, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.stop = function() {
+	AlbertAi.prototype.stop = function() {
 		var motoring = this.motoring;
+		this.__cancelNavigation();
 		this.__cancelMotion();
 
 		motoring.leftWheel = 0;
@@ -997,33 +1451,61 @@
 		this.__setMotion(0, 0, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.setBoardSize = function(width, height) {
+	AlbertAi.prototype.moveToOnBoard = function(toward, x, y, callback) {
 		var motoring = this.motoring;
-		width = parseInt(width);
-		height = parseInt(height);
-		if((typeof width == 'number') && (typeof height == 'number')) {
-			this.__setBoardSize(width, height);
+		this.__cancelNavigation();
+		this.__cancelMotion();
+
+		x = parseInt(x);
+		y = parseInt(y);
+		var navi = this.__getNavigator();
+		if((typeof x == 'number') && (typeof y == 'number') && x >= 0 && y >= 0) {
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			this.__setPulse(0);
+			this.__setMotion(0, 0, 0, 0, 0);
+			navi.setBackward(TOWARDS[toward] == BACKWARD);
+			navi.moveTo(x, y);
+			this.navigationCallback = callback;
 		}
 	};
 
-	UoAlbert.prototype.setEyeColor = function(eye, color) {
+	AlbertAi.prototype.setOrientationToOnBoard = function(degree, callback) {
+		var motoring = this.motoring;
+		this.__cancelNavigation();
+		this.__cancelMotion();
+
+		degree = parseInt(degree);
+		if(typeof degree == 'number') {
+			var navi = this.__getNavigator();
+			motoring.leftWheel = 0;
+			motoring.rightWheel = 0;
+			this.__setPulse(0);
+			this.__setMotion(0, 0, 0, 0, 0);
+			navi.setBackward(false);
+			navi.turnTo(degree);
+			this.navigationCallback = callback;
+		}
+	};
+
+	AlbertAi.prototype.setEyeColor = function(eye, color) {
 		var rgb = RGB_COLORS[color];
 		if(rgb) {
 			this.setRgb(eye, rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
-	UoAlbert.prototype.clearEye = function(eye) {
+	AlbertAi.prototype.clearEye = function(eye) {
 		this.setRgb(eye, 0, 0, 0);
 	};
 
-	UoAlbert.prototype.setRgbArray = function(eye, rgb) {
+	AlbertAi.prototype.setRgbArray = function(eye, rgb) {
 		if(rgb) {
 			this.setRgb(eye, rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
-	UoAlbert.prototype.setRgb = function(eye, red, green, blue) {
+	AlbertAi.prototype.setRgb = function(eye, red, green, blue) {
 		var motoring = this.motoring;
 		eye = PARTS[eye];
 		red = parseInt(red);
@@ -1065,7 +1547,7 @@
 		}
 	};
 
-	UoAlbert.prototype.changeRgb = function(eye, red, green, blue) {
+	AlbertAi.prototype.changeRgb = function(eye, red, green, blue) {
 		var motoring = this.motoring;
 		eye = PARTS[eye];
 		red = parseInt(red);
@@ -1107,12 +1589,12 @@
 		}
 	};
 
-	UoAlbert.prototype.playSound = function(sound, count) {
+	AlbertAi.prototype.playSound = function(sound, count) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
 
-		sound = UO_SOUNDS[sound];
+		sound = AI_SOUNDS[sound];
 		count = parseInt(count);
 		motoring.buzzer = 0;
 		this.__setNote(0);
@@ -1123,12 +1605,12 @@
 		}
 	};
 
-	UoAlbert.prototype.playSoundUntil = function(sound, count, callback) {
+	AlbertAi.prototype.playSoundUntil = function(sound, count, callback) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
 
-		sound = UO_SOUNDS[sound];
+		sound = AI_SOUNDS[sound];
 		count = parseInt(count);
 		motoring.buzzer = 0;
 		this.__setNote(0);
@@ -1141,7 +1623,7 @@
 		}
 	};
 
-	UoAlbert.prototype.setBuzzer = function(hz) {
+	AlbertAi.prototype.setBuzzer = function(hz) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1154,7 +1636,7 @@
 		this.__runSound(0);
 	};
 
-	UoAlbert.prototype.changeBuzzer = function(hz) {
+	AlbertAi.prototype.changeBuzzer = function(hz) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1167,7 +1649,7 @@
 		this.__runSound(0);
 	};
 
-	UoAlbert.prototype.clearSound = function() {
+	AlbertAi.prototype.clearSound = function() {
 		this.__cancelNote();
 		this.__cancelSound();
 		this.motoring.buzzer = 0;
@@ -1175,7 +1657,7 @@
 		this.__runSound(0);
 	};
 
-	UoAlbert.prototype.playNote = function(note, octave) {
+	AlbertAi.prototype.playNote = function(note, octave) {
 		var motoring = this.motoring;
 		this.__cancelNote();
 		this.__cancelSound();
@@ -1192,7 +1674,7 @@
 		this.__runSound(0);
 	};
 
-	UoAlbert.prototype.playNoteBeat = function(note, octave, beat, callback) {
+	AlbertAi.prototype.playNoteBeat = function(note, octave, beat, callback) {
 		var self = this;
 		var motoring = self.motoring;
 		self.__cancelNote();
@@ -1236,7 +1718,7 @@
 		}
 	};
 
-	UoAlbert.prototype.restBeat = function(beat, callback) {
+	AlbertAi.prototype.restBeat = function(beat, callback) {
 		var self = this;
 		var motoring = self.motoring;
 		self.__cancelNote();
@@ -1262,7 +1744,7 @@
 		}
 	};
 
-	UoAlbert.prototype.setTempo = function(bpm) {
+	AlbertAi.prototype.setTempo = function(bpm) {
 		bpm = parseFloat(bpm);
 		if(typeof bpm == 'number') {
 			this.tempo = bpm;
@@ -1270,7 +1752,7 @@
 		}
 	};
 
-	UoAlbert.prototype.changeTempo = function(bpm) {
+	AlbertAi.prototype.changeTempo = function(bpm) {
 		bpm = parseFloat(bpm);
 		if(typeof bpm == 'number') {
 			this.tempo += bpm;
@@ -1278,68 +1760,131 @@
 		}
 	};
 
-	UoAlbert.prototype.getLeftProximity = function() {
+	AlbertAi.prototype.getLeftProximity = function() {
 		return this.sensory.leftProximity;
 	};
 
-	UoAlbert.prototype.getRightProximity = function() {
+	AlbertAi.prototype.getRightProximity = function() {
 		return this.sensory.rightProximity;
 	};
 
-	UoAlbert.prototype.getAccelerationX = function() {
+	AlbertAi.prototype.getAccelerationX = function() {
 		return this.sensory.accelerationX;
 	};
 
-	UoAlbert.prototype.getAccelerationY = function() {
+	AlbertAi.prototype.getAccelerationY = function() {
 		return this.sensory.accelerationY;
 	};
 
-	UoAlbert.prototype.getAccelerationZ = function() {
+	AlbertAi.prototype.getAccelerationZ = function() {
 		return this.sensory.accelerationZ;
 	};
 
-	UoAlbert.prototype.getTouch = function() {
-		return this.sensory.touch;
+	AlbertAi.prototype.getMicTouch = function() {
+		return this.sensory.micTouch;
 	};
 
-	UoAlbert.prototype.getOid = function() {
+	AlbertAi.prototype.getVolumeUpTouch = function() {
+		return this.sensory.volumeUpTouch;
+	};
+
+	AlbertAi.prototype.getVolumeDownTouch = function() {
+		return this.sensory.volumeDownTouch;
+	};
+
+	AlbertAi.prototype.getPlayTouch = function() {
+		return this.sensory.playTouch;
+	};
+
+	AlbertAi.prototype.getBackTouch = function() {
+		return this.sensory.backTouch;
+	};
+
+	AlbertAi.prototype.getOidMode = function() {
+		return this.sensory.oidMode;
+	};
+
+	AlbertAi.prototype.getOid = function() {
 		return this.sensory.oid;
 	};
 
-	UoAlbert.prototype.getPositionX = function() {
+	AlbertAi.prototype.getLift = function() {
+		return this.sensory.lift;
+	};
+
+	AlbertAi.prototype.getPositionX = function() {
 		return this.sensory.positionX;
 	};
 
-	UoAlbert.prototype.getPositionY = function() {
+	AlbertAi.prototype.getPositionY = function() {
 		return this.sensory.positionY;
 	};
 
-	UoAlbert.prototype.getLight = function() {
+	AlbertAi.prototype.getOrientation = function() {
+		return this.sensory.orientation;
+	};
+
+	AlbertAi.prototype.getLight = function() {
 		return this.sensory.light;
 	};
 
-	UoAlbert.prototype.getTemperature = function() {
-		return this.sensory.temperature;
-	};
-
-	UoAlbert.prototype.getSignalStrength = function() {
+	AlbertAi.prototype.getSignalStrength = function() {
 		return this.sensory.signalStrength;
 	};
 
-	UoAlbert.prototype.checkHandFound = function() {
+	AlbertAi.prototype.checkHandFound = function() {
 		var sensory = this.sensory;
 		return (sensory.handFound === undefined) ? (sensory.leftProximity > 40 || sensory.rightProximity > 40) : sensory.handFound;
 	};
 
-	UoAlbert.prototype.checkTouch = function() {
-		return this.sensory.touch == 1;
+	AlbertAi.prototype.checkTouchState = function(sensor, event) {
+		sensor = TOUCH_SENSORS[sensor];
+		event = TOUCH_STATES[event];
+		switch(sensor) {
+			case TOUCH_MIC:
+				switch(event) {
+					case CLICKED: return this.micClicked;
+					case LONG_PRESSED: return this.micLongPressed;
+					case LONG_LONG_PRESSED: return this.micLongLongPressed;
+				}
+				break;
+			case TOUCH_VOLUME_UP:
+				switch(event) {
+					case CLICKED: return this.volumeUpClicked;
+					case LONG_PRESSED: return this.volumeUpLongPressed;
+					case LONG_LONG_PRESSED: return this.volumeUpLongLongPressed;
+				}
+				break;
+			case TOUCH_VOLUME_DOWN:
+				switch(event) {
+					case CLICKED: return this.volumeDownClicked;
+					case LONG_PRESSED: return this.volumeDownLongPressed;
+					case LONG_LONG_PRESSED: return this.volumeDownLongLongPressed;
+				}
+				break;
+			case TOUCH_PLAY:
+				switch(event) {
+					case CLICKED: return this.playClicked;
+					case LONG_PRESSED: return this.playLongPressed;
+					case LONG_LONG_PRESSED: return this.playLongLongPressed;
+				}
+				break;
+			case TOUCH_BACK:
+				switch(event) {
+					case CLICKED: return this.backClicked;
+					case LONG_PRESSED: return this.backLongPressed;
+					case LONG_LONG_PRESSED: return this.backLongLongPressed;
+				}
+				break;
+		}
+		return false;
 	};
 
-	UoAlbert.prototype.checkOid = function(value) {
+	AlbertAi.prototype.checkOid = function(value) {
 		return this.sensory.oid == parseInt(value);
 	};
 
-	UoAlbert.prototype.checkTilt = function(tilt) {
+	AlbertAi.prototype.checkTilt = function(tilt) {
 		switch(TILTS[tilt]) {
 			case TILT_FORWARD: return this.sensory.tilt == 1;
 			case TILT_BACKWARD: return this.sensory.tilt == -1;
@@ -1348,12 +1893,12 @@
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
 			case TILT_TAP: return this.tap;
-			case TILT_FREE_FALL: return this.freeFall;
+			case TILT_LIFT: return this.lift;
 		}
 		return false;
 	};
 
-	UoAlbert.prototype.checkBattery = function(battery) {
+	AlbertAi.prototype.checkBattery = function(battery) {
 		return this.sensory.batteryState == BATTERY_STATES[battery];
 	};
 
@@ -1362,7 +1907,7 @@
 		var robot = robots[key];
 		if(!robot) {
 			switch(module) {
-				case UOALBERT: robot = new UoAlbert(index); break;
+				case ALBERTAI: robot = new AlbertAi(index); break;
 			}
 			if(robot) {
 				robots[key] = robot;
@@ -1416,7 +1961,7 @@
 						var received = JSON.parse(message.data);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							if(received.module == UOALBERT) {
+							if(received.module == ALBERTAI) {
 								connectionState = received.state;
 							}
 						} else {
@@ -1451,7 +1996,7 @@
 										var json = JSON.stringify(packet);
 										if(canSend && socket) socket.send(json);
 									} else {
-										var robot = getRobot(UOALBERT, 0);
+										var robot = getRobot(ALBERTAI, 0);
 										if(robot) {
 											var json = JSON.stringify(robot.motoring);
 											if(canSend && socket) socket.send(json);
@@ -1484,248 +2029,283 @@
 		}
 	}
 	
-	ext.uoMoveForward = function(callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiMoveForward = function(callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.uoMoveBackward = function(callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiMoveBackward = function(callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.uoTurn = function(direction, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiTurn = function(direction, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.uoMoveForwardUnit = function(value, unit, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiMoveForwardUnit = function(value, unit, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.uoMoveBackwardUnit = function(value, unit, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiMoveBackwardUnit = function(value, unit, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.uoTurnUnitInPlace = function(direction, value, unit, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiTurnUnitInPlace = function(direction, value, unit, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.uoPivotAroundWheelUnitInDirection = function(wheel, value, unit, head, callback) {
-		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.pivotUnit(wheel, value, unit, head, callback);
+	ext.albertaiPivotAroundWheelUnitInDirection = function(wheel, value, unit, toward, callback) {
+		var robot = getRobot(ALBERTAI, 0);
+		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
-	ext.uoChangeBothWheelsBy = function(left, right) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiChangeBothWheelsBy = function(left, right) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.uoSetBothWheelsTo = function(left, right) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSetBothWheelsTo = function(left, right) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.uoChangeWheelBy = function(wheel, speed) {
-		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.changeWheel(wheel, speed);
+	ext.albertaiChangeWheelBy = function(wheel, velocity) {
+		var robot = getRobot(ALBERTAI, 0);
+		if(robot) robot.changeWheel(wheel, velocity);
 	};
 
-	ext.uoSetWheelTo = function(wheel, speed) {
-		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.setWheel(wheel, speed);
+	ext.albertaiSetWheelTo = function(wheel, velocity) {
+		var robot = getRobot(ALBERTAI, 0);
+		if(robot) robot.setWheel(wheel, velocity);
 	};
 
-	ext.uoStop = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiStop = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.stop();
 	};
 	
-	ext.uoSetBoardSizeTo = function(width, height) {
-		var robot = getRobot(UOALBERT, 0);
-		if(robot) robot.setBoardSize(width, height);
+	ext.albertaiMoveToOnBoard = function(toward, x, y, callback) {
+		var robot = getRobot(ALBERTAI, 0);
+		if(robot) robot.moveToOnBoard(toward, x, y, callback);
+	};
+	
+	ext.albertaiSetOrientationToOnBoard = function(degree, callback) {
+		var robot = getRobot(ALBERTAI, 0);
+		if(robot) robot.setOrientationToOnBoard(degree, callback);
 	};
 
-	ext.uoSetEyeTo = function(eye, color) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSetEyeTo = function(eye, color) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.setEyeColor(eye, color);
 	};
 	
-	ext.uoChangeEyeByRGB = function(eye, red, green, blue) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiChangeEyeByRGB = function(eye, red, green, blue) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.changeRgb(eye, red, green, blue);
 	};
 	
-	ext.uoSetEyeToRGB = function(eye, red, green, blue) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSetEyeToRGB = function(eye, red, green, blue) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.setRgb(eye, red, green, blue);
 	};
 
-	ext.uoClearEye = function(eye) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiClearEye = function(eye) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.clearEye(eye);
 	};
 
-	ext.uoPlaySound = function(sound) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPlaySound = function(sound) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.uoPlaySoundTimes = function(sound, count) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPlaySoundTimes = function(sound, count) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.uoPlaySoundTimesUntilDone = function(sound, count, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPlaySoundTimesUntilDone = function(sound, count, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.uoChangeBuzzerBy = function(hz) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiChangeBuzzerBy = function(hz) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.uoSetBuzzerTo = function(hz) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSetBuzzerTo = function(hz) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.uoClearSound = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiClearSound = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.uoPlayNote = function(note, octave) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPlayNote = function(note, octave) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.uoPlayNoteFor = function(note, octave, beat, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPlayNoteFor = function(note, octave, beat, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.uoRestFor = function(beat, callback) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiRestFor = function(beat, callback) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.uoChangeTempoBy = function(bpm) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiChangeTempoBy = function(bpm) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.uoSetTempoTo = function(bpm) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSetTempoTo = function(bpm) {
+		var robot = getRobot(ALBERTAI, 0);
 		if(robot) robot.setTempo(bpm);
 	};
 	
-	ext.uoLeftProximity = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiLeftProximity = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getLeftProximity() : 0;
 	};
 	
-	ext.uoRightProximity = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiRightProximity = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getRightProximity() : 0;
 	};
 	
-	ext.uoAccelerationX = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiAccelerationX = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getAccelerationX() : 0;
 	};
 	
-	ext.uoAccelerationY = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiAccelerationY = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getAccelerationY() : 0;
 	};
 	
-	ext.uoAccelerationZ = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiAccelerationZ = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getAccelerationZ() : 0;
 	};
 	
-	ext.uoTouch = function() {
-		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.getTouch() : 0;
+	ext.albertaiMicTouch = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getMicTouch() : 0;
 	};
 	
-	ext.uoOid = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiVolumeUpTouch = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getVolumeUpTouch() : 0;
+	};
+	
+	ext.albertaiVolumeDownTouch = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getVolumeDownTouch() : 0;
+	};
+	
+	ext.albertaiPlayTouch = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getPlayTouch() : 0;
+	};
+	
+	ext.albertaiBackTouch = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getBackTouch() : 0;
+	};
+	
+	ext.albertaiOidMode = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getOidMode() : 0;
+	};
+	
+	ext.albertaiOid = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getOid() : -1;
 	};
 	
-	ext.uoPositionX = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiLift = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getLift() : 0;
+	};
+	
+	ext.albertaiPositionX = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getPositionX() : -1;
 	};
 	
-	ext.uoPositionY = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiPositionY = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getPositionY() : -1;
 	};
 	
-	ext.uoLight = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiOrientation = function() {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.getOrientation() : -200;
+	};
+	
+	ext.albertaiLight = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getLight() : 0;
 	};
 	
-	ext.uoTemperature = function() {
-		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.getTemperature() : 0;
-	};
-	
-	ext.uoSignalStrength = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiSignalStrength = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.getSignalStrength() : 0;
 	};
 	
-	ext.uoWhenHandFound = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiWhenHandFound = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoWhenTouched = function() {
-		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.checkTouch() : false;
+	ext.albertaiWhenTouchState = function(sensor, event) {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.checkTouchState(sensor, event) : false;
 	};
 	
-	ext.uoWhenOid = function(value) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiWhenOid = function(value) {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkOid(value) : false;
 	};
 	
-	ext.uoWhenTilt = function(tilt) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiWhenTilt = function(tilt) {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.uoHandFound = function() {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiHandFound = function() {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkHandFound() : false;
 	};
 	
-	ext.uoTouching = function() {
-		var robot = getRobot(UOALBERT, 0);
-		return robot ? robot.checkTouch() : false;
+	ext.albertaiTouchState = function(sensor, event) {
+		var robot = getRobot(ALBERTAI, 0);
+		return robot ? robot.checkTouchState(sensor, event) : false;
 	};
 	
-	ext.uoIsOid = function(value) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiIsOid = function(value) {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkOid(value) : false;
 	};
 	
-	ext.uoTilt = function(tilt) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiTilt = function(tilt) {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.uoBatteryState = function(battery) {
-		var robot = getRobot(UOALBERT, 0);
+	ext.albertaiBattery = function(battery) {
+		var robot = getRobot(ALBERTAI, 0);
 		return robot ? robot.checkBattery(battery) : false;
 	};
 
