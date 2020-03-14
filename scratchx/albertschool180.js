@@ -470,8 +470,8 @@
 	const TILT_RIGHT = 4;
 	const TILT_FLIP = 5;
 	const TILT_NONE = 6;
-	const ON = 4;
-	const OFF = 5;
+	const ON = 1;
+	const OFF = 2;
 
 	var tmp;
 	for(var i in MENUS) {
@@ -863,7 +863,6 @@
 			orientation: -200,
 			light: 0,
 			temperature: 0,
-			battery: 0,
 			frontOid: -1,
 			rearOid: -1,
 			batteryState: 2,
@@ -1206,6 +1205,7 @@
 		y = parseInt(y);
 		var navi = this.__getNavigator();
 		if((typeof x == 'number') && (typeof y == 'number') && x >= 0 && x < navi.getBoardWidth() && y >= 0 && y < navi.getBoardHeight()) {
+			motoring.motion = 0;
 			navi.setBackward(TOWARDS[toward] == BACKWARD);
 			navi.moveTo(x, y);
 			this.navigationCallback = callback;
@@ -1220,6 +1220,7 @@
 		degree = parseInt(degree);
 		if(typeof degree == 'number') {
 			var navi = this.__getNavigator();
+			motoring.motion = 0;
 			navi.setBackward(false);
 			navi.turnTo(degree);
 			this.navigationCallback = callback;
@@ -1388,8 +1389,8 @@
 
 	AlbertSchool.prototype.restBeat = function(beat, callback) {
 		var self = this;
-		var motoring = self.motoring;
-		self.__cancelNote();
+	var motoring = self.motoring;
+	self.__cancelNote();
 
 		var tmp = BEATS[beat];
 		if(tmp) beat = tmp;
@@ -1774,122 +1775,102 @@
 	
 	ext.leftProximity = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getLeftProximity();
-		return 0;
+		return robot ? robot.getLeftProximity() : 0;
 	};
 	
 	ext.rightProximity = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getRightProximity();
-		return 0;
+		return robot ? robot.getRightProximity() : 0;
 	};
 	
 	ext.accelerationX = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getAccelerationX();
-		return 0;
+		return robot ? robot.getAccelerationX() : 0;
 	};
 	
 	ext.accelerationY = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getAccelerationY();
-		return 0;
+		return robot ? robot.getAccelerationY() : 0;
 	};
 	
 	ext.accelerationZ = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getAccelerationZ();
-		return 0;
+		return robot ? robot.getAccelerationZ() : 0;
 	};
 	
 	ext.frontOid = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getFrontOid();
-		return -1;
+		return robot ? robot.getFrontOid() : -1;
 	};
 	
 	ext.backOid = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getRearOid();
-		return -1;
+		return robot ? robot.getRearOid() : -1;
 	};
 	
 	ext.positionX = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getPositionX();
-		return -1;
+		return robot ? robot.getPositionX() : -1;
 	};
 	
 	ext.positionY = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getPositionY();
-		return -1;
+		return robot ? robot.getPositionY() : -1;
 	};
 	
 	ext.orientation = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getOrientation();
-		return -200;
+		return robot ? robot.getOrientation() : -200;
 	};
 	
 	ext.light = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getLight();
-		return 0;
+		return robot ? robot.getLight() : 0;
 	};
 	
 	ext.temperature = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getTemperature();
-		return 0;
+		return robot ? robot.getTemperature() : 0;
 	};
 	
 	ext.signalStrength = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.getSignalStrength();
-		return 0;
+		return robot ? robot.getSignalStrength() : 0;
 	};
 	
 	ext.whenHandFound = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkHandFound();
-		return false;
+		return robot ? robot.checkHandFound() : false;
 	};
 	
 	ext.whenOid = function(oid, value) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkOid(oid, value);
-		return false;
+		return robot ? robot.checkOid(oid, value) : false;
 	};
 	
 	ext.whenTilt = function(tilt) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkTilt(tilt);
-		return false;
+		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
 	ext.handFound = function() {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkHandFound();
-		return false;
+		return robot ? robot.checkHandFound() : false;
 	};
 	
 	ext.isOid = function(oid, value) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkOid(oid, value);
-		return false;
+		return robot ? robot.checkOid(oid, value) : false;
 	};
 	
 	ext.tilt = function(tilt) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkTilt(tilt);
-		return false;
+		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
 	ext.batteryState = function(battery) {
 		var robot = getRobot(ALBERTSCHOOL, 0);
-		if(robot) return robot.checkBattery(battery);
-		return false;
+		return robot ? robot.checkBattery(battery) : false;
 	};
 
 	ext._getStatus = function() {
