@@ -1893,7 +1893,7 @@
 			case TILT_FLIP: return this.sensory.tilt == 3;
 			case TILT_NONE: return this.sensory.tilt == -3;
 			case TILT_TAP: return this.tap;
-			case TILT_LIFT: return this.lift;
+			case TILT_LIFT: return this.sensory.lift == 1;
 		}
 		return false;
 	};
