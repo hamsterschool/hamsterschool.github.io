@@ -429,7 +429,7 @@
 			"forward_backward": ["forward", "backward"],
 			"move_forward_backward": ["forward", "backward"],
 			"led_color": ["red", "orange", "yellow", "green", "sky blue", "blue", "violet", "purple", "white"],
-			"albertai_sound": ["beep", "random beep", "noise", "siren", "engine", "robot", "dibidibidip", "good job", "march", "birthday"],
+			"albertai_sound": ["beep", "random beep", "noise", "siren", "engine", "robot"],
 			"note": ["C", "C♯ (D♭)", "D", "D♯ (E♭)", "E", "F", "F♯ (G♭)", "G", "G♯ (A♭)", "A", "A♯ (B♭)", "B"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
@@ -450,7 +450,7 @@
 			"forward_backward": ["앞쪽", "뒤쪽"],
 			"move_forward_backward": ["앞으로", "뒤로"],
 			"led_color": ["빨간색", "주황색", "노란색", "초록색", "하늘색", "파란색", "보라색", "자주색", "하얀색"],
-			"albertai_sound": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "로봇", "디비디비딥", "잘 했어요", "행진", "생일"],
+			"albertai_sound": ["삐", "무작위 삐", "지지직", "사이렌", "엔진", "로봇"],
 			"note": ["도", "도♯ (레♭)", "레", "레♯ (미♭)", "미", "파", "파♯ (솔♭)", "솔", "솔♯ (라♭)", "라", "라♯ (시♭)", "시"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
@@ -471,7 +471,7 @@
 			"forward_backward": ["前", "後"],
 			"move_forward_backward": ["前へ", "後ろへ"],
 			"led_color": ["赤色", "橙色", "黄色", "緑色", "水色", "青色", "青紫色", "紫色", "白色"],
-			"albertai_sound": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "ロボット", "ディバディバディップ", "よくやった", "行進", "誕生"],
+			"albertai_sound": ["ビープ", "ランダムビープ", "ノイズ", "サイレン", "エンジン", "ロボット"],
 			"note": ["ド", "ド♯ (レ♭)", "レ", "レ♯ (ミ♭)", "ミ", "ファ", "ファ♯ (ソ♭)", "ソ", "ソ♯ (ラ♭)", "ラ", "ラ♯ (シ♭)", "シ"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
@@ -492,7 +492,7 @@
 			"forward_backward": ["old", "orqa"],
 			"move_forward_backward": ["oldinga", "orqaga"],
 			"led_color": ["qizil", "mandarin", "sariq", "yashil", "moviy", "ko'k", "binafsha", "siyoh", "oq"],
-			"albertai_sound": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "robot", "dibidibidip", "juda yaxshi", "marsh", "tug'ilgan kun"],
+			"albertai_sound": ["qisqa", "tasodifiy qisqa", "shovqin", "sirena", "motor", "robot"],
 			"note": ["do", "do♯ (re♭)", "re", "re♯ (mi♭)", "mi", "fa", "fa♯ (sol♭)", "sol", "sol♯ (lya♭)", "lya", "lya♯ (si♭)", "si"],
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
@@ -604,10 +604,6 @@
 		AI_SOUNDS[tmp[3]] = 3; // siren
 		AI_SOUNDS[tmp[4]] = 4; // engine
 		AI_SOUNDS[tmp[5]] = 5; // robot
-		AI_SOUNDS[tmp[6]] = 8; // dibidibidip
-		AI_SOUNDS[tmp[7]] = 9; // good job
-		AI_SOUNDS[tmp[8]] = 6; // march
-		AI_SOUNDS[tmp[9]] = 7; // birthday
 		tmp = MENUS[i]['touch_sensor'];
 		TOUCH_SENSORS[tmp[0]] = TOUCH_MIC;
 		TOUCH_SENSORS[tmp[1]] = TOUCH_VOLUME_UP;
