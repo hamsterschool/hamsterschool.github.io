@@ -484,7 +484,8 @@
 	const GESTURE_RIGHTWARD = 3;
 	const GESTURE_NEAR = 4;
 	const GESTURE_FAR = 5;
-	const GESTURE_BLOCK = 6;
+	const GESTURE_CLICK = 6;
+	const GESTURE_LONG_TOUCH = 7;
 	
 	var tmp;
 	for(var i in MENUS) {
@@ -565,7 +566,8 @@
 		GESTURES[tmp[3]] = GESTURE_RIGHTWARD;
 		GESTURES[tmp[4]] = GESTURE_NEAR;
 		GESTURES[tmp[5]] = GESTURE_FAR;
-		GESTURES[tmp[6]] = GESTURE_BLOCK;
+		GESTURES[tmp[6]] = GESTURE_CLICK;
+		GESTURES[tmp[7]] = GESTURE_LONG_TOUCH;
 		tmp = MENUS[i]['battery'];
 		BATTERY_STATES[tmp[0]] = 2;
 		BATTERY_STATES[tmp[1]] = 1;
