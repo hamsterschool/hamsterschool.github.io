@@ -194,15 +194,15 @@
 			["b", "배터리 %m.battery ?", "zeroneBattery", "정상"]
 		],
 		ja1: [
-			["w", "前へ動かす", "zeroneMoveForward"],
-			["w", "後ろへ動かす", "zeroneMoveBackward"],
-			["w", "%m.left_right に回す", "zeroneTurn", "左"],
+			["w", "前へ移動する", "zeroneMoveForward"],
+			["w", "後ろへ移動する", "zeroneMoveBackward"],
+			["w", "%m.left_right へ回す", "zeroneTurn", "左"],
 			["-"],
 			[" ", "%m.left_right_head_tail_all LEDを %m.led_color にする", "zeroneSetLedTo", "前", "赤色"],
-			[" ", "%m.left_right_head_tail_all LEDをオフ", "zeroneClearLed", "前"],
+			[" ", "%m.left_right_head_tail_all LEDを消す", "zeroneClearLed", "前"],
 			["-"],
 			[" ", "%m.sound_effect 音を鳴らす", "zeronePlaySound", "ビープ"],
-			[" ", "音を止める", "zeroneClearSound"],
+			[" ", "音を消す", "zeroneClearSound"],
 			["-"],
 			[" ", "%m.zerone_sensor_mode センサーを開始する", "zeroneStartSensor", "ジェスチャー"],
 			["h", "ジェスチャーが %m.gesture であるとき", "zeroneWhenGesture", "前へ"],
@@ -211,16 +211,16 @@
 			["b", "%m.zerone_color に触れたか?", "zeroneTouchingColor", "赤色"]
 		],
 		ja2: [
-			["w", "前へ %n %m.cm_sec 動かす", "zeroneMoveForwardUnit", 6.5, "cm"],
-			["w", "後ろへ %n %m.cm_sec 動かす", "zeroneMoveBackwardUnit", 6.5, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.deg_sec 回す", "zeroneTurnUnitInPlace", "左", 90, "度"],
+			["w", "前へ %n %m.cm_sec 移動する", "zeroneMoveForwardUnit", 6.5, "cm"],
+			["w", "後ろへ %n %m.cm_sec 移動する", "zeroneMoveBackwardUnit", 6.5, "cm"],
+			["w", "%m.left_right へ %n %m.deg_sec 回す", "zeroneTurnUnitInPlace", "左", 90, "度"],
 			["-"],
 			[" ", "%m.left_right_head_tail_all LEDを %m.led_color にする", "zeroneSetLedTo", "前", "赤色"],
-			[" ", "%m.left_right_head_tail_all LEDをオフ", "zeroneClearLed", "前"],
+			[" ", "%m.left_right_head_tail_all LEDを消す", "zeroneClearLed", "前"],
 			["-"],
 			[" ", "%m.sound_effect 音を %n 回鳴らす", "zeronePlaySoundTimes", "ビープ", 1],
 			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "zeronePlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "音を止める", "zeroneClearSound"],
+			[" ", "音を消す", "zeroneClearSound"],
 			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "zeronePlayNoteFor", "ド", "4", 0.5],
 			["w", "%d.beats 拍休む", "zeroneRestFor", 0.25],
 			[" ", "テンポを %n ずつ変える", "zeroneChangeTempoBy", 20],
@@ -233,9 +233,9 @@
 			["b", "%m.zerone_color に触れたか?", "zeroneTouchingColor", "赤色"]
 		],
 		ja3: [
-			["w", "前へ %n %m.move_unit 動かす", "zeroneMoveForwardUnit", 6.5, "cm"],
-			["w", "後ろへ %n %m.move_unit 動かす", "zeroneMoveBackwardUnit", 6.5, "cm"],
-			["w", "所定位置で %m.left_right に %n %m.turn_unit 回す", "zeroneTurnUnitInPlace", "左", 90, "度"],
+			["w", "前へ %n %m.move_unit 移動する", "zeroneMoveForwardUnit", 6.5, "cm"],
+			["w", "後ろへ %n %m.move_unit 移動する", "zeroneMoveBackwardUnit", 6.5, "cm"],
+			["w", "%m.left_right へ %n %m.turn_unit 回す", "zeroneTurnUnitInPlace", "左", 90, "度"],
 			[" ", "左車輪を %n 右車輪を %n ずつ変える", "zeroneChangeBothWheelsBy", 10, 10],
 			[" ", "左車輪を %n 右車輪を %n にする", "zeroneSetBothWheelsTo", 50, 50],
 			[" ", "%m.left_right_both 車輪を %n ずつ変える", "zeroneChangeWheelBy", "左", 10],
@@ -245,13 +245,13 @@
 			[" ", "%m.left_right_head_tail_all LEDを %m.led_color にする", "zeroneSetLedTo", "前", "赤色"],
 			[" ", "%m.left_right_head_tail_all LEDをR: %n G: %n B: %n ずつ変える", "zeroneChangeLedByRGB", "前", 10, 0, 0],
 			[" ", "%m.left_right_head_tail_all LEDをR: %n G: %n B: %n にする", "zeroneSetLedToRGB", "前", 255, 0, 0],
-			[" ", "%m.left_right_head_tail_all LEDをオフ", "zeroneClearLed", "前"],
+			[" ", "%m.left_right_head_tail_all LEDを消す", "zeroneClearLed", "前"],
 			["-"],
 			[" ", "%m.sound_effect 音を %n 回鳴らす", "zeronePlaySoundTimes", "ビープ", 1],
 			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "zeronePlaySoundTimesUntilDone", "ビープ", 1],
 			[" ", "ブザー音を %n ずつ変える", "zeroneChangeBuzzerBy", 10],
 			[" ", "ブザー音を %n にする", "zeroneSetBuzzerTo", 1000],
-			[" ", "音を止める", "zeroneClearSound"],
+			[" ", "音を消す", "zeroneClearSound"],
 			[" ", "%m.note %m.octave 音を鳴らす", "zeronePlayNote", "ド", "4"],
 			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "zeronePlayNoteFor", "ド", "4", 0.5],
 			["w", "%d.beats 拍休む", "zeroneRestFor", 0.25],
@@ -374,7 +374,7 @@
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"zerone_sensor_mode": ["gesture", "color"],
-			"gesture": ["forward", "backward", "leftward", "rightward", "near", "far", "long block"],
+			"gesture": ["forward", "backward", "leftward", "rightward", "near", "far", "click", "long touch"],
 			"battery": ["normal", "low", "empty"]
 		},
 		ko: {
@@ -392,7 +392,7 @@
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"zerone_sensor_mode": ["제스처", "색깔"],
-			"gesture": ["앞으로", "뒤로", "왼쪽으로", "오른쪽으로", "가까이", "멀리", "오래 가림"],
+			"gesture": ["앞으로", "뒤로", "왼쪽으로", "오른쪽으로", "가까이", "멀리", "클릭", "오래 터치"],
 			"battery": ["정상", "부족", "없음"]
 		},
 		ja: {
@@ -410,7 +410,7 @@
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"zerone_sensor_mode": ["ジェスチャー", "色"],
-			"gesture": ["前へ", "後ろへ", "左へ", "右へ", "近く", "遠く", "長く遮蔽"],
+			"gesture": ["前へ", "後ろへ", "左へ", "右へ", "近く", "遠く", "クリック", "長くタッチ"],
 			"battery": ["正常か", "足りないか", "ないか"]
 		},
 		uz: {
@@ -428,7 +428,7 @@
 			"octave": ["1", "2", "3", "4", "5", "6", "7"],
 			"beats": ["¼", "½", "¾", "1", "1¼", "1½", "1¾", "2", "3", "4"],
 			"zerone_sensor_mode": ["jest", "rang"],
-			"gesture": ["oldinga", "orqaga", "chapga", "o'ngga", "yaqin", "uzoq", "uzoq to'smoq"],
+			"gesture": ["oldinga", "orqaga", "chapga", "o'ngga", "yaqin", "uzoq", "bosgan", "uzoq bosganmi"],
 			"battery": ["normal", "past", "bo'sh"]
 		}
 	};
