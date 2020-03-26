@@ -554,11 +554,11 @@
 		SOUNDS[tmp[14]] = 7; // birthday
 		tmp = MENUS[i]['zerone_color'];
 		COLOR_NUMBERS[tmp[0]] = 1; // red
-		COLOR_NUMBERS[tmp[1]] = 3; // yellow
-		COLOR_NUMBERS[tmp[2]] = 4; // green
-		COLOR_NUMBERS[tmp[3]] = 5; // sky blue
-		COLOR_NUMBERS[tmp[4]] = 6; // blue
-		COLOR_NUMBERS[tmp[5]] = 7; // purple
+		COLOR_NUMBERS[tmp[1]] = 2; // yellow
+		COLOR_NUMBERS[tmp[2]] = 3; // green
+		COLOR_NUMBERS[tmp[3]] = 4; // sky blue
+		COLOR_NUMBERS[tmp[4]] = 5; // blue
+		COLOR_NUMBERS[tmp[5]] = 6; // purple
 		tmp = MENUS[i]['gesture'];
 		GESTURES[tmp[0]] = GESTURE_FORWARD;
 		GESTURES[tmp[1]] = GESTURE_BACKWARD;
