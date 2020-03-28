@@ -1239,13 +1239,13 @@
 	LineRobot.prototype.setLedColor = function(color) {
 		var rgb = RGB_COLORS[color];
 		if(rgb) {
-			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+			this.setLedRgb(rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
 	LineRobot.prototype.setLedRgbArray = function(rgb) {
 		if(rgb) {
-			this.setHeadRgb(rgb[0], rgb[1], rgb[2]);
+			this.setLedRgb(rgb[0], rgb[1], rgb[2]);
 		}
 	};
 
@@ -1282,7 +1282,7 @@
 	};
 
 	LineRobot.prototype.clearLed = function() {
-		this.setHeadRgb(0, 0, 0);
+		this.setLedRgb(0, 0, 0);
 	};
 
 	LineRobot.prototype.playSound = function(sound, count) {
