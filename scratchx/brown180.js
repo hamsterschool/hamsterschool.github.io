@@ -1608,7 +1608,7 @@
 						var received = JSON.parse(message.data);
 						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							if(received.module == BROWN) {
+							if(received.module == LINE) {
 								connectionState = received.state;
 							}
 						} else {
