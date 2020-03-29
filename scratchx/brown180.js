@@ -1048,7 +1048,7 @@
 		}
 	};
 
-	LineRobot.prototype.swingUnit = function(direction, value, unit, radius, toward, callback) {
+	LineRobot.prototype.circleUnit = function(direction, value, unit, radius, toward, callback) {
 		unit = UNITS[unit];
 		if(DIRECTIONS[direction] == LEFT) {
 			if(TOWARDS[toward] == FORWARD) {
@@ -1713,7 +1713,7 @@
 	
 	ext.brownTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, toward, callback) {
 		var robot = getRobot(LINE, 0);
-		if(robot) robot.swingUnit(direction, value, unit, radius, toward, callback);
+		if(robot) robot.circleUnit(direction, value, unit, radius, toward, callback);
 	};
 	
 	ext.brownChangeWheelsByLeftRight = function(left, right) {
