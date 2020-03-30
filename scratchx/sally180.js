@@ -25,407 +25,407 @@
 		uz: [ 'Robot Kodlash dasturini ishga tushiring.', 'Robot ulanmagan.', 'Tayyorlangan' ]
 	};
 	const EXTENSION_NAME = {
-		en: 'Brown',
-		ko: '브라운',
-		ja: 'ブラウン',
-		uz: 'Brown'
+		en: 'Sally',
+		ko: '샐리',
+		ja: 'サリー',
+		uz: 'Sally'
 	};
 	const BLOCKS = {
 		en1: [
-			["w", "move forward", "brownMoveForward"],
-			["w", "move backward", "brownMoveBackward"],
-			["w", "turn %m.left_right", "brownTurn", "left"],
+			["w", "move forward", "sallyMoveForward"],
+			["w", "move backward", "sallyMoveBackward"],
+			["w", "turn %m.left_right", "sallyTurn", "left"],
 			["-"],
-			[" ", "set led to %m.led_color", "brownSetLedTo", "red"],
-			[" ", "clear led", "brownClearLed"],
+			[" ", "set led to %m.led_color", "sallySetLedTo", "red"],
+			[" ", "clear led", "sallyClearLed"],
 			["-"],
-			[" ", "play sound %m.sound_effect", "brownPlaySound", "beep"],
-			[" ", "clear sound", "brownClearSound"],
+			[" ", "play sound %m.sound_effect", "sallyPlaySound", "beep"],
+			[" ", "clear sound", "sallyClearSound"],
 			["-"],
-			["h", "when %m.touching_color touched", "brownWhenColorTouched", "red"],
-			["h", "when button %m.when_button_state", "brownWhenButtonState", "clicked"],
-			["b", "touching %m.touching_color ?", "brownTouchingColor", "red"],
-			["b", "button %m.button_state ?", "brownButtonState", "clicked"]
+			["h", "when %m.touching_color touched", "sallyWhenColorTouched", "red"],
+			["h", "when button %m.when_button_state", "sallyWhenButtonState", "clicked"],
+			["b", "touching %m.touching_color ?", "sallyTouchingColor", "red"],
+			["b", "button %m.button_state ?", "sallyButtonState", "clicked"]
 		],
 		en2: [
-			["w", "move forward %n %m.cm_sec", "brownMoveForwardUnit", 6, "cm"],
-			["w", "move backward %n %m.cm_sec", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "turn %m.left_right %n %m.deg_sec in place", "brownTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "brownPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
-			["w", "turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "brownTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "forward"],
+			["w", "move forward %n %m.cm_sec", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "move backward %n %m.cm_sec", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "turn %m.left_right %n %m.deg_sec in place", "sallyTurnUnitInPlace", "left", 90, "degrees"],
+			["w", "pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "sallyPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
+			["w", "turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sallyTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "forward"],
 			["-"],
-			[" ", "set led to %m.led_color", "brownSetLedTo", "red"],
-			[" ", "clear led", "brownClearLed"],
+			[" ", "set led to %m.led_color", "sallySetLedTo", "red"],
+			[" ", "clear led", "sallyClearLed"],
 			["-"],
-			[" ", "play sound %m.sound_effect %n times", "brownPlaySoundTimes", "beep", 1],
-			["w", "play sound %m.sound_effect %n times until done", "brownPlaySoundTimesUntilDone", "beep", 1],
-			[" ", "clear sound", "brownClearSound"],
-			["w", "play note %m.note %m.octave for %d.beats beats", "brownPlayNoteForBeats", "C", "4", 0.5],
-			["w", "rest for %d.beats beats", "brownRestForBeats", 0.25],
-			[" ", "change tempo by %n", "brownChangeTempoBy", 20],
-			[" ", "set tempo to %n bpm", "brownSetTempoTo", 60],
+			[" ", "play sound %m.sound_effect %n times", "sallyPlaySoundTimes", "beep", 1],
+			["w", "play sound %m.sound_effect %n times until done", "sallyPlaySoundTimesUntilDone", "beep", 1],
+			[" ", "clear sound", "sallyClearSound"],
+			["w", "play note %m.note %m.octave for %d.beats beats", "sallyPlayNoteForBeats", "C", "4", 0.5],
+			["w", "rest for %d.beats beats", "sallyRestForBeats", 0.25],
+			[" ", "change tempo by %n", "sallyChangeTempoBy", 20],
+			[" ", "set tempo to %n bpm", "sallySetTempoTo", 60],
 			["-"],
-			["h", "when %m.touching_color touched", "brownWhenColorTouched", "red"],
-			["h", "when color pattern is %m.pattern_color_black %m.pattern_color_black", "brownWhenColorPattern", "black", "red"],
-			["h", "when button %m.when_button_state", "brownWhenButtonState", "clicked"],
-			["h", "when %m.when_s_tilt", "brownWhenTilt", "tilt forward"],
-			["b", "touching %m.touching_color ?", "brownTouchingColor", "red"],
-			["b", "color pattern %m.pattern_color_black %m.pattern_color_black ?", "brownIsColorPattern", "black", "red"],
-			["b", "button %m.button_state ?", "brownButtonState", "clicked"],
-			["b", "%m.s_tilt ?", "brownTilt", "tilt forward"]
+			["h", "when %m.touching_color touched", "sallyWhenColorTouched", "red"],
+			["h", "when color pattern is %m.pattern_color_black %m.pattern_color_black", "sallyWhenColorPattern", "black", "red"],
+			["h", "when button %m.when_button_state", "sallyWhenButtonState", "clicked"],
+			["h", "when %m.when_s_tilt", "sallyWhenTilt", "tilt forward"],
+			["b", "touching %m.touching_color ?", "sallyTouchingColor", "red"],
+			["b", "color pattern %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", "black", "red"],
+			["b", "button %m.button_state ?", "sallyButtonState", "clicked"],
+			["b", "%m.s_tilt ?", "sallyTilt", "tilt forward"]
 		],
 		en3: [
-			["w", "move forward %n %m.move_unit", "brownMoveForwardUnit", 6, "cm"],
-			["w", "move backward %n %m.move_unit", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "turn %m.left_right %n %m.turn_unit in place", "brownTurnUnitInPlace", "left", 90, "degrees"],
-			["w", "pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "brownPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
-			["w", "turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "brownTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "forward"],
-			[" ", "change wheels by left: %n right: %n", "brownChangeWheelsByLeftRight", 10, 10],
-			[" ", "set wheels to left: %n right: %n", "brownSetWheelsToLeftRight", 40, 40],
-			[" ", "change %m.left_right_both wheel by %n", "brownChangeWheelBy", "left", 10],
-			[" ", "set %m.left_right_both wheel to %n", "brownSetWheelTo", "left", 40],
-			[" ", "follow line", "brownFollowLine"],
-			["w", "follow line until %m.target_color", "brownFollowLineUntil", "red"],
-			["w", "cross intersection", "brownCrossIntersection"],
-			["w", "turn %m.left_right_back at intersection", "brownTurnAtIntersection", "left"],
-			["w", "jump to %m.left_right line", "brownJumpLine", "left"],
-			[" ", "set following speed to %m.speed", "brownSetFollowingSpeedTo", "4"],
-			[" ", "stop", "brownStop"],
+			["w", "move forward %n %m.move_unit", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "move backward %n %m.move_unit", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "turn %m.left_right %n %m.turn_unit in place", "sallyTurnUnitInPlace", "left", 90, "degrees"],
+			["w", "pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "sallyPivotAroundWheelUnitInDirection", "left", 90, "degrees", "forward"],
+			["w", "turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sallyTurnUnitWithRadiusInDirection", "left", 90, "degrees", 6, "forward"],
+			[" ", "change wheels by left: %n right: %n", "sallyChangeWheelsByLeftRight", 10, 10],
+			[" ", "set wheels to left: %n right: %n", "sallySetWheelsToLeftRight", 40, 40],
+			[" ", "change %m.left_right_both wheel by %n", "sallyChangeWheelBy", "left", 10],
+			[" ", "set %m.left_right_both wheel to %n", "sallySetWheelTo", "left", 40],
+			[" ", "follow line", "sallyFollowLine"],
+			["w", "follow line until %m.target_color", "sallyFollowLineUntil", "red"],
+			["w", "cross intersection", "sallyCrossIntersection"],
+			["w", "turn %m.left_right_back at intersection", "sallyTurnAtIntersection", "left"],
+			["w", "jump to %m.left_right line", "sallyJumpLine", "left"],
+			[" ", "set following speed to %m.speed", "sallySetFollowingSpeedTo", "4"],
+			[" ", "stop", "sallyStop"],
 			["-"],
-			[" ", "set led to %m.led_color", "brownSetLedTo", "red"],
-			[" ", "change led by r: %n g: %n b: %n", "brownChangeLedByRGB", 10, 0, 0],
-			[" ", "set led to r: %n g: %n b: %n", "brownSetLedToRGB", 255, 0, 0],
-			[" ", "clear led", "brownClearLed"],
+			[" ", "set led to %m.led_color", "sallySetLedTo", "red"],
+			[" ", "change led by r: %n g: %n b: %n", "sallyChangeLedByRGB", 10, 0, 0],
+			[" ", "set led to r: %n g: %n b: %n", "sallySetLedToRGB", 255, 0, 0],
+			[" ", "clear led", "sallyClearLed"],
 			["-"],
-			[" ", "play sound %m.sound_effect %n times", "brownPlaySoundTimes", "beep", 1],
-			["w", "play sound %m.sound_effect %n times until done", "brownPlaySoundTimesUntilDone", "beep", 1],
-			[" ", "change buzzer by %n", "brownChangeBuzzerBy", 10],
-			[" ", "set buzzer to %n", "brownSetBuzzerTo", 1000],
-			[" ", "clear sound", "brownClearSound"],
-			[" ", "play note %m.note %m.octave", "brownPlayNote", "C", "4"],
-			["w", "play note %m.note %m.octave for %d.beats beats", "brownPlayNoteForBeats", "C", "4", 0.5],
-			["w", "rest for %d.beats beats", "brownRestForBeats", 0.25],
-			[" ", "change tempo by %n", "brownChangeTempoBy", 20],
-			[" ", "set tempo to %n bpm", "brownSetTempoTo", 60],
+			[" ", "play sound %m.sound_effect %n times", "sallyPlaySoundTimes", "beep", 1],
+			["w", "play sound %m.sound_effect %n times until done", "sallyPlaySoundTimesUntilDone", "beep", 1],
+			[" ", "change buzzer by %n", "sallyChangeBuzzerBy", 10],
+			[" ", "set buzzer to %n", "sallySetBuzzerTo", 1000],
+			[" ", "clear sound", "sallyClearSound"],
+			[" ", "play note %m.note %m.octave", "sallyPlayNote", "C", "4"],
+			["w", "play note %m.note %m.octave for %d.beats beats", "sallyPlayNoteForBeats", "C", "4", 0.5],
+			["w", "rest for %d.beats beats", "sallyRestForBeats", 0.25],
+			[" ", "change tempo by %n", "sallyChangeTempoBy", 20],
+			[" ", "set tempo to %n bpm", "sallySetTempoTo", 60],
 			["-"],
-			["r", "color number", "brownColorNumber"],
-			["r", "color pattern", "brownColorPattern"],
-			["r", "color r", "brownColorRed"],
-			["r", "color g", "brownColorGreen"],
-			["r", "color b", "brownColorBlue"],
-			["r", "floor", "brownFloor"],
-			["r", "button", "brownButton"],
-			["r", "x acceleration", "brownAccelerationX"],
-			["r", "y acceleration", "brownAccelerationY"],
-			["r", "z acceleration", "brownAccelerationZ"],
-			["r", "temperature", "brownTemperature"],
-			["r", "signal strength", "brownSignalStrength"],
-			["h", "when %m.touching_color touched", "brownWhenColorTouched", "red"],
-			["h", "when color pattern is %m.pattern_color_black %m.pattern_color_black", "brownWhenColorPattern", "black", "red"],
-			["h", "when button %m.when_button_state", "brownWhenButtonState", "clicked"],
-			["h", "when %m.when_s_tilt", "brownWhenTilt", "tilt forward"],
-			["b", "touching %m.touching_color ?", "brownTouchingColor", "red"],
-			["b", "color pattern %m.pattern_color_black %m.pattern_color_black ?", "brownIsColorPattern", "black", "red"],
-			["b", "button %m.button_state ?", "brownButtonState", "clicked"],
-			["b", "%m.s_tilt ?", "brownTilt", "tilt forward"],
-			["b", "battery %m.battery ?", "brownBattery", "normal"]
+			["r", "color number", "sallyColorNumber"],
+			["r", "color pattern", "sallyColorPattern"],
+			["r", "color r", "sallyColorRed"],
+			["r", "color g", "sallyColorGreen"],
+			["r", "color b", "sallyColorBlue"],
+			["r", "floor", "sallyFloor"],
+			["r", "button", "sallyButton"],
+			["r", "x acceleration", "sallyAccelerationX"],
+			["r", "y acceleration", "sallyAccelerationY"],
+			["r", "z acceleration", "sallyAccelerationZ"],
+			["r", "temperature", "sallyTemperature"],
+			["r", "signal strength", "sallySignalStrength"],
+			["h", "when %m.touching_color touched", "sallyWhenColorTouched", "red"],
+			["h", "when color pattern is %m.pattern_color_black %m.pattern_color_black", "sallyWhenColorPattern", "black", "red"],
+			["h", "when button %m.when_button_state", "sallyWhenButtonState", "clicked"],
+			["h", "when %m.when_s_tilt", "sallyWhenTilt", "tilt forward"],
+			["b", "touching %m.touching_color ?", "sallyTouchingColor", "red"],
+			["b", "color pattern %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", "black", "red"],
+			["b", "button %m.button_state ?", "sallyButtonState", "clicked"],
+			["b", "%m.s_tilt ?", "sallyTilt", "tilt forward"],
+			["b", "battery %m.battery ?", "sallyBattery", "normal"]
 		],
 		ko1: [
-			["w", "앞으로 이동하기", "brownMoveForward"],
-			["w", "뒤로 이동하기", "brownMoveBackward"],
-			["w", "%m.left_right 으로 돌기", "brownTurn", "왼쪽"],
+			["w", "앞으로 이동하기", "sallyMoveForward"],
+			["w", "뒤로 이동하기", "sallyMoveBackward"],
+			["w", "%m.left_right 으로 돌기", "sallyTurn", "왼쪽"],
 			["-"],
-			[" ", "LED를 %m.led_color 으로 정하기", "brownSetLedTo", "빨간색"],
-			[" ", "LED 끄기", "brownClearLed"],
+			[" ", "LED를 %m.led_color 으로 정하기", "sallySetLedTo", "빨간색"],
+			[" ", "LED 끄기", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 소리 재생하기", "brownPlaySound", "삐"],
-			[" ", "소리 끄기", "brownClearSound"],
+			[" ", "%m.sound_effect 소리 재생하기", "sallyPlaySound", "삐"],
+			[" ", "소리 끄기", "sallyClearSound"],
 			["-"],
-			["h", "%m.touching_color 에 닿았을 때", "brownWhenColorTouched", "빨간색"],
-			["h", "버튼을 %m.when_button_state 때", "brownWhenButtonState", "클릭했을"],
-			["b", "%m.touching_color 에 닿았는가?", "brownTouchingColor", "빨간색"],
-			["b", "버튼을 %m.button_state ?", "brownButtonState", "클릭했는가"]
+			["h", "%m.touching_color 에 닿았을 때", "sallyWhenColorTouched", "빨간색"],
+			["h", "버튼을 %m.when_button_state 때", "sallyWhenButtonState", "클릭했을"],
+			["b", "%m.touching_color 에 닿았는가?", "sallyTouchingColor", "빨간색"],
+			["b", "버튼을 %m.button_state ?", "sallyButtonState", "클릭했는가"]
 		],
 		ko2: [
-			["w", "앞으로 %n %m.cm_sec 이동하기", "brownMoveForwardUnit", 6, "cm"],
-			["w", "뒤로 %n %m.cm_sec 이동하기", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right 으로 %n %m.deg_sec 제자리 돌기", "brownTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "brownPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
-			["w", "%m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "brownTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "앞쪽"],
+			["w", "앞으로 %n %m.cm_sec 이동하기", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "뒤로 %n %m.cm_sec 이동하기", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right 으로 %n %m.deg_sec 제자리 돌기", "sallyTurnUnitInPlace", "왼쪽", 90, "도"],
+			["w", "%m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sallyPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
+			["w", "%m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sallyTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "앞쪽"],
 			["-"],
-			[" ", "LED를 %m.led_color 으로 정하기", "brownSetLedTo", "빨간색"],
-			[" ", "LED 끄기", "brownClearLed"],
+			[" ", "LED를 %m.led_color 으로 정하기", "sallySetLedTo", "빨간색"],
+			[" ", "LED 끄기", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 소리 %n 번 재생하기", "brownPlaySoundTimes", "삐", 1],
-			["w", "%m.sound_effect 소리 %n 번 재생하고 기다리기", "brownPlaySoundTimesUntilDone", "삐", 1],
-			[" ", "소리 끄기", "brownClearSound"],
-			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "brownPlayNoteForBeats", "도", "4", 0.5],
-			["w", "%d.beats 박자 쉬기", "brownRestForBeats", 0.25],
-			[" ", "연주 속도를 %n 만큼 바꾸기", "brownChangeTempoBy", 20],
-			[" ", "연주 속도를 %n BPM으로 정하기", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect 소리 %n 번 재생하기", "sallyPlaySoundTimes", "삐", 1],
+			["w", "%m.sound_effect 소리 %n 번 재생하고 기다리기", "sallyPlaySoundTimesUntilDone", "삐", 1],
+			[" ", "소리 끄기", "sallyClearSound"],
+			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "sallyPlayNoteForBeats", "도", "4", 0.5],
+			["w", "%d.beats 박자 쉬기", "sallyRestForBeats", 0.25],
+			[" ", "연주 속도를 %n 만큼 바꾸기", "sallyChangeTempoBy", 20],
+			[" ", "연주 속도를 %n BPM으로 정하기", "sallySetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color 에 닿았을 때", "brownWhenColorTouched", "빨간색"],
-			["h", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "brownWhenColorPattern", "검은색", "빨간색"],
-			["h", "버튼을 %m.when_button_state 때", "brownWhenButtonState", "클릭했을"],
-			["h", "%m.when_s_tilt 때", "brownWhenTilt", "앞으로 기울였을"],
-			["b", "%m.touching_color 에 닿았는가?", "brownTouchingColor", "빨간색"],
-			["b", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "brownIsColorPattern", "검은색", "빨간색"],
-			["b", "버튼을 %m.button_state ?", "brownButtonState", "클릭했는가"],
-			["b", "%m.s_tilt ?", "brownTilt", "앞으로 기울임"]
+			["h", "%m.touching_color 에 닿았을 때", "sallyWhenColorTouched", "빨간색"],
+			["h", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "sallyWhenColorPattern", "검은색", "빨간색"],
+			["h", "버튼을 %m.when_button_state 때", "sallyWhenButtonState", "클릭했을"],
+			["h", "%m.when_s_tilt 때", "sallyWhenTilt", "앞으로 기울였을"],
+			["b", "%m.touching_color 에 닿았는가?", "sallyTouchingColor", "빨간색"],
+			["b", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "sallyIsColorPattern", "검은색", "빨간색"],
+			["b", "버튼을 %m.button_state ?", "sallyButtonState", "클릭했는가"],
+			["b", "%m.s_tilt ?", "sallyTilt", "앞으로 기울임"]
 		],
 		ko3: [
-			["w", "앞으로 %n %m.move_unit 이동하기", "brownMoveForwardUnit", 6, "cm"],
-			["w", "뒤로 %n %m.move_unit 이동하기", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right 으로 %n %m.turn_unit 제자리 돌기", "brownTurnUnitInPlace", "왼쪽", 90, "도"],
-			["w", "%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "brownPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
-			["w", "%m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "brownTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "앞쪽"],
-			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "brownChangeWheelsByLeftRight", 10, 10],
-			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "brownSetWheelsToLeftRight", 40, 40],
-			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "brownChangeWheelBy", "왼쪽", 10],
-			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "brownSetWheelTo", "왼쪽", 40],
-			[" ", "선 따라가기", "brownFollowLine"],
-			["w", "선을 따라 %m.target_color 까지 이동하기", "brownFollowLineUntil", "빨간색"],
-			["w", "교차로 건너가기", "brownCrossIntersection"],
-			["w", "교차로에서 %m.left_right_back 으로 돌기", "brownTurnAtIntersection", "왼쪽"],
-			["w", "%m.left_right 선으로 건너가기", "brownJumpLine", "왼쪽"],
-			[" ", "선 따라가기 속도를 %m.speed (으)로 정하기", "brownSetFollowingSpeedTo", "4"],
-			[" ", "정지하기", "brownStop"],
+			["w", "앞으로 %n %m.move_unit 이동하기", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "뒤로 %n %m.move_unit 이동하기", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right 으로 %n %m.turn_unit 제자리 돌기", "sallyTurnUnitInPlace", "왼쪽", 90, "도"],
+			["w", "%m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sallyPivotAroundWheelUnitInDirection", "왼쪽", 90, "도", "앞쪽"],
+			["w", "%m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sallyTurnUnitWithRadiusInDirection", "왼쪽", 90, "도", 6, "앞쪽"],
+			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "sallyChangeWheelsByLeftRight", 10, 10],
+			[" ", "왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "sallySetWheelsToLeftRight", 40, 40],
+			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "sallyChangeWheelBy", "왼쪽", 10],
+			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "sallySetWheelTo", "왼쪽", 40],
+			[" ", "선 따라가기", "sallyFollowLine"],
+			["w", "선을 따라 %m.target_color 까지 이동하기", "sallyFollowLineUntil", "빨간색"],
+			["w", "교차로 건너가기", "sallyCrossIntersection"],
+			["w", "교차로에서 %m.left_right_back 으로 돌기", "sallyTurnAtIntersection", "왼쪽"],
+			["w", "%m.left_right 선으로 건너가기", "sallyJumpLine", "왼쪽"],
+			[" ", "선 따라가기 속도를 %m.speed (으)로 정하기", "sallySetFollowingSpeedTo", "4"],
+			[" ", "정지하기", "sallyStop"],
 			["-"],
-			[" ", "LED를 %m.led_color 으로 정하기", "brownSetLedTo", "빨간색"],
-			[" ", "LED를 R: %n G: %n B: %n 만큼 바꾸기", "brownChangeLedByRGB", 10, 0, 0],
-			[" ", "LED를 R: %n G: %n B: %n (으)로 정하기", "brownSetLedToRGB", 255, 0, 0],
-			[" ", "LED 끄기", "brownClearLed"],
+			[" ", "LED를 %m.led_color 으로 정하기", "sallySetLedTo", "빨간색"],
+			[" ", "LED를 R: %n G: %n B: %n 만큼 바꾸기", "sallyChangeLedByRGB", 10, 0, 0],
+			[" ", "LED를 R: %n G: %n B: %n (으)로 정하기", "sallySetLedToRGB", 255, 0, 0],
+			[" ", "LED 끄기", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 소리 %n 번 재생하기", "brownPlaySoundTimes", "삐", 1],
-			["w", "%m.sound_effect 소리 %n 번 재생하고 기다리기", "brownPlaySoundTimesUntilDone", "삐", 1],
-			[" ", "버저 음을 %n 만큼 바꾸기", "brownChangeBuzzerBy", 10],
-			[" ", "버저 음을 %n (으)로 정하기", "brownSetBuzzerTo", 1000],
-			[" ", "소리 끄기", "brownClearSound"],
-			[" ", "%m.note %m.octave 음을 연주하기", "brownPlayNote", "도", "4"],
-			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "brownPlayNoteForBeats", "도", "4", 0.5],
-			["w", "%d.beats 박자 쉬기", "brownRestForBeats", 0.25],
-			[" ", "연주 속도를 %n 만큼 바꾸기", "brownChangeTempoBy", 20],
-			[" ", "연주 속도를 %n BPM으로 정하기", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect 소리 %n 번 재생하기", "sallyPlaySoundTimes", "삐", 1],
+			["w", "%m.sound_effect 소리 %n 번 재생하고 기다리기", "sallyPlaySoundTimesUntilDone", "삐", 1],
+			[" ", "버저 음을 %n 만큼 바꾸기", "sallyChangeBuzzerBy", 10],
+			[" ", "버저 음을 %n (으)로 정하기", "sallySetBuzzerTo", 1000],
+			[" ", "소리 끄기", "sallyClearSound"],
+			[" ", "%m.note %m.octave 음을 연주하기", "sallyPlayNote", "도", "4"],
+			["w", "%m.note %m.octave 음을 %d.beats 박자 연주하기", "sallyPlayNoteForBeats", "도", "4", 0.5],
+			["w", "%d.beats 박자 쉬기", "sallyRestForBeats", 0.25],
+			[" ", "연주 속도를 %n 만큼 바꾸기", "sallyChangeTempoBy", 20],
+			[" ", "연주 속도를 %n BPM으로 정하기", "sallySetTempoTo", 60],
 			["-"],
-			["r", "색깔 번호", "brownColorNumber"],
-			["r", "색깔 패턴", "brownColorPattern"],
-			["r", "색깔 R", "brownColorRed"],
-			["r", "색깔 G", "brownColorGreen"],
-			["r", "색깔 B", "brownColorBlue"],
-			["r", "바닥 센서", "brownFloor"],
-			["r", "버튼", "brownButton"],
-			["r", "x축 가속도", "brownAccelerationX"],
-			["r", "y축 가속도", "brownAccelerationY"],
-			["r", "z축 가속도", "brownAccelerationZ"],
-			["r", "온도", "brownTemperature"],
-			["r", "신호 세기", "brownSignalStrength"],
-			["h", "%m.touching_color 에 닿았을 때", "brownWhenColorTouched", "빨간색"],
-			["h", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "brownWhenColorPattern", "검은색", "빨간색"],
-			["h", "버튼을 %m.when_button_state 때", "brownWhenButtonState", "클릭했을"],
-			["h", "%m.when_s_tilt 때", "brownWhenTilt", "앞으로 기울였을"],
-			["b", "%m.touching_color 에 닿았는가?", "brownTouchingColor", "빨간색"],
-			["b", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "brownIsColorPattern", "검은색", "빨간색"],
-			["b", "버튼을 %m.button_state ?", "brownButtonState", "클릭했는가"],
-			["b", "%m.s_tilt ?", "brownTilt", "앞으로 기울임"],
-			["b", "배터리 %m.battery ?", "brownBattery", "정상"]
+			["r", "색깔 번호", "sallyColorNumber"],
+			["r", "색깔 패턴", "sallyColorPattern"],
+			["r", "색깔 R", "sallyColorRed"],
+			["r", "색깔 G", "sallyColorGreen"],
+			["r", "색깔 B", "sallyColorBlue"],
+			["r", "바닥 센서", "sallyFloor"],
+			["r", "버튼", "sallyButton"],
+			["r", "x축 가속도", "sallyAccelerationX"],
+			["r", "y축 가속도", "sallyAccelerationY"],
+			["r", "z축 가속도", "sallyAccelerationZ"],
+			["r", "온도", "sallyTemperature"],
+			["r", "신호 세기", "sallySignalStrength"],
+			["h", "%m.touching_color 에 닿았을 때", "sallyWhenColorTouched", "빨간색"],
+			["h", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "sallyWhenColorPattern", "검은색", "빨간색"],
+			["h", "버튼을 %m.when_button_state 때", "sallyWhenButtonState", "클릭했을"],
+			["h", "%m.when_s_tilt 때", "sallyWhenTilt", "앞으로 기울였을"],
+			["b", "%m.touching_color 에 닿았는가?", "sallyTouchingColor", "빨간색"],
+			["b", "색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "sallyIsColorPattern", "검은색", "빨간색"],
+			["b", "버튼을 %m.button_state ?", "sallyButtonState", "클릭했는가"],
+			["b", "%m.s_tilt ?", "sallyTilt", "앞으로 기울임"],
+			["b", "배터리 %m.battery ?", "sallyBattery", "정상"]
 		],
 		ja1: [
-			["w", "前へ移動する", "brownMoveForward"],
-			["w", "後ろへ移動する", "brownMoveBackward"],
-			["w", "%m.left_right へ回す", "brownTurn", "左"],
+			["w", "前へ移動する", "sallyMoveForward"],
+			["w", "後ろへ移動する", "sallyMoveBackward"],
+			["w", "%m.left_right へ回す", "sallyTurn", "左"],
 			["-"],
-			[" ", "LEDを %m.led_color にする", "brownSetLedTo", "赤色"],
-			[" ", "LEDを消す", "brownClearLed"],
+			[" ", "LEDを %m.led_color にする", "sallySetLedTo", "赤色"],
+			[" ", "LEDを消す", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 音を鳴らす", "brownPlaySound", "ビープ"],
-			[" ", "音を消す", "brownClearSound"],
+			[" ", "%m.sound_effect 音を鳴らす", "sallyPlaySound", "ビープ"],
+			[" ", "音を消す", "sallyClearSound"],
 			["-"],
-			["h", "%m.touching_color に触れたとき", "brownWhenColorTouched", "赤色"],
-			["h", "ボタンを %m.when_button_state とき", "brownWhenButtonState", "クリックした"],
-			["b", "%m.touching_color に触れたか?", "brownTouchingColor", "赤色"],
-			["b", "ボタンを %m.button_state ?", "brownButtonState", "クリックしたか"]
+			["h", "%m.touching_color に触れたとき", "sallyWhenColorTouched", "赤色"],
+			["h", "ボタンを %m.when_button_state とき", "sallyWhenButtonState", "クリックした"],
+			["b", "%m.touching_color に触れたか?", "sallyTouchingColor", "赤色"],
+			["b", "ボタンを %m.button_state ?", "sallyButtonState", "クリックしたか"]
 		],
 		ja2: [
-			["w", "前へ %n %m.cm_sec 移動する", "brownMoveForwardUnit", 6, "cm"],
-			["w", "後ろへ %n %m.cm_sec 移動する", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right へ %n %m.deg_sec その場で回す", "brownTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向へ回す", "brownPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
-			["w", "%m.left_right へ %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向へ回す", "brownTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "前"],
+			["w", "前へ %n %m.cm_sec 移動する", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "後ろへ %n %m.cm_sec 移動する", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right へ %n %m.deg_sec その場で回す", "sallyTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向へ回す", "sallyPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
+			["w", "%m.left_right へ %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向へ回す", "sallyTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "前"],
 			["-"],
-			[" ", "LEDを %m.led_color にする", "brownSetLedTo", "赤色"],
-			[" ", "LEDを消す", "brownClearLed"],
+			[" ", "LEDを %m.led_color にする", "sallySetLedTo", "赤色"],
+			[" ", "LEDを消す", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 音を %n 回鳴らす", "brownPlaySoundTimes", "ビープ", 1],
-			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "brownPlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "音を消す", "brownClearSound"],
-			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "brownPlayNoteForBeats", "ド", "4", 0.5],
-			["w", "%d.beats 拍休む", "brownRestForBeats", 0.25],
-			[" ", "テンポを %n ずつ変える", "brownChangeTempoBy", 20],
-			[" ", "テンポを %n BPMにする", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "音を消す", "sallyClearSound"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "sallyPlayNoteForBeats", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "sallyRestForBeats", 0.25],
+			[" ", "テンポを %n ずつ変える", "sallyChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "sallySetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color に触れたとき", "brownWhenColorTouched", "赤色"],
-			["h", "色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "brownWhenColorPattern", "黒色", "赤色"],
-			["h", "ボタンを %m.when_button_state とき", "brownWhenButtonState", "クリックした"],
-			["h", "%m.when_s_tilt とき", "brownWhenTilt", "前に傾けた"],
-			["b", "%m.touching_color に触れたか?", "brownTouchingColor", "赤色"],
-			["b", "色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "brownIsColorPattern", "黒色", "赤色"],
-			["b", "ボタンを %m.button_state ?", "brownButtonState", "クリックしたか"],
-			["b", "%m.s_tilt ?", "brownTilt", "前に傾けたか"]
+			["h", "%m.touching_color に触れたとき", "sallyWhenColorTouched", "赤色"],
+			["h", "色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "sallyWhenColorPattern", "黒色", "赤色"],
+			["h", "ボタンを %m.when_button_state とき", "sallyWhenButtonState", "クリックした"],
+			["h", "%m.when_s_tilt とき", "sallyWhenTilt", "前に傾けた"],
+			["b", "%m.touching_color に触れたか?", "sallyTouchingColor", "赤色"],
+			["b", "色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "sallyIsColorPattern", "黒色", "赤色"],
+			["b", "ボタンを %m.button_state ?", "sallyButtonState", "クリックしたか"],
+			["b", "%m.s_tilt ?", "sallyTilt", "前に傾けたか"]
 		],
 		ja3: [
-			["w", "前へ %n %m.move_unit 移動する", "brownMoveForwardUnit", 6, "cm"],
-			["w", "後ろへ %n %m.move_unit 移動する", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right へ %n %m.turn_unit その場で回す", "brownTurnUnitInPlace", "左", 90, "度"],
-			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向へ回す", "brownPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
-			["w", "%m.left_right へ %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向へ回す", "brownTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "前"],
-			[" ", "左車輪を %n 右車輪を %n ずつ変える", "brownChangeWheelsByLeftRight", 10, 10],
-			[" ", "左車輪を %n 右車輪を %n にする", "brownSetWheelsToLeftRight", 40, 40],
-			[" ", "%m.left_right_both 車輪を %n ずつ変える", "brownChangeWheelBy", "左", 10],
-			[" ", "%m.left_right_both 車輪を %n にする", "brownSetWheelTo", "左", 40],
-			[" ", "線を追従する", "brownFollowLine"],
-			["w", "線を追従して %m.target_color まで移動する", "brownFollowLineUntil", "赤色"],
-			["w", "交差点を渡る", "brownCrossIntersection"],
-			["w", "交差点で %m.left_right_back へ回す", "brownTurnAtIntersection", "左"],
-			["w", "%m.left_right 線へ渡り行く", "brownJumpLine", "左"],
-			[" ", "線を追従する速度を %m.speed にする", "brownSetFollowingSpeedTo", "4"],
-			[" ", "停止する", "brownStop"],
+			["w", "前へ %n %m.move_unit 移動する", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "後ろへ %n %m.move_unit 移動する", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right へ %n %m.turn_unit その場で回す", "sallyTurnUnitInPlace", "左", 90, "度"],
+			["w", "%m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向へ回す", "sallyPivotAroundWheelUnitInDirection", "左", 90, "度", "前"],
+			["w", "%m.left_right へ %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向へ回す", "sallyTurnUnitWithRadiusInDirection", "左", 90, "度", 6, "前"],
+			[" ", "左車輪を %n 右車輪を %n ずつ変える", "sallyChangeWheelsByLeftRight", 10, 10],
+			[" ", "左車輪を %n 右車輪を %n にする", "sallySetWheelsToLeftRight", 40, 40],
+			[" ", "%m.left_right_both 車輪を %n ずつ変える", "sallyChangeWheelBy", "左", 10],
+			[" ", "%m.left_right_both 車輪を %n にする", "sallySetWheelTo", "左", 40],
+			[" ", "線を追従する", "sallyFollowLine"],
+			["w", "線を追従して %m.target_color まで移動する", "sallyFollowLineUntil", "赤色"],
+			["w", "交差点を渡る", "sallyCrossIntersection"],
+			["w", "交差点で %m.left_right_back へ回す", "sallyTurnAtIntersection", "左"],
+			["w", "%m.left_right 線へ渡り行く", "sallyJumpLine", "左"],
+			[" ", "線を追従する速度を %m.speed にする", "sallySetFollowingSpeedTo", "4"],
+			[" ", "停止する", "sallyStop"],
 			["-"],
-			[" ", "LEDを %m.led_color にする", "brownSetLedTo", "赤色"],
-			[" ", "LEDをR: %n G: %n B: %n ずつ変える", "brownChangeLedByRGB", 10, 0, 0],
-			[" ", "LEDをR: %n G: %n B: %n にする", "brownSetLedToRGB", 255, 0, 0],
-			[" ", "LEDを消す", "brownClearLed"],
+			[" ", "LEDを %m.led_color にする", "sallySetLedTo", "赤色"],
+			[" ", "LEDをR: %n G: %n B: %n ずつ変える", "sallyChangeLedByRGB", 10, 0, 0],
+			[" ", "LEDをR: %n G: %n B: %n にする", "sallySetLedToRGB", 255, 0, 0],
+			[" ", "LEDを消す", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect 音を %n 回鳴らす", "brownPlaySoundTimes", "ビープ", 1],
-			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "brownPlaySoundTimesUntilDone", "ビープ", 1],
-			[" ", "ブザー音を %n ずつ変える", "brownChangeBuzzerBy", 10],
-			[" ", "ブザー音を %n にする", "brownSetBuzzerTo", 1000],
-			[" ", "音を消す", "brownClearSound"],
-			[" ", "%m.note %m.octave 音を鳴らす", "brownPlayNote", "ド", "4"],
-			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "brownPlayNoteForBeats", "ド", "4", 0.5],
-			["w", "%d.beats 拍休む", "brownRestForBeats", 0.25],
-			[" ", "テンポを %n ずつ変える", "brownChangeTempoBy", 20],
-			[" ", "テンポを %n BPMにする", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimes", "ビープ", 1],
+			["w", "終わるまで %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimesUntilDone", "ビープ", 1],
+			[" ", "ブザー音を %n ずつ変える", "sallyChangeBuzzerBy", 10],
+			[" ", "ブザー音を %n にする", "sallySetBuzzerTo", 1000],
+			[" ", "音を消す", "sallyClearSound"],
+			[" ", "%m.note %m.octave 音を鳴らす", "sallyPlayNote", "ド", "4"],
+			["w", "%m.note %m.octave 音を %d.beats 拍鳴らす", "sallyPlayNoteForBeats", "ド", "4", 0.5],
+			["w", "%d.beats 拍休む", "sallyRestForBeats", 0.25],
+			[" ", "テンポを %n ずつ変える", "sallyChangeTempoBy", 20],
+			[" ", "テンポを %n BPMにする", "sallySetTempoTo", 60],
 			["-"],
-			["r", "色番号", "brownColorNumber"],
-			["r", "色パターン", "brownColorPattern"],
-			["r", "色R", "brownColorRed"],
-			["r", "色G", "brownColorGreen"],
-			["r", "色B", "brownColorBlue"],
-			["r", "フロアセンサー", "brownFloor"],
-			["r", "ボタン", "brownButton"],
-			["r", "x軸加速度", "brownAccelerationX"],
-			["r", "y軸加速度", "brownAccelerationY"],
-			["r", "z軸加速度", "brownAccelerationZ"],
-			["r", "温度", "brownTemperature"],
-			["r", "信号強度", "brownSignalStrength"],
-			["h", "%m.touching_color に触れたとき", "brownWhenColorTouched", "赤色"],
-			["h", "色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "brownWhenColorPattern", "黒色", "赤色"],
-			["h", "ボタンを %m.when_button_state とき", "brownWhenButtonState", "クリックした"],
-			["h", "%m.when_s_tilt とき", "brownWhenTilt", "前に傾けた"],
-			["b", "%m.touching_color に触れたか?", "brownTouchingColor", "赤色"],
-			["b", "色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "brownIsColorPattern", "黒色", "赤色"],
-			["b", "ボタンを %m.button_state ?", "brownButtonState", "クリックしたか"],
-			["b", "%m.s_tilt ?", "brownTilt", "前に傾けたか"],
-			["b", "電池が %m.battery ?", "brownBattery", "正常か"]
+			["r", "色番号", "sallyColorNumber"],
+			["r", "色パターン", "sallyColorPattern"],
+			["r", "色R", "sallyColorRed"],
+			["r", "色G", "sallyColorGreen"],
+			["r", "色B", "sallyColorBlue"],
+			["r", "フロアセンサー", "sallyFloor"],
+			["r", "ボタン", "sallyButton"],
+			["r", "x軸加速度", "sallyAccelerationX"],
+			["r", "y軸加速度", "sallyAccelerationY"],
+			["r", "z軸加速度", "sallyAccelerationZ"],
+			["r", "温度", "sallyTemperature"],
+			["r", "信号強度", "sallySignalStrength"],
+			["h", "%m.touching_color に触れたとき", "sallyWhenColorTouched", "赤色"],
+			["h", "色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "sallyWhenColorPattern", "黒色", "赤色"],
+			["h", "ボタンを %m.when_button_state とき", "sallyWhenButtonState", "クリックした"],
+			["h", "%m.when_s_tilt とき", "sallyWhenTilt", "前に傾けた"],
+			["b", "%m.touching_color に触れたか?", "sallyTouchingColor", "赤色"],
+			["b", "色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "sallyIsColorPattern", "黒色", "赤色"],
+			["b", "ボタンを %m.button_state ?", "sallyButtonState", "クリックしたか"],
+			["b", "%m.s_tilt ?", "sallyTilt", "前に傾けたか"],
+			["b", "電池が %m.battery ?", "sallyBattery", "正常か"]
 		],
 		uz1: [
-			["w", "oldinga yurish", "brownMoveForward"],
-			["w", "orqaga yurish", "brownMoveBackward"],
-			["w", "%m.left_right ga o'girilish", "brownTurn", "chap"],
+			["w", "oldinga yurish", "sallyMoveForward"],
+			["w", "orqaga yurish", "sallyMoveBackward"],
+			["w", "%m.left_right ga o'girilish", "sallyTurn", "chap"],
 			["-"],
-			[" ", "LEDni %m.led_color ga sozlash", "brownSetLedTo", "qizil"],
-			[" ", "LEDni o'chirish", "brownClearLed"],
+			[" ", "LEDni %m.led_color ga sozlash", "sallySetLedTo", "qizil"],
+			[" ", "LEDni o'chirish", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect tovushni ijro etish", "brownPlaySound", "qisqa"],
-			[" ", "tovushni o'chirish", "brownClearSound"],
+			[" ", "%m.sound_effect tovushni ijro etish", "sallyPlaySound", "qisqa"],
+			[" ", "tovushni o'chirish", "sallyClearSound"],
 			["-"],
-			["h", "%m.touching_color ga tegilganda", "brownWhenColorTouched", "qizil"],
-			["h", "tugmani %m.when_button_state da", "brownWhenButtonState", "bosgan"],
-			["b", "%m.touching_color ga tekkan?", "brownTouchingColor", "qizil"],
-			["b", "tugmani %m.button_state ?", "brownButtonState", "bosgan"]
+			["h", "%m.touching_color ga tegilganda", "sallyWhenColorTouched", "qizil"],
+			["h", "tugmani %m.when_button_state da", "sallyWhenButtonState", "bosgan"],
+			["b", "%m.touching_color ga tekkan?", "sallyTouchingColor", "qizil"],
+			["b", "tugmani %m.button_state ?", "sallyButtonState", "bosgan"]
 		],
 		uz2: [
-			["w", "oldinga %n %m.cm_sec yurish", "brownMoveForwardUnit", 6, "cm"],
-			["w", "orqaga %n %m.cm_sec yurish", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "brownTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "brownPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
-			["w", "%m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "brownTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "old"],
+			["w", "oldinga %n %m.cm_sec yurish", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "orqaga %n %m.cm_sec yurish", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "sallyTurnUnitInPlace", "chap", 90, "daraja"],
+			["w", "%m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sallyPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
+			["w", "%m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sallyTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "old"],
 			["-"],
-			[" ", "LEDni %m.led_color ga sozlash", "brownSetLedTo", "qizil"],
-			[" ", "LEDni o'chirish", "brownClearLed"],
+			[" ", "LEDni %m.led_color ga sozlash", "sallySetLedTo", "qizil"],
+			[" ", "LEDni o'chirish", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect tovushni %n marta ijro etish", "brownPlaySoundTimes", "qisqa", 1],
-			["w", "%m.sound_effect tovushni %n marta ijro tugaguncha kutish", "brownPlaySoundTimesUntilDone", "qisqa", 1],
-			[" ", "tovushni o'chirish", "brownClearSound"],
-			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "brownPlayNoteForBeats", "do", "4", 0.5],
-			["w", "%d.beats zarb tanaffus", "brownRestForBeats", 0.25],
-			[" ", "temni %n ga o'zgartirish", "brownChangeTempoBy", 20],
-			[" ", "temni %n bpm ga sozlash", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect tovushni %n marta ijro etish", "sallyPlaySoundTimes", "qisqa", 1],
+			["w", "%m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sallyPlaySoundTimesUntilDone", "qisqa", 1],
+			[" ", "tovushni o'chirish", "sallyClearSound"],
+			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "sallyPlayNoteForBeats", "do", "4", 0.5],
+			["w", "%d.beats zarb tanaffus", "sallyRestForBeats", 0.25],
+			[" ", "temni %n ga o'zgartirish", "sallyChangeTempoBy", 20],
+			[" ", "temni %n bpm ga sozlash", "sallySetTempoTo", 60],
 			["-"],
-			["h", "%m.touching_color ga tegilganda", "brownWhenColorTouched", "qizil"],
-			["h", "rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "brownWhenColorPattern", "qora", "qizil"],
-			["h", "tugmani %m.when_button_state da", "brownWhenButtonState", "bosgan"],
-			["h", "%m.when_s_tilt bo'lganda", "brownWhenTilt", "oldinga eğin"],
-			["b", "%m.touching_color ga tekkan?", "brownTouchingColor", "qizil"],
-			["b", "rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "brownIsColorPattern", "qora", "qizil"],
-			["b", "tugmani %m.button_state ?", "brownButtonState", "bosgan"],
-			["b", "%m.s_tilt ?", "brownTilt", "oldinga eğin"]
+			["h", "%m.touching_color ga tegilganda", "sallyWhenColorTouched", "qizil"],
+			["h", "rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "sallyWhenColorPattern", "qora", "qizil"],
+			["h", "tugmani %m.when_button_state da", "sallyWhenButtonState", "bosgan"],
+			["h", "%m.when_s_tilt bo'lganda", "sallyWhenTilt", "oldinga eğin"],
+			["b", "%m.touching_color ga tekkan?", "sallyTouchingColor", "qizil"],
+			["b", "rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", "qora", "qizil"],
+			["b", "tugmani %m.button_state ?", "sallyButtonState", "bosgan"],
+			["b", "%m.s_tilt ?", "sallyTilt", "oldinga eğin"]
 		],
 		uz3: [
-			["w", "oldinga %n %m.move_unit yurish", "brownMoveForwardUnit", 6, "cm"],
-			["w", "orqaga %n %m.move_unit yurish", "brownMoveBackwardUnit", 6, "cm"],
-			["w", "%m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "brownTurnUnitInPlace", "chap", 90, "daraja"],
-			["w", "%m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "brownPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
-			["w", "%m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "brownTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "old"],
-			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "brownChangeWheelsByLeftRight", 10, 10],
-			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "brownSetWheelsToLeftRight", 40, 40],
-			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "brownChangeWheelBy", "chap", 10],
-			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "brownSetWheelTo", "chap", 40],
-			[" ", "chiziqqa ergashish", "brownFollowLine"],
-			["w", "chiziq ustida %m.target_color gacha yurish", "brownFollowLineUntil", "qizil"],
-			["w", "chorrahadan o'tib yurish", "brownCrossIntersection"],
-			["w", "chorrahada %m.left_right_back ga o'girilish", "brownTurnAtIntersection", "chap"],
-			["w", "%m.left_right chiziqqa sakrash", "brownJumpLine", "chap"],
-			[" ", "liniyada ergashish tezligini %m.speed ga sozlash", "brownSetFollowingSpeedTo", "4"],
-			[" ", "to'xtatish", "brownStop"],
+			["w", "oldinga %n %m.move_unit yurish", "sallyMoveForwardUnit", 6, "cm"],
+			["w", "orqaga %n %m.move_unit yurish", "sallyMoveBackwardUnit", 6, "cm"],
+			["w", "%m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "sallyTurnUnitInPlace", "chap", 90, "daraja"],
+			["w", "%m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sallyPivotAroundWheelUnitInDirection", "chap", 90, "daraja", "old"],
+			["w", "%m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sallyTurnUnitWithRadiusInDirection", "chap", 90, "daraja", 6, "old"],
+			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "sallyChangeWheelsByLeftRight", 10, 10],
+			[" ", "chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "sallySetWheelsToLeftRight", 40, 40],
+			[" ", "%m.left_right_both g'ildirakni %n ga o'zgartirish", "sallyChangeWheelBy", "chap", 10],
+			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "sallySetWheelTo", "chap", 40],
+			[" ", "chiziqqa ergashish", "sallyFollowLine"],
+			["w", "chiziq ustida %m.target_color gacha yurish", "sallyFollowLineUntil", "qizil"],
+			["w", "chorrahadan o'tib yurish", "sallyCrossIntersection"],
+			["w", "chorrahada %m.left_right_back ga o'girilish", "sallyTurnAtIntersection", "chap"],
+			["w", "%m.left_right chiziqqa sakrash", "sallyJumpLine", "chap"],
+			[" ", "liniyada ergashish tezligini %m.speed ga sozlash", "sallySetFollowingSpeedTo", "4"],
+			[" ", "to'xtatish", "sallyStop"],
 			["-"],
-			[" ", "LEDni %m.led_color ga sozlash", "brownSetLedTo", "qizil"],
-			[" ", "LEDni r: %n g: %n b: %n ga o'zgartirish", "brownChangeLedByRGB", 10, 0, 0],
-			[" ", "LEDni r: %n g: %n b: %n ga sozlash", "brownSetLedToRGB", 255, 0, 0],
-			[" ", "LEDni o'chirish", "brownClearLed"],
+			[" ", "LEDni %m.led_color ga sozlash", "sallySetLedTo", "qizil"],
+			[" ", "LEDni r: %n g: %n b: %n ga o'zgartirish", "sallyChangeLedByRGB", 10, 0, 0],
+			[" ", "LEDni r: %n g: %n b: %n ga sozlash", "sallySetLedToRGB", 255, 0, 0],
+			[" ", "LEDni o'chirish", "sallyClearLed"],
 			["-"],
-			[" ", "%m.sound_effect tovushni %n marta ijro etish", "brownPlaySoundTimes", "qisqa", 1],
-			["w", "%m.sound_effect tovushni %n marta ijro tugaguncha kutish", "brownPlaySoundTimesUntilDone", "qisqa", 1],
-			[" ", "buzerning ovozini %n ga o'zgartirish", "brownChangeBuzzerBy", 10],
-			[" ", "buzerning ovozini %n ga sozlash", "brownSetBuzzerTo", 1000],
-			[" ", "tovushni o'chirish", "brownClearSound"],
-			[" ", "%m.note %m.octave notani ijro etish", "brownPlayNote", "do", "4"],
-			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "brownPlayNoteForBeats", "do", "4", 0.5],
-			["w", "%d.beats zarb tanaffus", "brownRestForBeats", 0.25],
-			[" ", "temni %n ga o'zgartirish", "brownChangeTempoBy", 20],
-			[" ", "temni %n bpm ga sozlash", "brownSetTempoTo", 60],
+			[" ", "%m.sound_effect tovushni %n marta ijro etish", "sallyPlaySoundTimes", "qisqa", 1],
+			["w", "%m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sallyPlaySoundTimesUntilDone", "qisqa", 1],
+			[" ", "buzerning ovozini %n ga o'zgartirish", "sallyChangeBuzzerBy", 10],
+			[" ", "buzerning ovozini %n ga sozlash", "sallySetBuzzerTo", 1000],
+			[" ", "tovushni o'chirish", "sallyClearSound"],
+			[" ", "%m.note %m.octave notani ijro etish", "sallyPlayNote", "do", "4"],
+			["w", "%m.note %m.octave notani %d.beats zarb ijro etish", "sallyPlayNoteForBeats", "do", "4", 0.5],
+			["w", "%d.beats zarb tanaffus", "sallyRestForBeats", 0.25],
+			[" ", "temni %n ga o'zgartirish", "sallyChangeTempoBy", 20],
+			[" ", "temni %n bpm ga sozlash", "sallySetTempoTo", 60],
 			["-"],
-			["r", "rang raqami", "brownColorNumber"],
-			["r", "rang naqshi", "brownColorPattern"],
-			["r", "rang r", "brownColorRed"],
-			["r", "rang g", "brownColorGreen"],
-			["r", "rang b", "brownColorBlue"],
-			["r", "taglik sensori", "brownFloor"],
-			["r", "tugma", "brownButton"],
-			["r", "x tezlanish", "brownAccelerationX"],
-			["r", "y tezlanish", "brownAccelerationY"],
-			["r", "z tezlanish", "brownAccelerationZ"],
-			["r", "harorat", "brownTemperature"],
-			["r", "signal kuchi", "brownSignalStrength"],
-			["h", "%m.touching_color ga tegilganda", "brownWhenColorTouched", "qizil"],
-			["h", "rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "brownWhenColorPattern", "qora", "qizil"],
-			["h", "tugmani %m.when_button_state da", "brownWhenButtonState", "bosgan"],
-			["h", "%m.when_s_tilt bo'lganda", "brownWhenTilt", "oldinga eğin"],
-			["b", "%m.touching_color ga tekkan?", "brownTouchingColor", "qizil"],
-			["b", "rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "brownIsColorPattern", "qora", "qizil"],
-			["b", "tugmani %m.button_state ?", "brownButtonState", "bosgan"],
-			["b", "%m.s_tilt ?", "brownTilt", "oldinga eğin"],
-			["b", "batareya %m.battery ?", "brownBattery", "normal"]
+			["r", "rang raqami", "sallyColorNumber"],
+			["r", "rang naqshi", "sallyColorPattern"],
+			["r", "rang r", "sallyColorRed"],
+			["r", "rang g", "sallyColorGreen"],
+			["r", "rang b", "sallyColorBlue"],
+			["r", "taglik sensori", "sallyFloor"],
+			["r", "tugma", "sallyButton"],
+			["r", "x tezlanish", "sallyAccelerationX"],
+			["r", "y tezlanish", "sallyAccelerationY"],
+			["r", "z tezlanish", "sallyAccelerationZ"],
+			["r", "harorat", "sallyTemperature"],
+			["r", "signal kuchi", "sallySignalStrength"],
+			["h", "%m.touching_color ga tegilganda", "sallyWhenColorTouched", "qizil"],
+			["h", "rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "sallyWhenColorPattern", "qora", "qizil"],
+			["h", "tugmani %m.when_button_state da", "sallyWhenButtonState", "bosgan"],
+			["h", "%m.when_s_tilt bo'lganda", "sallyWhenTilt", "oldinga eğin"],
+			["b", "%m.touching_color ga tekkan?", "sallyTouchingColor", "qizil"],
+			["b", "rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", "qora", "qizil"],
+			["b", "tugmani %m.button_state ?", "sallyButtonState", "bosgan"],
+			["b", "%m.s_tilt ?", "sallyTilt", "oldinga eğin"],
+			["b", "batareya %m.battery ?", "sallyBattery", "normal"]
 		]
 	};
 	const MENUS = {
@@ -1676,277 +1676,277 @@
 		}
 	}
 	
-	ext.brownMoveForward = function(callback) {
+	ext.sallyMoveForward = function(callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.moveForward(callback);
 	};
 	
-	ext.brownMoveBackward = function(callback) {
+	ext.sallyMoveBackward = function(callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.brownTurn = function(direction, callback) {
+	ext.sallyTurn = function(direction, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.brownMoveForwardUnit = function(value, unit, callback) {
+	ext.sallyMoveForwardUnit = function(value, unit, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.brownMoveBackwardUnit = function(value, unit, callback) {
+	ext.sallyMoveBackwardUnit = function(value, unit, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.brownTurnUnitInPlace = function(direction, value, unit, callback) {
+	ext.sallyTurnUnitInPlace = function(direction, value, unit, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.brownPivotAroundWheelUnitInDirection = function(wheel, value, unit, toward, callback) {
+	ext.sallyPivotAroundWheelUnitInDirection = function(wheel, value, unit, toward, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
-	ext.brownTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, toward, callback) {
+	ext.sallyTurnUnitWithRadiusInDirection = function(direction, value, unit, radius, toward, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.circleUnit(direction, value, unit, radius, toward, callback);
 	};
 	
-	ext.brownChangeWheelsByLeftRight = function(left, right) {
+	ext.sallyChangeWheelsByLeftRight = function(left, right) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.brownSetWheelsToLeftRight = function(left, right) {
+	ext.sallySetWheelsToLeftRight = function(left, right) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.brownChangeWheelBy = function(wheel, velocity) {
+	ext.sallyChangeWheelBy = function(wheel, velocity) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.changeWheel(wheel, velocity);
 	};
 
-	ext.brownSetWheelTo = function(wheel, velocity) {
+	ext.sallySetWheelTo = function(wheel, velocity) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setWheel(wheel, velocity);
 	};
 
-	ext.brownFollowLine = function() {
+	ext.sallyFollowLine = function() {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.followLine();
 	};
 
-	ext.brownFollowLineUntil = function(color, callback) {
+	ext.sallyFollowLineUntil = function(color, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.followLineUntil(color, callback);
 	};
 	
-	ext.brownCrossIntersection = function(callback) {
+	ext.sallyCrossIntersection = function(callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.crossIntersection(callback);
 	};
 	
-	ext.brownTurnAtIntersection = function(direction, callback) {
+	ext.sallyTurnAtIntersection = function(direction, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.turnAtIntersection(direction, callback);
 	};
 	
-	ext.brownJumpLine = function(direction, callback) {
+	ext.sallyJumpLine = function(direction, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.jumpLine(direction, callback);
 	};
 
-	ext.brownSetFollowingSpeedTo = function(speed) {
+	ext.sallySetFollowingSpeedTo = function(speed) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setLineTracerSpeed(speed);
 	};
 
-	ext.brownStop = function() {
+	ext.sallyStop = function() {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.stop();
 	};
 
-	ext.brownSetLedTo = function(color) {
+	ext.sallySetLedTo = function(color) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setLedColor(color);
 	};
 	
-	ext.brownChangeLedByRGB = function(red, green, blue) {
+	ext.sallyChangeLedByRGB = function(red, green, blue) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.changeLedRgb(red, green, blue);
 	};
 	
-	ext.brownSetLedToRGB = function(red, green, blue) {
+	ext.sallySetLedToRGB = function(red, green, blue) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setLedRgb(red, green, blue);
 	};
 
-	ext.brownClearLed = function() {
+	ext.sallyClearLed = function() {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.clearLed();
 	};
 
-	ext.brownPlaySound = function(sound) {
+	ext.sallyPlaySound = function(sound) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.brownPlaySoundTimes = function(sound, count) {
+	ext.sallyPlaySoundTimes = function(sound, count) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.brownPlaySoundTimesUntilDone = function(sound, count, callback) {
+	ext.sallyPlaySoundTimesUntilDone = function(sound, count, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.brownChangeBuzzerBy = function(hz) {
+	ext.sallyChangeBuzzerBy = function(hz) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.brownSetBuzzerTo = function(hz) {
+	ext.sallySetBuzzerTo = function(hz) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.brownClearSound = function() {
+	ext.sallyClearSound = function() {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.brownPlayNote = function(note, octave) {
+	ext.sallyPlayNote = function(note, octave) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.brownPlayNoteForBeats = function(note, octave, beat, callback) {
+	ext.sallyPlayNoteForBeats = function(note, octave, beat, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.brownRestForBeats = function(beat, callback) {
+	ext.sallyRestForBeats = function(beat, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.brownChangeTempoBy = function(bpm) {
+	ext.sallyChangeTempoBy = function(bpm) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.brownSetTempoTo = function(bpm) {
+	ext.sallySetTempoTo = function(bpm) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.setTempo(bpm);
 	};
 
-	ext.brownWhenColorTouched = function(color) {
+	ext.sallyWhenColorTouched = function(color) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkTouchingColor(color) : false;
 	};
 	
-	ext.brownWhenColorPattern = function(color1, color2) {
+	ext.sallyWhenColorPattern = function(color1, color2) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkColorPattern(color1, color2) : false;
 	};
 	
-	ext.brownWhenButtonState = function(state) {
+	ext.sallyWhenButtonState = function(state) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkButtonEvent(state) : false;
 	};
 	
-	ext.brownWhenTilt = function(tilt) {
+	ext.sallyWhenTilt = function(tilt) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.brownTouchingColor = function(color) {
+	ext.sallyTouchingColor = function(color) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkTouchingColor(color) : false;
 	};
 	
-	ext.brownIsColorPattern = function(color1, color2) {
+	ext.sallyIsColorPattern = function(color1, color2) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkColorPattern(color1, color2) : false;
 	};
 	
-	ext.brownButtonState = function(state) {
+	ext.sallyButtonState = function(state) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkButtonEvent(state) : false;
 	};
 	
-	ext.brownTilt = function(tilt) {
+	ext.sallyTilt = function(tilt) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.brownBattery = function(state) {
+	ext.sallyBattery = function(state) {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.checkBattery(state) : false;
 	};
 
-	ext.brownColorNumber = function() {
+	ext.sallyColorNumber = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getColorNumber() : -1;
 	};
 
-	ext.brownColorPattern = function() {
+	ext.sallyColorPattern = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getColorPattern() : -1;
 	};
 	
-	ext.brownColorRed = function() {
+	ext.sallyColorRed = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getColorRed() : 0;
 	};
 	
-	ext.brownColorGreen = function() {
+	ext.sallyColorGreen = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getColorGreen() : 0;
 	};
 	
-	ext.brownColorBlue = function() {
+	ext.sallyColorBlue = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getColorBlue() : 0;
 	};
 
-	ext.brownFloor = function() {
+	ext.sallyFloor = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getFloor() : 0;
 	};
 
-	ext.brownButton = function() {
+	ext.sallyButton = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getButton() : 0;
 	};
 
-	ext.brownAccelerationX = function() {
+	ext.sallyAccelerationX = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getAccelerationX() : 0;
 	};
 
-	ext.brownAccelerationY = function() {
+	ext.sallyAccelerationY = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getAccelerationY() : 0;
 	};
 
-	ext.brownAccelerationZ = function() {
+	ext.sallyAccelerationZ = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getAccelerationZ() : 0;
 	};
 	
-	ext.brownTemperature = function() {
+	ext.sallyTemperature = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getTemperature() : 0;
 	};
 	
-	ext.brownSignalStrength = function() {
+	ext.sallySignalStrength = function() {
 		var robot = getRobot(LINE, 0);
 		return robot ? robot.getSignalStrength() : 0;
 	};
