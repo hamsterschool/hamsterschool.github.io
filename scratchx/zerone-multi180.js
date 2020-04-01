@@ -1247,7 +1247,9 @@
 	};
 
 	Zerone.prototype.checkTouchingColor = function(color) {
+		console.log(color);
 		color = COLOR_NUMBERS[color];
+		console.log(color + ' ' + this.sensory.colorNumber);
 		if(typeof color == 'number') {
 			return this.sensory.colorNumber == color;
 		}
