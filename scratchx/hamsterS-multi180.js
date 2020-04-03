@@ -762,36 +762,62 @@
 		VALUES[tmp[1]] = WHITE;
 	}
 	
-	function WriteQueue(size) {
+	function RoboidWriteQueue(size) {
 		this.setSize(size);
 		this.output = new Array(19);
 	}
 
-	WriteQueue.prototype.setSize = function(size) {
+	RoboidWriteQueue.prototype.setSize = function(size) {
 		this.buffer = new Array(size);
 		this.mask = size - 1;
 		this.provider = 0;
 		this.consumer = 0;
 	};
 
-	WriteQueue.prototype.reset = function() {
+	RoboidWriteQueue.prototype.reset = function() {
 		this.provider = 0;
 		this.consumer = 0;
 	};
 
-	WriteQueue.prototype.push = function(str, line) {
+	// from https://github.com/google/closure-library/blob/8598d87242af59aac233270742c8984e2b2bdbe0/closure/goog/crypt/crypt.js
+	RoboidWriteQueue.prototype.stringToUtf8ByteArray = function(str) {
+		var out = [];
+		var p = 0, c;
+		for(var i = 0; i < str.length; i++) {
+			c = str.charCodeAt(i);
+			if(c < 128) {
+				out[p++] = c;
+			} else if(c < 2048) {
+				out[p++] = (c >> 6) | 192;
+				out[p++] = (c & 63) | 128;
+			} else if(((c & 0xFC00) == 0xD800) && (i + 1) < str.length && ((str.charCodeAt(i + 1) & 0xFC00) == 0xDC00)) {
+				c = 0x10000 + ((c & 0x03FF) << 10) + (str.charCodeAt(++i) & 0x03FF);
+				out[p++] = (c >> 18) | 240;
+				out[p++] = ((c >> 12) & 63) | 128;
+				out[p++] = ((c >> 6) & 63) | 128;
+				out[p++] = (c & 63) | 128;
+			} else {
+				out[p++] = (c >> 12) | 224;
+				out[p++] = ((c >> 6) & 63) | 128;
+				out[p++] = (c & 63) | 128;
+			}
+		}
+		return out;
+	};
+
+	RoboidWriteQueue.prototype.push = function(str, line) {
 		var buffer = this.buffer;
 		var mask = this.mask;
 		var provider = this.provider;
 		var consumer = this.consumer;
 
-		var len = str.length;
-		if(len > 0) {
-			for(var i = 0; i < len; ++i) {
+		if(str.length > 0) {
+			var out = this.stringToUtf8ByteArray(str);
+			for(var i = 0; i < out.length; ++i) {
 				if(((provider - consumer) & mask) == mask) { // full
 					consumer = (consumer + 1) & mask;
 				}
-				buffer[provider] = str.charCodeAt(i);
+				buffer[provider] = out[i];
 				provider = (provider + 1) & mask;
 			}
 		}
@@ -806,7 +832,7 @@
 		this.consumer = consumer;
 	};
 
-	WriteQueue.prototype.pop = function() {
+	RoboidWriteQueue.prototype.pop = function() {
 		var provider = this.provider;
 		var consumer = this.consumer;
 		if(provider == consumer) return undefined; // empty
@@ -830,24 +856,64 @@
 		return output;
 	};
 
-	function ReadQueue(size) {
+	function RoboidReadQueue(size) {
 		this.setSize(size);
 	}
 
-	ReadQueue.prototype.setSize = function(size) {
+	RoboidReadQueue.prototype.setSize = function(size) {
 		this.buffer = new Array(size);
 		this.mask = size - 1;
 		this.provider = 0;
 		this.consumer = 0;
 	};
 
-	ReadQueue.prototype.reset = function() {
+	RoboidReadQueue.prototype.reset = function() {
 		this.provider = 0;
 		this.consumer = 0;
 	};
 
-	ReadQueue.prototype.push = function(packet) {
-		var len = packet[0];
+	RoboidReadQueue.prototype.utf8ByteArrayToString = function(bytes, current, end) {
+		var mask = this.mask, out = [];
+		var c = 0, c1, c2, c3, c4, u;
+		while(current != end) {
+			c1 = bytes[current];
+			current = (current + 1) & mask;
+			if(c1 < 128) {
+				out[c++] = String.fromCharCode(c1);
+			} else if(c1 > 191 && c1 < 224) {
+				if(current == end) break;
+				c2 = bytes[current];
+				current = (current + 1) & mask;
+				out[c++] = String.fromCharCode((c1 & 31) << 6 | c2 & 63);
+			} else if(c1 > 239 && c1 < 365) {
+				if(current == end) break;
+				c2 = bytes[current];
+				current = (current + 1) & mask;
+				if(current == end) break;
+				c3 = bytes[current];
+				current = (current + 1) & mask;
+				if(current == end) break;
+				c4 = bytes[current];
+				current = (current + 1) & mask;
+				u = ((c1 & 7) << 18 | (c2 & 63) << 12 | (c3 & 63) << 6 | c4 & 63) - 0x10000;
+				out[c++] = String.fromCharCode(0xD800 + (u >> 10));
+				out[c++] = String.fromCharCode(0xDC00 + (u & 1023));
+			} else {
+				if(current == end) break;
+				c2 = bytes[current];
+				current = (current + 1) & mask;
+				if(current == end) break;
+				c3 = bytes[current];
+				current = (current + 1) & mask;
+				out[c++] = String.fromCharCode((c1 & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+			}
+		}
+		this.consumer = current;
+		return out.join('');
+	};
+
+	RoboidReadQueue.prototype.push = function(packet, offset) {
+		var len = packet[offset];
 		if(len > 0) {
 			if(len > 18) len = 18;
 
@@ -855,7 +921,8 @@
 			var mask = this.mask;
 			var provider = this.provider;
 			var consumer = this.consumer;
-			for(var i = 1; i <= len; ++i) {
+			var end = len + offset;
+			for(var i = 1 + offset; i <= end; ++i) {
 				if(((provider - consumer) & mask) == mask) { // full
 					consumer = (consumer + 1) & mask;
 				}
@@ -867,22 +934,16 @@
 		}
 	};
 
-	ReadQueue.prototype.pop = function(delimiter) {
+	RoboidReadQueue.prototype.pop = function(delimiter) {
 		var provider = this.provider;
 		var consumer = this.consumer;
 		if(provider == consumer) return undefined; // empty
 
-		var buffer = this.buffer;
-		var mask = this.mask;
 		if(delimiter == 0) {
-			var str = '';
-			while(consumer != provider) {
-				str += String.fromCharCode(buffer[consumer]);
-				consumer = (consumer + 1) & mask;
-			}
-			this.consumer = consumer;
-			return str;
+			return this.utf8ByteArrayToString(this.buffer, consumer, provider);
 		} else {
+			var buffer = this.buffer;
+			var mask = this.mask;
 			var found = -1;
 			while(consumer != provider) {
 				if(buffer[consumer] == delimiter) {
@@ -892,13 +953,8 @@
 				consumer = (consumer + 1) & mask;
 			}
 			if(found >= 0) {
-				consumer = this.consumer;
-				var str = '';
-				while(consumer != found) {
-					str += String.fromCharCode(buffer[consumer]);
-					consumer = (consumer + 1) & mask;
-				}
-				this.consumer = (consumer + 1) & mask;
+				var str = this.utf8ByteArrayToString(buffer, this.consumer, found);
+				this.consumer = (this.consumer + 1) & mask;
 				return str;
 			}
 		}
@@ -2180,8 +2236,8 @@
 		this.tempo = 60;
 		this.speed = 5;
 		this.gain = -1;
-		this.writeQueue = new WriteQueue(64);
-		this.readQueue = new ReadQueue(64);
+		this.writeQueue = new RoboidWriteQueue(64);
+		this.readQueue = new RoboidReadQueue(64);
 		this.timeouts = [];
 	}
 	
@@ -2603,7 +2659,7 @@
 			}
 		}
 		if(sensory.map2 & 0x00002000) {
-			if(sensory.serial) self.readQueue.push(sensory.serial);
+			if(sensory.serial) self.readQueue.push(sensory.serial, 0);
 		}
 		if(sensory.map2 & 0x00000200) {
 			var tmp = self.writeQueue.pop();
