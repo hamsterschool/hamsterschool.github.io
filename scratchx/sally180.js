@@ -709,6 +709,7 @@
 			batteryState: 2
 		};
 		this.motoring = {
+			group: 'line',
 			module: module,
 			index: index,
 			map: 0xf8000000,
