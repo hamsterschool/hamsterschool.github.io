@@ -230,20 +230,20 @@
 			["b", "브라운/샐리 %n : 배터리 %m.battery ?", "lineBattery", 0, "정상"]
 		],
 		ja1: [
-			["w", "ブラウン/サリー %n : 前へ移動する", "lineMoveForward", 0],
-			["w", "ブラウン/サリー %n : 後ろへ移動する", "lineMoveBackward", 0],
-			["w", "ブラウン/サリー %n : %m.left_right へ回す", "lineTurn", 0, "左"],
+			["w", "ブラウン·サリー %n : 前へ移動する", "lineMoveForward", 0],
+			["w", "ブラウン·サリー %n : 後ろへ移動する", "lineMoveBackward", 0],
+			["w", "ブラウン·サリー %n : %m.left_right へ回す", "lineTurn", 0, "左"],
 			["-"],
-			[" ", "ブラウン/サリー %n : LEDを %m.led_color にする", "lineSetLedTo", 0, "赤色"],
-			[" ", "ブラウン/サリー %n : LEDを消す", "lineClearLed", 0],
+			[" ", "ブラウン·サリー %n : LEDを %m.led_color にする", "lineSetLedTo", 0, "赤色"],
+			[" ", "ブラウン·サリー %n : LEDを消す", "lineClearLed", 0],
 			["-"],
-			[" ", "ブラウン/サリー %n : %m.sound_effect 音を鳴らす", "linePlaySound", 0, "ビープ"],
-			[" ", "ブラウン/サリー %n : 音を消す", "lineClearSound", 0],
+			[" ", "ブラウン·サリー %n : %m.sound_effect 音を鳴らす", "linePlaySound", 0, "ビープ"],
+			[" ", "ブラウン·サリー %n : 音を消す", "lineClearSound", 0],
 			["-"],
-			["h", "ブラウン/サリー %n : %m.touching_color に触れたとき", "lineWhenColorTouched", 0, "赤色"],
-			["h", "ブラウン/サリー %n : ボタンを %m.when_button_state とき", "lineWhenButtonState", 0, "クリックした"],
-			["b", "ブラウン/サリー %n : %m.touching_color に触れたか?", "lineTouchingColor", 0, "赤色"],
-			["b", "ブラウン/サリー %n : ボタンを %m.button_state ?", "lineButtonState", 0, "クリックしたか"]
+			["h", "ブラウン·サリー %n : %m.touching_color に触れたとき", "lineWhenColorTouched", 0, "赤色"],
+			["h", "ブラウン·サリー %n : ボタンを %m.when_button_state とき", "lineWhenButtonState", 0, "クリックした"],
+			["b", "ブラウン·サリー %n : %m.touching_color に触れたか?", "lineTouchingColor", 0, "赤色"],
+			["b", "ブラウン·サリー %n : ボタンを %m.button_state ?", "lineButtonState", 0, "クリックしたか"]
 		],
 		ja2: [
 			["w", "ブラウン/サリー %n : 前へ %n %m.cm_sec 移動する", "lineMoveForwardUnit", 0, 6, "cm"],
