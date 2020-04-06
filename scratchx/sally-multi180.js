@@ -32,400 +32,400 @@
 	};
 	const BLOCKS = {
 		en1: [
-			["w", "Sally %n : move forward", "sallyMoveForward", 0],
-			["w", "Sally %n : move backward", "sallyMoveBackward", 0],
-			["w", "Sally %n : turn %m.left_right", "sallyTurn", 0, "left"],
+			["w", "Brown/Sally %n : move forward", "lineMoveForward", 0],
+			["w", "Brown/Sally %n : move backward", "lineMoveBackward", 0],
+			["w", "Brown/Sally %n : turn %m.left_right", "lineTurn", 0, "left"],
 			["-"],
-			[" ", "Sally %n : set led to %m.led_color", "sallySetLedTo", 0, "red"],
-			[" ", "Sally %n : clear led", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : set led to %m.led_color", "lineSetLedTo", 0, "red"],
+			[" ", "Brown/Sally %n : clear led", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : play sound %m.sound_effect", "sallyPlaySound", 0, "beep"],
-			[" ", "Sally %n : clear sound", "sallyClearSound", 0],
+			[" ", "Brown/Sally %n : play sound %m.sound_effect", "linePlaySound", 0, "beep"],
+			[" ", "Brown/Sally %n : clear sound", "lineClearSound", 0],
 			["-"],
-			["h", "Sally %n : when %m.touching_color touched", "sallyWhenColorTouched", 0, "red"],
-			["h", "Sally %n : when button %m.when_button_state", "sallyWhenButtonState", 0, "clicked"],
-			["b", "Sally %n : touching %m.touching_color ?", "sallyTouchingColor", 0, "red"],
-			["b", "Sally %n : button %m.button_state ?", "sallyButtonState", 0, "clicked"]
+			["h", "Brown/Sally %n : when %m.touching_color touched", "lineWhenColorTouched", 0, "red"],
+			["h", "Brown/Sally %n : when button %m.when_button_state", "lineWhenButtonState", 0, "clicked"],
+			["b", "Brown/Sally %n : touching %m.touching_color ?", "lineTouchingColor", 0, "red"],
+			["b", "Brown/Sally %n : button %m.button_state ?", "lineButtonState", 0, "clicked"]
 		],
 		en2: [
-			["w", "Sally %n : move forward %n %m.cm_sec", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : move backward %n %m.cm_sec", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : turn %m.left_right %n %m.deg_sec in place", "sallyTurnUnitInPlace", 0, "left", 90, "degrees"],
-			["w", "Sally %n : pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "sallyPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
-			["w", "Sally %n : turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "sallyTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 3, "forward"],
+			["w", "Brown/Sally %n : move forward %n %m.cm_sec", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : move backward %n %m.cm_sec", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : turn %m.left_right %n %m.deg_sec in place", "lineTurnUnitInPlace", 0, "left", 90, "degrees"],
+			["w", "Brown/Sally %n : pivot around %m.left_right wheel %n %m.deg_sec in %m.forward_backward direction", "linePivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
+			["w", "Brown/Sally %n : turn %m.left_right %n %m.deg_sec with radius %n cm in %m.forward_backward direction", "lineTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 3, "forward"],
 			["-"],
-			[" ", "Sally %n : set led to %m.led_color", "sallySetLedTo", 0, "red"],
-			[" ", "Sally %n : clear led", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : set led to %m.led_color", "lineSetLedTo", 0, "red"],
+			[" ", "Brown/Sally %n : clear led", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : play sound %m.sound_effect %n times", "sallyPlaySoundTimes", 0, "beep", 1],
-			["w", "Sally %n : play sound %m.sound_effect %n times until done", "sallyPlaySoundTimesUntilDone", 0, "beep", 1],
-			[" ", "Sally %n : clear sound", "sallyClearSound", 0],
-			["w", "Sally %n : play note %m.note %m.octave for %d.beats beats", "sallyPlayNoteForBeats", 0, "C", "4", 0.5],
-			["w", "Sally %n : rest for %d.beats beats", "sallyRestForBeats", 0, 0.25],
-			[" ", "Sally %n : change tempo by %n", "sallyChangeTempoBy", 0, 20],
-			[" ", "Sally %n : set tempo to %n bpm", "sallySetTempoTo", 0, 60],
+			[" ", "Brown/Sally %n : play sound %m.sound_effect %n times", "linePlaySoundTimes", 0, "beep", 1],
+			["w", "Brown/Sally %n : play sound %m.sound_effect %n times until done", "linePlaySoundTimesUntilDone", 0, "beep", 1],
+			[" ", "Brown/Sally %n : clear sound", "lineClearSound", 0],
+			["w", "Brown/Sally %n : play note %m.note %m.octave for %d.beats beats", "linePlayNoteForBeats", 0, "C", "4", 0.5],
+			["w", "Brown/Sally %n : rest for %d.beats beats", "lineRestForBeats", 0, 0.25],
+			[" ", "Brown/Sally %n : change tempo by %n", "lineChangeTempoBy", 0, 20],
+			[" ", "Brown/Sally %n : set tempo to %n bpm", "lineSetTempoTo", 0, 60],
 			["-"],
-			["h", "Sally %n : when %m.touching_color touched", "sallyWhenColorTouched", 0, "red"],
-			["h", "Sally %n : when color pattern is %m.pattern_color_black %m.pattern_color_black", "sallyWhenColorPattern", 0, "black", "red"],
-			["h", "Sally %n : when button %m.when_button_state", "sallyWhenButtonState", 0, "clicked"],
-			["h", "Sally %n : when %m.when_s_tilt", "sallyWhenTilt", 0, "tilt forward"],
-			["b", "Sally %n : touching %m.touching_color ?", "sallyTouchingColor", 0, "red"],
-			["b", "Sally %n : color pattern %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", 0, "black", "red"],
-			["b", "Sally %n : button %m.button_state ?", "sallyButtonState", 0, "clicked"],
-			["b", "Sally %n : %m.s_tilt ?", "sallyTilt", 0, "tilt forward"]
+			["h", "Brown/Sally %n : when %m.touching_color touched", "lineWhenColorTouched", 0, "red"],
+			["h", "Brown/Sally %n : when color pattern is %m.pattern_color_black %m.pattern_color_black", "lineWhenColorPattern", 0, "black", "red"],
+			["h", "Brown/Sally %n : when button %m.when_button_state", "lineWhenButtonState", 0, "clicked"],
+			["h", "Brown/Sally %n : when %m.when_s_tilt", "lineWhenTilt", 0, "tilt forward"],
+			["b", "Brown/Sally %n : touching %m.touching_color ?", "lineTouchingColor", 0, "red"],
+			["b", "Brown/Sally %n : color pattern %m.pattern_color_black %m.pattern_color_black ?", "lineIsColorPattern", 0, "black", "red"],
+			["b", "Brown/Sally %n : button %m.button_state ?", "lineButtonState", 0, "clicked"],
+			["b", "Brown/Sally %n : %m.s_tilt ?", "lineTilt", 0, "tilt forward"]
 		],
 		en3: [
-			["w", "Sally %n : move forward %n %m.move_unit", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : move backward %n %m.move_unit", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : turn %m.left_right %n %m.turn_unit in place", "sallyTurnUnitInPlace", 0, "left", 90, "degrees"],
-			["w", "Sally %n : pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "sallyPivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
-			["w", "Sally %n : turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "sallyTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 3, "forward"],
-			[" ", "Sally %n : change wheels by left: %n right: %n", "sallyChangeWheelsByLeftRight", 0, 10, 10],
-			[" ", "Sally %n : set wheels to left: %n right: %n", "sallySetWheelsToLeftRight", 0, 40, 40],
-			[" ", "Sally %n : change %m.left_right_both wheel by %n", "sallyChangeWheelBy", 0, "left", 10],
-			[" ", "Sally %n : set %m.left_right_both wheel to %n", "sallySetWheelTo", 0, "left", 40],
-			[" ", "Sally %n : follow line", "sallyFollowLine", 0],
-			["w", "Sally %n : follow line until %m.target_color", "sallyFollowLineUntil", 0, "red"],
-			["w", "Sally %n : cross intersection", "sallyCrossIntersection", 0],
-			["w", "Sally %n : turn %m.left_right_back at intersection", "sallyTurnAtIntersection", 0, "left"],
-			["w", "Sally %n : jump to %m.left_right line", "sallyJumpLine", 0, "left"],
-			[" ", "Sally %n : set following speed to %m.speed", "sallySetFollowingSpeedTo", 0, "4"],
-			[" ", "Sally %n : stop", "sallyStop", 0],
+			["w", "Brown/Sally %n : move forward %n %m.move_unit", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : move backward %n %m.move_unit", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : turn %m.left_right %n %m.turn_unit in place", "lineTurnUnitInPlace", 0, "left", 90, "degrees"],
+			["w", "Brown/Sally %n : pivot around %m.left_right wheel %n %m.turn_unit in %m.forward_backward direction", "linePivotAroundWheelUnitInDirection", 0, "left", 90, "degrees", "forward"],
+			["w", "Brown/Sally %n : turn %m.left_right %n %m.turn_unit with radius %n cm in %m.forward_backward direction", "lineTurnUnitWithRadiusInDirection", 0, "left", 90, "degrees", 3, "forward"],
+			[" ", "Brown/Sally %n : change wheels by left: %n right: %n", "lineChangeWheelsByLeftRight", 0, 10, 10],
+			[" ", "Brown/Sally %n : set wheels to left: %n right: %n", "lineSetWheelsToLeftRight", 0, 40, 40],
+			[" ", "Brown/Sally %n : change %m.left_right_both wheel by %n", "lineChangeWheelBy", 0, "left", 10],
+			[" ", "Brown/Sally %n : set %m.left_right_both wheel to %n", "lineSetWheelTo", 0, "left", 40],
+			[" ", "Brown/Sally %n : follow line", "lineFollowLine", 0],
+			["w", "Brown/Sally %n : follow line until %m.target_color", "lineFollowLineUntil", 0, "red"],
+			["w", "Brown/Sally %n : cross intersection", "lineCrossIntersection", 0],
+			["w", "Brown/Sally %n : turn %m.left_right_back at intersection", "lineTurnAtIntersection", 0, "left"],
+			["w", "Brown/Sally %n : jump to %m.left_right line", "lineJumpLine", 0, "left"],
+			[" ", "Brown/Sally %n : set following speed to %m.speed", "lineSetFollowingSpeedTo", 0, "4"],
+			[" ", "Brown/Sally %n : stop", "lineStop", 0],
 			["-"],
-			[" ", "Sally %n : set led to %m.led_color", "sallySetLedTo", 0, "red"],
-			[" ", "Sally %n : change led by r: %n g: %n b: %n", "sallyChangeLedByRGB", 0, 10, 0, 0],
-			[" ", "Sally %n : set led to r: %n g: %n b: %n", "sallySetLedToRGB", 0, 255, 0, 0],
-			[" ", "Sally %n : clear led", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : set led to %m.led_color", "lineSetLedTo", 0, "red"],
+			[" ", "Brown/Sally %n : change led by r: %n g: %n b: %n", "lineChangeLedByRGB", 0, 10, 0, 0],
+			[" ", "Brown/Sally %n : set led to r: %n g: %n b: %n", "lineSetLedToRGB", 0, 255, 0, 0],
+			[" ", "Brown/Sally %n : clear led", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : play sound %m.sound_effect %n times", "sallyPlaySoundTimes", 0, "beep", 1],
-			["w", "Sally %n : play sound %m.sound_effect %n times until done", "sallyPlaySoundTimesUntilDone", 0, "beep", 1],
-			[" ", "Sally %n : change buzzer by %n", "sallyChangeBuzzerBy", 0, 10],
-			[" ", "Sally %n : set buzzer to %n", "sallySetBuzzerTo", 0, 1000],
-			[" ", "Sally %n : clear sound", "sallyClearSound", 0],
-			[" ", "Sally %n : play note %m.note %m.octave", "sallyPlayNote", 0, "C", "4"],
-			["w", "Sally %n : play note %m.note %m.octave for %d.beats beats", "sallyPlayNoteForBeats", 0, "C", "4", 0.5],
-			["w", "Sally %n : rest for %d.beats beats", "sallyRestForBeats", 0, 0.25],
-			[" ", "Sally %n : change tempo by %n", "sallyChangeTempoBy", 0, 20],
-			[" ", "Sally %n : set tempo to %n bpm", "sallySetTempoTo", 0, 60],
+			[" ", "Brown/Sally %n : play sound %m.sound_effect %n times", "linePlaySoundTimes", 0, "beep", 1],
+			["w", "Brown/Sally %n : play sound %m.sound_effect %n times until done", "linePlaySoundTimesUntilDone", 0, "beep", 1],
+			[" ", "Brown/Sally %n : change buzzer by %n", "lineChangeBuzzerBy", 0, 10],
+			[" ", "Brown/Sally %n : set buzzer to %n", "lineSetBuzzerTo", 0, 1000],
+			[" ", "Brown/Sally %n : clear sound", "lineClearSound", 0],
+			[" ", "Brown/Sally %n : play note %m.note %m.octave", "linePlayNote", 0, "C", "4"],
+			["w", "Brown/Sally %n : play note %m.note %m.octave for %d.beats beats", "linePlayNoteForBeats", 0, "C", "4", 0.5],
+			["w", "Brown/Sally %n : rest for %d.beats beats", "lineRestForBeats", 0, 0.25],
+			[" ", "Brown/Sally %n : change tempo by %n", "lineChangeTempoBy", 0, 20],
+			[" ", "Brown/Sally %n : set tempo to %n bpm", "lineSetTempoTo", 0, 60],
 			["-"],
-			["r", "Sally %n : color number", "sallyColorNumber", 0],
-			["r", "Sally %n : color pattern", "sallyColorPattern", 0],
-			["r", "Sally %n : color r", "sallyColorRed", 0],
-			["r", "Sally %n : color g", "sallyColorGreen", 0],
-			["r", "Sally %n : color b", "sallyColorBlue", 0],
-			["r", "Sally %n : floor", "sallyFloor", 0],
-			["r", "Sally %n : button", "sallyButton", 0],
-			["r", "Sally %n : x acceleration", "sallyAccelerationX", 0],
-			["r", "Sally %n : y acceleration", "sallyAccelerationY", 0],
-			["r", "Sally %n : z acceleration", "sallyAccelerationZ", 0],
-			["r", "Sally %n : temperature", "sallyTemperature", 0],
-			["r", "Sally %n : signal strength", "sallySignalStrength", 0],
-			["h", "Sally %n : when %m.touching_color touched", "sallyWhenColorTouched", 0, "red"],
-			["h", "Sally %n : when color pattern is %m.pattern_color_black %m.pattern_color_black", "sallyWhenColorPattern", 0, "black", "red"],
-			["h", "Sally %n : when button %m.when_button_state", "sallyWhenButtonState", 0, "clicked"],
-			["h", "Sally %n : when %m.when_s_tilt", "sallyWhenTilt", 0, "tilt forward"],
-			["b", "Sally %n : touching %m.touching_color ?", "sallyTouchingColor", 0, "red"],
-			["b", "Sally %n : color pattern %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", 0, "black", "red"],
-			["b", "Sally %n : button %m.button_state ?", "sallyButtonState", 0, "clicked"],
-			["b", "Sally %n : %m.s_tilt ?", "sallyTilt", 0, "tilt forward"],
-			["b", "Sally %n : battery %m.battery ?", "sallyBattery", 0, "normal"]
+			["r", "Brown/Sally %n : color number", "lineColorNumber", 0],
+			["r", "Brown/Sally %n : color pattern", "lineColorPattern", 0],
+			["r", "Brown/Sally %n : color r", "lineColorRed", 0],
+			["r", "Brown/Sally %n : color g", "lineColorGreen", 0],
+			["r", "Brown/Sally %n : color b", "lineColorBlue", 0],
+			["r", "Brown/Sally %n : floor", "lineFloor", 0],
+			["r", "Brown/Sally %n : button", "lineButton", 0],
+			["r", "Brown/Sally %n : x acceleration", "lineAccelerationX", 0],
+			["r", "Brown/Sally %n : y acceleration", "lineAccelerationY", 0],
+			["r", "Brown/Sally %n : z acceleration", "lineAccelerationZ", 0],
+			["r", "Brown/Sally %n : temperature", "lineTemperature", 0],
+			["r", "Brown/Sally %n : signal strength", "lineSignalStrength", 0],
+			["h", "Brown/Sally %n : when %m.touching_color touched", "lineWhenColorTouched", 0, "red"],
+			["h", "Brown/Sally %n : when color pattern is %m.pattern_color_black %m.pattern_color_black", "lineWhenColorPattern", 0, "black", "red"],
+			["h", "Brown/Sally %n : when button %m.when_button_state", "lineWhenButtonState", 0, "clicked"],
+			["h", "Brown/Sally %n : when %m.when_s_tilt", "lineWhenTilt", 0, "tilt forward"],
+			["b", "Brown/Sally %n : touching %m.touching_color ?", "lineTouchingColor", 0, "red"],
+			["b", "Brown/Sally %n : color pattern %m.pattern_color_black %m.pattern_color_black ?", "lineIsColorPattern", 0, "black", "red"],
+			["b", "Brown/Sally %n : button %m.button_state ?", "lineButtonState", 0, "clicked"],
+			["b", "Brown/Sally %n : %m.s_tilt ?", "lineTilt", 0, "tilt forward"],
+			["b", "Brown/Sally %n : battery %m.battery ?", "lineBattery", 0, "normal"]
 		],
 		ko1: [
-			["w", "샐리 %n : 앞으로 이동하기", "sallyMoveForward", 0],
-			["w", "샐리 %n : 뒤로 이동하기", "sallyMoveBackward", 0],
-			["w", "샐리 %n : %m.left_right 으로 돌기", "sallyTurn", 0, "왼쪽"],
+			["w", "브라운/샐리 %n : 앞으로 이동하기", "lineMoveForward", 0],
+			["w", "브라운/샐리 %n : 뒤로 이동하기", "lineMoveBackward", 0],
+			["w", "브라운/샐리 %n : %m.left_right 으로 돌기", "lineTurn", 0, "왼쪽"],
 			["-"],
-			[" ", "샐리 %n : LED를 %m.led_color 으로 정하기", "sallySetLedTo", 0, "빨간색"],
-			[" ", "샐리 %n : LED 끄기", "sallyClearLed", 0],
+			[" ", "브라운/샐리 %n : LED를 %m.led_color 으로 정하기", "lineSetLedTo", 0, "빨간색"],
+			[" ", "브라운/샐리 %n : LED 끄기", "lineClearLed", 0],
 			["-"],
-			[" ", "샐리 %n : %m.sound_effect 소리 재생하기", "sallyPlaySound", 0, "삐"],
-			[" ", "샐리 %n : 소리 끄기", "sallyClearSound", 0],
+			[" ", "브라운/샐리 %n : %m.sound_effect 소리 재생하기", "linePlaySound", 0, "삐"],
+			[" ", "브라운/샐리 %n : 소리 끄기", "lineClearSound", 0],
 			["-"],
-			["h", "샐리 %n : %m.touching_color 에 닿았을 때", "sallyWhenColorTouched", 0, "빨간색"],
-			["h", "샐리 %n : 버튼을 %m.when_button_state 때", "sallyWhenButtonState", 0, "클릭했을"],
-			["b", "샐리 %n : %m.touching_color 에 닿았는가?", "sallyTouchingColor", 0, "빨간색"],
-			["b", "샐리 %n : 버튼을 %m.button_state ?", "sallyButtonState", 0, "클릭했는가"]
+			["h", "브라운/샐리 %n : %m.touching_color 에 닿았을 때", "lineWhenColorTouched", 0, "빨간색"],
+			["h", "브라운/샐리 %n : 버튼을 %m.when_button_state 때", "lineWhenButtonState", 0, "클릭했을"],
+			["b", "브라운/샐리 %n : %m.touching_color 에 닿았는가?", "lineTouchingColor", 0, "빨간색"],
+			["b", "브라운/샐리 %n : 버튼을 %m.button_state ?", "lineButtonState", 0, "클릭했는가"]
 		],
 		ko2: [
-			["w", "샐리 %n : 앞으로 %n %m.cm_sec 이동하기", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "샐리 %n : 뒤로 %n %m.cm_sec 이동하기", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "샐리 %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기", "sallyTurnUnitInPlace", 0, "왼쪽", 90, "도"],
-			["w", "샐리 %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "sallyPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
-			["w", "샐리 %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sallyTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 3, "앞쪽"],
+			["w", "브라운/샐리 %n : 앞으로 %n %m.cm_sec 이동하기", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "브라운/샐리 %n : 뒤로 %n %m.cm_sec 이동하기", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "브라운/샐리 %n : %m.left_right 으로 %n %m.deg_sec 제자리 돌기", "lineTurnUnitInPlace", 0, "왼쪽", 90, "도"],
+			["w", "브라운/샐리 %n : %m.left_right 바퀴 중심으로 %n %m.deg_sec %m.forward_backward 방향으로 돌기", "linePivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
+			["w", "브라운/샐리 %n : %m.left_right 으로 %n %m.deg_sec 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "lineTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 3, "앞쪽"],
 			["-"],
-			[" ", "샐리 %n : LED를 %m.led_color 으로 정하기", "sallySetLedTo", 0, "빨간색"],
-			[" ", "샐리 %n : LED 끄기", "sallyClearLed", 0],
+			[" ", "브라운/샐리 %n : LED를 %m.led_color 으로 정하기", "lineSetLedTo", 0, "빨간색"],
+			[" ", "브라운/샐리 %n : LED 끄기", "lineClearLed", 0],
 			["-"],
-			[" ", "샐리 %n : %m.sound_effect 소리 %n 번 재생하기", "sallyPlaySoundTimes", 0, "삐", 1],
-			["w", "샐리 %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "sallyPlaySoundTimesUntilDone", 0, "삐", 1],
-			[" ", "샐리 %n : 소리 끄기", "sallyClearSound", 0],
-			["w", "샐리 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "sallyPlayNoteForBeats", 0, "도", "4", 0.5],
-			["w", "샐리 %n : %d.beats 박자 쉬기", "sallyRestForBeats", 0, 0.25],
-			[" ", "샐리 %n : 연주 속도를 %n 만큼 바꾸기", "sallyChangeTempoBy", 0, 20],
-			[" ", "샐리 %n : 연주 속도를 %n BPM으로 정하기", "sallySetTempoTo", 0, 60],
+			[" ", "브라운/샐리 %n : %m.sound_effect 소리 %n 번 재생하기", "linePlaySoundTimes", 0, "삐", 1],
+			["w", "브라운/샐리 %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "linePlaySoundTimesUntilDone", 0, "삐", 1],
+			[" ", "브라운/샐리 %n : 소리 끄기", "lineClearSound", 0],
+			["w", "브라운/샐리 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "linePlayNoteForBeats", 0, "도", "4", 0.5],
+			["w", "브라운/샐리 %n : %d.beats 박자 쉬기", "lineRestForBeats", 0, 0.25],
+			[" ", "브라운/샐리 %n : 연주 속도를 %n 만큼 바꾸기", "lineChangeTempoBy", 0, 20],
+			[" ", "브라운/샐리 %n : 연주 속도를 %n BPM으로 정하기", "lineSetTempoTo", 0, 60],
 			["-"],
-			["h", "샐리 %n : %m.touching_color 에 닿았을 때", "sallyWhenColorTouched", 0, "빨간색"],
-			["h", "샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "sallyWhenColorPattern", 0, "검은색", "빨간색"],
-			["h", "샐리 %n : 버튼을 %m.when_button_state 때", "sallyWhenButtonState", 0, "클릭했을"],
-			["h", "샐리 %n : %m.when_s_tilt 때", "sallyWhenTilt", 0, "앞으로 기울였을"],
-			["b", "샐리 %n : %m.touching_color 에 닿았는가?", "sallyTouchingColor", 0, "빨간색"],
-			["b", "샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "sallyIsColorPattern", 0, "검은색", "빨간색"],
-			["b", "샐리 %n : 버튼을 %m.button_state ?", "sallyButtonState", 0, "클릭했는가"],
-			["b", "샐리 %n : %m.s_tilt ?", "sallyTilt", 0, "앞으로 기울임"]
+			["h", "브라운/샐리 %n : %m.touching_color 에 닿았을 때", "lineWhenColorTouched", 0, "빨간색"],
+			["h", "브라운/샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "lineWhenColorPattern", 0, "검은색", "빨간색"],
+			["h", "브라운/샐리 %n : 버튼을 %m.when_button_state 때", "lineWhenButtonState", 0, "클릭했을"],
+			["h", "브라운/샐리 %n : %m.when_s_tilt 때", "lineWhenTilt", 0, "앞으로 기울였을"],
+			["b", "브라운/샐리 %n : %m.touching_color 에 닿았는가?", "lineTouchingColor", 0, "빨간색"],
+			["b", "브라운/샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "lineIsColorPattern", 0, "검은색", "빨간색"],
+			["b", "브라운/샐리 %n : 버튼을 %m.button_state ?", "lineButtonState", 0, "클릭했는가"],
+			["b", "브라운/샐리 %n : %m.s_tilt ?", "lineTilt", 0, "앞으로 기울임"]
 		],
 		ko3: [
-			["w", "샐리 %n : 앞으로 %n %m.move_unit 이동하기", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "샐리 %n : 뒤로 %n %m.move_unit 이동하기", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "샐리 %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기", "sallyTurnUnitInPlace", 0, "왼쪽", 90, "도"],
-			["w", "샐리 %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "sallyPivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
-			["w", "샐리 %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "sallyTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 3, "앞쪽"],
-			[" ", "샐리 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "sallyChangeWheelsByLeftRight", 0, 10, 10],
-			[" ", "샐리 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "sallySetWheelsToLeftRight", 0, 40, 40],
-			[" ", "샐리 %n : %m.left_right_both 바퀴 %n 만큼 바꾸기", "sallyChangeWheelBy", 0, "왼쪽", 10],
-			[" ", "샐리 %n : %m.left_right_both 바퀴 %n (으)로 정하기", "sallySetWheelTo", 0, "왼쪽", 40],
-			[" ", "샐리 %n : 선 따라가기", "sallyFollowLine", 0],
-			["w", "샐리 %n : 선을 따라 %m.target_color 까지 이동하기", "sallyFollowLineUntil", 0, "빨간색"],
-			["w", "샐리 %n : 교차로 건너가기", "sallyCrossIntersection", 0],
-			["w", "샐리 %n : 교차로에서 %m.left_right_back 으로 돌기", "sallyTurnAtIntersection", 0, "왼쪽"],
-			["w", "샐리 %n : %m.left_right 선으로 건너가기", "sallyJumpLine", 0, "왼쪽"],
-			[" ", "샐리 %n : 선 따라가기 속도를 %m.speed (으)로 정하기", "sallySetFollowingSpeedTo", 0, "4"],
-			[" ", "샐리 %n : 정지하기", "sallyStop", 0],
+			["w", "브라운/샐리 %n : 앞으로 %n %m.move_unit 이동하기", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "브라운/샐리 %n : 뒤로 %n %m.move_unit 이동하기", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "브라운/샐리 %n : %m.left_right 으로 %n %m.turn_unit 제자리 돌기", "lineTurnUnitInPlace", 0, "왼쪽", 90, "도"],
+			["w", "브라운/샐리 %n : %m.left_right 바퀴 중심으로 %n %m.turn_unit %m.forward_backward 방향으로 돌기", "linePivotAroundWheelUnitInDirection", 0, "왼쪽", 90, "도", "앞쪽"],
+			["w", "브라운/샐리 %n : %m.left_right 으로 %n %m.turn_unit 반지름 %n cm를 %m.forward_backward 방향으로 돌기", "lineTurnUnitWithRadiusInDirection", 0, "왼쪽", 90, "도", 3, "앞쪽"],
+			[" ", "브라운/샐리 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n 만큼 바꾸기", "lineChangeWheelsByLeftRight", 0, 10, 10],
+			[" ", "브라운/샐리 %n : 왼쪽 바퀴 %n 오른쪽 바퀴 %n (으)로 정하기", "lineSetWheelsToLeftRight", 0, 40, 40],
+			[" ", "브라운/샐리 %n : %m.left_right_both 바퀴 %n 만큼 바꾸기", "lineChangeWheelBy", 0, "왼쪽", 10],
+			[" ", "브라운/샐리 %n : %m.left_right_both 바퀴 %n (으)로 정하기", "lineSetWheelTo", 0, "왼쪽", 40],
+			[" ", "브라운/샐리 %n : 선 따라가기", "lineFollowLine", 0],
+			["w", "브라운/샐리 %n : 선을 따라 %m.target_color 까지 이동하기", "lineFollowLineUntil", 0, "빨간색"],
+			["w", "브라운/샐리 %n : 교차로 건너가기", "lineCrossIntersection", 0],
+			["w", "브라운/샐리 %n : 교차로에서 %m.left_right_back 으로 돌기", "lineTurnAtIntersection", 0, "왼쪽"],
+			["w", "브라운/샐리 %n : %m.left_right 선으로 건너가기", "lineJumpLine", 0, "왼쪽"],
+			[" ", "브라운/샐리 %n : 선 따라가기 속도를 %m.speed (으)로 정하기", "lineSetFollowingSpeedTo", 0, "4"],
+			[" ", "브라운/샐리 %n : 정지하기", "lineStop", 0],
 			["-"],
-			[" ", "샐리 %n : LED를 %m.led_color 으로 정하기", "sallySetLedTo", 0, "빨간색"],
-			[" ", "샐리 %n : LED를 R: %n G: %n B: %n 만큼 바꾸기", "sallyChangeLedByRGB", 0, 10, 0, 0],
-			[" ", "샐리 %n : LED를 R: %n G: %n B: %n (으)로 정하기", "sallySetLedToRGB", 0, 255, 0, 0],
-			[" ", "샐리 %n : LED 끄기", "sallyClearLed", 0],
+			[" ", "브라운/샐리 %n : LED를 %m.led_color 으로 정하기", "lineSetLedTo", 0, "빨간색"],
+			[" ", "브라운/샐리 %n : LED를 R: %n G: %n B: %n 만큼 바꾸기", "lineChangeLedByRGB", 0, 10, 0, 0],
+			[" ", "브라운/샐리 %n : LED를 R: %n G: %n B: %n (으)로 정하기", "lineSetLedToRGB", 0, 255, 0, 0],
+			[" ", "브라운/샐리 %n : LED 끄기", "lineClearLed", 0],
 			["-"],
-			[" ", "샐리 %n : %m.sound_effect 소리 %n 번 재생하기", "sallyPlaySoundTimes", 0, "삐", 1],
-			["w", "샐리 %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "sallyPlaySoundTimesUntilDone", 0, "삐", 1],
-			[" ", "샐리 %n : 버저 음을 %n 만큼 바꾸기", "sallyChangeBuzzerBy", 0, 10],
-			[" ", "샐리 %n : 버저 음을 %n (으)로 정하기", "sallySetBuzzerTo", 0, 1000],
-			[" ", "샐리 %n : 소리 끄기", "sallyClearSound", 0],
-			[" ", "샐리 %n : %m.note %m.octave 음을 연주하기", "sallyPlayNote", 0, "도", "4"],
-			["w", "샐리 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "sallyPlayNoteForBeats", 0, "도", "4", 0.5],
-			["w", "샐리 %n : %d.beats 박자 쉬기", "sallyRestForBeats", 0, 0.25],
-			[" ", "샐리 %n : 연주 속도를 %n 만큼 바꾸기", "sallyChangeTempoBy", 0, 20],
-			[" ", "샐리 %n : 연주 속도를 %n BPM으로 정하기", "sallySetTempoTo", 0, 60],
+			[" ", "브라운/샐리 %n : %m.sound_effect 소리 %n 번 재생하기", "linePlaySoundTimes", 0, "삐", 1],
+			["w", "브라운/샐리 %n : %m.sound_effect 소리 %n 번 재생하고 기다리기", "linePlaySoundTimesUntilDone", 0, "삐", 1],
+			[" ", "브라운/샐리 %n : 버저 음을 %n 만큼 바꾸기", "lineChangeBuzzerBy", 0, 10],
+			[" ", "브라운/샐리 %n : 버저 음을 %n (으)로 정하기", "lineSetBuzzerTo", 0, 1000],
+			[" ", "브라운/샐리 %n : 소리 끄기", "lineClearSound", 0],
+			[" ", "브라운/샐리 %n : %m.note %m.octave 음을 연주하기", "linePlayNote", 0, "도", "4"],
+			["w", "브라운/샐리 %n : %m.note %m.octave 음을 %d.beats 박자 연주하기", "linePlayNoteForBeats", 0, "도", "4", 0.5],
+			["w", "브라운/샐리 %n : %d.beats 박자 쉬기", "lineRestForBeats", 0, 0.25],
+			[" ", "브라운/샐리 %n : 연주 속도를 %n 만큼 바꾸기", "lineChangeTempoBy", 0, 20],
+			[" ", "브라운/샐리 %n : 연주 속도를 %n BPM으로 정하기", "lineSetTempoTo", 0, 60],
 			["-"],
-			["r", "샐리 %n : 색깔 번호", "sallyColorNumber", 0],
-			["r", "샐리 %n : 색깔 패턴", "sallyColorPattern", 0],
-			["r", "샐리 %n : 색깔 R", "sallyColorRed", 0],
-			["r", "샐리 %n : 색깔 G", "sallyColorGreen", 0],
-			["r", "샐리 %n : 색깔 B", "sallyColorBlue", 0],
-			["r", "샐리 %n : 바닥 센서", "sallyFloor", 0],
-			["r", "샐리 %n : 버튼", "sallyButton", 0],
-			["r", "샐리 %n : x축 가속도", "sallyAccelerationX", 0],
-			["r", "샐리 %n : y축 가속도", "sallyAccelerationY", 0],
-			["r", "샐리 %n : z축 가속도", "sallyAccelerationZ", 0],
-			["r", "샐리 %n : 온도", "sallyTemperature", 0],
-			["r", "샐리 %n : 신호 세기", "sallySignalStrength", 0],
-			["h", "샐리 %n : %m.touching_color 에 닿았을 때", "sallyWhenColorTouched", 0, "빨간색"],
-			["h", "샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "sallyWhenColorPattern", 0, "검은색", "빨간색"],
-			["h", "샐리 %n : 버튼을 %m.when_button_state 때", "sallyWhenButtonState", 0, "클릭했을"],
-			["h", "샐리 %n : %m.when_s_tilt 때", "sallyWhenTilt", 0, "앞으로 기울였을"],
-			["b", "샐리 %n : %m.touching_color 에 닿았는가?", "sallyTouchingColor", 0, "빨간색"],
-			["b", "샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "sallyIsColorPattern", 0, "검은색", "빨간색"],
-			["b", "샐리 %n : 버튼을 %m.button_state ?", "sallyButtonState", 0, "클릭했는가"],
-			["b", "샐리 %n : %m.s_tilt ?", "sallyTilt", 0, "앞으로 기울임"],
-			["b", "샐리 %n : 배터리 %m.battery ?", "sallyBattery", 0, "정상"]
+			["r", "브라운/샐리 %n : 색깔 번호", "lineColorNumber", 0],
+			["r", "브라운/샐리 %n : 색깔 패턴", "lineColorPattern", 0],
+			["r", "브라운/샐리 %n : 색깔 R", "lineColorRed", 0],
+			["r", "브라운/샐리 %n : 색깔 G", "lineColorGreen", 0],
+			["r", "브라운/샐리 %n : 색깔 B", "lineColorBlue", 0],
+			["r", "브라운/샐리 %n : 바닥 센서", "lineFloor", 0],
+			["r", "브라운/샐리 %n : 버튼", "lineButton", 0],
+			["r", "브라운/샐리 %n : x축 가속도", "lineAccelerationX", 0],
+			["r", "브라운/샐리 %n : y축 가속도", "lineAccelerationY", 0],
+			["r", "브라운/샐리 %n : z축 가속도", "lineAccelerationZ", 0],
+			["r", "브라운/샐리 %n : 온도", "lineTemperature", 0],
+			["r", "브라운/샐리 %n : 신호 세기", "lineSignalStrength", 0],
+			["h", "브라운/샐리 %n : %m.touching_color 에 닿았을 때", "lineWhenColorTouched", 0, "빨간색"],
+			["h", "브라운/샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 일 때", "lineWhenColorPattern", 0, "검은색", "빨간색"],
+			["h", "브라운/샐리 %n : 버튼을 %m.when_button_state 때", "lineWhenButtonState", 0, "클릭했을"],
+			["h", "브라운/샐리 %n : %m.when_s_tilt 때", "lineWhenTilt", 0, "앞으로 기울였을"],
+			["b", "브라운/샐리 %n : %m.touching_color 에 닿았는가?", "lineTouchingColor", 0, "빨간색"],
+			["b", "브라운/샐리 %n : 색깔 패턴이 %m.pattern_color_black %m.pattern_color_black 인가?", "lineIsColorPattern", 0, "검은색", "빨간색"],
+			["b", "브라운/샐리 %n : 버튼을 %m.button_state ?", "lineButtonState", 0, "클릭했는가"],
+			["b", "브라운/샐리 %n : %m.s_tilt ?", "lineTilt", 0, "앞으로 기울임"],
+			["b", "브라운/샐리 %n : 배터리 %m.battery ?", "lineBattery", 0, "정상"]
 		],
 		ja1: [
-			["w", "サリー %n : 前へ移動する", "sallyMoveForward", 0],
-			["w", "サリー %n : 後ろへ移動する", "sallyMoveBackward", 0],
-			["w", "サリー %n : %m.left_right へ回す", "sallyTurn", 0, "左"],
+			["w", "ブラウン/サリー %n : 前へ移動する", "lineMoveForward", 0],
+			["w", "ブラウン/サリー %n : 後ろへ移動する", "lineMoveBackward", 0],
+			["w", "ブラウン/サリー %n : %m.left_right へ回す", "lineTurn", 0, "左"],
 			["-"],
-			[" ", "サリー %n : LEDを %m.led_color にする", "sallySetLedTo", 0, "赤色"],
-			[" ", "サリー %n : LEDを消す", "sallyClearLed", 0],
+			[" ", "ブラウン/サリー %n : LEDを %m.led_color にする", "lineSetLedTo", 0, "赤色"],
+			[" ", "ブラウン/サリー %n : LEDを消す", "lineClearLed", 0],
 			["-"],
-			[" ", "サリー %n : %m.sound_effect 音を鳴らす", "sallyPlaySound", 0, "ビープ"],
-			[" ", "サリー %n : 音を消す", "sallyClearSound", 0],
+			[" ", "ブラウン/サリー %n : %m.sound_effect 音を鳴らす", "linePlaySound", 0, "ビープ"],
+			[" ", "ブラウン/サリー %n : 音を消す", "lineClearSound", 0],
 			["-"],
-			["h", "サリー %n : %m.touching_color に触れたとき", "sallyWhenColorTouched", 0, "赤色"],
-			["h", "サリー %n : ボタンを %m.when_button_state とき", "sallyWhenButtonState", 0, "クリックした"],
-			["b", "サリー %n : %m.touching_color に触れたか?", "sallyTouchingColor", 0, "赤色"],
-			["b", "サリー %n : ボタンを %m.button_state ?", "sallyButtonState", 0, "クリックしたか"]
+			["h", "ブラウン/サリー %n : %m.touching_color に触れたとき", "lineWhenColorTouched", 0, "赤色"],
+			["h", "ブラウン/サリー %n : ボタンを %m.when_button_state とき", "lineWhenButtonState", 0, "クリックした"],
+			["b", "ブラウン/サリー %n : %m.touching_color に触れたか?", "lineTouchingColor", 0, "赤色"],
+			["b", "ブラウン/サリー %n : ボタンを %m.button_state ?", "lineButtonState", 0, "クリックしたか"]
 		],
 		ja2: [
-			["w", "サリー %n : 前へ %n %m.cm_sec 移動する", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "サリー %n : 後ろへ %n %m.cm_sec 移動する", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "サリー %n : %m.left_right へ %n %m.deg_sec その場で回す", "sallyTurnUnitInPlace", 0, "左", 90, "度"],
-			["w", "サリー %n : %m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向へ回す", "sallyPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
-			["w", "サリー %n : %m.left_right へ %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向へ回す", "sallyTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 3, "前"],
+			["w", "ブラウン/サリー %n : 前へ %n %m.cm_sec 移動する", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "ブラウン/サリー %n : 後ろへ %n %m.cm_sec 移動する", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "ブラウン/サリー %n : %m.left_right へ %n %m.deg_sec その場で回す", "lineTurnUnitInPlace", 0, "左", 90, "度"],
+			["w", "ブラウン/サリー %n : %m.left_right 車輪を中心に %n %m.deg_sec %m.forward_backward 方向へ回す", "linePivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
+			["w", "ブラウン/サリー %n : %m.left_right へ %n %m.deg_sec 半径 %n cmを %m.forward_backward 方向へ回す", "lineTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 3, "前"],
 			["-"],
-			[" ", "サリー %n : LEDを %m.led_color にする", "sallySetLedTo", 0, "赤色"],
-			[" ", "サリー %n : LEDを消す", "sallyClearLed", 0],
+			[" ", "ブラウン/サリー %n : LEDを %m.led_color にする", "lineSetLedTo", 0, "赤色"],
+			[" ", "ブラウン/サリー %n : LEDを消す", "lineClearLed", 0],
 			["-"],
-			[" ", "サリー %n : %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimes", 0, "ビープ", 1],
-			["w", "サリー %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimesUntilDone", 0, "ビープ", 1],
-			[" ", "サリー %n : 音を消す", "sallyClearSound", 0],
-			["w", "サリー %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "sallyPlayNoteForBeats", 0, "ド", "4", 0.5],
-			["w", "サリー %n : %d.beats 拍休む", "sallyRestForBeats", 0, 0.25],
-			[" ", "サリー %n : テンポを %n ずつ変える", "sallyChangeTempoBy", 0, 20],
-			[" ", "サリー %n : テンポを %n BPMにする", "sallySetTempoTo", 0, 60],
+			[" ", "ブラウン/サリー %n : %m.sound_effect 音を %n 回鳴らす", "linePlaySoundTimes", 0, "ビープ", 1],
+			["w", "ブラウン/サリー %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "linePlaySoundTimesUntilDone", 0, "ビープ", 1],
+			[" ", "ブラウン/サリー %n : 音を消す", "lineClearSound", 0],
+			["w", "ブラウン/サリー %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "linePlayNoteForBeats", 0, "ド", "4", 0.5],
+			["w", "ブラウン/サリー %n : %d.beats 拍休む", "lineRestForBeats", 0, 0.25],
+			[" ", "ブラウン/サリー %n : テンポを %n ずつ変える", "lineChangeTempoBy", 0, 20],
+			[" ", "ブラウン/サリー %n : テンポを %n BPMにする", "lineSetTempoTo", 0, 60],
 			["-"],
-			["h", "サリー %n : %m.touching_color に触れたとき", "sallyWhenColorTouched", 0, "赤色"],
-			["h", "サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "sallyWhenColorPattern", 0, "黒色", "赤色"],
-			["h", "サリー %n : ボタンを %m.when_button_state とき", "sallyWhenButtonState", 0, "クリックした"],
-			["h", "サリー %n : %m.when_s_tilt とき", "sallyWhenTilt", 0, "前に傾けた"],
-			["b", "サリー %n : %m.touching_color に触れたか?", "sallyTouchingColor", 0, "赤色"],
-			["b", "サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "sallyIsColorPattern", 0, "黒色", "赤色"],
-			["b", "サリー %n : ボタンを %m.button_state ?", "sallyButtonState", 0, "クリックしたか"],
-			["b", "サリー %n : %m.s_tilt ?", "sallyTilt", 0, "前に傾けたか"]
+			["h", "ブラウン/サリー %n : %m.touching_color に触れたとき", "lineWhenColorTouched", 0, "赤色"],
+			["h", "ブラウン/サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "lineWhenColorPattern", 0, "黒色", "赤色"],
+			["h", "ブラウン/サリー %n : ボタンを %m.when_button_state とき", "lineWhenButtonState", 0, "クリックした"],
+			["h", "ブラウン/サリー %n : %m.when_s_tilt とき", "lineWhenTilt", 0, "前に傾けた"],
+			["b", "ブラウン/サリー %n : %m.touching_color に触れたか?", "lineTouchingColor", 0, "赤色"],
+			["b", "ブラウン/サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "lineIsColorPattern", 0, "黒色", "赤色"],
+			["b", "ブラウン/サリー %n : ボタンを %m.button_state ?", "lineButtonState", 0, "クリックしたか"],
+			["b", "ブラウン/サリー %n : %m.s_tilt ?", "lineTilt", 0, "前に傾けたか"]
 		],
 		ja3: [
-			["w", "サリー %n : 前へ %n %m.move_unit 移動する", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "サリー %n : 後ろへ %n %m.move_unit 移動する", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "サリー %n : %m.left_right へ %n %m.turn_unit その場で回す", "sallyTurnUnitInPlace", 0, "左", 90, "度"],
-			["w", "サリー %n : %m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向へ回す", "sallyPivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
-			["w", "サリー %n : %m.left_right へ %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向へ回す", "sallyTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 3, "前"],
-			[" ", "サリー %n : 左車輪を %n 右車輪を %n ずつ変える", "sallyChangeWheelsByLeftRight", 0, 10, 10],
-			[" ", "サリー %n : 左車輪を %n 右車輪を %n にする", "sallySetWheelsToLeftRight", 0, 40, 40],
-			[" ", "サリー %n : %m.left_right_both 車輪を %n ずつ変える", "sallyChangeWheelBy", 0, "左", 10],
-			[" ", "サリー %n : %m.left_right_both 車輪を %n にする", "sallySetWheelTo", 0, "左", 40],
-			[" ", "サリー %n : 線を追従する", "sallyFollowLine", 0],
-			["w", "サリー %n : 線を追従して %m.target_color まで移動する", "sallyFollowLineUntil", 0, "赤色"],
-			["w", "サリー %n : 交差点を渡る", "sallyCrossIntersection", 0],
-			["w", "サリー %n : 交差点で %m.left_right_back へ回す", "sallyTurnAtIntersection", 0, "左"],
-			["w", "サリー %n : %m.left_right 線へ渡り行く", "sallyJumpLine", 0, "左"],
-			[" ", "サリー %n : 線を追従する速度を %m.speed にする", "sallySetFollowingSpeedTo", 0, "4"],
-			[" ", "サリー %n : 停止する", "sallyStop", 0],
+			["w", "ブラウン/サリー %n : 前へ %n %m.move_unit 移動する", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "ブラウン/サリー %n : 後ろへ %n %m.move_unit 移動する", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "ブラウン/サリー %n : %m.left_right へ %n %m.turn_unit その場で回す", "lineTurnUnitInPlace", 0, "左", 90, "度"],
+			["w", "ブラウン/サリー %n : %m.left_right 車輪を中心に %n %m.turn_unit %m.forward_backward 方向へ回す", "linePivotAroundWheelUnitInDirection", 0, "左", 90, "度", "前"],
+			["w", "ブラウン/サリー %n : %m.left_right へ %n %m.turn_unit 半径 %n cmを %m.forward_backward 方向へ回す", "lineTurnUnitWithRadiusInDirection", 0, "左", 90, "度", 3, "前"],
+			[" ", "ブラウン/サリー %n : 左車輪を %n 右車輪を %n ずつ変える", "lineChangeWheelsByLeftRight", 0, 10, 10],
+			[" ", "ブラウン/サリー %n : 左車輪を %n 右車輪を %n にする", "lineSetWheelsToLeftRight", 0, 40, 40],
+			[" ", "ブラウン/サリー %n : %m.left_right_both 車輪を %n ずつ変える", "lineChangeWheelBy", 0, "左", 10],
+			[" ", "ブラウン/サリー %n : %m.left_right_both 車輪を %n にする", "lineSetWheelTo", 0, "左", 40],
+			[" ", "ブラウン/サリー %n : 線を追従する", "lineFollowLine", 0],
+			["w", "ブラウン/サリー %n : 線を追従して %m.target_color まで移動する", "lineFollowLineUntil", 0, "赤色"],
+			["w", "ブラウン/サリー %n : 交差点を渡る", "lineCrossIntersection", 0],
+			["w", "ブラウン/サリー %n : 交差点で %m.left_right_back へ回す", "lineTurnAtIntersection", 0, "左"],
+			["w", "ブラウン/サリー %n : %m.left_right 線へ渡り行く", "lineJumpLine", 0, "左"],
+			[" ", "ブラウン/サリー %n : 線を追従する速度を %m.speed にする", "lineSetFollowingSpeedTo", 0, "4"],
+			[" ", "ブラウン/サリー %n : 停止する", "lineStop", 0],
 			["-"],
-			[" ", "サリー %n : LEDを %m.led_color にする", "sallySetLedTo", 0, "赤色"],
-			[" ", "サリー %n : LEDをR: %n G: %n B: %n ずつ変える", "sallyChangeLedByRGB", 0, 10, 0, 0],
-			[" ", "サリー %n : LEDをR: %n G: %n B: %n にする", "sallySetLedToRGB", 0, 255, 0, 0],
-			[" ", "サリー %n : LEDを消す", "sallyClearLed", 0],
+			[" ", "ブラウン/サリー %n : LEDを %m.led_color にする", "lineSetLedTo", 0, "赤色"],
+			[" ", "ブラウン/サリー %n : LEDをR: %n G: %n B: %n ずつ変える", "lineChangeLedByRGB", 0, 10, 0, 0],
+			[" ", "ブラウン/サリー %n : LEDをR: %n G: %n B: %n にする", "lineSetLedToRGB", 0, 255, 0, 0],
+			[" ", "ブラウン/サリー %n : LEDを消す", "lineClearLed", 0],
 			["-"],
-			[" ", "サリー %n : %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimes", 0, "ビープ", 1],
-			["w", "サリー %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "sallyPlaySoundTimesUntilDone", 0, "ビープ", 1],
-			[" ", "サリー %n : ブザー音を %n ずつ変える", "sallyChangeBuzzerBy", 0, 10],
-			[" ", "サリー %n : ブザー音を %n にする", "sallySetBuzzerTo", 0, 1000],
-			[" ", "サリー %n : 音を消す", "sallyClearSound", 0],
-			[" ", "サリー %n : %m.note %m.octave 音を鳴らす", "sallyPlayNote", 0, "ド", "4"],
-			["w", "サリー %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "sallyPlayNoteForBeats", 0, "ド", "4", 0.5],
-			["w", "サリー %n : %d.beats 拍休む", "sallyRestForBeats", 0, 0.25],
-			[" ", "サリー %n : テンポを %n ずつ変える", "sallyChangeTempoBy", 0, 20],
-			[" ", "サリー %n : テンポを %n BPMにする", "sallySetTempoTo", 0, 60],
+			[" ", "ブラウン/サリー %n : %m.sound_effect 音を %n 回鳴らす", "linePlaySoundTimes", 0, "ビープ", 1],
+			["w", "ブラウン/サリー %n : 終わるまで %m.sound_effect 音を %n 回鳴らす", "linePlaySoundTimesUntilDone", 0, "ビープ", 1],
+			[" ", "ブラウン/サリー %n : ブザー音を %n ずつ変える", "lineChangeBuzzerBy", 0, 10],
+			[" ", "ブラウン/サリー %n : ブザー音を %n にする", "lineSetBuzzerTo", 0, 1000],
+			[" ", "ブラウン/サリー %n : 音を消す", "lineClearSound", 0],
+			[" ", "ブラウン/サリー %n : %m.note %m.octave 音を鳴らす", "linePlayNote", 0, "ド", "4"],
+			["w", "ブラウン/サリー %n : %m.note %m.octave 音を %d.beats 拍鳴らす", "linePlayNoteForBeats", 0, "ド", "4", 0.5],
+			["w", "ブラウン/サリー %n : %d.beats 拍休む", "lineRestForBeats", 0, 0.25],
+			[" ", "ブラウン/サリー %n : テンポを %n ずつ変える", "lineChangeTempoBy", 0, 20],
+			[" ", "ブラウン/サリー %n : テンポを %n BPMにする", "lineSetTempoTo", 0, 60],
 			["-"],
-			["r", "サリー %n : 色番号", "sallyColorNumber", 0],
-			["r", "サリー %n : 色パターン", "sallyColorPattern", 0],
-			["r", "サリー %n : 色R", "sallyColorRed", 0],
-			["r", "サリー %n : 色G", "sallyColorGreen", 0],
-			["r", "サリー %n : 色B", "sallyColorBlue", 0],
-			["r", "サリー %n : フロアセンサー", "sallyFloor", 0],
-			["r", "サリー %n : ボタン", "sallyButton", 0],
-			["r", "サリー %n : x軸加速度", "sallyAccelerationX", 0],
-			["r", "サリー %n : y軸加速度", "sallyAccelerationY", 0],
-			["r", "サリー %n : z軸加速度", "sallyAccelerationZ", 0],
-			["r", "サリー %n : 温度", "sallyTemperature", 0],
-			["r", "サリー %n : 信号強度", "sallySignalStrength", 0],
-			["h", "サリー %n : %m.touching_color に触れたとき", "sallyWhenColorTouched", 0, "赤色"],
-			["h", "サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "sallyWhenColorPattern", 0, "黒色", "赤色"],
-			["h", "サリー %n : ボタンを %m.when_button_state とき", "sallyWhenButtonState", 0, "クリックした"],
-			["h", "サリー %n : %m.when_s_tilt とき", "sallyWhenTilt", 0, "前に傾けた"],
-			["b", "サリー %n : %m.touching_color に触れたか?", "sallyTouchingColor", 0, "赤色"],
-			["b", "サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "sallyIsColorPattern", 0, "黒色", "赤色"],
-			["b", "サリー %n : ボタンを %m.button_state ?", "sallyButtonState", 0, "クリックしたか"],
-			["b", "サリー %n : %m.s_tilt ?", "sallyTilt", 0, "前に傾けたか"],
-			["b", "サリー %n : 電池が %m.battery ?", "sallyBattery", 0, "正常か"]
+			["r", "ブラウン/サリー %n : 色番号", "lineColorNumber", 0],
+			["r", "ブラウン/サリー %n : 色パターン", "lineColorPattern", 0],
+			["r", "ブラウン/サリー %n : 色R", "lineColorRed", 0],
+			["r", "ブラウン/サリー %n : 色G", "lineColorGreen", 0],
+			["r", "ブラウン/サリー %n : 色B", "lineColorBlue", 0],
+			["r", "ブラウン/サリー %n : フロアセンサー", "lineFloor", 0],
+			["r", "ブラウン/サリー %n : ボタン", "lineButton", 0],
+			["r", "ブラウン/サリー %n : x軸加速度", "lineAccelerationX", 0],
+			["r", "ブラウン/サリー %n : y軸加速度", "lineAccelerationY", 0],
+			["r", "ブラウン/サリー %n : z軸加速度", "lineAccelerationZ", 0],
+			["r", "ブラウン/サリー %n : 温度", "lineTemperature", 0],
+			["r", "ブラウン/サリー %n : 信号強度", "lineSignalStrength", 0],
+			["h", "ブラウン/サリー %n : %m.touching_color に触れたとき", "lineWhenColorTouched", 0, "赤色"],
+			["h", "ブラウン/サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black であるとき", "lineWhenColorPattern", 0, "黒色", "赤色"],
+			["h", "ブラウン/サリー %n : ボタンを %m.when_button_state とき", "lineWhenButtonState", 0, "クリックした"],
+			["h", "ブラウン/サリー %n : %m.when_s_tilt とき", "lineWhenTilt", 0, "前に傾けた"],
+			["b", "ブラウン/サリー %n : %m.touching_color に触れたか?", "lineTouchingColor", 0, "赤色"],
+			["b", "ブラウン/サリー %n : 色パターンが %m.pattern_color_black %m.pattern_color_black ですか?", "lineIsColorPattern", 0, "黒色", "赤色"],
+			["b", "ブラウン/サリー %n : ボタンを %m.button_state ?", "lineButtonState", 0, "クリックしたか"],
+			["b", "ブラウン/サリー %n : %m.s_tilt ?", "lineTilt", 0, "前に傾けたか"],
+			["b", "ブラウン/サリー %n : 電池が %m.battery ?", "lineBattery", 0, "正常か"]
 		],
 		uz1: [
-			["w", "Sally %n : oldinga yurish", "sallyMoveForward", 0],
-			["w", "Sally %n : orqaga yurish", "sallyMoveBackward", 0],
-			["w", "Sally %n : %m.left_right ga o'girilish", "sallyTurn", 0, "chap"],
+			["w", "Brown/Sally %n : oldinga yurish", "lineMoveForward", 0],
+			["w", "Brown/Sally %n : orqaga yurish", "lineMoveBackward", 0],
+			["w", "Brown/Sally %n : %m.left_right ga o'girilish", "lineTurn", 0, "chap"],
 			["-"],
-			[" ", "Sally %n : LEDni %m.led_color ga sozlash", "sallySetLedTo", 0, "qizil"],
-			[" ", "Sally %n : LEDni o'chirish", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : LEDni %m.led_color ga sozlash", "lineSetLedTo", 0, "qizil"],
+			[" ", "Brown/Sally %n : LEDni o'chirish", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : %m.sound_effect tovushni ijro etish", "sallyPlaySound", 0, "qisqa"],
-			[" ", "Sally %n : tovushni o'chirish", "sallyClearSound", 0],
+			[" ", "Brown/Sally %n : %m.sound_effect tovushni ijro etish", "linePlaySound", 0, "qisqa"],
+			[" ", "Brown/Sally %n : tovushni o'chirish", "lineClearSound", 0],
 			["-"],
-			["h", "Sally %n : %m.touching_color ga tegilganda", "sallyWhenColorTouched", 0, "qizil"],
-			["h", "Sally %n : tugmani %m.when_button_state da", "sallyWhenButtonState", 0, "bosgan"],
-			["b", "Sally %n : %m.touching_color ga tekkan?", "sallyTouchingColor", 0, "qizil"],
-			["b", "Sally %n : tugmani %m.button_state ?", "sallyButtonState", 0, "bosgan"]
+			["h", "Brown/Sally %n : %m.touching_color ga tegilganda", "lineWhenColorTouched", 0, "qizil"],
+			["h", "Brown/Sally %n : tugmani %m.when_button_state da", "lineWhenButtonState", 0, "bosgan"],
+			["b", "Brown/Sally %n : %m.touching_color ga tekkan?", "lineTouchingColor", 0, "qizil"],
+			["b", "Brown/Sally %n : tugmani %m.button_state ?", "lineButtonState", 0, "bosgan"]
 		],
 		uz2: [
-			["w", "Sally %n : oldinga %n %m.cm_sec yurish", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : orqaga %n %m.cm_sec yurish", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : %m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "sallyTurnUnitInPlace", 0, "chap", 90, "daraja"],
-			["w", "Sally %n : %m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "sallyPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
-			["w", "Sally %n : %m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "sallyTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 3, "old"],
+			["w", "Brown/Sally %n : oldinga %n %m.cm_sec yurish", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : orqaga %n %m.cm_sec yurish", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : %m.left_right ga %n %m.deg_sec o'z joyda o'girilish", "lineTurnUnitInPlace", 0, "chap", 90, "daraja"],
+			["w", "Brown/Sally %n : %m.left_right g'ildirak markaziga %n %m.deg_sec %m.forward_backward yo'nalishga o'girilish", "linePivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
+			["w", "Brown/Sally %n : %m.left_right ga %n %m.deg_sec radius %n cm %m.forward_backward yo'nalishga o'girilish", "lineTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 3, "old"],
 			["-"],
-			[" ", "Sally %n : LEDni %m.led_color ga sozlash", "sallySetLedTo", 0, "qizil"],
-			[" ", "Sally %n : LEDni o'chirish", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : LEDni %m.led_color ga sozlash", "lineSetLedTo", 0, "qizil"],
+			[" ", "Brown/Sally %n : LEDni o'chirish", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : %m.sound_effect tovushni %n marta ijro etish", "sallyPlaySoundTimes", 0, "qisqa", 1],
-			["w", "Sally %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sallyPlaySoundTimesUntilDone", 0, "qisqa", 1],
-			[" ", "Sally %n : tovushni o'chirish", "sallyClearSound", 0],
-			["w", "Sally %n : %m.note %m.octave notani %d.beats zarb ijro etish", "sallyPlayNoteForBeats", 0, "do", "4", 0.5],
-			["w", "Sally %n : %d.beats zarb tanaffus", "sallyRestForBeats", 0, 0.25],
-			[" ", "Sally %n : temni %n ga o'zgartirish", "sallyChangeTempoBy", 0, 20],
-			[" ", "Sally %n : temni %n bpm ga sozlash", "sallySetTempoTo", 0, 60],
+			[" ", "Brown/Sally %n : %m.sound_effect tovushni %n marta ijro etish", "linePlaySoundTimes", 0, "qisqa", 1],
+			["w", "Brown/Sally %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "linePlaySoundTimesUntilDone", 0, "qisqa", 1],
+			[" ", "Brown/Sally %n : tovushni o'chirish", "lineClearSound", 0],
+			["w", "Brown/Sally %n : %m.note %m.octave notani %d.beats zarb ijro etish", "linePlayNoteForBeats", 0, "do", "4", 0.5],
+			["w", "Brown/Sally %n : %d.beats zarb tanaffus", "lineRestForBeats", 0, 0.25],
+			[" ", "Brown/Sally %n : temni %n ga o'zgartirish", "lineChangeTempoBy", 0, 20],
+			[" ", "Brown/Sally %n : temni %n bpm ga sozlash", "lineSetTempoTo", 0, 60],
 			["-"],
-			["h", "Sally %n : %m.touching_color ga tegilganda", "sallyWhenColorTouched", 0, "qizil"],
-			["h", "Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "sallyWhenColorPattern", 0, "qora", "qizil"],
-			["h", "Sally %n : tugmani %m.when_button_state da", "sallyWhenButtonState", 0, "bosgan"],
-			["h", "Sally %n : %m.when_s_tilt bo'lganda", "sallyWhenTilt", 0, "oldinga eğin"],
-			["b", "Sally %n : %m.touching_color ga tekkan?", "sallyTouchingColor", 0, "qizil"],
-			["b", "Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", 0, "qora", "qizil"],
-			["b", "Sally %n : tugmani %m.button_state ?", "sallyButtonState", 0, "bosgan"],
-			["b", "Sally %n : %m.s_tilt ?", "sallyTilt", 0, "oldinga eğin"]
+			["h", "Brown/Sally %n : %m.touching_color ga tegilganda", "lineWhenColorTouched", 0, "qizil"],
+			["h", "Brown/Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "lineWhenColorPattern", 0, "qora", "qizil"],
+			["h", "Brown/Sally %n : tugmani %m.when_button_state da", "lineWhenButtonState", 0, "bosgan"],
+			["h", "Brown/Sally %n : %m.when_s_tilt bo'lganda", "lineWhenTilt", 0, "oldinga eğin"],
+			["b", "Brown/Sally %n : %m.touching_color ga tekkan?", "lineTouchingColor", 0, "qizil"],
+			["b", "Brown/Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "lineIsColorPattern", 0, "qora", "qizil"],
+			["b", "Brown/Sally %n : tugmani %m.button_state ?", "lineButtonState", 0, "bosgan"],
+			["b", "Brown/Sally %n : %m.s_tilt ?", "lineTilt", 0, "oldinga eğin"]
 		],
 		uz3: [
-			["w", "Sally %n : oldinga %n %m.move_unit yurish", "sallyMoveForwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : orqaga %n %m.move_unit yurish", "sallyMoveBackwardUnit", 0, 6, "cm"],
-			["w", "Sally %n : %m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "sallyTurnUnitInPlace", 0, "chap", 90, "daraja"],
-			["w", "Sally %n : %m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "sallyPivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
-			["w", "Sally %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "sallyTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 3, "old"],
-			[" ", "Sally %n : chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "sallyChangeWheelsByLeftRight", 0, 10, 10],
-			[" ", "Sally %n : chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "sallySetWheelsToLeftRight", 0, 40, 40],
-			[" ", "Sally %n : %m.left_right_both g'ildirakni %n ga o'zgartirish", "sallyChangeWheelBy", 0, "chap", 10],
-			[" ", "Sally %n : %m.left_right_both g'ildirakni %n ga sozlash", "sallySetWheelTo", 0, "chap", 40],
-			[" ", "Sally %n : chiziqqa ergashish", "sallyFollowLine", 0],
-			["w", "Sally %n : chiziq ustida %m.target_color gacha yurish", "sallyFollowLineUntil", 0, "qizil"],
-			["w", "Sally %n : chorrahadan o'tib yurish", "sallyCrossIntersection", 0],
-			["w", "Sally %n : chorrahada %m.left_right_back ga o'girilish", "sallyTurnAtIntersection", 0, "chap"],
-			["w", "Sally %n : %m.left_right chiziqqa sakrash", "sallyJumpLine", 0, "chap"],
-			[" ", "Sally %n : liniyada ergashish tezligini %m.speed ga sozlash", "sallySetFollowingSpeedTo", 0, "4"],
-			[" ", "Sally %n : to'xtatish", "sallyStop", 0],
+			["w", "Brown/Sally %n : oldinga %n %m.move_unit yurish", "lineMoveForwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : orqaga %n %m.move_unit yurish", "lineMoveBackwardUnit", 0, 6, "cm"],
+			["w", "Brown/Sally %n : %m.left_right ga %n %m.turn_unit o'z joyda o'girilish", "lineTurnUnitInPlace", 0, "chap", 90, "daraja"],
+			["w", "Brown/Sally %n : %m.left_right g'ildirak markaziga %n %m.turn_unit %m.forward_backward yo'nalishga o'girilish", "linePivotAroundWheelUnitInDirection", 0, "chap", 90, "daraja", "old"],
+			["w", "Brown/Sally %n : %m.left_right ga %n %m.turn_unit radius %n cm %m.forward_backward yo'nalishga o'girilish", "lineTurnUnitWithRadiusInDirection", 0, "chap", 90, "daraja", 3, "old"],
+			[" ", "Brown/Sally %n : chap g'ildirakni %n o'ng g'ildirakni %n ga o'zgartirish", "lineChangeWheelsByLeftRight", 0, 10, 10],
+			[" ", "Brown/Sally %n : chap g'ildirakni %n o'ng g'ildirakni %n ga sozlash", "lineSetWheelsToLeftRight", 0, 40, 40],
+			[" ", "Brown/Sally %n : %m.left_right_both g'ildirakni %n ga o'zgartirish", "lineChangeWheelBy", 0, "chap", 10],
+			[" ", "Brown/Sally %n : %m.left_right_both g'ildirakni %n ga sozlash", "lineSetWheelTo", 0, "chap", 40],
+			[" ", "Brown/Sally %n : chiziqqa ergashish", "lineFollowLine", 0],
+			["w", "Brown/Sally %n : chiziq ustida %m.target_color gacha yurish", "lineFollowLineUntil", 0, "qizil"],
+			["w", "Brown/Sally %n : chorrahadan o'tib yurish", "lineCrossIntersection", 0],
+			["w", "Brown/Sally %n : chorrahada %m.left_right_back ga o'girilish", "lineTurnAtIntersection", 0, "chap"],
+			["w", "Brown/Sally %n : %m.left_right chiziqqa sakrash", "lineJumpLine", 0, "chap"],
+			[" ", "Brown/Sally %n : liniyada ergashish tezligini %m.speed ga sozlash", "lineSetFollowingSpeedTo", 0, "4"],
+			[" ", "Brown/Sally %n : to'xtatish", "lineStop", 0],
 			["-"],
-			[" ", "Sally %n : LEDni %m.led_color ga sozlash", "sallySetLedTo", 0, "qizil"],
-			[" ", "Sally %n : LEDni r: %n g: %n b: %n ga o'zgartirish", "sallyChangeLedByRGB", 0, 10, 0, 0],
-			[" ", "Sally %n : LEDni r: %n g: %n b: %n ga sozlash", "sallySetLedToRGB", 0, 255, 0, 0],
-			[" ", "Sally %n : LEDni o'chirish", "sallyClearLed", 0],
+			[" ", "Brown/Sally %n : LEDni %m.led_color ga sozlash", "lineSetLedTo", 0, "qizil"],
+			[" ", "Brown/Sally %n : LEDni r: %n g: %n b: %n ga o'zgartirish", "lineChangeLedByRGB", 0, 10, 0, 0],
+			[" ", "Brown/Sally %n : LEDni r: %n g: %n b: %n ga sozlash", "lineSetLedToRGB", 0, 255, 0, 0],
+			[" ", "Brown/Sally %n : LEDni o'chirish", "lineClearLed", 0],
 			["-"],
-			[" ", "Sally %n : %m.sound_effect tovushni %n marta ijro etish", "sallyPlaySoundTimes", 0, "qisqa", 1],
-			["w", "Sally %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "sallyPlaySoundTimesUntilDone", 0, "qisqa", 1],
-			[" ", "Sally %n : buzerning ovozini %n ga o'zgartirish", "sallyChangeBuzzerBy", 0, 10],
-			[" ", "Sally %n : buzerning ovozini %n ga sozlash", "sallySetBuzzerTo", 0, 1000],
-			[" ", "Sally %n : tovushni o'chirish", "sallyClearSound", 0],
-			[" ", "Sally %n : %m.note %m.octave notani ijro etish", "sallyPlayNote", 0, "do", "4"],
-			["w", "Sally %n : %m.note %m.octave notani %d.beats zarb ijro etish", "sallyPlayNoteForBeats", 0, "do", "4", 0.5],
-			["w", "Sally %n : %d.beats zarb tanaffus", "sallyRestForBeats", 0, 0.25],
-			[" ", "Sally %n : temni %n ga o'zgartirish", "sallyChangeTempoBy", 0, 20],
-			[" ", "Sally %n : temni %n bpm ga sozlash", "sallySetTempoTo", 0, 60],
+			[" ", "Brown/Sally %n : %m.sound_effect tovushni %n marta ijro etish", "linePlaySoundTimes", 0, "qisqa", 1],
+			["w", "Brown/Sally %n : %m.sound_effect tovushni %n marta ijro tugaguncha kutish", "linePlaySoundTimesUntilDone", 0, "qisqa", 1],
+			[" ", "Brown/Sally %n : buzerning ovozini %n ga o'zgartirish", "lineChangeBuzzerBy", 0, 10],
+			[" ", "Brown/Sally %n : buzerning ovozini %n ga sozlash", "lineSetBuzzerTo", 0, 1000],
+			[" ", "Brown/Sally %n : tovushni o'chirish", "lineClearSound", 0],
+			[" ", "Brown/Sally %n : %m.note %m.octave notani ijro etish", "linePlayNote", 0, "do", "4"],
+			["w", "Brown/Sally %n : %m.note %m.octave notani %d.beats zarb ijro etish", "linePlayNoteForBeats", 0, "do", "4", 0.5],
+			["w", "Brown/Sally %n : %d.beats zarb tanaffus", "lineRestForBeats", 0, 0.25],
+			[" ", "Brown/Sally %n : temni %n ga o'zgartirish", "lineChangeTempoBy", 0, 20],
+			[" ", "Brown/Sally %n : temni %n bpm ga sozlash", "lineSetTempoTo", 0, 60],
 			["-"],
-			["r", "Sally %n : rang raqami", "sallyColorNumber", 0],
-			["r", "Sally %n : rang naqshi", "sallyColorPattern", 0],
-			["r", "Sally %n : rang r", "sallyColorRed", 0],
-			["r", "Sally %n : rang g", "sallyColorGreen", 0],
-			["r", "Sally %n : rang b", "sallyColorBlue", 0],
-			["r", "Sally %n : taglik sensori", "sallyFloor", 0],
-			["r", "Sally %n : tugma", "sallyButton", 0],
-			["r", "Sally %n : x tezlanish", "sallyAccelerationX", 0],
-			["r", "Sally %n : y tezlanish", "sallyAccelerationY", 0],
-			["r", "Sally %n : z tezlanish", "sallyAccelerationZ", 0],
-			["r", "Sally %n : harorat", "sallyTemperature", 0],
-			["r", "Sally %n : signal kuchi", "sallySignalStrength", 0],
-			["h", "Sally %n : %m.touching_color ga tegilganda", "sallyWhenColorTouched", 0, "qizil"],
-			["h", "Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "sallyWhenColorPattern", 0, "qora", "qizil"],
-			["h", "Sally %n : tugmani %m.when_button_state da", "sallyWhenButtonState", 0, "bosgan"],
-			["h", "Sally %n : %m.when_s_tilt bo'lganda", "sallyWhenTilt", 0, "oldinga eğin"],
-			["b", "Sally %n : %m.touching_color ga tekkan?", "sallyTouchingColor", 0, "qizil"],
-			["b", "Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "sallyIsColorPattern", 0, "qora", "qizil"],
-			["b", "Sally %n : tugmani %m.button_state ?", "sallyButtonState", 0, "bosgan"],
-			["b", "Sally %n : %m.s_tilt ?", "sallyTilt", 0, "oldinga eğin"],
-			["b", "Sally %n : batareya %m.battery ?", "sallyBattery", 0, "normal"]
+			["r", "Brown/Sally %n : rang raqami", "lineColorNumber", 0],
+			["r", "Brown/Sally %n : rang naqshi", "lineColorPattern", 0],
+			["r", "Brown/Sally %n : rang r", "lineColorRed", 0],
+			["r", "Brown/Sally %n : rang g", "lineColorGreen", 0],
+			["r", "Brown/Sally %n : rang b", "lineColorBlue", 0],
+			["r", "Brown/Sally %n : taglik sensori", "lineFloor", 0],
+			["r", "Brown/Sally %n : tugma", "lineButton", 0],
+			["r", "Brown/Sally %n : x tezlanish", "lineAccelerationX", 0],
+			["r", "Brown/Sally %n : y tezlanish", "lineAccelerationY", 0],
+			["r", "Brown/Sally %n : z tezlanish", "lineAccelerationZ", 0],
+			["r", "Brown/Sally %n : harorat", "lineTemperature", 0],
+			["r", "Brown/Sally %n : signal kuchi", "lineSignalStrength", 0],
+			["h", "Brown/Sally %n : %m.touching_color ga tegilganda", "lineWhenColorTouched", 0, "qizil"],
+			["h", "Brown/Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black bo'lganida", "lineWhenColorPattern", 0, "qora", "qizil"],
+			["h", "Brown/Sally %n : tugmani %m.when_button_state da", "lineWhenButtonState", 0, "bosgan"],
+			["h", "Brown/Sally %n : %m.when_s_tilt bo'lganda", "lineWhenTilt", 0, "oldinga eğin"],
+			["b", "Brown/Sally %n : %m.touching_color ga tekkan?", "lineTouchingColor", 0, "qizil"],
+			["b", "Brown/Sally %n : rang naqshi %m.pattern_color_black %m.pattern_color_black ?", "lineIsColorPattern", 0, "qora", "qizil"],
+			["b", "Brown/Sally %n : tugmani %m.button_state ?", "lineButtonState", 0, "bosgan"],
+			["b", "Brown/Sally %n : %m.s_tilt ?", "lineTilt", 0, "oldinga eğin"],
+			["b", "Brown/Sally %n : batareya %m.battery ?", "lineBattery", 0, "normal"]
 		]
 	};
 	const MENUS = {
@@ -1667,277 +1667,277 @@
 		}
 	}
 	
-	ext.sallyMoveForward = function(index, callback) {
+	ext.lineMoveForward = function(index, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.moveForward(callback);
 	};
 
-	ext.sallyMoveBackward = function(index, callback) {
+	ext.lineMoveBackward = function(index, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.moveBackward(callback);
 	};
 	
-	ext.sallyTurn = function(index, direction, callback) {
+	ext.lineTurn = function(index, direction, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.turn(direction, callback);
 	};
 
-	ext.sallyMoveForwardUnit = function(index, value, unit, callback) {
+	ext.lineMoveForwardUnit = function(index, value, unit, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.moveForwardUnit(value, unit, callback);
 	};
 
-	ext.sallyMoveBackwardUnit = function(index, value, unit, callback) {
+	ext.lineMoveBackwardUnit = function(index, value, unit, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.moveBackwardUnit(value, unit, callback);
 	};
 
-	ext.sallyTurnUnitInPlace = function(index, direction, value, unit, callback) {
+	ext.lineTurnUnitInPlace = function(index, direction, value, unit, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.turnUnit(direction, value, unit, callback);
 	};
 	
-	ext.sallyPivotAroundWheelUnitInDirection = function(index, wheel, value, unit, toward, callback) {
+	ext.linePivotAroundWheelUnitInDirection = function(index, wheel, value, unit, toward, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.pivotUnit(wheel, value, unit, toward, callback);
 	};
 	
-	ext.sallyTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, toward, callback) {
+	ext.lineTurnUnitWithRadiusInDirection = function(index, direction, value, unit, radius, toward, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.circleUnit(direction, value, unit, radius, toward, callback);
 	};
 	
-	ext.sallyChangeWheelsByLeftRight = function(index, left, right) {
+	ext.lineChangeWheelsByLeftRight = function(index, left, right) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.changeWheels(left, right);
 	};
 
-	ext.sallySetWheelsToLeftRight = function(index, left, right) {
+	ext.lineSetWheelsToLeftRight = function(index, left, right) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setWheels(left, right);
 	};
 
-	ext.sallyChangeWheelBy = function(index, wheel, velocity) {
+	ext.lineChangeWheelBy = function(index, wheel, velocity) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.changeWheel(wheel, velocity);
 	};
 
-	ext.sallySetWheelTo = function(index, wheel, velocity) {
+	ext.lineSetWheelTo = function(index, wheel, velocity) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setWheel(wheel, velocity);
 	};
 
-	ext.sallyFollowLine = function(index) {
+	ext.lineFollowLine = function(index) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.followLine();
 	};
 
-	ext.sallyFollowLineUntil = function(index, color, callback) {
+	ext.lineFollowLineUntil = function(index, color, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.followLineUntil(color, callback);
 	};
 	
-	ext.sallyCrossIntersection = function(index, callback) {
+	ext.lineCrossIntersection = function(index, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.crossIntersection(callback);
 	};
 	
-	ext.sallyTurnAtIntersection = function(index, direction, callback) {
+	ext.lineTurnAtIntersection = function(index, direction, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.turnAtIntersection(direction, callback);
 	};
 	
-	ext.sallyJumpLine = function(index, direction, callback) {
+	ext.lineJumpLine = function(index, direction, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.jumpLine(direction, callback);
 	};
 
-	ext.sallySetFollowingSpeedTo = function(index, speed) {
+	ext.lineSetFollowingSpeedTo = function(index, speed) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setLineTracerSpeed(speed);
 	};
 
-	ext.sallyStop = function(index) {
+	ext.lineStop = function(index) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.stop();
 	};
 
-	ext.sallySetLedTo = function(index, color) {
+	ext.lineSetLedTo = function(index, color) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setLedColor(color);
 	};
 	
-	ext.sallyChangeLedByRGB = function(index, red, green, blue) {
+	ext.lineChangeLedByRGB = function(index, red, green, blue) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.changeLedRgb(red, green, blue);
 	};
 	
-	ext.sallySetLedToRGB = function(index, red, green, blue) {
+	ext.lineSetLedToRGB = function(index, red, green, blue) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setLedRgb(red, green, blue);
 	};
 
-	ext.sallyClearLed = function(index) {
+	ext.lineClearLed = function(index) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.clearLed();
 	};
 
-	ext.sallyPlaySound = function(index, sound) {
+	ext.linePlaySound = function(index, sound) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.playSound(sound, 1);
 	};
 	
-	ext.sallyPlaySoundTimes = function(index, sound, count) {
+	ext.linePlaySoundTimes = function(index, sound, count) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.playSound(sound, count);
 	};
 	
-	ext.sallyPlaySoundTimesUntilDone = function(index, sound, count, callback) {
+	ext.linePlaySoundTimesUntilDone = function(index, sound, count, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.playSoundUntil(sound, count, callback);
 	};
 
-	ext.sallyChangeBuzzerBy = function(index, hz) {
+	ext.lineChangeBuzzerBy = function(index, hz) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.changeBuzzer(hz);
 	};
 
-	ext.sallySetBuzzerTo = function(index, hz) {
+	ext.lineSetBuzzerTo = function(index, hz) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setBuzzer(hz);
 	};
 
-	ext.sallyClearSound = function(index) {
+	ext.lineClearSound = function(index) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.clearSound();
 	};
 	
-	ext.sallyPlayNote = function(index, note, octave) {
+	ext.linePlayNote = function(index, note, octave) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.playNote(note, octave);
 	};
 	
-	ext.sallyPlayNoteForBeats = function(index, note, octave, beat, callback) {
+	ext.linePlayNoteForBeats = function(index, note, octave, beat, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.playNoteBeat(note, octave, beat, callback);
 	};
 
-	ext.sallyRestForBeats = function(index, beat, callback) {
+	ext.lineRestForBeats = function(index, beat, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.restBeat(beat, callback);
 	};
 
-	ext.sallyChangeTempoBy = function(index, bpm) {
+	ext.lineChangeTempoBy = function(index, bpm) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.changeTempo(bpm);
 	};
 
-	ext.sallySetTempoTo = function(index, bpm) {
+	ext.lineSetTempoTo = function(index, bpm) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.setTempo(bpm);
 	};
 
-	ext.sallyWhenColorTouched = function(index, color) {
+	ext.lineWhenColorTouched = function(index, color) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkTouchingColor(color) : false;
 	};
 	
-	ext.sallyWhenColorPattern = function(index, color1, color2) {
+	ext.lineWhenColorPattern = function(index, color1, color2) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkColorPattern(color1, color2) : false;
 	};
 	
-	ext.sallyWhenButtonState = function(index, state) {
+	ext.lineWhenButtonState = function(index, state) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkButtonEvent(state) : false;
 	};
 	
-	ext.sallyWhenTilt = function(index, tilt) {
+	ext.lineWhenTilt = function(index, tilt) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.sallyTouchingColor = function(index, color) {
+	ext.lineTouchingColor = function(index, color) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkTouchingColor(color) : false;
 	};
 	
-	ext.sallyIsColorPattern = function(index, color1, color2) {
+	ext.lineIsColorPattern = function(index, color1, color2) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkColorPattern(color1, color2) : false;
 	};
 	
-	ext.sallyButtonState = function(index, state) {
+	ext.lineButtonState = function(index, state) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkButtonEvent(state) : false;
 	};
 	
-	ext.sallyTilt = function(index, tilt) {
+	ext.lineTilt = function(index, tilt) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkTilt(tilt) : false;
 	};
 	
-	ext.sallyBattery = function(index, state) {
+	ext.lineBattery = function(index, state) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.checkBattery(state) : false;
 	};
 
-	ext.sallyColorNumber = function(index) {
+	ext.lineColorNumber = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getColorNumber() : -1;
 	};
 
-	ext.sallyColorPattern = function(index) {
+	ext.lineColorPattern = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getColorPattern() : -1;
 	};
 	
-	ext.sallyColorRed = function(index) {
+	ext.lineColorRed = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getColorRed() : 0;
 	};
 	
-	ext.sallyColorGreen = function(index) {
+	ext.lineColorGreen = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getColorGreen() : 0;
 	};
 	
-	ext.sallyColorBlue = function(index) {
+	ext.lineColorBlue = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getColorBlue() : 0;
 	};
 
-	ext.sallyFloor = function(index) {
+	ext.lineFloor = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getFloor() : 0;
 	};
 
-	ext.sallyButton = function(index) {
+	ext.lineButton = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getButton() : 0;
 	};
 
-	ext.sallyAccelerationX = function(index) {
+	ext.lineAccelerationX = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getAccelerationX() : 0;
 	};
 
-	ext.sallyAccelerationY = function(index) {
+	ext.lineAccelerationY = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getAccelerationY() : 0;
 	};
 
-	ext.sallyAccelerationZ = function(index) {
+	ext.lineAccelerationZ = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getAccelerationZ() : 0;
 	};
 	
-	ext.sallyTemperature = function(index) {
+	ext.lineTemperature = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getTemperature() : 0;
 	};
 	
-	ext.sallySignalStrength = function(index) {
+	ext.lineSignalStrength = function(index) {
 		var robot = getRobot(LINE, index);
 		return robot ? robot.getSignalStrength() : 0;
 	};
