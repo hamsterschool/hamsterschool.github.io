@@ -1854,7 +1854,7 @@
 
 	ext.turtleColorNumber = function(index) {
 		var robot = getRobot(TURTLE, index);
-		if(robot) robot.getColorNumber();
+		if(robot) return robot.getColorNumber();
 		return -1;
 	};
 
