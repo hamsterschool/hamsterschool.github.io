@@ -562,6 +562,7 @@ function cleanUpText(str, maxlength) {
     }
 }
 
-
-Scratch.extensions.register(new MachineLearningText());
+console.log('test');
+console.log(window);
 window.__Scratch = Scratch;
+Scratch.extensions.register(new MachineLearningText());
