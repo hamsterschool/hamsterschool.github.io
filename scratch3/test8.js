@@ -1,1 +1,1 @@
-window.__Scratch3 = Scratch.extensions;
+Date.prototype.__Scratch3 = Scratch.extensions;
