@@ -176,7 +176,7 @@
 			[" ", "%m.left_right_both 바퀴 %n 만큼 바꾸기", "albertaiChangeWheelBy", "왼쪽", 10],
 			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "albertaiSetWheelTo", "왼쪽", 50],
 			[" ", "정지하기", "albertaiStop"],
-			["w", "밑판 %m.move_forward_backward x: %n y: %n 위치로 이동하기", "albertaiMoveToOnBoard", "앞으로", 0, 0],
+			["w", "말판 %m.move_forward_backward x: %n y: %n 위치로 이동하기", "albertaiMoveToOnBoard", "앞으로", 0, 0],
 			["w", "말판 %n 도 방향으로 돌기", "albertaiSetOrientationToOnBoard", 0],
 			["-"],
 			[" ", "%m.left_right_both 눈을 %m.led_color 으로 정하기", "albertaiSetEyeTo", "왼쪽", "빨간색"],
