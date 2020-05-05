@@ -1553,33 +1553,22 @@
 		if('WebSocket' in window) {
 			try {
 				var sock = new WebSocket(url);
-				var slaveVersion = 1;
-				var decode = function(data) {
-					if(data.index == 0) {
-						var robot = getOrCreateRobot(data.module, data.realModule, 0);
-						if(robot) {
-							robot.sensory = data;
-							robot.handleSensory();
-						}
-					}
-				};
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onmessage = function(message) {
 					try {
 						var received = JSON.parse(message.data);
-						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							if(received.module == ALBERTSCHOOL) {
-								connectionState = received.state;
+							if(received.states) {
+								connectionState = received.states[ALBERTSCHOOL];
 							}
 						} else {
-							if(slaveVersion == 1) {
-								for(var i in received) {
-									decode(received[i]);
+							if(received.index >= 0) {
+								var robot = getOrCreateRobot(received.group, received.module, received.index);
+								if(robot) {
+									robot.sensory = received;
+									robot.handleSensory();
 								}
-							} else {
-								decode(received);
 							}
 						}
 					} catch (e) {
@@ -1601,16 +1590,8 @@
 						if(canSend && socket) {
 							if(Date.now() > targetTime) {
 								try {
-									if(slaveVersion == 1) {
-										var json = JSON.stringify(packet);
-										if(canSend && socket) socket.send(json);
-									} else {
-										var robot = getRobot(ALBERTSCHOOL, 0);
-										if(robot) {
-											var json = JSON.stringify(robot.motoring);
-											if(canSend && socket) socket.send(json);
-										}
-									}
+									var json = JSON.stringify(packet);
+									if(canSend && socket) socket.send(json);
 									clearMotorings();
 								} catch (e) {
 								}
