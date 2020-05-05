@@ -160,7 +160,7 @@
 			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "setWheelTo", "왼쪽", 30],
 			[" ", "정지하기", "stop"],
 			[" ", "말판 크기를 폭 %d.board_size 높이 %d.board_size (으)로 정하기", "setBoardSizeTo", 108, 76],
-			["w", "밑판 %m.move_forward_backward x: %n y: %n 위치로 이동하기", "moveToOnBoard", "앞으로", 0, 0],
+			["w", "말판 %m.move_forward_backward x: %n y: %n 위치로 이동하기", "moveToOnBoard", "앞으로", 0, 0],
 			["w", "말판 %n 도 방향으로 돌기", "setOrientationToOnBoard", 0],
 			["-"],
 			[" ", "%m.left_right_both 눈을 %m.color 으로 정하기", "setEyeTo", "왼쪽", "빨간색"],
