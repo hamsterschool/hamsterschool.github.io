@@ -1946,8 +1946,8 @@
 					try {
 						var received = JSON.parse(message.data);
 						if(received.type == 0) {
-							if(received.module == ALBERTAI) {
-								connectionState = received.state;
+							if(received.states) {
+								connectionState = received.states[ALBERTAI];
 							}
 						} else {
 							if(received.index >= 0) {
