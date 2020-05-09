@@ -1346,8 +1346,8 @@
 					try {
 						var received = JSON.parse(message.data);
 						if(received.type == 0) {
-							if(received.states) {
-								connectionState = received.states[ZERONE];
+							if(received.route && received.states) {
+								connectionState = received.states[received.route.module][received.route.index];
 							}
 						} else {
 							if(received.index >= 0) {
