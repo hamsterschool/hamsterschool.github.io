@@ -1584,31 +1584,22 @@
 		if('WebSocket' in window) {
 			try {
 				var sock = new WebSocket(url);
-				var slaveVersion = 1;
-				var decode = function(data) {
-					if(data.index >= 0) {
-						var robot = getOrCreateRobot(data.module, data.realModule, data.index);
-						if(robot) {
-							robot.sensory = data;
-							robot.handleSensory();
-						}
-					}
-				};
 				sock.binaryType = 'arraybuffer';
 				socket = sock;
 				sock.onmessage = function(message) {
 					try {
 						var received = JSON.parse(message.data);
-						slaveVersion = received.version || 0;
 						if(received.type == 0) {
-							connectionState = received.state;
+							if(received.route && received.states) {
+								connectionState = received.states[received.route.module][received.route.index];
+							}
 						} else {
-							if(slaveVersion == 1) {
-								for(var i in received) {
-									decode(received[i]);
+							if(received.index >= 0) {
+								var robot = getOrCreateRobot(received.group, received.module, received.index);
+								if(robot) {
+									robot.sensory = received;
+									robot.handleSensory();
 								}
-							} else {
-								decode(received);
 							}
 						}
 					} catch (e) {
