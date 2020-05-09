@@ -3084,7 +3084,7 @@
 	
 	function HamsterS(index) {
 		this.sensory = {
-			map: 0,
+			map1: 0,
 			map2: 0,
 			signalStrength: 0,
 			leftProximity: 0,
@@ -3110,7 +3110,7 @@
 		this.motoring = {
 			module: HAMSTER_S,
 			index: index,
-			map: 0xfc000000,
+			map1: 0xfc000000,
 			map2: 0xc0000000,
 			leftWheel: 0,
 			rightWheel: 0,
@@ -3170,7 +3170,7 @@
 	
 	HamsterS.prototype.reset = function() {
 		var motoring = this.motoring;
-		motoring.map = 0xfc7c0000;
+		motoring.map1 = 0xfc7c0000;
 		motoring.map2 = 0xfa000000;
 		motoring.leftWheel = 0;
 		motoring.rightWheel = 0;
@@ -3262,7 +3262,7 @@
 	};
 
 	HamsterS.prototype.clearMotoring = function() {
-		this.motoring.map = 0xfc000000;
+		this.motoring.map1 = 0xfc000000;
 		this.motoring.map2 = 0xc0000000;
 	};
 
@@ -3278,7 +3278,7 @@
 
 	HamsterS.prototype.__setLineTracerMode = function(mode) {
 		this.motoring.lineTracerMode = mode;
-		this.motoring.map |= 0x00200000;
+		this.motoring.map1 |= 0x00200000;
 	};
 
 	HamsterS.prototype.__setLineTracerGain = function(gain) {
@@ -3288,7 +3288,7 @@
 
 	HamsterS.prototype.__setLineTracerSpeed = function(speed) {
 		this.motoring.lineTracerSpeed = speed;
-		this.motoring.map |= 0x00100000;
+		this.motoring.map1 |= 0x00100000;
 	};
 
 	HamsterS.prototype.__cancelLineTracer = function() {
@@ -3318,7 +3318,7 @@
 
 	HamsterS.prototype.__setNote = function(note) {
 		this.motoring.note = note;
-		this.motoring.map |= 0x00400000;
+		this.motoring.map1 |= 0x00400000;
 	};
 
 	HamsterS.prototype.__issueNoteId = function() {
@@ -3359,12 +3359,12 @@
 
 	HamsterS.prototype.__setIoModeA = function(mode) {
 		this.motoring.ioModeA = mode;
-		this.motoring.map |= 0x00080000;
+		this.motoring.map1 |= 0x00080000;
 	};
 
 	HamsterS.prototype.__setIoModeB = function(mode) {
 		this.motoring.ioModeB = mode;
-		this.motoring.map |= 0x00040000;
+		this.motoring.map1 |= 0x00040000;
 	};
 
 	HamsterS.prototype.__issueIoId = function() {
@@ -3395,7 +3395,7 @@
 		if(sensory.map2 & 0x00008000) self.freeFall = true;
 		if(sensory.map2 & 0x00004000) self.tap = true;
 
-		if(self.lineTracerCallback && (sensory.map & 0x00000010) != 0) {
+		if(self.lineTracerCallback && (sensory.map1 & 0x00000010) != 0) {
 			if(sensory.lineTracerState == 0x40) {
 				self.__setLineTracerMode(0);
 				var callback = self.lineTracerCallback;
