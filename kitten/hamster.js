@@ -1832,8 +1832,6 @@ class HamsterExtension {
 	}
 }
 
-Scratch.extensions.register(new HamsterExtension());
-
 if(!Date.now) {
 	Date.now = function() {
 		return new Date().getTime();
@@ -1842,3 +1840,5 @@ if(!Date.now) {
 setTimeout(() => {
 	RoboidRunner.open();
 }, 1000);
+
+module.exports = HamsterExtension;
