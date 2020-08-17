@@ -91,7 +91,7 @@ function send(string) {
     return;
   console.log("sending to serial: [" + string +"]\n");
 
-  let view = new TextEncoder('utf-8').encode(string);
+  let view = new TextEncoder('utf-8').encode('FF\r');
   console.log(view);
   if (port) {
     port.send(view);
@@ -111,6 +111,10 @@ window.onload = _ => {
     let source = document.querySelector("#editor").value;
     send(source);
   }
+  
+  document.querySelector("#disconnect").onclick = () => {
+    if(port) port.disconnect();
+  }
 }
 
 </script>
@@ -121,4 +125,5 @@ window.onload = _ => {
  <br><br>
  <label for="title">Receiver: </label> </br>
  <textarea id="output", rows="25" cols="80" id="source"></textarea>
+  <br><button id="disconnect">Disconnect</button>
 </body>
