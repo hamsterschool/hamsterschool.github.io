@@ -91,7 +91,7 @@ function send(string) {
     return;
   console.log("sending to serial: [" + string +"]\n");
 
-  let view = new TextEncoder('utf-8').encode(string);
+  let view = new TextEncoder('utf-8').encode('FF\r');
   console.log(view);
   if (port) {
     port.send(view);
