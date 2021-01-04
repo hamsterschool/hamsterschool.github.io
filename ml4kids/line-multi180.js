@@ -84,6 +84,7 @@
 			[" ", "Brown·Sally %n : set %m.left_right_both wheel to %n", "lineSetWheelTo", 0, "left", 40],
 			[" ", "Brown·Sally %n : follow line", "lineFollowLine", 0],
 			["w", "Brown·Sally %n : follow line until %m.target_color", "lineFollowLineUntil", 0, "red"],
+			["w", "Brown·Sally %n : follow line until intersection", "lineFollowLineUntilIntersection", 0],
 			["w", "Brown·Sally %n : cross intersection", "lineCrossIntersection", 0],
 			["w", "Brown·Sally %n : turn %m.left_right_back at intersection", "lineTurnAtIntersection", 0, "left"],
 			["w", "Brown·Sally %n : jump to %m.left_right line", "lineJumpLine", 0, "left"],
@@ -181,6 +182,7 @@
 			[" ", "브라운·샐리 %n : %m.left_right_both 바퀴 %n (으)로 정하기", "lineSetWheelTo", 0, "왼쪽", 40],
 			[" ", "브라운·샐리 %n : 선 따라가기", "lineFollowLine", 0],
 			["w", "브라운·샐리 %n : 선을 따라 %m.target_color 까지 이동하기", "lineFollowLineUntil", 0, "빨간색"],
+			["w", "브라운·샐리 %n : 선을 따라 교차로까지 이동하기", "lineFollowLineUntilIntersection", 0],
 			["w", "브라운·샐리 %n : 교차로 건너가기", "lineCrossIntersection", 0],
 			["w", "브라운·샐리 %n : 교차로에서 %m.left_right_back 으로 돌기", "lineTurnAtIntersection", 0, "왼쪽"],
 			["w", "브라운·샐리 %n : %m.left_right 선으로 건너가기", "lineJumpLine", 0, "왼쪽"],
@@ -278,6 +280,7 @@
 			[" ", "ブラウン·サリー %n : %m.left_right_both 車輪を %n にする", "lineSetWheelTo", 0, "左", 40],
 			[" ", "ブラウン·サリー %n : 線に沿って移動する", "lineFollowLine", 0],
 			["w", "ブラウン·サリー %n : 線に沿って %m.target_color まで移動する", "lineFollowLineUntil", 0, "赤色"],
+			["w", "ブラウン·サリー %n : 線にそって交差点まで移動する", "lineFollowLineUntilIntersection", 0],
 			["w", "ブラウン·サリー %n : 交差点を渡る", "lineCrossIntersection", 0],
 			["w", "ブラウン·サリー %n : 交差点で %m.left_right_back へ回る", "lineTurnAtIntersection", 0, "左"],
 			["w", "ブラウン·サリー %n : %m.left_right 線へ渡り行く", "lineJumpLine", 0, "左"],
@@ -375,6 +378,7 @@
 			[" ", "Brown·Sally %n : %m.left_right_both g'ildirakni %n ga sozlash", "lineSetWheelTo", 0, "chap", 40],
 			[" ", "Brown·Sally %n : chiziqqa ergashish", "lineFollowLine", 0],
 			["w", "Brown·Sally %n : chiziq ustida %m.target_color gacha yurish", "lineFollowLineUntil", 0, "qizil"],
+			["w", "Brown·Sally %n : chiziq ustida chorrahagacha yurish", "lineFollowLineUntilIntersection", 0],
 			["w", "Brown·Sally %n : chorrahadan o'tib yurish", "lineCrossIntersection", 0],
 			["w", "Brown·Sally %n : chorrahada %m.left_right_back ga o'girilish", "lineTurnAtIntersection", 0, "chap"],
 			["w", "Brown·Sally %n : %m.left_right chiziqqa sakrash", "lineJumpLine", 0, "chap"],
@@ -1166,6 +1170,18 @@
 		this.__setLineTracerMode(mode);
 		this.lineTracerCallback = callback;
 	};
+	
+	LineRobot.prototype.followLineUntilIntersection = function(callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(9);
+		this.lineTracerCallback = callback;
+	};
 
 	LineRobot.prototype.crossIntersection = function(callback) {
 		var motoring = this.motoring;
@@ -1718,6 +1734,11 @@
 	ext.lineFollowLineUntil = function(index, color, callback) {
 		var robot = getRobot(LINE, index);
 		if(robot) robot.followLineUntil(color, callback);
+	};
+	
+	ext.lineFollowLineUntilIntersection = function(index, callback) {
+		var robot = getRobot(LINE, index);
+		if(robot) robot.followLineUntilIntersection(callback);
 	};
 	
 	ext.lineCrossIntersection = function(index, callback) {
