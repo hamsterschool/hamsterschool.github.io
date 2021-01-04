@@ -84,6 +84,7 @@
 			[" ", "set %m.left_right_both wheel to %n", "brownSetWheelTo", "left", 40],
 			[" ", "follow line", "brownFollowLine"],
 			["w", "follow line until %m.target_color", "brownFollowLineUntil", "red"],
+			["w", "follow line until intersection", "brownFollowLineUntilIntersection"],
 			["w", "cross intersection", "brownCrossIntersection"],
 			["w", "turn %m.left_right_back at intersection", "brownTurnAtIntersection", "left"],
 			["w", "jump to %m.left_right line", "brownJumpLine", "left"],
@@ -181,6 +182,7 @@
 			[" ", "%m.left_right_both 바퀴 %n (으)로 정하기", "brownSetWheelTo", "왼쪽", 40],
 			[" ", "선 따라가기", "brownFollowLine"],
 			["w", "선을 따라 %m.target_color 까지 이동하기", "brownFollowLineUntil", "빨간색"],
+			["w", "선을 따라 교차로까지 이동하기", "brownFollowLineUntilIntersection"],
 			["w", "교차로 건너가기", "brownCrossIntersection"],
 			["w", "교차로에서 %m.left_right_back 으로 돌기", "brownTurnAtIntersection", "왼쪽"],
 			["w", "%m.left_right 선으로 건너가기", "brownJumpLine", "왼쪽"],
@@ -278,6 +280,7 @@
 			[" ", "%m.left_right_both 車輪を %n にする", "brownSetWheelTo", "左", 40],
 			[" ", "線に沿って移動する", "brownFollowLine"],
 			["w", "線に沿って %m.target_color まで移動する", "brownFollowLineUntil", "赤色"],
+			["w", "線にそって交差点まで移動する", "brownFollowLineUntilIntersection"],
 			["w", "交差点を渡る", "brownCrossIntersection"],
 			["w", "交差点で %m.left_right_back へ回る", "brownTurnAtIntersection", "左"],
 			["w", "%m.left_right 線へ渡り行く", "brownJumpLine", "左"],
@@ -375,6 +378,7 @@
 			[" ", "%m.left_right_both g'ildirakni %n ga sozlash", "brownSetWheelTo", "chap", 40],
 			[" ", "chiziqqa ergashish", "brownFollowLine"],
 			["w", "chiziq ustida %m.target_color gacha yurish", "brownFollowLineUntil", "qizil"],
+			["w", "chiziq ustida chorrahagacha yurish", "brownFollowLineUntilIntersection"],
 			["w", "chorrahadan o'tib yurish", "brownCrossIntersection"],
 			["w", "chorrahada %m.left_right_back ga o'girilish", "brownTurnAtIntersection", "chap"],
 			["w", "%m.left_right chiziqqa sakrash", "brownJumpLine", "chap"],
@@ -1166,6 +1170,18 @@
 		this.__setLineTracerMode(mode);
 		this.lineTracerCallback = callback;
 	};
+	
+	LineRobot.prototype.followLineUntilIntersection = function(callback) {
+		var motoring = this.motoring;
+		this.__cancelMotion();
+
+		motoring.leftWheel = 0;
+		motoring.rightWheel = 0;
+		this.__setPulse(0);
+		this.__setMotion(0, 0, 0, 0, 0);
+		this.__setLineTracerMode(9);
+		this.lineTracerCallback = callback;
+	};
 
 	LineRobot.prototype.crossIntersection = function(callback) {
 		var motoring = this.motoring;
@@ -1737,6 +1753,11 @@
 	ext.brownFollowLineUntil = function(color, callback) {
 		var robot = getRobot(LINE, 0);
 		if(robot) robot.followLineUntil(color, callback);
+	};
+	
+	ext.brownFollowLineUntilIntersection = function(callback) {
+		var robot = getRobot(LINE, 0);
+		if(robot) robot.followLineUntilIntersection(callback);
 	};
 	
 	ext.brownCrossIntersection = function(callback) {
